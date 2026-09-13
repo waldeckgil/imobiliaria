@@ -103,12 +103,13 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT DE AUTENTICAÇÃO E ROTEAMENTO -->
+    <!-- JAVASCRIPT COM 'supabaseClient' (SEM CONFLITO GLOBAL) -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Instância nomeada como supabaseClient para evitar conflito com window.supabase
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         async function executarLogin(event) {
             event.preventDefault();
@@ -125,7 +126,7 @@
 
             try {
                 // 1. Autenticação no Supabase Auth
-                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -141,7 +142,7 @@
                 }
 
                 // 3. VERIFICAÇÃO DO USUÁRIO OPERACIONAL (GESTOR / CORRETOR)
-                const { data: perfil, error: perfilError } = await supabase
+                const { data: perfil, error: perfilError } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('user_id', user.id)
@@ -152,12 +153,12 @@
                 }
 
                 if (perfil.ativo === false) {
-                    await supabase.auth.signOut();
+                    await supabaseClient.auth.signOut();
                     throw new Error('Seu acesso foi desativado pela diretoria da imobiliária.');
                 }
 
                 // 4. AUDITORIA FINANCEIRA DA ASSINATURA SAAS
-                const { data: imob, error: imobError } = await supabase
+                const { data: imob, error: imobError } = await supabaseClient
                     .from('imobiliarias')
                     .select('status, data_vencimento')
                     .eq('id', perfil.imobiliaria_id)
@@ -194,7 +195,7 @@
         function recuperarSenha() {
             const email = prompt('Digite seu e-mail cadastrado para redefinir sua senha:');
             if (email) {
-                supabase.auth.resetPasswordForEmail(email)
+                supabaseClient.auth.resetPasswordForEmail(email)
                     .then(() => alert('Instruções de redefinição enviadas para o seu e-mail!'))
                     .catch(err => alert('Erro: ' + err.message));
             }
