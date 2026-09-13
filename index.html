@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Castro Imóveis - Alto Padrão em Florianópolis</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .bg-barra-preta { background-color: #0d0e11; }
+        .bg-filtro-amarelo { background-color: #fae69d; border-color: #edd17d; }
+        .azul-preco { color: #1c6ba0; }
+        .btn-azul-mensagem { background-color: #1f6497; }
+        .btn-azul-mensagem:hover { background-color: #174f77; }
+        .btn-azul-topo { background-color: #1f6497; }
+        .dropdown-menu { display: none; }
+        .group-dropdown:hover .dropdown-menu { display: block; }
+        .tab-ativa { border-bottom: 2px solid #1c6ba0; color: #1c6ba0; font-weight: 700; }
+    </style>
+</head>
+<body class="bg-gray-100 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- =========================================================================
+         1. CABEÇALHO (LOGO COM COROA, NAVEGAÇÃO E TELEFONE)
+         ========================================================================= -->
+    <header class="bg-white border-b border-gray-200 py-4 px-4 sm:px-8 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-[1340px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+            
+            <!-- LOGO DINÂMICA DA IMOBILIÁRIA -->
+            <a href="index.html" class="flex items-center gap-4 cursor-pointer no-underline text-inherit">
+                <div class="flex items-center gap-3">
+                    <div id="container-logo-visual" class="text-slate-900 text-3xl font-serif tracking-tighter flex flex-col items-center">
+                        <i class="fa-solid fa-crown text-2xl text-slate-800 mb-0.5"></i>
+                        <span id="header-nome-curto" class="text-2xl font-serif font-black tracking-widest leading-none">CASTRO</span>
+                        <span class="text-[8px] tracking-[0.4em] font-extrabold uppercase text-slate-600 mt-0.5">I M Ó V E I S</span>
+                    </div>
+                </div>
+
+                <div class="border-l border-gray-300 pl-4">
+                    <p id="header-razao" class="text-sm font-bold text-slate-800 tracking-wide">CASTRO IMÓVEIS</p>
+                    <p id="header-creci" class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">CRECI-SC 14797F</p>
+                    <p class="text-xs text-slate-500 italic font-serif mt-0.5">Alto Padrão em Florianópolis</p>
+                </div>
+            </a>
+
+            <!-- NAVEGAÇÃO E TELEFONE -->
+            <div class="flex items-center gap-6 text-[13px] font-bold text-slate-800 flex-wrap justify-center">
+                
+                <!-- VENDA -->
+                <div class="relative group-dropdown py-2">
+                    <button class="flex items-center gap-1 hover:text-blue-700 transition uppercase tracking-wide">
+                        VENDA <i class="fa-solid fa-caret-down text-blue-700"></i>
+                    </button>
+                    <div class="dropdown-menu absolute left-0 top-full bg-white shadow-2xl rounded-b-xl border border-gray-200 py-1.5 w-56 z-50 text-[13px]">
+                        <a href="javascript:void(0)" onclick="filtrarTipo('')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800 border-b border-gray-100">Todos os Imóveis</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Apartamento')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Apartamento</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Casa')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Casa</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Comercial')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Comercial</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Terreno')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Terreno</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Casa em Condomínio')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Casa em Condomínio</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Cobertura')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Cobertura</a>
+                        <a href="javascript:void(0)" onclick="filtrarTipo('Sítio')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Sítio</a>
+                    </div>
+                </div>
+
+                <!-- BAIRROS -->
+                <div class="relative group-dropdown py-2">
+                    <button class="flex items-center gap-1 hover:text-blue-700 transition uppercase tracking-wide">
+                        BAIRROS <i class="fa-solid fa-caret-down text-blue-700"></i>
+                    </button>
+                    <div class="dropdown-menu absolute left-0 top-full bg-white shadow-2xl rounded-b-xl border border-gray-200 py-1.5 w-48 z-50 text-[13px]">
+                        <a href="javascript:void(0)" onclick="filtrarBairro('Carvoeira')" class="block px-4 py-2 hover:bg-blue-50">Carvoeira</a>
+                        <a href="javascript:void(0)" onclick="filtrarBairro('Centro')" class="block px-4 py-2 hover:bg-blue-50">Centro</a>
+                        <a href="javascript:void(0)" onclick="filtrarBairro('Agronômica')" class="block px-4 py-2 hover:bg-blue-50">Agronômica</a>
+                        <a href="javascript:void(0)" onclick="filtrarBairro('Jurerê Internacional')" class="block px-4 py-2 hover:bg-blue-50">Jurerê Internacional</a>
+                    </div>
+                </div>
+
+                <!-- INFORMAÇÕES -->
+                <div class="relative group-dropdown py-2">
+                    <button class="flex items-center gap-1 hover:text-blue-700 transition uppercase tracking-wide">
+                        INFORMAÇÕES <i class="fa-solid fa-caret-down text-blue-700"></i>
+                    </button>
+                    <div class="dropdown-menu absolute left-0 top-full bg-white shadow-2xl rounded-b-xl border border-gray-200 py-1.5 w-52 z-50 text-[13px]">
+                        <a href="#sobre" class="block px-4 py-2 hover:bg-blue-50">O Corretor</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-blue-50">Financiamento</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-blue-50">Certidões On-Line</a>
+                    </div>
+                </div>
+
+                <!-- CONTATO -->
+                <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
+                    CONTATO
+                </a>
+
+                <!-- BOTÃO TELEFONE -->
+                <a id="btn-telefone-header" href="tel:48991646210" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
+                    <i class="fa-solid fa-phone text-xs"></i>
+                    <span id="txt-telefone-header">(48) 99164-6210</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================================================
+         2. FAIXA PRETA DE TÍTULO E BUSCA POR CÓDIGO
+         ========================================================================= -->
+    <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
+        <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
+                    Imóveis Disponíveis, Venda, Apartamento
+                </h1>
+                <p class="text-xs text-gray-300 mt-1">
+                    <strong id="contador-imoveis" class="text-white">Carregando...</strong> imóveis encontrados nesta exibição.
+                </p>
+            </div>
+
+            <!-- CAMPO: BUSCAR CÓDIGO -->
+            <div class="w-full md:w-64">
+                <div class="relative flex items-center">
+                    <input type="text" id="campoBuscarCodigo" placeholder="Buscar Código (ex: 720)" 
+                           onkeydown="if(event.key === 'Enter') buscarCodigo();"
+                           class="w-full bg-black/40 border border-gray-600 rounded px-3 py-1.5 text-xs text-white placeholder-gray-400 outline-none focus:border-white">
+                    <button onclick="buscarCodigo()" class="absolute right-2 text-gray-300 hover:text-white text-xs cursor-pointer">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+         3. CONTEÚDO PRINCIPAL: LISTA DE IMÓVEIS + BARRA LATERAL AMARELA
+         ========================================================================= -->
+    <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- COLUNA ESQUERDA: LISTAGEM DE IMÓVEIS DINÂMICA (8 COLUNAS) -->
+            <div id="container-imoveis" class="lg:col-span-8 space-y-6">
+                <!-- CARREGANDO DINAMICAMENTE PELO JAVASCRIPT -->
+                <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+                    <p class="text-sm font-bold">Consultando banco de dados no Supabase...</p>
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA: BARRA LATERAL AMARELA DE FILTROS (4 COLUNAS) -->
+            <div class="lg:col-span-4">
+                <div class="bg-filtro-amarelo border rounded-lg p-5 shadow-sm">
+                    <div class="flex items-center justify-between pb-3 border-b border-amber-300">
+                        <h3 class="font-black text-slate-900 uppercase tracking-wide text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-filter text-slate-700"></i> Filtrar Imóveis
+                        </h3>
+                        <button onclick="limparFiltros()" class="text-[11px] font-bold text-slate-700 underline hover:text-black cursor-pointer">
+                            Limpar
+                        </button>
+                    </div>
+
+                    <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 mt-4 text-xs">
+                        
+                        <!-- FINALIDADE -->
+                        <div>
+                            <label class="block font-bold text-slate-800 mb-1">Finalidade</label>
+                            <select id="filtro-finalidade" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                <option value="Venda" selected>Comprar (Venda)</option>
+                                <option value="Locacao">Alugar (Locação)</option>
+                            </select>
+                        </div>
+
+                        <!-- TIPO DE IMÓVEL -->
+                        <div>
+                            <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
+                            <select id="filtro-tipo" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                <option value="">Todos os Tipos</option>
+                                <option value="Apartamento">Apartamento</option>
+                                <option value="Casa">Casa</option>
+                                <option value="Terreno">Terreno</option>
+                                <option value="Comercial">Comercial</option>
+                                <option value="Cobertura">Cobertura</option>
+                            </select>
+                        </div>
+
+                        <!-- BAIRRO -->
+                        <div>
+                            <label class="block font-bold text-slate-800 mb-1">Bairro em Florianópolis</label>
+                            <select id="filtro-bairro" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                <option value="">Todos os Bairros</option>
+                                <option value="Carvoeira">Carvoeira</option>
+                                <option value="Centro">Centro</option>
+                                <option value="Agronômica">Agronômica</option>
+                                <option value="Jurerê Internacional">Jurerê Internacional</option>
+                                <option value="Campeche">Campeche</option>
+                            </select>
+                        </div>
+
+                        <!-- FAIXA DE PREÇO -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Preço Mínimo</label>
+                                <input type="number" id="filtro-preco-min" placeholder="R$ Min" class="w-full bg-white border border-amber-300 rounded p-2 text-xs outline-none">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Preço Máximo</label>
+                                <input type="number" id="filtro-preco-max" placeholder="R$ Max" class="w-full bg-white border border-amber-300 rounded p-2 text-xs outline-none">
+                            </div>
+                        </div>
+
+                        <!-- DORMITÓRIOS -->
+                        <div>
+                            <label class="block font-bold text-slate-800 mb-1">Quartos Mínimos</label>
+                            <input type="hidden" id="filtro-quartos" value="0">
+                            <div class="grid grid-cols-4 gap-1">
+                                <button type="button" onclick="selecionarQuarto(1, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">1+</button>
+                                <button type="button" onclick="selecionarQuarto(2, this)" class="btn-quarto bg-amber-500 text-white border border-amber-600 py-1.5 rounded font-bold">2+</button>
+                                <button type="button" onclick="selecionarQuarto(3, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">3+</button>
+                                <button type="button" onclick="selecionarQuarto(4, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">4+</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
+                            <i class="fa-solid fa-magnifying-glass mr-1.5"></i> Filtrar Imóveis
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- =========================================================================
+         4. MODAL DE CAPTURA DE LEAD
+         ========================================================================= -->
+    <div id="modal-lead" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="fecharModalLead()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 text-blue-700 font-bold text-sm uppercase tracking-wide">
+                <i class="fa-regular fa-paper-plane"></i>
+                <span>Atendimento Imediato</span>
+            </div>
+
+            <h3 class="text-lg font-black text-slate-800 mt-1" id="modal-titulo-imovel">Imóvel Ref: 720</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Preencha abaixo para receber a ficha completa e conversar com o corretor responsável.</p>
+
+            <form id="form-lead" onsubmit="enviarLead(event)" class="space-y-3 mt-4 text-xs">
+                <input type="hidden" id="lead-imovel-id" value="">
+                <input type="hidden" id="lead-imovel-ref" value="">
+                
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo</label>
+                    <input type="text" id="lead-nome" required placeholder="Ex: João da Silva" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Seu WhatsApp (com DDD)</label>
+                    <input type="tel" id="lead-zap" required placeholder="(48) 99999-9999" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
+                    <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel..."></textarea>
+                </div>
+
+                <button type="submit" id="btn-submit-lead" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Enviar e Abrir no WhatsApp</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+    <a id="btn-flutuante-zap" href="https://wa.me/5548991646210?text=Ol%C3%A1%2C+estou+no+site+e+gostaria+de+informa%C3%A7%C3%B5es+sobre+im%C3%B3veis" target="_blank" 
+       class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- =========================================================================
+         5. RODAPÉ INSTITUCIONAL
+         ========================================================================= -->
+    <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
+        <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="text-white text-xl font-serif font-black tracking-widest leading-none mb-1" id="footer-nome">CASTRO IMÓVEIS</div>
+                <p id="footer-creci" class="text-[10px] text-slate-500 font-bold uppercase">CRECI-SC 14797F</p>
+                <p class="text-slate-400 mt-2 leading-relaxed">
+                    Especialistas na intermediação e consultoria de imóveis de alto padrão em Florianópolis e região.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold uppercase text-[11px] mb-3">Atendimento</h4>
+                <p id="footer-telefone" class="leading-relaxed"><i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> (48) 99164-6210</p>
+                <p id="footer-email" class="leading-relaxed mt-1"><i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> contato@castroimoveis.com.br</p>
+                <p class="leading-relaxed mt-1"><i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> Florianópolis - Santa Catarina</p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold uppercase text-[11px] mb-3">Navegação</h4>
+                <ul class="space-y-1">
+                    <li><a href="javascript:void(0)" onclick="filtrarTipo('Apartamento')" class="hover:text-white">Apartamentos em Venda</a></li>
+                    <li><a href="javascript:void(0)" onclick="filtrarTipo('Casa')" class="hover:text-white">Casas de Alto Padrão</a></li>
+                    <li><a href="javascript:void(0)" onclick="filtrarTipo('Terreno')" class="hover:text-white">Terrenos em Condomínio</a></li>
+                    <li><a href="login.html" class="hover:text-cyan-400 font-bold text-[11px] mt-2 block"><i class="fa-solid fa-lock mr-1"></i> Área Restrita do Corretor</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold uppercase text-[11px] mb-3">Tecnologia Multi-tenant</h4>
+                <p class="text-[11px] text-slate-500 leading-relaxed">
+                    Plataforma SGI SaaS protegida por PostgreSQL Row Level Security (RLS). Todos os direitos reservados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =========================================================================
+         6. JAVASCRIPT CONECTADO DIRETAMENTE AO SUPABASE REAL
+         ========================================================================= -->
+    <script>
+        // SUAS CREDENCIAIS REAIS DO SUPABASE INJETADAS
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        // Estado do Tenant
+        let slugAtual = 'castro-imoveis';
+        let tenantAtual = {
+            id: 'a0000000-0000-0000-0000-000000000001',
+            nome_fantasia: 'Castro Imóveis',
+            razao_social: 'Castro Imóveis',
+            creci_juridico: 'CRECI-SC 14797F',
+            whatsapp_contato: '5548991646210',
+            telefone_contato: '(48) 99164-6210'
+        };
+
+        let listaImoveisCache = [];
+
+        // 1. Identificar o Tenant pela URL
+        function identificarTenant() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const imobParam = urlParams.get('imob');
+            if (imobParam) {
+                slugAtual = imobParam;
+            }
+            carregarDadosImobiliaria();
+        }
+
+        // 2. Carregar Dados da Imobiliária do Banco
+        async function carregarDadosImobiliaria() {
+            try {
+                const { data, error } = await supabase
+                    .from('imobiliarias')
+                    .select('*')
+                    .eq('slug', slugAtual)
+                    .eq('status', 'active')
+                    .single();
+
+                if (data && !error) {
+                    tenantAtual = data;
+                    document.title = `${data.nome_fantasia} - Imóveis de Alto Padrão`;
+                    document.getElementById('header-nome-curto').innerText = data.nome_fantasia.toUpperCase();
+                    document.getElementById('header-razao').innerText = data.razao_social || data.nome_fantasia;
+                    document.getElementById('header-creci').innerText = data.creci_juridico || '';
+                    document.getElementById('txt-telefone-header').innerText = data.telefone_contato || data.whatsapp_contato;
+                    document.getElementById('btn-telefone-header').href = `tel:${data.telefone_contato || data.whatsapp_contato}`;
+                    document.getElementById('footer-nome').innerText = data.nome_fantasia.toUpperCase();
+                    document.getElementById('footer-creci').innerText = data.creci_juridico || '';
+                    document.getElementById('footer-telefone').innerHTML = `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${data.telefone_contato || data.whatsapp_contato}`;
+                    document.getElementById('btn-flutuante-zap').href = `https://wa.me/${sanitizarZap(data.whatsapp_contato)}`;
+                }
+            } catch (err) {
+                console.warn('Aviso ao carregar imobiliária:', err);
+            } finally {
+                carregarImoveisVitrine();
+            }
+        }
+
+        // 3. Carregar Imóveis Reais da Tabela imoveis (Paginado & RLS)
+        async function carregarImoveisVitrine(filtros = {}) {
+            const container = document.getElementById('container-imoveis');
+            container.innerHTML = `
+                <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+                    <p class="text-sm font-bold">Buscando imóveis disponíveis...</p>
+                </div>`;
+
+            try {
+                let query = supabase
+                    .from('imoveis')
+                    .select('*')
+                    .eq('imobiliaria_id', tenantAtual.id)
+                    .eq('ativa', true)
+                    .eq('status', 'Disponível');
+
+                if (filtros.finalidade) query = query.eq('finalidade', filtros.finalidade);
+                if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
+                if (filtros.bairro) query = query.eq('bairro', filtros.bairro);
+                if (filtros.precoMin) query = query.gte('valor_venda', filtros.precoMin);
+                if (filtros.precoMax) query = query.lte('valor_venda', filtros.precoMax);
+                if (filtros.quartos && filtros.quartos > 0) query = query.gte('quartos', filtros.quartos);
+
+                const { data, error } = await query.order('created_at', { ascending: false }).limit(10);
+
+                if (error) throw error;
+
+                listaImoveisCache = data || [];
+                document.getElementById('contador-imoveis').innerText = listaImoveisCache.length;
+
+                if (listaImoveisCache.length === 0) {
+                    container.innerHTML = `
+                        <div class="bg-white rounded-lg p-12 text-center text-slate-500 border border-gray-200">
+                            <i class="fa-solid fa-house-chimney-crack text-4xl text-amber-500 mb-3"></i>
+                            <h3 class="text-base font-bold text-slate-800">Nenhum imóvel encontrado</h3>
+                            <p class="text-xs text-slate-400 mt-1">Tente ajustar os filtros laterais de pesquisa.</p>
+                        </div>`;
+                    return;
+                }
+
+                renderizarCardsImoveis(listaImoveisCache);
+
+            } catch (err) {
+                console.error('Erro ao consultar imóveis:', err);
+                container.innerHTML = `
+                    <div class="bg-white rounded-lg p-8 text-center text-red-500 border border-red-200">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                        <p class="text-sm font-bold">Erro ao carregar catálogo de imóveis.</p>
+                    </div>`;
+            }
+        }
+
+        // 4. Renderizar Cards HTML Ricos
+        function renderizarCardsImoveis(imoveis) {
+            const container = document.getElementById('container-imoveis');
+            container.innerHTML = '';
+
+            imoveis.forEach(imovel => {
+                const precoFormatado = Number(imovel.valor_venda || imovel.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const fotoCapa = imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80';
+                
+                // Miniaturas sob demanda
+                let galeriaHtml = '';
+                if (imovel.fotos && imovel.fotos.length > 0) {
+                    galeriaHtml = imovel.fotos.map(f => `
+                        <img src="${f}" class="rounded h-14 w-full object-cover cursor-pointer hover:opacity-90 transition" 
+                             onclick="trocarFotoPrincipal('${imovel.codigo_ref}', '${f}')">
+                    `).join('');
+                } else {
+                    galeriaHtml = '<p class="text-[11px] text-slate-400 col-span-3">Nenhuma foto adicional cadastrada.</p>';
+                }
+
+                // Tour virtual
+                const videoHtml = imovel.video_url ? `
+                    <div class="bg-slate-100 p-2.5 rounded text-[11px] flex items-center justify-between">
+                        <span class="text-slate-600 font-semibold"><i class="fa-brands fa-youtube text-red-600 mr-1.5"></i> Tour Virtual Disponível</span>
+                        <a href="${imovel.video_url}" target="_blank" class="text-blue-600 font-bold underline">Assistir Vídeo</a>
+                    </div>
+                ` : '<p class="text-[11px] text-slate-400">Vídeo não disponível para este imóvel.</p>';
+
+                const card = `
+                <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
+                    <div class="grid grid-cols-1 md:grid-cols-12">
+                        
+                        <div class="md:col-span-5 relative bg-slate-900 min-h-[260px]">
+                            <img src="${fotoCapa}" 
+                                 alt="${imovel.titulo}" 
+                                 id="img-capa-${imovel.codigo_ref}"
+                                 class="w-full h-full object-cover min-h-[260px] max-h-[340px]">
+                            <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow">
+                                ${imovel.finalidade}
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm">
+                                Ref: ${imovel.codigo_ref}
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-7 p-5 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${imovel.bairro || 'Bairro Nobre'} - ${imovel.cidade || 'Florianópolis'}/${imovel.uf || 'SC'}</span>
+                                <h3 class="text-lg font-bold text-slate-800 leading-snug mt-0.5">
+                                    ${imovel.titulo}
+                                </h3>
+
+                                <div class="flex items-center gap-4 mt-3 text-xs text-slate-600 border-y border-gray-100 py-2.5">
+                                    <span title="Dormitórios" class="flex items-center gap-1.5 font-medium">
+                                        <i class="fa-solid fa-bed text-blue-600"></i> ${imovel.quartos || 0} Dorms
+                                    </span>
+                                    <span title="Banheiros" class="flex items-center gap-1.5 font-medium">
+                                        <i class="fa-solid fa-bath text-blue-600"></i> ${imovel.banheiros || 1} Banheiro
+                                    </span>
+                                    <span title="Vagas" class="flex items-center gap-1.5 font-medium">
+                                        <i class="fa-solid fa-car text-blue-600"></i> ${imovel.vagas || 0} Vaga
+                                    </span>
+                                    <span title="Área Útil" class="flex items-center gap-1.5 font-medium">
+                                        <i class="fa-solid fa-ruler-combined text-blue-600"></i> ${imovel.area_util || 0} m²
+                                    </span>
+                                </div>
+
+                                <div class="mt-3">
+                                    <div class="flex border-b border-gray-200 text-xs">
+                                        <button onclick="alternarAba('${imovel.codigo_ref}', 'desc')" id="tab-btn-desc-${imovel.codigo_ref}" class="py-1 px-3 tab-ativa cursor-pointer">Descrição</button>
+                                        <button onclick="alternarAba('${imovel.codigo_ref}', 'fotos')" id="tab-btn-fotos-${imovel.codigo_ref}" class="py-1 px-3 text-slate-500 hover:text-slate-800 cursor-pointer">Fotos (Sob Demanda)</button>
+                                        <button onclick="alternarAba('${imovel.codigo_ref}', 'video')" id="tab-btn-video-${imovel.codigo_ref}" class="py-1 px-3 text-slate-500 hover:text-slate-800 cursor-pointer">Vídeo Tour</button>
+                                    </div>
+
+                                    <div id="aba-desc-${imovel.codigo_ref}" class="text-xs text-slate-600 mt-2 leading-relaxed h-14 overflow-hidden text-ellipsis">
+                                        ${imovel.descricao || 'Sem descrição informada.'}
+                                    </div>
+
+                                    <div id="aba-fotos-${imovel.codigo_ref}" class="hidden mt-2 grid grid-cols-3 gap-1.5">
+                                        ${galeriaHtml}
+                                    </div>
+
+                                    <div id="aba-video-${imovel.codigo_ref}" class="hidden mt-2">
+                                        ${videoHtml}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Valor de ${imovel.finalidade}</span>
+                                    <span class="text-xl font-extrabold azul-preco leading-none">${precoFormatado}</span>
+                                </div>
+
+                                <div class="flex items-center gap-2">
+                                    <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}')" class="btn-azul-mensagem text-white text-xs font-bold px-3.5 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                        <i class="fa-regular fa-envelope"></i> Enviar Mensagem
+                                    </button>
+                                    <a href="https://wa.me/${sanitizarZap(tenantAtual.whatsapp_contato)}?text=Ol%C3%A1%2C+tenho+interesse+no+im%C3%B3vel+Ref%3A+${imovel.codigo_ref}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded transition flex items-center gap-1.5 shadow-sm">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>`;
+                container.innerHTML += card;
+            });
+        }
+
+        // 5. Alternância de Abas no Card
+        function alternarAba(codigoRef, aba) {
+            const abas = ['desc', 'fotos', 'video'];
+            abas.forEach(a => {
+                const container = document.getElementById(`aba-${a}-${codigoRef}`);
+                const btn = document.getElementById(`tab-btn-${a}-${codigoRef}`);
+                if (container && btn) {
+                    if (a === aba) {
+                        container.classList.remove('hidden');
+                        btn.className = 'py-1 px-3 tab-ativa cursor-pointer';
+                    } else {
+                        container.classList.add('hidden');
+                        btn.className = 'py-1 px-3 text-slate-500 hover:text-slate-800 cursor-pointer';
+                    }
+                }
+            });
+        }
+
+        function trocarFotoPrincipal(codigoRef, url) {
+            const img = document.getElementById(`img-capa-${codigoRef}`);
+            if (img) img.src = url;
+        }
+
+        // 6. Busca Direta por Código de Referência
+        function buscarCodigo() {
+            const cod = document.getElementById('campoBuscarCodigo').value.trim();
+            if (!cod) {
+                alert('Digite a referência do imóvel (ex: 720)');
+                return;
+            }
+            const card = document.getElementById(`card-${cod}`);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.classList.add('ring-4', 'ring-blue-500');
+                setTimeout(() => card.classList.remove('ring-4', 'ring-blue-500'), 3000);
+            } else {
+                carregarImoveisVitrine({ codigoRef: cod });
+            }
+        }
+
+        // 7. Filtros Laterais
+        function filtrarTipo(tipo) {
+            document.getElementById('filtro-tipo').value = tipo;
+            document.getElementById('titulo-categoria-atual').innerText = tipo ? `Imóveis Disponíveis, Venda, ${tipo}` : 'Todos os Imóveis Disponíveis';
+            aplicarFiltrosLaterais();
+        }
+
+        function filtrarBairro(bairro) {
+            document.getElementById('filtro-bairro').value = bairro;
+            aplicarFiltrosLaterais();
+        }
+
+        function selecionarQuarto(qtd, elemento) {
+            document.querySelectorAll('.btn-quarto').forEach(btn => {
+                btn.className = 'btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100 cursor-pointer';
+            });
+            elemento.className = 'btn-quarto bg-amber-500 text-white border border-amber-600 py-1.5 rounded font-bold cursor-pointer';
+            document.getElementById('filtro-quartos').value = qtd;
+        }
+
+        function aplicarFiltrosLaterais() {
+            const filtros = {
+                finalidade: document.getElementById('filtro-finalidade').value,
+                tipo: document.getElementById('filtro-tipo').value,
+                bairro: document.getElementById('filtro-bairro').value,
+                precoMin: document.getElementById('filtro-preco-min').value ? Number(document.getElementById('filtro-preco-min').value) : null,
+                precoMax: document.getElementById('filtro-preco-max').value ? Number(document.getElementById('filtro-preco-max').value) : null,
+                quartos: Number(document.getElementById('filtro-quartos').value || 0)
+            };
+            carregarImoveisVitrine(filtros);
+        }
+
+        function limparFiltros() {
+            document.getElementById('form-filtros').reset();
+            document.getElementById('filtro-quartos').value = '0';
+            document.getElementById('titulo-categoria-atual').innerText = 'Imóveis Disponíveis, Venda, Apartamento';
+            carregarImoveisVitrine();
+        }
+
+        // 8. Envio de Lead e Conversão WhatsApp
+        function abrirModalLead(idImovel, ref, titulo) {
+            document.getElementById('lead-imovel-id').value = idImovel;
+            document.getElementById('lead-imovel-ref').value = ref;
+            document.getElementById('modal-titulo-imovel').innerText = `Ref: ${ref} • ${titulo}`;
+            document.getElementById('modal-lead').classList.remove('hidden');
+        }
+
+        function fecharModalLead() {
+            document.getElementById('modal-lead').classList.add('hidden');
+        }
+
+        async function enviarLead(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btn-submit-lead');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Enviando...';
+            btn.disabled = true;
+
+            const idImovel = document.getElementById('lead-imovel-id').value;
+            const refImovel = document.getElementById('lead-imovel-ref').value;
+            const nome = document.getElementById('lead-nome').value.trim();
+            const zap = sanitizarZap(document.getElementById('lead-zap').value.trim());
+            const msg = document.getElementById('lead-msg').value.trim();
+
+            try {
+                // Grava no Supabase através da política RLS pública de inserção
+                await supabase.from('leads_contatos').insert([{
+                    imobiliaria_id: tenantAtual.id,
+                    imovel_id: idImovel,
+                    nome: nome,
+                    whatsapp: zap,
+                    mensagem: msg,
+                    status: 'Novo'
+                }]);
+            } catch (err) {
+                console.error('Erro ao gravar lead no banco:', err);
+            }
+
+            // Dispara para o WhatsApp oficial
+            const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '5548991646210');
+            const texto = encodeURIComponent(`Olá! Me chamo ${nome}. Tenho interesse no imóvel Ref: ${refImovel}. Mensagem: ${msg || 'Gostaria de agendar uma visita.'}`);
+            const urlZap = `https://wa.me/${zapCorretor}?text=${texto}`;
+
+            fecharModalLead();
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> <span>Enviar e Abrir no WhatsApp</span>';
+            btn.disabled = false;
+
+            window.open(urlZap, '_blank');
+        }
+
+        function sanitizarZap(num) {
+            let limpo = ('' + num).replace(/\D/g, '');
+            if (!limpo.startsWith('55')) limpo = '55' + limpo;
+            return limpo;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            identificarTenant();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito - SGI SaaS Imobiliário</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-login { background: #0f172a; border: 1px solid #334155; border-radius: 1.25rem; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md w-full">
+        
+        <!-- LOGO E IDENTIDADE DO PROJETO -->
+        <div class="text-center mb-6">
+            <div class="w-14 h-14 rounded-2xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-xl mx-auto mb-3">
+                <i class="fa-solid fa-building-shield"></i>
+            </div>
+            <h1 class="text-xl font-black tracking-wide text-white">SGI • GESTÃO IMOBILIÁRIA</h1>
+            <p class="text-xs text-cyan-400 font-extrabold uppercase tracking-widest mt-0.5">Área Restrita do Sistema</p>
+        </div>
+
+        <!-- FORMULÁRIO DE LOGIN -->
+        <div class="box-login p-6 sm:p-8 shadow-2xl relative">
+            
+            <div id="alerta-erro" class="hidden mb-4 p-3 rounded-xl text-xs font-bold bg-red-950/80 border border-red-800 text-red-300 flex items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-base"></i>
+                <span id="alerta-erro-texto">E-mail ou senha incorretos.</span>
+            </div>
+
+            <form id="form-login" onsubmit="executarLogin(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">E-mail de Acesso</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="email" id="login-email" required placeholder="seu@email.com" 
+                               class="w-full bg-slate-950/80 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Senha Secreta</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+                        <input type="password" id="login-senha" required placeholder="••••••••" 
+                               class="w-full bg-slate-950/80 border border-slate-700 rounded-xl py-2.5 pl-10 pr-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] pt-1">
+                    <label class="flex items-center gap-1.5 text-slate-400 cursor-pointer">
+                        <input type="checkbox" id="lembrar-me" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Lembrar login</span>
+                    </label>
+                    <a href="javascript:void(0)" onclick="recuperarSenha()" class="text-cyan-400 hover:underline">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" id="btn-entrar" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm mt-3 cursor-pointer">
+                    <span>Acessar Plataforma</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-800/80 text-center text-xs text-slate-500">
+                Sua imobiliária ainda não é cliente? 
+                <a href="cadastro-imobiliaria.html" class="text-cyan-400 font-bold hover:underline block mt-0.5">Cadastre-se para testar grátis</a>
+            </div>
+        </div>
+
+        <div class="text-center mt-6 text-[11px] text-slate-600">
+            SGI SaaS • Isolamento Multi-tenant via PostgreSQL RLS
+        </div>
+    </div>
+
+    <!-- MODAL DE DECISÃO DO ADMINISTRADOR MASTER -->
+    <div id="modal-master" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-login max-w-sm w-full p-6 text-center border-2 border-amber-400 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center text-2xl mx-auto mb-3 border border-amber-400/30">
+                👑
+            </div>
+            <h3 class="text-base font-black text-white">Bem-vindo, Administrador Master!</h3>
+            <p class="text-xs text-slate-400 mt-1">Identificamos sua conta mestre (<strong class="text-amber-300">waldeckgil@gmail.com</strong>). Onde deseja operar agora?</p>
+
+            <div class="space-y-2 mt-5">
+                <button onclick="window.location.href='admin-master.html'" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Painel Master SaaS (Métricas Globais)</span>
+                </button>
+
+                <button onclick="window.location.href='dashboard.html'" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer border border-slate-700">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Abrir Dashboard Operacional (Piloto)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE AUTENTICAÇÃO E ROTEAMENTO -->
+    <script>
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        async function executarLogin(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btn-entrar');
+            const erroBox = document.getElementById('alerta-erro');
+            const erroTxt = document.getElementById('alerta-erro-texto');
+
+            erroBox.classList.add('hidden');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Verificando credenciais...</span>';
+            btn.disabled = true;
+
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-senha').value;
+
+            try {
+                // 1. Autenticação no Supabase Auth
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (authError) throw authError;
+
+                const user = authData.user;
+
+                // 2. ROTEAMENTO DO ADMINISTRADOR MASTER
+                if (user.email.toLowerCase() === 'waldeckgil@gmail.com') {
+                    document.getElementById('modal-master').classList.remove('hidden');
+                    return;
+                }
+
+                // 3. VERIFICAÇÃO DO USUÁRIO OPERACIONAL (GESTOR / CORRETOR)
+                const { data: perfil, error: perfilError } = await supabase
+                    .from('usuarios')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (perfilError || !perfil) {
+                    throw new Error('Perfil de colaborador não encontrado para esta conta.');
+                }
+
+                if (perfil.ativo === false) {
+                    await supabase.auth.signOut();
+                    throw new Error('Seu acesso foi desativado pela diretoria da imobiliária.');
+                }
+
+                // 4. AUDITORIA FINANCEIRA DA ASSINATURA SAAS
+                const { data: imob, error: imobError } = await supabase
+                    .from('imobiliarias')
+                    .select('status, data_vencimento')
+                    .eq('id', perfil.imobiliaria_id)
+                    .single();
+
+                if (imobError || !imob) {
+                    throw new Error('Imobiliária vinculada não localizada.');
+                }
+
+                // Verifica se a assinatura está vencida ou suspensa
+                const hoje = new Date().toISOString().split('T')[0];
+                const estaVencido = imob.data_vencimento && imob.data_vencimento < hoje;
+                const estaBloqueado = imob.status === 'blocked' || estaVencido;
+
+                if (estaBloqueado) {
+                    sessionStorage.setItem('sgi_modo_leitura', 'true');
+                    alert('Aviso do Sistema: A assinatura desta imobiliária possui pendências financeiras. O acesso foi liberado exclusivamente em MODO DE LEITURA.');
+                } else {
+                    sessionStorage.removeItem('sgi_modo_leitura');
+                }
+
+                // Sucesso: Redireciona para o Dashboard Operacional
+                window.location.href = 'dashboard.html';
+
+            } catch (err) {
+                console.error('Erro de autenticação:', err);
+                erroTxt.innerText = err.message || 'Erro ao realizar login. Verifique seus dados.';
+                erroBox.classList.remove('hidden');
+                btn.innerHTML = '<span>Acessar Plataforma</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        function recuperarSenha() {
+            const email = prompt('Digite seu e-mail cadastrado para redefinir sua senha:');
+            if (email) {
+                supabase.auth.resetPasswordForEmail(email)
+                    .then(() => alert('Instruções de redefinição enviadas para o seu e-mail!'))
+                    .catch(err => alert('Erro: ' + err.message));
+            }
+        }
+    </script>
+</body>
+</html>
