@@ -27,7 +27,6 @@
             <h1 class="text-2xl sm:text-3xl font-black text-white">Cadastre sua Imobiliária</h1>
             <p class="text-xs sm:text-sm text-slate-400 mt-1">Sua vitrine pública de alto padrão e painel de gestão prontos em segundos.</p>
         </div>
-        
 
         <!-- FORMULÁRIO PRINCIPAL -->
         <div class="box-tech p-6 sm:p-8 shadow-2xl relative">
@@ -159,12 +158,13 @@
         SGI SaaS • Sistema de Gestão Imobiliária com Isolamento Multi-tenant
     </footer>
 
-    <!-- JAVASCRIPT DE ONBOARDING -->
+    <!-- JAVASCRIPT DE ONBOARDING COM 'supabaseClient' (SEM CONFLITO) -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Instância nomeada como supabaseClient para eliminar conflito com window.supabase
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         // 1. Sanitizador de Slug em Tempo Real
         function sanitizarSlug(texto) {
@@ -181,7 +181,7 @@
             document.getElementById('preview-slug').innerText = slug;
         }
 
-        // 2. Execução do Onboarding
+        // 2. Execução do Onboarding Atômico
         async function executarOnboarding(event) {
             event.preventDefault();
             const btn = document.getElementById('btn-cadastrar');
@@ -204,8 +204,8 @@
             const slug = sanitizarSlug(nomeFantasia);
 
             try {
-                // ETAPA A: Criação do Usuário no Supabase Auth
-                const { data: authData, error: authError } = await supabase.auth.signUp({
+                // ETAPA A: Criação do Usuário no Supabase Auth via supabaseClient
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                     email: email,
                     password: senha,
                     options: {
@@ -221,8 +221,8 @@
 
                 const novoUserId = authData.user.id;
 
-                // ETAPA B: Chamada da Função RPC Atômica no PostgreSQL
-                const { data: rpcData, error: rpcError } = await supabase.rpc('cadastrar_nova_imobiliaria', {
+                // ETAPA B: Chamada da Função RPC Atômica no PostgreSQL via supabaseClient
+                const { data: rpcData, error: rpcError } = await supabaseClient.rpc('cadastrar_nova_imobiliaria', {
                     p_user_id: novoUserId,
                     p_nome_fantasia: nomeFantasia,
                     p_razao_social: nomeFantasia,
