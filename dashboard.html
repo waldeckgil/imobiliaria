@@ -280,13 +280,14 @@
     </footer>
 
     <!-- =========================================================================
-         6. JAVASCRIPT: AUDITORIA DE SESSÃO & QUERIES SUPABASE
+         6. JAVASCRIPT: AUDITORIA DE SESSÃO & QUERIES SUPABASE (COM 'supabaseClient')
          ========================================================================= -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Instância nomeada como supabaseClient para eliminar conflito com window.supabase
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let dadosSessao = null;
         let dadosUsuario = null;
@@ -294,10 +295,9 @@
 
         // 1. Verificação Estrita de Sessão ao Iniciar
         async function inicializarDashboard() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
 
             if (error || !session) {
-                // Sem sessão ativa: redireciona para o login
                 window.location.href = 'login.html';
                 return;
             }
@@ -318,18 +318,18 @@
         // 2. Carrega Perfil do Usuário e Imobiliária
         async function carregarPerfilOperacional(userId) {
             try {
-                const { data: usuario, error: errUser } = await supabase
+                const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('user_id', userId)
                     .single();
 
-                if (errUser || !usuario) throw new Error('Perfil de colaborador não localizado.');
+                if (errUser || !usuario) throw new Error('Perfil de colaborador não localizado na tabela de usuários.');
 
                 dadosUsuario = usuario;
 
                 // Consulta a Imobiliária
-                const { data: imob, error: errImob } = await supabase
+                const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
                     .eq('id', usuario.imobiliaria_id)
@@ -339,10 +339,10 @@
 
                 dadosImobiliaria = imob;
 
-                // Atualiza a Topbar
+                // Atualiza a Topbar com os dados reais do Paulo Castro e da Imobiliária
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
-                document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
+                document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'dono').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
                 // 3. Auditoria Financeira (Modo Somente Leitura)
@@ -362,7 +362,6 @@
             } catch (err) {
                 console.error(err);
                 alert(err.message || 'Erro ao carregar dados operacionais.');
-                window.location.href = 'login.html';
             }
         }
 
@@ -373,8 +372,7 @@
             document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
             document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-            // Carrega dados da imobiliária piloto (Castro Imóveis)
-            const { data: imobPiloto } = await supabase.from('imobiliarias').select('*').limit(1).single();
+            const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
             if (imobPiloto) {
                 dadosImobiliaria = imobPiloto;
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
@@ -398,7 +396,7 @@
         async function carregarMetricas(imobId) {
             try {
                 // Total Imóveis Ativos
-                const { count: imoveisCount } = await supabase
+                const { count: imoveisCount } = await supabaseClient
                     .from('imoveis')
                     .select('*', { count: 'exact', head: true })
                     .eq('imobiliaria_id', imobId)
@@ -409,7 +407,7 @@
 
                 // Total Leads Hoje (24h)
                 const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-                const { count: leadsHojeCount } = await supabase
+                const { count: leadsHojeCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
                     .eq('imobiliaria_id', imobId)
@@ -418,7 +416,7 @@
                 document.getElementById('kpi-leads-hoje').innerText = leadsHojeCount || 0;
 
                 // Em Atendimento / Visitas
-                const { count: visitasCount } = await supabase
+                const { count: visitasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
                     .eq('imobiliaria_id', imobId)
@@ -427,7 +425,7 @@
                 document.getElementById('kpi-visitas-hoje').innerText = visitasCount || 0;
 
                 // Propostas em Análise
-                const { count: propostasCount } = await supabase
+                const { count: propostasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
                     .eq('imobiliaria_id', imobId)
@@ -444,7 +442,7 @@
         async function carregarCatalogo(imobId) {
             const tbody = document.getElementById('tabela-catalogo-corpo');
             try {
-                const { data: imoveis, error } = await supabase
+                const { data: imoveis, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
                     .eq('imobiliaria_id', imobId)
@@ -488,7 +486,7 @@
         async function carregarLeads(imobId) {
             const tbody = document.getElementById('tabela-leads-corpo');
             try {
-                const { data: leads, error } = await supabase
+                const { data: leads, error } = await supabaseClient
                     .from('leads_contatos')
                     .select('*')
                     .eq('imobiliaria_id', imobId)
@@ -537,12 +535,14 @@
             abas.forEach(a => {
                 const container = document.getElementById(`aba-conteudo-${a}`);
                 const btn = document.getElementById(`tab-btn-${a}`);
-                if (a === aba) {
-                    container.classList.remove('hidden');
-                    btn.className = 'px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer';
-                } else {
-                    container.classList.add('hidden');
-                    btn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
+                if (container && btn) {
+                    if (a === aba) {
+                        container.classList.remove('hidden');
+                        btn.className = 'px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer';
+                    } else {
+                        container.classList.add('hidden');
+                        btn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
+                    }
                 }
             });
         }
@@ -550,7 +550,7 @@
         // 9. Logout Seguro
         async function executarLogout() {
             if (confirm('Deseja realmente encerrar sua sessão?')) {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 sessionStorage.clear();
                 window.location.href = 'login.html';
             }
