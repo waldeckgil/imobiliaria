@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Imóveis - SGI Gestão Imobiliária</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- FAIXA MODO LEITURA (CASO A ASSINATURA ESTEJA VENCIDA) -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. Ações de criação, exclusão e alteração de vitrine estão bloqueadas.</span>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO TOPBAR -->
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
+                    <i class="fa-solid fa-house-chimney"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 id="topbar-imob-nome" class="text-sm font-black text-white tracking-wide">CARREGANDO...</h1>
+                        <span id="topbar-cargo-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                            DONO
+                        </span>
+                    </div>
+                    <p id="topbar-user-nome" class="text-xs text-slate-400">Identificando usuário...</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
+                <a id="btn-ver-vitrine" href="index.html" target="_blank" 
+                   class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    <span>Vitrine Pública</span>
+                </a>
+
+                <a id="btn-novo-imovel" href="imovel-form.html" 
+                   class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Novo Imóvel</span>
+                </a>
+
+                <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span class="hidden sm:inline">Sair</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO DOS MÓDULOS -->
+    <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
+        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
+            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
+            </a>
+            <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
+                <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
+            </a>
+            <a href="leads.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-comments mr-1"></i> Central de Leads
+            </a>
+            <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-users mr-1"></i> Equipe de Corretores
+            </a>
+            <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-gear mr-1"></i> Configurações & PDF
+            </a>
+        </div>
+    </nav>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
+        
+        <!-- RESUMO DO INVENTÁRIO (KPIs DO ESTOQUE) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-cyan-400">
+                <div>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Total em Carteira</span>
+                    <span id="kpi-total-estoque" class="text-2xl font-black text-white">0</span>
+                </div>
+                <i class="fa-solid fa-boxes-stacked text-cyan-400/30 text-3xl"></i>
+            </div>
+
+            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-emerald-400">
+                <div>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Ativos na Vitrine</span>
+                    <span id="kpi-ativos-vitrine" class="text-2xl font-black text-emerald-400">0</span>
+                </div>
+                <i class="fa-solid fa-globe text-emerald-400/30 text-3xl"></i>
+            </div>
+
+            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-purple-400">
+                <div>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Valor Geral de Vendas (VGV)</span>
+                    <span id="kpi-vgv-carteira" class="text-xl font-black text-purple-300">R$ 0,00</span>
+                </div>
+                <i class="fa-solid fa-hand-holding-dollar text-purple-400/30 text-3xl"></i>
+            </div>
+        </div>
+
+        <!-- BARRA DE FILTROS E BUSCA OPERACIONAL -->
+        <div class="box-tech p-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
+                
+                <!-- BUSCA POR CÓDIGO OU TÍTULO -->
+                <div class="lg:col-span-4 relative">
+                    <input type="text" id="filtro-busca" placeholder="Buscar por código (ex: 720) ou título..." 
+                           oninput="aplicarFiltros()"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white text-xs outline-none focus:border-cyan-400">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                </div>
+
+                <!-- FILTRO DE STATUS -->
+                <div class="lg:col-span-3">
+                    <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <option value="">Status: Todos</option>
+                        <option value="Disponível">Disponível</option>
+                        <option value="Em Proposta">Em Proposta</option>
+                        <option value="Vendido">Vendido</option>
+                        <option value="Alugado">Alugado</option>
+                        <option value="Inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <!-- FILTRO DE FINALIDADE -->
+                <div class="lg:col-span-3">
+                    <select id="filtro-finalidade" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <option value="">Finalidade: Todas</option>
+                        <option value="Venda">Venda</option>
+                        <option value="Locação">Locação</option>
+                        <option value="Ambos">Venda ou Locação</option>
+                    </select>
+                </div>
+
+                <!-- BOTÃO RESETAR -->
+                <div class="lg:col-span-2">
+                    <button onclick="limparFiltros()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl border border-slate-700 transition cursor-pointer flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                        <span>Limpar</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TABELA ADMINISTRATIVA DO ESTOQUE -->
+        <div class="box-tech overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
+                        <tr>
+                            <th class="py-3 px-4">Imóvel</th>
+                            <th class="py-3 px-3">Código</th>
+                            <th class="py-3 px-3">Tipo / Bairro</th>
+                            <th class="py-3 px-3">Preço / Encargos</th>
+                            <th class="py-3 px-3">Status</th>
+                            <th class="py-3 px-3 text-center">Vitrine</th>
+                            <th class="py-3 px-4 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-imoveis-corpo" class="divide-y divide-slate-800/60">
+                        <tr>
+                            <td colspan="7" class="py-12 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
+                                <p>Carregando inventário de imóveis...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RODAPÉ DA TABELA COM CONTADOR -->
+            <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span>Exibindo <strong id="contador-linhas" class="text-white">0</strong> imóveis</span>
+                <span class="font-mono text-[11px]">SGI • PostgreSQL Row Level Security Ativo</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div id="modal-excluir" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-sm w-full p-6 text-center border border-red-500/40 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-xl mx-auto mb-3 border border-red-500/30">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h3 class="text-base font-black text-white">Excluir Imóvel?</h3>
+            <p class="text-xs text-slate-400 mt-1">Essa ação é definitiva e removerá este anúncio e todas as suas referências.</p>
+            <p class="text-xs font-bold text-cyan-400 mt-2 font-mono" id="modal-excluir-ref">Ref: ---</p>
+
+            <input type="hidden" id="modal-excluir-id">
+
+            <div class="flex items-center gap-2 mt-5">
+                <button onclick="fecharModalExcluir()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">
+                    Cancelar
+                </button>
+                <button onclick="confirmarExclusao()" id="btn-confirmar-delete" class="w-1/2 bg-red-600 hover:bg-red-500 text-white font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow">
+                    Sim, Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RODAPÉ TÉCNICO -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
+        SGI • Sistema de Gestão Imobiliária SaaS • Gestão Operacional de Catálogo
+    </footer>
+
+    <!-- JAVASCRIPT DE OPERAÇÃO DO CATÁLOGO -->
+    <script>
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let imobiliariaId = null;
+        let listaImoveisCompleta = [];
+        let modoLeitura = false;
+
+        async function inicializarCatalogo() {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const email = session.user.email.toLowerCase();
+
+            // MODO MASTER BYPASS
+            if (email === 'waldeckgil@gmail.com') {
+                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (CATÁLOGO GERAL)';
+                document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
+                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+
+                const { data: imobPiloto } = await supabase.from('imobiliarias').select('*').limit(1).single();
+                if (imobPiloto) {
+                    imobiliariaId = imobPiloto.id;
+                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
+                    carregarImoveis();
+                }
+                return;
+            }
+
+            // GESTOR / CORRETOR LOGADO
+            try {
+                const { data: usuario, error: errUser } = await supabase
+                    .from('usuarios')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .single();
+
+                if (errUser || !usuario) throw new Error('Perfil não encontrado.');
+
+                const { data: imob, error: errImob } = await supabase
+                    .from('imobiliarias')
+                    .select('*')
+                    .eq('id', usuario.imobiliaria_id)
+                    .single();
+
+                if (errImob || !imob) throw new Error('Imobiliária não localizada.');
+
+                imobiliariaId = imob.id;
+                document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
+                document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
+                document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
+                document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
+
+                // Auditoria Financeira
+                const hoje = new Date().toISOString().split('T')[0];
+                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
+                modoLeitura = (imob.status === 'blocked' || vencido);
+
+                if (modoLeitura) {
+                    document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                    const btnNovo = document.getElementById('btn-novo-imovel');
+                    btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                }
+
+                carregarImoveis();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao validar perfil de acesso.');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Busca os imóveis daquela imobiliária
+        async function carregarImoveis() {
+            try {
+                const { data, error } = await supabase
+                    .from('imoveis')
+                    .select('*')
+                    .eq('imobiliaria_id', imobiliariaId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                listaImoveisCompleta = data || [];
+                atualizarMetricasEstoque(listaImoveisCompleta);
+                renderizarTabela(listaImoveisCompleta);
+
+            } catch (err) {
+                console.error('Erro ao buscar imóveis:', err);
+                document.getElementById('tabela-imoveis-corpo').innerHTML = `
+                    <tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar lista de imóveis.</td></tr>`;
+            }
+        }
+
+        // Atualiza contadores e VGV
+        function atualizarMetricasEstoque(imoveis) {
+            const total = imoveis.length;
+            const ativos = imoveis.filter(i => i.ativa === true && i.status === 'Disponível').length;
+            const vgv = imoveis.reduce((acc, curr) => acc + (Number(curr.valor_venda) || 0), 0);
+
+            document.getElementById('kpi-total-estoque').innerText = total;
+            document.getElementById('kpi-ativos-vitrine').innerText = ativos;
+            document.getElementById('kpi-vgv-carteira').innerText = vgv.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('contador-linhas').innerText = total;
+        }
+
+        // Renderiza as linhas da tabela
+        function renderizarTabela(imoveis) {
+            const tbody = document.getElementById('tabela-imoveis-corpo');
+
+            if (imoveis.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-12 text-center text-slate-500">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-600"></i>
+                            <p class="font-bold text-slate-400">Nenhum imóvel encontrado.</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Ajuste os filtros ou clique em "+ Novo Imóvel".</p>
+                        </td>
+                    </tr>`;
+                document.getElementById('contador-linhas').innerText = 0;
+                return;
+            }
+
+            document.getElementById('contador-linhas').innerText = imoveis.length;
+
+            tbody.innerHTML = imoveis.map(im => {
+                const foto = im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
+                const precoFormatado = Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                
+                // Badges de Status Comercial
+                let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
+                if (im.status === 'Disponível') statusBadge = 'bg-emerald-950 text-emerald-400 border-emerald-800';
+                if (im.status === 'Em Proposta') statusBadge = 'bg-amber-950 text-amber-400 border-amber-800';
+                if (im.status === 'Vendido' || im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-400 border-purple-800';
+
+                // Botão Toggle Ativo/Inativo
+                const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
+                const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
+
+                return `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="py-3 px-4 flex items-center gap-3">
+                        <img src="${foto}" alt="Capa" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                        <div>
+                            <span class="font-bold text-white block truncate max-w-xs leading-snug">${im.titulo}</span>
+                            <span class="text-[10px] text-slate-500">${im.area_util || 0} m² • ${im.quartos || 0} Quartos • ${im.vagas || 0} Vagas</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 font-mono font-bold text-cyan-400">Ref: ${im.codigo_ref}</td>
+                    <td class="py-3 px-3 text-slate-300">
+                        <span class="font-semibold text-white block">${im.tipo}</span>
+                        <span class="text-[11px] text-slate-500">${im.bairro || 'Florianópolis'}</span>
+                    </td>
+                    <td class="py-3 px-3">
+                        <span class="font-black text-cyan-300 block">${precoFormatado}</span>
+                        <span class="text-[10px] text-slate-500">${im.finalidade}</span>
+                    </td>
+                    <td class="py-3 px-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusBadge}">
+                            ${im.status}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-center">
+                        <button onclick="alternarVisibilidadeVitrine('${im.id}', ${im.ativa})" 
+                                ${modoLeitura ? 'disabled' : ''}
+                                title="Clique para alternar presença na vitrine"
+                                class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}">
+                            <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
+                        </button>
+                    </td>
+                    <td class="py-3 px-4 text-right">
+                        <div class="inline-flex items-center gap-1.5">
+                            <a href="imovel-form.html?id=${im.id}" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition" title="Editar Imóvel">
+                                <i class="fa-regular fa-pen-to-square text-xs"></i>
+                            </a>
+                            <button onclick="abrirModalExcluir('${im.id}', '${im.codigo_ref}')" 
+                                    ${modoLeitura ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" title="Excluir">
+                                <i class="fa-regular fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // Alterna ativa = true/false direto no Supabase
+        async function alternarVisibilidadeVitrine(imovelId, estadoAtual) {
+            if (modoLeitura) return;
+            try {
+                const { error } = await supabase
+                    .from('imoveis')
+                    .update({ ativa: !estadoAtual })
+                    .eq('id', imovelId);
+
+                if (error) throw error;
+                await carregarImoveis();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao atualizar status da vitrine.');
+            }
+        }
+
+        // Filtros e Busca em Tempo Real
+        function aplicarFiltros() {
+            const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
+            const status = document.getElementById('filtro-status').value;
+            const finalidade = document.getElementById('filtro-finalidade').value;
+
+            let filtrados = listaImoveisCompleta.filter(im => {
+                const matchBusca = !busca || 
+                    (im.codigo_ref && im.codigo_ref.toLowerCase().includes(busca)) ||
+                    (im.titulo && im.titulo.toLowerCase().includes(busca)) ||
+                    (im.bairro && im.bairro.toLowerCase().includes(busca));
+
+                const matchStatus = !status || im.status === status;
+                const matchFinalidade = !finalidade || im.finalidade === finalidade;
+
+                return matchBusca && matchStatus && matchFinalidade;
+            });
+
+            renderizarTabela(filtrados);
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtro-busca').value = '';
+            document.getElementById('filtro-status').value = '';
+            document.getElementById('filtro-finalidade').value = '';
+            renderizarTabela(listaImoveisCompleta);
+        }
+
+        // Modal de Exclusão
+        function abrirModalExcluir(id, ref) {
+            if (modoLeitura) return;
+            document.getElementById('modal-excluir-id').value = id;
+            document.getElementById('modal-excluir-ref').innerText = `Ref: ${ref}`;
+            document.getElementById('modal-excluir').classList.remove('hidden');
+        }
+
+        function fecharModalExcluir() {
+            document.getElementById('modal-excluir').classList.add('hidden');
+        }
+
+        async function confirmarExclusao() {
+            const id = document.getElementById('modal-excluir-id').value;
+            const btn = document.getElementById('btn-confirmar-delete');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabase
+                    .from('imoveis')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                fecharModalExcluir();
+                await carregarImoveis();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao excluir o imóvel: ' + err.message);
+            } finally {
+                btn.innerHTML = 'Sim, Excluir';
+                btn.disabled = false;
+            }
+        }
+
+        // Logout
+        async function executarLogout() {
+            if (confirm('Deseja encerrar a sessão?')) {
+                await supabase.auth.signOut();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', inicializarCatalogo);
+    </script>
+</body>
+</html>
