@@ -143,7 +143,6 @@
             
             <!-- COLUNA ESQUERDA: LISTAGEM DE IMÓVEIS DINÂMICA (8 COLUNAS) -->
             <div id="container-imoveis" class="lg:col-span-8 space-y-6">
-                <!-- CARREGANDO DINAMICAMENTE PELO JAVASCRIPT -->
                 <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
                     <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
                     <p class="text-sm font-bold">Consultando banco de dados no Supabase...</p>
@@ -255,12 +254,12 @@
                 <input type="hidden" id="lead-imovel-ref" value="">
                 
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo</label>
+                    <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo *</label>
                     <input type="text" id="lead-nome" required placeholder="Ex: João da Silva" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Seu WhatsApp (com DDD)</label>
+                    <label class="block font-bold text-slate-700 mb-1">Seu WhatsApp (com DDD) *</label>
                     <input type="tel" id="lead-zap" required placeholder="(48) 99999-9999" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
                 </div>
 
@@ -323,14 +322,15 @@
     </footer>
 
     <!-- =========================================================================
-         6. JAVASCRIPT CONECTADO DIRETAMENTE AO SUPABASE REAL
+         6. JAVASCRIPT CONECTADO AO SUPABASE COM VARIÁVEL 'supabaseClient' (SEM CONFLITO)
          ========================================================================= -->
     <script>
-        // SUAS CREDENCIAIS REAIS DO SUPABASE INJETADAS
+        // SUAS CREDENCIAIS REAIS DO SUPABASE
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Nome único da variável para evitar conflito com window.supabase do CDN
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         // Estado do Tenant
         let slugAtual = 'castro-imoveis';
@@ -358,7 +358,7 @@
         // 2. Carregar Dados da Imobiliária do Banco
         async function carregarDadosImobiliaria() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
                     .eq('slug', slugAtual)
@@ -395,7 +395,7 @@
                 </div>`;
 
             try {
-                let query = supabase
+                let query = supabaseClient
                     .from('imoveis')
                     .select('*')
                     .eq('imobiliaria_id', tenantAtual.id)
@@ -653,8 +653,7 @@
             const msg = document.getElementById('lead-msg').value.trim();
 
             try {
-                // Grava no Supabase através da política RLS pública de inserção
-                await supabase.from('leads_contatos').insert([{
+                await supabaseClient.from('leads_contatos').insert([{
                     imobiliaria_id: tenantAtual.id,
                     imovel_id: idImovel,
                     nome: nome,
@@ -666,7 +665,6 @@
                 console.error('Erro ao gravar lead no banco:', err);
             }
 
-            // Dispara para o WhatsApp oficial
             const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '5548991646210');
             const texto = encodeURIComponent(`Olá! Me chamo ${nome}. Tenho interesse no imóvel Ref: ${refImovel}. Mensagem: ${msg || 'Gostaria de agendar uma visita.'}`);
             const urlZap = `https://wa.me/${zapCorretor}?text=${texto}`;
