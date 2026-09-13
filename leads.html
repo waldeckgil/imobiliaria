@@ -141,7 +141,6 @@
                 <div class="lg:col-span-3">
                     <select id="filtro-corretor" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Corretor: Todos</option>
-                        <!-- PREENCHIDO DINAMICAMENTE -->
                     </select>
                 </div>
 
@@ -218,12 +217,13 @@
         SGI • Sistema de Gestão Imobiliária SaaS • CRM & Funil de Vendas
     </footer>
 
-    <!-- JAVASCRIPT DE OPERAÇÃO DO CRM -->
+    <!-- JAVASCRIPT COM 'supabaseClient' (SEM CONFLITO DE ESCOPO) -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Instância nomeada como supabaseClient para eliminar conflito com window.supabase
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let listaLeadsCompleta = [];
@@ -231,7 +231,7 @@
         let modoLeitura = false;
 
         async function inicializarLeads() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (error || !session) {
                 window.location.href = 'login.html';
                 return;
@@ -246,7 +246,7 @@
                 document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-                const { data: imobPiloto } = await supabase.from('imobiliarias').select('*').limit(1).single();
+                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
                     document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
@@ -258,7 +258,7 @@
 
             // GESTOR / CORRETOR LOGADO
             try {
-                const { data: usuario, error: errUser } = await supabase
+                const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('user_id', session.user.id)
@@ -266,7 +266,7 @@
 
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
-                const { data: imob, error: errImob } = await supabase
+                const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
                     .eq('id', usuario.imobiliaria_id)
@@ -302,7 +302,7 @@
         // Carrega lista de corretores para o seletor de atribuição
         async function carregarEquipeCorretores() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('usuarios')
                     .select('id, nome_completo, cargo')
                     .eq('imobiliaria_id', imobiliariaId)
@@ -321,7 +321,7 @@
             }
         }
 
-        // Busca leads e faz correlação com a tabela de imóveis
+        // Busca leads e correlaciona com as tabelas imoveis e usuarios
         async function carregarLeads() {
             const tbody = document.getElementById('tabela-leads-corpo');
             tbody.innerHTML = `
@@ -333,8 +333,7 @@
                 </tr>`;
 
             try {
-                // Consulta leads com join em imoveis e usuarios
-                const { data: leads, error } = await supabase
+                const { data: leads, error } = await supabaseClient
                     .from('leads_contatos')
                     .select(`
                         *,
@@ -387,7 +386,6 @@
                 const dataFormatada = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
                 
-                // Dados do Imóvel Vinculado
                 let imovelBloco = '<span class="text-slate-500 italic">Interesse Geral</span>';
                 let refImovelTexto = 'Geral';
                 if (l.imovel) {
@@ -404,14 +402,12 @@
                     `;
                 }
 
-                // Opções de Corretores
                 let opcoesCorretores = '<option value="">Sem corretor atribuído</option>';
                 listaCorretores.forEach(c => {
                     const selected = (l.corretor_atribuido_id === c.id) ? 'selected' : '';
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Mensagem formatada para WhatsApp de resposta rápida
                 const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo da equipe de atendimento. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
                 const urlWa = `https://wa.me/${zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo}?text=${msgWa}`;
 
@@ -475,14 +471,13 @@
         async function atualizarStatusLead(leadId, novoStatus) {
             if (modoLeitura) return;
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('leads_contatos')
                     .update({ status: novoStatus })
                     .eq('id', leadId);
 
                 if (error) throw error;
                 
-                // Atualiza em memória para recalcular métricas sem recarregar tela
                 const item = listaLeadsCompleta.find(l => l.id === leadId);
                 if (item) item.status = novoStatus;
                 atualizarMetricasFunil(listaLeadsCompleta);
@@ -501,7 +496,7 @@
                     corretor_atribuido_id: corretorId ? Number(corretorId) : null
                 };
 
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('leads_contatos')
                     .update(payload)
                     .eq('id', leadId);
@@ -565,7 +560,7 @@
             btn.disabled = true;
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('leads_contatos')
                     .delete()
                     .eq('id', id);
@@ -585,12 +580,11 @@
 
         async function executarLogout() {
             if (confirm('Deseja realmente sair?')) {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 sessionStorage.clear();
                 window.location.href = 'login.html';
             }
         }
-        
 
         window.addEventListener('DOMContentLoaded', inicializarLeads);
     </script>
