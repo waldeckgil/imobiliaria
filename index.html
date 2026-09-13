@@ -99,9 +99,9 @@
                 </a>
 
                 <!-- BOTÃO TELEFONE -->
-                <a id="btn-telefone-header" href="tel:48991646210" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
+                <a id="btn-telefone-header" href="tel:22964120231" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
                     <i class="fa-solid fa-phone text-xs"></i>
-                    <span id="txt-telefone-header">(48) 99164-6210</span>
+                    <span id="txt-telefone-header">(21) 964120231</span>
                 </a>
             </div>
         </div>
@@ -277,7 +277,7 @@
     </div>
 
     <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
-    <a id="btn-flutuante-zap" href="https://wa.me/5548991646210?text=Ol%C3%A1%2C+estou+no+site+e+gostaria+de+informa%C3%A7%C3%B5es+sobre+im%C3%B3veis" target="_blank" 
+    <a id="btn-flutuante-zap" href="https://wa.me/552296412031?text=Ol%C3%A1%2C+estou+no+site+e+gostaria+de+informa%C3%A7%C3%B5es+sobre+im%C3%B3veis" target="_blank" 
        class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
@@ -297,7 +297,7 @@
 
             <div>
                 <h4 class="text-white font-bold uppercase text-[11px] mb-3">Atendimento</h4>
-                <p id="footer-telefone" class="leading-relaxed"><i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> (48) 99164-6210</p>
+                <p id="footer-telefone" class="leading-relaxed"><i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> (22) 964120231/p>
                 <p id="footer-email" class="leading-relaxed mt-1"><i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> contato@castroimoveis.com.br</p>
                 <p class="leading-relaxed mt-1"><i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> Florianópolis - Santa Catarina</p>
             </div>
@@ -338,9 +338,9 @@
             id: 'a0000000-0000-0000-0000-000000000001',
             nome_fantasia: 'Castro Imóveis',
             razao_social: 'Castro Imóveis',
-            creci_juridico: 'CRECI-SC 14797F',
-            whatsapp_contato: '5548991646210',
-            telefone_contato: '(48) 99164-6210'
+            creci_juridico: 'CRECI-SC xxxxxx',
+            whatsapp_contato: '5522964120231',
+            telefone_contato: '(21 96412-0231'
         };
 
         let listaImoveisCache = [];
@@ -665,7 +665,7 @@
                 console.error('Erro ao gravar lead no banco:', err);
             }
 
-            const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '5548991646210');
+            const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '5521964120231');
             const texto = encodeURIComponent(`Olá! Me chamo ${nome}. Tenho interesse no imóvel Ref: ${refImovel}. Mensagem: ${msg || 'Gostaria de agendar uma visita.'}`);
             const urlZap = `https://wa.me/${zapCorretor}?text=${texto}`;
 
