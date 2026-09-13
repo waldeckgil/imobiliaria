@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Master SaaS - Controle Soberano</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+        .box-master { background: #131722; border: 1px solid #f59e0b; border-radius: 1rem; box-shadow: 0 0 25px rgba(245, 158, 11, 0.15); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- =========================================================================
+         1. CABEÇALHO SOBERANO (MASTER TOPBAR)
+         ========================================================================= -->
+    <header class="bg-slate-950 border-b border-amber-500/30 py-3.5 px-4 sm:px-8 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg">
+                    👑
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm font-black text-white tracking-wide">SGI • PAINEL SUPER ADMIN MASTER</h1>
+                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                            PROPRIETÁRIO
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400">waldeckgil@gmail.com • Sessão Soberana com Bypass RLS</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs">
+                <button onclick="carregarDadosMaster()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-rotate text-xs"></i>
+                    <span>Atualizar Métricas</span>
+                </button>
+
+                <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-building text-xs"></i>
+                    <span>Dashboard Piloto</span>
+                </a>
+
+                <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span>Encerrar Sessão</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================================================
+         2. CONTEÚDO PRINCIPAL (MÉTRICAS GLOBAIS E GESTÃO DE CLIENTES)
+         ========================================================================= -->
+    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-8">
+        
+        <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- CARD 1: MRR (RECEITA RECORRENTE MENSAL) -->
+            <div class="box-master p-5 border-l-4 border-l-amber-400">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span>Receita Mensal (MRR)</span>
+                    <i class="fa-solid fa-sack-dollar text-amber-400 text-lg"></i>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-mrr" class="text-3xl font-black text-amber-400">R$ 0,00</span>
+                </div>
+                <span class="text-[10px] text-slate-500 mt-1 block">Faturamento recorrente ativo</span>
+            </div>
+
+            <!-- CARD 2: IMOBILIÁRIAS ATIVAS -->
+            <div class="box-tech p-5 border-l-4 border-l-emerald-400">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span>Imobiliárias Parceiras</span>
+                    <i class="fa-solid fa-building-circle-check text-emerald-400 text-lg"></i>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-imobiliarias-ativas" class="text-3xl font-black text-white">0</span>
+                    <span id="kpi-imobiliarias-total" class="text-xs text-slate-400">de 0 cadastradas</span>
+                </div>
+                <span class="text-[10px] text-emerald-400 mt-1 block">Empresas em operação</span>
+            </div>
+
+            <!-- CARD 3: TOTAL DE IMÓVEIS NA PLATAFORMA -->
+            <div class="box-tech p-5 border-l-4 border-l-cyan-400">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span>Estoque Global de Imóveis</span>
+                    <i class="fa-solid fa-house-laptop text-cyan-400 text-lg"></i>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-imoveis-global" class="text-3xl font-black text-white">0</span>
+                    <span class="text-xs text-cyan-400">anúncios</span>
+                </div>
+                <span class="text-[10px] text-slate-500 mt-1 block">Cadastrados em todo o Brasil</span>
+            </div>
+
+            <!-- CARD 4: INADIMPLENTES / BLOQUEADAS -->
+            <div class="box-tech p-5 border-l-4 border-l-rose-500">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span>Pendências / Bloqueios</span>
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+                </div>
+                <div class="mt-3 flex items-baseline gap-2">
+                    <span id="kpi-bloqueadas" class="text-3xl font-black text-rose-400">0</span>
+                    <span class="text-xs text-slate-400">imobiliárias</span>
+                </div>
+                <span class="text-[10px] text-slate-500 mt-1 block">Acesso restrito a leitura</span>
+            </div>
+
+        </div>
+
+        <!-- =====================================================================
+             3. GESTÃO DE ASSINANTES (TABELA GERAL DE IMOBILIÁRIAS)
+             ===================================================================== -->
+        <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-5">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                <div>
+                    <h3 class="text-base font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-building-user text-amber-400"></i> Carteira de Imobiliárias Assinantes
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, renove mensalidades, aplique bloqueios e acerte suporte via Impersonate.</p>
+                </div>
+
+                <div class="w-full sm:w-80 relative">
+                    <input type="text" id="filtro-busca-imob" placeholder="Buscar por nome, slug, e-mail ou CRECI..." 
+                           oninput="filtrarImobiliarias()"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white outline-none focus:border-amber-400">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                </div>
+            </div>
+
+            <!-- TABELA DE ASSINANTES -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
+                        <tr>
+                            <th class="py-3 px-4">Imobiliária / Slug</th>
+                            <th class="py-3 px-3">Gestor / Contato</th>
+                            <th class="py-3 px-3">Imóveis</th>
+                            <th class="py-3 px-3">Plano Mensal</th>
+                            <th class="py-3 px-3">Vencimento</th>
+                            <th class="py-3 px-3 text-center">Status</th>
+                            <th class="py-3 px-4 text-right">Ações de Gestão & Suporte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-imobiliarias-corpo" class="divide-y divide-slate-800/60">
+                        <tr>
+                            <td colspan="7" class="py-12 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-amber-400 text-2xl mb-2"></i>
+                                <p>Carregando carteira de imobiliárias...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-slate-950/80 px-4 py-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+                <span>Total de <strong id="contador-imob" class="text-white">0</strong> imobiliárias listadas</span>
+                <span class="font-mono text-[11px] text-amber-400/80">SGI Master Engine • PostgreSQL RLS Bypass Ativo</span>
+            </div>
+        </div>
+
+        <!-- =====================================================================
+             4. CENTRAL DE COMUNICADOS GLOBAIS (BROADCAST PARA TODOS OS CORRETORES)
+             ===================================================================== -->
+        <div class="box-tech p-6 space-y-4 border border-cyan-500/30">
+            <div class="border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>Canal de Broadcast Global</span>
+                </div>
+                <h3 class="text-base font-black text-white mt-1">Emitir Comunicado no Painel dos Corretores</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Envie avisos de manutenção, melhorias ou notificações importantes que aparecerão na tela de todas as imobiliárias do país.</p>
+            </div>
+
+            <form id="form-comunicado" onsubmit="enviarComunicado(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-2">
+                        <label class="block font-bold text-slate-300 mb-1">Título do Comunicado *</label>
+                        <input type="text" id="aviso-titulo" required placeholder="Ex: Manutenção Programada dos Servidores às 23h" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Tipo de Alerta *</label>
+                        <select id="aviso-tipo" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                            <option value="info">ℹ️ Informativo (Azul)</option>
+                            <option value="aviso">⚠️ Aviso Importante (Amarelo)</option>
+                            <option value="urgente">🚨 Alerta Urgente (Vermelho)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Mensagem Completa *</label>
+                    <textarea id="aviso-mensagem" required rows="3" placeholder="Descreva os detalhes da notificação com clareza..." 
+                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400"></textarea>
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                    <span class="text-[11px] text-slate-500">O comunicado é gravado na tabela <code class="text-cyan-400">avisos_sistema</code> com distribuição instantânea.</span>
+                    <button type="submit" id="btn-enviar-aviso" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-6 py-2.5 rounded-xl shadow-lg transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Transmitir Comunicado</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- LISTA DE COMUNICADOS ATIVOS -->
+            <div class="pt-4 border-t border-slate-800 space-y-2">
+                <span class="text-[10px] font-black uppercase text-slate-400 block">Comunicados Ativos na Rede:</span>
+                <div id="lista-avisos-ativos" class="space-y-2">
+                    <p class="text-xs text-slate-500 italic">Nenhum comunicado ativo no momento.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- =========================================================================
+         5. RODAPÉ TÉCNICO
+         ========================================================================= -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
+        SGI SaaS • Sistema de Gestão Imobiliária • Console Soberano do Administrador
+    </footer>
+
+    <!-- =========================================================================
+         6. JAVASCRIPT MASTER: CONTROLE GLOBAL & IMPERSONATION
+         ========================================================================= -->
+    <script>
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let listaImobiliarias = [];
+        let listaImoveisGlobal = [];
+
+        // 1. Trava Rígida de Exclusividade do Master
+        async function inicializarMaster() {
+            const { data: { session }, error } = await supabase.auth.getSession();
+
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const email = session.user.email.toLowerCase();
+
+            // BLOQUEIO TOTAL PARA QUEM NÃO FOR WALDECK
+            if (email !== 'waldeckgil@gmail.com') {
+                alert('Acesso Negado: Esta área é restrita ao Administrador Proprietário da Plataforma.');
+                await supabase.auth.signOut();
+                window.location.href = 'login.html';
+                return;
+            }
+
+            await carregarDadosMaster();
+            await carregarAvisos();
+        }
+
+        // 2. Consulta de Dados Globais e Cálculo de MRR
+        async function carregarDadosMaster() {
+            try {
+                // Busca todas as imobiliárias
+                const { data: imobs, error: errImobs } = await supabase
+                    .from('imobiliarias')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (errImobs) throw errImobs;
+                listaImobiliarias = imobs || [];
+
+                // Busca todos os imóveis da base
+                const { data: imoveis, error: errImoveis } = await supabase
+                    .from('imoveis')
+                    .select('id, imobiliaria_id, ativa');
+
+                if (!errImoveis) listaImoveisGlobal = imoveis || [];
+
+                // Atualiza KPIs
+                atualizarMetricasMaster();
+                renderizarTabelaImobiliarias(listaImobiliarias);
+
+            } catch (err) {
+                console.error('Erro ao carregar dados do Master:', err);
+                alert('Erro ao consultar banco de dados master.');
+            }
+        }
+
+        // 3. Atualização dos Cards de Métricas
+        function atualizarMetricasMaster() {
+            const totalImobs = listaImobiliarias.length;
+            const hoje = new Date().toISOString().split('T')[0];
+
+            let mrrTotal = 0;
+            let ativasCount = 0;
+            let bloqueadasCount = 0;
+
+            listaImobiliarias.forEach(im => {
+                const vencido = im.data_vencimento && im.data_vencimento < hoje;
+                const estaAtiva = (im.status === 'active' && !vencido);
+
+                if (estaAtiva) {
+                    mrrTotal += Number(im.plano_valor || 149);
+                    ativasCount++;
+                } else {
+                    bloqueadasCount++;
+                }
+            });
+
+            document.getElementById('kpi-mrr').innerText = mrrTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('kpi-imobiliarias-ativas').innerText = ativasCount;
+            document.getElementById('kpi-imobiliarias-total').innerText = `de ${totalImobs} cadastradas`;
+            document.getElementById('kpi-imoveis-global').innerText = listaImoveisGlobal.length;
+            document.getElementById('kpi-bloqueadas').innerText = bloqueadasCount;
+            document.getElementById('contador-imob').innerText = totalImobs;
+        }
+
+        // 4. Renderização da Tabela de Imobiliárias
+        function renderizarTabelaImobiliarias(imobs) {
+            const tbody = document.getElementById('tabela-imobiliarias-corpo');
+
+            if (imobs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">Nenhuma imobiliária localizada com os filtros informados.</td></tr>`;
+                return;
+            }
+
+            const hoje = new Date().toISOString().split('T')[0];
+
+            tbody.innerHTML = imobs.map(im => {
+                const qtdImoveis = listaImoveisGlobal.filter(i => i.imobiliaria_id === im.id).length;
+                const vencido = im.data_vencimento && im.data_vencimento < hoje;
+                const estaBloqueada = im.status === 'blocked' || vencido;
+
+                let badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Ativa</span>';
+                if (im.status === 'blocked') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800">Bloqueada</span>';
+                } else if (vencido) {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800">Vencida</span>';
+                }
+
+                const dataVencFormatada = im.data_vencimento 
+                    ? im.data_vencimento.split('-').reverse().join('/') 
+                    : '--/--/----';
+
+                const zapLimpo = ('' + (im.whatsapp_contato || '')).replace(/\D/g, '');
+
+                return `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="py-3 px-4">
+                        <div class="flex items-center gap-2.5">
+                            <img src="${im.logo_url || 'https://via.placeholder.com/40?text=Imob'}" class="w-8 h-8 rounded-lg object-contain bg-white/5 border border-slate-700 p-0.5">
+                            <div>
+                                <span class="font-black text-white block leading-snug">${im.nome_fantasia}</span>
+                                <span class="text-[10px] font-mono text-cyan-400">/${im.slug}</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <span class="text-slate-300 font-bold block">${im.razao_social || 'Sem Razão Social'}</span>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[11px] text-slate-500">${im.email_admin || 'Sem e-mail'}</span>
+                            ${zapLimpo ? `<a href="https://wa.me/${zapLimpo}" target="_blank" class="text-emerald-400 hover:text-emerald-300" title="Chamar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <span class="font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded text-[11px]">${qtdImoveis}</span>
+                    </td>
+
+                    <td class="py-3 px-3 font-bold text-cyan-300">
+                        R$ ${Number(im.plano_valor || 149).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </td>
+
+                    <td class="py-3 px-3 font-mono text-[11px] ${vencido ? 'text-rose-400 font-bold' : 'text-slate-300'}">
+                        ${dataVencFormatada}
+                    </td>
+
+                    <td class="py-3 px-3 text-center">
+                        ${badgeStatus}
+                    </td>
+
+                    <td class="py-3 px-4 text-right whitespace-nowrap">
+                        <div class="inline-flex items-center gap-1.5">
+                            
+                            <!-- RENOVAR +30 DIAS -->
+                            <button onclick="renovarMensalidade('${im.id}')" 
+                                    class="p-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
+                                    title="Renovar Mensalidade (+30 dias)">
+                                <i class="fa-solid fa-calendar-plus text-xs"></i>
+                            </button>
+
+                            <!-- BLOQUEAR / DESBLOQUEAR -->
+                            <button onclick="alternarBloqueio('${im.id}', '${im.status}')" 
+                                    class="p-1.5 rounded-lg ${estaBloqueada ? 'bg-amber-950 text-amber-400 border-amber-800' : 'bg-slate-800 text-slate-400 border-slate-700'} border hover:opacity-80 transition cursor-pointer" 
+                                    title="${estaBloqueada ? 'Desbloquear Imobiliária' : 'Bloquear Imobiliária'}">
+                                <i class="fa-solid ${estaBloqueada ? 'fa-lock-open' : 'fa-lock'} text-xs"></i>
+                            </button>
+
+                            <!-- MODO IMPERSONATE (SUPORTE) -->
+                            <button onclick="acessarComoMaster('${im.id}', '${im.slug}')" 
+                                    class="p-1.5 rounded-lg bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 transition cursor-pointer" 
+                                    title="Modo Suporte: Abrir painel desta imobiliária">
+                                <i class="fa-solid fa-user-astronaut text-xs"></i>
+                            </button>
+
+                            <!-- VER VITRINE -->
+                            <a href="index.html?imob=${im.slug}" target="_blank" 
+                               class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" 
+                               title="Abrir Vitrine Pública">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // 5. Ação: Renovar Mensalidade (+30 Dias)
+        async function renovarMensalidade(imobId) {
+            const imob = listaImobiliarias.find(i => i.id === imobId);
+            if (!imob) return;
+
+            if (confirm(`Deseja renovar a mensalidade de "${imob.nome_fantasia}" por mais 30 dias?`)) {
+                try {
+                    // Calcula 30 dias a partir da data atual ou do vencimento futuro
+                    let baseData = new Date();
+                    if (imob.data_vencimento && new Date(imob.data_vencimento) > baseData) {
+                        baseData = new Date(imob.data_vencimento);
+                    }
+                    baseData.setDate(baseData.getDate() + 30);
+                    const novaData = baseData.toISOString().split('T')[0];
+
+                    const { error } = await supabase
+                        .from('imobiliarias')
+                        .update({
+                            data_vencimento: novaData,
+                            status: 'active'
+                        })
+                        .eq('id', imobId);
+
+                    if (error) throw error;
+
+                    alert(`Mensalidade renovada com sucesso até ${novaData.split('-').reverse().join('/')}!`);
+                    await carregarDadosMaster();
+
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro ao renovar assinatura.');
+                }
+            }
+        }
+
+        // 6. Ação: Bloquear ou Desbloquear Imobiliária
+        async function alternarBloqueio(imobId, statusAtual) {
+            const novoStatus = (statusAtual === 'blocked') ? 'active' : 'blocked';
+            const acaoTexto = (novoStatus === 'blocked') ? 'bloquear o acesso de' : 'reativar';
+
+            if (confirm(`Deseja realmente ${acaoTexto} esta imobiliária?`)) {
+                try {
+                    const { error } = await supabase
+                        .from('imobiliarias')
+                        .update({ status: novoStatus })
+                        .eq('id', imobId);
+
+                    if (error) throw error;
+                    await carregarDadosMaster();
+
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro ao alterar status da imobiliária.');
+                }
+            }
+        }
+
+        // 7. Ação: Modo Impersonate (Acessar como Suporte)
+        function acessarComoMaster(imobId, slug) {
+            sessionStorage.setItem('sgi_impersonate_id', imobId);
+            sessionStorage.setItem('sgi_impersonate_slug', slug);
+            window.location.href = 'dashboard.html';
+        }
+
+        // 8. Filtro Dinâmico de Imobiliárias
+        function filtrarImobiliarias() {
+            const busca = document.getElementById('filtro-busca-imob').value.toLowerCase().trim();
+            if (!busca) {
+                renderizarTabelaImobiliarias(listaImobiliarias);
+                return;
+            }
+
+            const filtradas = listaImobiliarias.filter(im => 
+                (im.nome_fantasia && im.nome_fantasia.toLowerCase().includes(busca)) ||
+                (im.slug && im.slug.toLowerCase().includes(busca)) ||
+                (im.email_admin && im.email_admin.toLowerCase().includes(busca)) ||
+                (im.creci_juridico && im.creci_juridico.toLowerCase().includes(busca))
+            );
+
+            renderizarTabelaImobiliarias(filtradas);
+        }
+
+        // 9. Central de Comunicados em Massa (Broadcast)
+        async function carregarAvisos() {
+            const container = document.getElementById('lista-avisos-ativos');
+            try {
+                const { data: avisos, error } = await supabase
+                    .from('avisos_sistema')
+                    .select('*')
+                    .eq('ativo', true)
+                    .order('criado_em', { ascending: false });
+
+                if (error) throw error;
+
+                if (!avisos || avisos.length === 0) {
+                    container.innerHTML = '<p class="text-xs text-slate-500 italic">Nenhum comunicado ativo no momento.</p>';
+                    return;
+                }
+
+                container.innerHTML = avisos.map(av => `
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="font-bold text-white">${av.titulo}</span>
+                            <p class="text-slate-400 text-[11px] mt-0.5">${av.mensagem}</p>
+                        </div>
+                        <button onclick="desativarAviso('${av.id}')" class="text-red-400 hover:text-red-300 font-bold text-[10px] px-2 py-1 rounded bg-red-950/40 border border-red-900/60 cursor-pointer">
+                            Desativar
+                        </button>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.warn('Erro ao carregar avisos:', err);
+            }
+        }
+
+        async function enviarComunicado(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btn-enviar-aviso');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Transmitindo...';
+            btn.disabled = true;
+
+            const titulo = document.getElementById('aviso-titulo').value.trim();
+            const tipo = document.getElementById('aviso-tipo').value;
+            const msg = document.getElementById('aviso-mensagem').value.trim();
+
+            try {
+                const { error } = await supabase
+                    .from('avisos_sistema')
+                    .insert([{
+                        imobiliaria_id: null, // NULL = Broadcast para todas as imobiliárias
+                        titulo: titulo,
+                        mensagem: msg,
+                        tipo: tipo,
+                        ativo: true
+                    }]);
+
+                if (error) throw error;
+
+                alert('Comunicado transmitido com sucesso para todas as imobiliárias!');
+                document.getElementById('form-comunicado').reset();
+                await carregarAvisos();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao emitir comunicado.');
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Transmitir Comunicado</span>';
+                btn.disabled = false;
+            }
+        }
+
+        async function desativarAviso(avisoId) {
+            if (confirm('Deseja retirar este comunicado do ar?')) {
+                try {
+                    await supabase.from('avisos_sistema').update({ ativo: false }).eq('id', avisoId);
+                    await carregarAvisos();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        }
+
+        async function executarLogout() {
+            if (confirm('Deseja encerrar sua sessão Master?')) {
+                await supabase.auth.signOut();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', inicializarMaster);
+    </script>
+</body>
+</html>
