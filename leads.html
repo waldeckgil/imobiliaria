@@ -737,13 +737,19 @@ async function inicializarLeads() {
                             ` : ''}
                         </div>
                     `;
+   
+   const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+                const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
+                
+                let urlWa = `https://wa.me/${numeroWa}`;
+
+                // MENSAGEM PERSONALIZADA SOMENTE SE O LEAD FOR NOVO
+                if (!l.status || l.status === 'Novo') {
+                    const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
+                    urlWa += `?text=${msgWa}`;
                 }
-
-       const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo ${usuarioLogadoNome} da equipe de atendimento. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
-                const urlWa = `https://wa.me/${zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo}?text=${msgWa}`;
-
-
-                return `
+   
+                    return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
                     
