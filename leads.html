@@ -321,7 +321,7 @@
             }
         }
 
-        // Busca leads e correlaciona com as tabelas imoveis e usuarios
+        // Busca leads e correlaciona com os dados de imóveis sem depender de Foreign Key no schema
         async function carregarLeads() {
             const tbody = document.getElementById('tabela-leads-corpo');
             tbody.innerHTML = `
@@ -333,24 +333,44 @@
                 </tr>`;
 
             try {
-                const { data: leads, error } = await supabaseClient
+                // Consulta direta à tabela leads_contatos
+                const { data: leadsData, error: errLeads } = await supabaseClient
                     .from('leads_contatos')
-                    .select(`
-                        *,
-                        imovel:imoveis (id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao),
-                        corretor:usuarios (id, nome_completo)
-                    `)
+                    .select('*')
                     .eq('imobiliaria_id', imobiliariaId)
                     .order('criado_em', { ascending: false });
 
-                if (error) throw error;
+                if (errLeads) throw errLeads;
 
-                listaLeadsCompleta = leads || [];
+                let leads = leadsData || [];
+
+                // Hidratação dos dados dos imóveis vinculados
+                const imoveisIds = [...new Set(leads.map(l => l.imovel_id).filter(Boolean))];
+                if (imoveisIds.length > 0) {
+                    const { data: imoveisData, error: errImoveis } = await supabaseClient
+                        .from('imoveis')
+                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao')
+                        .in('id', imoveisIds);
+
+                    if (!errImoveis && imoveisData) {
+                        const mapaImoveis = {};
+                        imoveisData.forEach(im => {
+                            mapaImoveis[im.id] = im;
+                        });
+
+                        leads = leads.map(l => ({
+                            ...l,
+                            imovel: l.imovel_id ? (mapaImoveis[l.imovel_id] || null) : null
+                        }));
+                    }
+                }
+
+                listaLeadsCompleta = leads;
                 atualizarMetricasFunil(listaLeadsCompleta);
                 renderizarTabelaLeads(listaLeadsCompleta);
 
             } catch (err) {
-                console.error('Erro ao consultar leads:', err);
+                console.error('Erro ao consultar leads:', err.message || err);
                 tbody.innerHTML = `
                     <tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar lista de leads.</td></tr>`;
             }
