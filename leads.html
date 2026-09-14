@@ -489,14 +489,27 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Badge e botão de visita
+                // Badge e botão de visita com exibição direta das notas
                 let blocoAgendamento = '';
                 if (l.data_agendamento) {
+                    const notaTexto = l.notas_agendamento ? l.notas_agendamento.replace(/"/g, '&quot;') : '';
                     blocoAgendamento = `
-                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono transition" title="${l.notas_agendamento ? 'Nota: ' + l.notas_agendamento : 'Alterar data da visita'}">
-                            <i class="fa-solid fa-calendar-check text-cyan-400"></i>
-                            <span>${formatarDataVisita(l.data_agendamento)}</span>
-                        </button>
+                        <div class="mt-1.5 flex flex-col gap-1 w-full max-w-[220px]">
+                            <button onclick="abrirModalAgendamento('${l.id}')" 
+                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-1 rounded-lg font-mono font-bold transition w-fit" 
+                                    title="Clique para editar agendamento">
+                                <i class="fa-solid fa-calendar-check text-cyan-400"></i>
+                                <span>${formatarDataVisita(l.data_agendamento)}</span>
+                            </button>
+                            ${l.notas_agendamento ? `
+                                <div onclick="abrirModalAgendamento('${l.id}')" 
+                                     class="cursor-pointer bg-slate-950 border border-amber-500/40 text-amber-200 text-[10px] px-2 py-1 rounded-lg flex items-start gap-1.5 shadow-sm hover:border-amber-400 transition" 
+                                     title="Clique para editar: ${notaTexto}">
+                                    <i class="fa-solid fa-note-sticky text-amber-400 text-xs mt-0.5 flex-shrink-0"></i>
+                                    <span class="truncate font-medium">${l.notas_agendamento}</span>
+                                </div>
+                            ` : ''}
+                        </div>
                     `;
                 } else if (l.status === 'Visita Agendada') {
                     blocoAgendamento = `
