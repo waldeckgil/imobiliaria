@@ -612,16 +612,28 @@
         // ==========================================
         async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
             try {
-                await supabaseClient.from('leads_historico').insert([{
+                const payload = {
                     lead_id: leadId,
-                    imobiliaria_id: imobiliariaId,
-                    autor_nome: usuarioLogadoNome,
+                    imobiliaria_id: Number(imobiliariaId),
+                    autor_nome: usuarioLogadoNome || 'Gestor',
                     tipo_evento: tipoEvento,
                     descricao: descricao,
                     detalhes: detalhes
-                }]);
+                };
+
+                const { data, error } = await supabaseClient
+                    .from('leads_historico')
+                    .insert([payload])
+                    .select();
+
+                if (error) {
+                    console.error('Falha Supabase ao registrar histórico:', error);
+                    throw error;
+                }
+                return data;
             } catch (err) {
-                console.warn('Não foi possível gravar evento no histórico:', err);
+                console.error('Erro ao registrar histórico:', err.message || err);
+                throw err;
             }
         }
 
@@ -666,7 +678,7 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Bloco de Visita (exibe se estiver com visita agendada OU se já tiver data histórica)
+                // Bloco de Visita
                 let blocoAgendamento = '';
                 if (l.data_agendamento) {
                     const notaTexto = l.notas_agendamento ? l.notas_agendamento.replace(/"/g, '&quot;') : '';
@@ -823,7 +835,7 @@
                     leadId, 
                     'status', 
                     `Etapa alterada de "${statusAntigo}" para "${novoStatus}"`
-                );
+                ).catch(() => {});
             }
         }
 
@@ -924,7 +936,7 @@
                     'visita',
                     `Visita agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
                     { data_visita: isoData, notas: notas }
-                );
+                ).catch(() => {});
 
                 fecharModalAgendamento();
                 atualizarMetricasFunil(listaLeadsCompleta);
@@ -1089,7 +1101,7 @@
                     'proposta',
                     `Proposta comercial registrada no valor de ${valorFormatado}` + (condicoes ? `. Condições: "${condicoes}"` : ''),
                     { valor: valor, condicoes: condicoes }
-                );
+                ).catch(() => {});
 
                 fecharModalProposta();
                 atualizarMetricasFunil(listaLeadsCompleta);
@@ -1220,7 +1232,7 @@
 
             } catch (err) {
                 console.error(err);
-                container.innerHTML = `<div class="p-4 text-center text-red-400 text-xs">Erro ao consultar linha do tempo.</div>`;
+                container.innerHTML = `<div class="p-4 text-center text-red-400 text-xs">Erro ao consultar linha do tempo: ${err.message || ''}</div>`;
             }
         }
 
@@ -1239,8 +1251,8 @@
                 input.value = '';
                 await carregarEventosTimeline(leadEmTimeline.id);
             } catch (err) {
-                console.error(err);
-                alert('Erro ao salvar nota: ' + err.message);
+                console.error('Falha completa na nota:', err);
+                alert('Erro ao salvar nota: ' + (err.message || JSON.stringify(err)));
             }
         }
 
@@ -1271,7 +1283,7 @@
                     leadId,
                     'status',
                     `Corretor responsável definido para: ${nomeCorretor}`
-                );
+                ).catch(() => {});
 
             } catch (err) {
                 console.error(err);
