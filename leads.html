@@ -25,7 +25,7 @@
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
-            <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos e exclusão estão desabilitadas.</span>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos, propostas e exclusões estão desabilitadas.</span>
         </div>
     </div>
 
@@ -168,7 +168,7 @@
                             <th class="py-3 px-3">Cliente (Comprador)</th>
                             <th class="py-3 px-3">Imóvel de Interesse</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
-                            <th class="py-3 px-3">Etapa do Funil & Visita</th>
+                            <th class="py-3 px-3">Etapa do Funil, Visita & Proposta</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
                             <th class="py-3 px-4 text-right">Ação Direta</th>
                         </tr>
@@ -187,13 +187,13 @@
             <!-- RODAPÉ DA TABELA -->
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads cadastrados</span>
-                <span class="font-mono text-[11px]">SGI • Conversão Direta & Agendamentos</span>
+                <span class="font-mono text-[11px]">SGI • CRM Imobiliário, Agendamentos & Propostas</span>
             </div>
         </div>
 
     </main>
 
-    <!-- MODAL DE AGENDAMENTO DE VISITA (NOVO) -->
+    <!-- MODAL DE AGENDAMENTO DE VISITA -->
     <div id="modal-agendar-visita" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-md w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -228,9 +228,7 @@
                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 resize-none"></textarea>
             </div>
 
-
-
-<!-- AÇÕES DO MODAL COM CANCELAR E REAGENDAR -->
+            <!-- AÇÕES DO MODAL COM CANCELAR E REAGENDAR -->
             <div class="space-y-2 pt-2 border-t border-slate-800">
                 <div class="flex items-center gap-2">
                     <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
@@ -261,6 +259,88 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOMIZADO: CONFIRMAR DESMARCAR VISITA -->
+    <div id="modal-confirmar-desmarcar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-sm w-full p-6 text-center border border-amber-500/40 shadow-2xl space-y-3">
+            <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mx-auto border border-amber-500/30">
+                <i class="fa-solid fa-calendar-xmark"></i>
+            </div>
+            
+            <h3 class="text-base font-black text-white">Desmarcar Visita?</h3>
+            <p class="text-xs text-slate-400">
+                A data combinada será removida e o lead retornará para o estágio 
+                <span class="text-amber-400 font-bold">"Em Atendimento"</span>.
+            </p>
+
+            <div class="flex items-center gap-2 pt-3">
+                <button onclick="fecharModalConfirmarDesmarcar()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                    Voltar
+                </button>
+                <button onclick="executarCancelamentoVisita()" id="btn-confirmar-desmarcar-acao" class="w-1/2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow">
+                    Sim, Desmarcar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE REGISTRO DE PROPOSTA COMERCIAL -->
+    <div id="modal-proposta-comercial" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 border border-purple-500/40 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-purple-400 font-black text-sm">
+                    <i class="fa-solid fa-hand-holding-dollar text-base"></i>
+                    <span>Registrar Proposta Comercial</span>
+                </div>
+                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="proposta-lead-id">
+
+            <!-- CONTEXTO DO CLIENTE E IMÓVEL -->
+            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
+                <p class="text-slate-400">Comprador: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
+                <p class="text-slate-400">Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
+                <p class="text-slate-400">Valor Anunciado: <strong id="proposta-valor-anuncio" class="text-emerald-400 font-mono">---</strong></p>
+            </div>
+
+            <!-- VALOR OFERTADO -->
+            <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Valor da Proposta Ofertada (R$)</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">R$</span>
+                    <input type="number" step="0.01" id="proposta-valor-input" placeholder="0,00" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white font-mono font-bold text-sm outline-none focus:border-purple-400">
+                </div>
+            </div>
+
+            <!-- CONDIÇÕES DE PAGAMENTO -->
+            <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Forma de Pagamento / Condições</label>
+                <textarea id="proposta-condicoes-input" rows="3" 
+                          placeholder="Ex: Sinal de 20% + Financiamento Bancário + Carro como parte de pagamento..." 
+                          class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 resize-none"></textarea>
+            </div>
+
+            <!-- AÇÕES -->
+            <div class="space-y-2 pt-2 border-t border-slate-800">
+                <button onclick="salvarPropostaComercial()" id="btn-salvar-proposta" 
+                        class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-purple-950/40">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Salvar Proposta</span>
+                </button>
+
+                <button onclick="enviarPropostaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Enviar Resumo da Proposta no WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL DE EXCLUSÃO DE LEAD -->
     <div id="modal-excluir-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -287,7 +367,7 @@
 
     <!-- RODAPÉ TÉCNICO -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
-        SGI • Sistema de Gestão Imobiliária SaaS • CRM & Funil de Vendas
+        SGI • Sistema de Gestão Imobiliária SaaS • CRM, Funil & Agendamentos
     </footer>
 
     <!-- JAVASCRIPT COM 'supabaseClient' -->
@@ -301,7 +381,9 @@
         let listaLeadsCompleta = [];
         let listaCorretores = [];
         let modoLeitura = false;
+        
         let leadEmAgendamento = null;
+        let leadEmProposta = null;
 
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -399,7 +481,7 @@
                 <tr>
                     <td colspan="7" class="py-12 text-center text-slate-500">
                         <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                        <p>Buscando mensagens e agendamentos...</p>
+                        <p>Buscando mensagens, visitas e propostas...</p>
                     </td>
                 </tr>`;
 
@@ -506,7 +588,7 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Badge e botão de visita com exibição direta das notas
+                // Bloco visual de Visita Agendada com Notas
                 let blocoAgendamento = '';
                 if (l.data_agendamento) {
                     const notaTexto = l.notas_agendamento ? l.notas_agendamento.replace(/"/g, '&quot;') : '';
@@ -534,6 +616,30 @@
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span>Definir Data/Hora</span>
                         </button>
+                    `;
+                }
+
+                // Bloco visual de Proposta Comercial
+                let blocoProposta = '';
+                if (l.status === 'Proposta') {
+                    const condTexto = l.condicoes_proposta ? l.condicoes_proposta.replace(/"/g, '&quot;') : '';
+                    blocoProposta = `
+                        <div class="mt-1.5 flex flex-col gap-1 w-full max-w-[220px]">
+                            <button onclick="abrirModalProposta('${l.id}')" 
+                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-1 rounded-lg font-mono font-black transition w-fit" 
+                                    title="Editar proposta comercial">
+                                <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
+                                <span>${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Definir Valor'}</span>
+                            </button>
+                            ${l.condicoes_proposta ? `
+                                <div onclick="abrirModalProposta('${l.id}')" 
+                                     class="cursor-pointer bg-slate-950 border border-purple-500/40 text-purple-300 text-[10px] px-2 py-1 rounded-lg flex items-start gap-1.5 shadow-sm hover:border-purple-400 transition" 
+                                     title="${condTexto}">
+                                    <i class="fa-solid fa-file-contract text-purple-400 text-xs mt-0.5 flex-shrink-0"></i>
+                                    <span class="truncate font-medium">${l.condicoes_proposta}</span>
+                                </div>
+                            ` : ''}
+                        </div>
                     `;
                 }
 
@@ -571,6 +677,7 @@
                                 <option value="Perdido" ${l.status === 'Perdido' ? 'selected' : ''}>⚫ Perdido</option>
                             </select>
                             ${blocoAgendamento}
+                            ${blocoProposta}
                         </div>
                     </td>
 
@@ -608,13 +715,14 @@
             }).join('');
         }
 
-        // DISPARADOR DE MUDANÇA DE STATUS COM GATILHO DE VISITA
+        // GATILHO DINÂMICO DE MUDANÇA DE STATUS
         async function aoMudarStatusLead(leadId, novoStatus) {
             if (modoLeitura) return;
 
-            // Se for Visita Agendada, abre o modal de imediato para garantir dia e hora
             if (novoStatus === 'Visita Agendada') {
                 abrirModalAgendamento(leadId);
+            } else if (novoStatus === 'Proposta') {
+                abrirModalProposta(leadId);
             }
 
             await atualizarStatusLead(leadId, novoStatus);
@@ -658,7 +766,6 @@
                 ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
                 : 'Interesse Geral na Imobiliária';
 
-            // Preenche se já tiver data definida
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
                 d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -705,7 +812,6 @@
 
                 if (error) throw error;
 
-                // Atualiza localmente
                 const item = listaLeadsCompleta.find(l => l.id === leadId);
                 if (item) {
                     item.status = 'Visita Agendada';
@@ -721,24 +827,28 @@
                 console.error(err);
                 alert('Erro ao salvar agendamento: ' + err.message);
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Agendamento</span>';
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar / Remarcar</span>';
                 btn.disabled = false;
             }
         }
 
+        // Cancelamento de Visita (Abertura de Modal Customizado)
+        function cancelarVisitaAgendada() {
+            if (modoLeitura) return;
+            document.getElementById('modal-confirmar-desmarcar').classList.remove('hidden');
+        }
 
-// Cancelamento de Visita Agendada (Desmarcar)
-        async function cancelarVisitaAgendada() {
+        function fecharModalConfirmarDesmarcar() {
+            document.getElementById('modal-confirmar-desmarcar').classList.add('hidden');
+        }
+
+        async function executarCancelamentoVisita() {
             if (modoLeitura) return;
             const leadId = document.getElementById('agendamento-lead-id').value;
             if (!leadId) return;
 
-            if (!confirm('Deseja desmarcar esta visita? O status voltará para "Em Atendimento".')) {
-                return;
-            }
-
-            const btn = document.getElementById('btn-cancelar-visita');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const btn = document.getElementById('btn-confirmar-desmarcar-acao');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Desmarcando...';
             btn.disabled = true;
 
             try {
@@ -752,27 +862,26 @@
 
                 if (error) throw error;
 
-                // Atualiza lista local em memória
                 const item = listaLeadsCompleta.find(l => l.id === leadId);
                 if (item) {
                     item.status = 'Em Atendimento';
                     item.data_agendamento = null;
                 }
 
+                fecharModalConfirmarDesmarcar();
                 fecharModalAgendamento();
                 atualizarMetricasFunil(listaLeadsCompleta);
                 renderizarTabelaLeads(listaLeadsCompleta);
 
             } catch (err) {
-                console.error(err);
-                alert('Erro ao desmarcar visita: ' + err.message);
+                console.error('Erro ao desmarcar visita:', err);
+                alert('Erro ao desmarcar visita: ' + (err.message || err));
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-calendar-xmark"></i> <span class="hidden sm:inline">Desmarcar</span>';
+                btn.innerHTML = 'Sim, Desmarcar';
                 btn.disabled = false;
             }
         }
 
-        // Disparo de Mensagem no WhatsApp (Confirmação ou Remarcação)
         function dispararConfirmacaoWhatsApp(tipo = 'confirmacao') {
             if (!leadEmAgendamento) return;
 
@@ -801,8 +910,108 @@
             window.open(urlWa, '_blank');
         }
 
+        // ==========================================
+        // MÓDULO DE PROPOSTAS COMERCIAIS
+        // ==========================================
+        function abrirModalProposta(leadId) {
+            if (modoLeitura) return;
+            const lead = listaLeadsCompleta.find(l => l.id === leadId);
+            if (!lead) return;
 
-        // Atribuição de Corretor Responsável
+            leadEmProposta = lead;
+
+            document.getElementById('proposta-lead-id').value = lead.id;
+            document.getElementById('proposta-lead-nome').innerText = lead.nome;
+            document.getElementById('proposta-lead-imovel').innerText = lead.imovel 
+                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
+                : 'Interesse Geral';
+
+            const valorRef = lead.imovel ? (lead.imovel.valor_venda || lead.imovel.valor_locacao) : null;
+            document.getElementById('proposta-valor-anuncio').innerText = valorRef 
+                ? 'R$ ' + Number(valorRef).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) 
+                : 'Sob Consulta';
+
+            document.getElementById('proposta-valor-input').value = lead.valor_proposta || '';
+            document.getElementById('proposta-condicoes-input').value = lead.condicoes_proposta || '';
+
+            document.getElementById('modal-proposta-comercial').classList.remove('hidden');
+        }
+
+        function fecharModalProposta() {
+            document.getElementById('modal-proposta-comercial').classList.add('hidden');
+            leadEmProposta = null;
+        }
+
+        async function salvarPropostaComercial() {
+            if (modoLeitura) return;
+            const leadId = document.getElementById('proposta-lead-id').value;
+            const valor = document.getElementById('proposta-valor-input').value;
+            const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
+
+            const btn = document.getElementById('btn-salvar-proposta');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Proposta',
+                        valor_proposta: valor ? Number(valor) : null,
+                        condicoes_proposta: condicoes || null
+                    })
+                    .eq('id', leadId);
+
+                if (error) throw error;
+
+                const item = listaLeadsCompleta.find(l => l.id === leadId);
+                if (item) {
+                    item.status = 'Proposta';
+                    item.valor_proposta = valor ? Number(valor) : null;
+                    item.condicoes_proposta = condicoes || null;
+                }
+
+                fecharModalProposta();
+                atualizarMetricasFunil(listaLeadsCompleta);
+                renderizarTabelaLeads(listaLeadsCompleta);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar proposta: ' + (err.message || err));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Proposta</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function enviarPropostaWhatsApp() {
+            if (!leadEmProposta) return;
+
+            const valor = document.getElementById('proposta-valor-input').value;
+            const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
+
+            if (!valor) {
+                alert('Informe ao menos o valor ofertado para gerar a mensagem.');
+                return;
+            }
+
+            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const refImovel = leadEmProposta.imovel ? `Ref: ${leadEmProposta.imovel.codigo_ref}` : 'do imóvel';
+            const zapLimpo = ('' + leadEmProposta.whatsapp).replace(/\D/g, '');
+            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+
+            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente sua proposta comercial para o imóvel ${refImovel}:\n\n` +
+                           `💰 *Valor Ofertado:* ${valorFormatado}\n` +
+                           (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
+                           `Nossa diretoria e o proprietário estão analisando e te retornamos em breve!`;
+
+            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWa, '_blank');
+        }
+
+        // ==========================================
+        // ATRIBUIÇÃO, FILTROS E EXCLUSÃO
+        // ==========================================
         async function atribuirCorretorLead(leadId, corretorId) {
             if (modoLeitura) return;
             try {
@@ -826,7 +1035,6 @@
             }
         }
 
-        // Filtros em Tempo Real
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
@@ -855,7 +1063,6 @@
             renderizarTabelaLeads(listaLeadsCompleta);
         }
 
-        // Modal de Exclusão
         function abrirModalExcluirLead(id, nome) {
             if (modoLeitura) return;
             document.getElementById('modal-excluir-lead-id').value = id;
