@@ -13,19 +13,15 @@
     <style>
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
-        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA -->
+    <!-- FAIXA MODO LEITURA (CASO A ASSINATURA ESTEJA VENCIDA) -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
-            <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos e exclusão estão desabilitadas.</span>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status e exclusão de leads estão desabilitadas.</span>
         </div>
     </div>
 
@@ -164,11 +160,11 @@
                 <table class="w-full text-left text-xs text-slate-300">
                     <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
                         <tr>
-                            <th class="py-3 px-4">Recebido em</th>
+                            <th class="py-3 px-4">Data / Hora</th>
                             <th class="py-3 px-3">Cliente (Comprador)</th>
                             <th class="py-3 px-3">Imóvel de Interesse</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
-                            <th class="py-3 px-3">Etapa do Funil & Visita</th>
+                            <th class="py-3 px-3">Etapa do Funil</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
                             <th class="py-3 px-4 text-right">Ação Direta</th>
                         </tr>
@@ -187,63 +183,11 @@
             <!-- RODAPÉ DA TABELA -->
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads cadastrados</span>
-                <span class="font-mono text-[11px]">SGI • Conversão Direta & Agendamentos</span>
+                <span class="font-mono text-[11px]">SGI • Conversão Direta via WhatsApp</span>
             </div>
         </div>
 
     </main>
-
-    <!-- MODAL DE AGENDAMENTO DE VISITA (NOVO) -->
-    <div id="modal-agendar-visita" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-cyan-400 font-black text-sm">
-                    <i class="fa-solid fa-calendar-days text-base"></i>
-                    <span>Agendar Visita ao Imóvel</span>
-                </div>
-                <button onclick="fecharModalAgendamento()" class="text-slate-500 hover:text-white transition">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
-            </div>
-
-            <input type="hidden" id="agendamento-lead-id">
-
-            <!-- DADOS DO CLIENTE & IMÓVEL (SOMENTE LEITURA) -->
-            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <p class="text-slate-400">Cliente: <strong id="agendamento-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Imóvel: <strong id="agendamento-lead-imovel" class="text-cyan-400 font-mono">---</strong></p>
-            </div>
-
-            <!-- CAMPO DATA E HORA -->
-            <div>
-                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Data e Hora do Compromisso</label>
-                <input type="datetime-local" id="agendamento-data" 
-                       class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
-            </div>
-
-            <!-- CAMPO OBSERVAÇÕES -->
-            <div>
-                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Notas / Instruções de Acesso</label>
-                <textarea id="agendamento-notas" rows="3" placeholder="Ex: Buscar chaves na portaria, cliente vai acompanhado da esposa..." 
-                          class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 resize-none"></textarea>
-            </div>
-
-            <!-- AÇÕES DO MODAL -->
-            <div class="space-y-2 pt-2 border-t border-slate-800">
-                <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
-                        class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    <span>Salvar Agendamento</span>
-                </button>
-
-                <button onclick="dispararConfirmacaoWhatsApp()" id="btn-whatsapp-agendamento" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Confirmar no WhatsApp do Cliente</span>
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- MODAL DE EXCLUSÃO DE LEAD -->
     <div id="modal-excluir-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -273,18 +217,18 @@
         SGI • Sistema de Gestão Imobiliária SaaS • CRM & Funil de Vendas
     </footer>
 
-    <!-- JAVASCRIPT COM 'supabaseClient' -->
+    <!-- JAVASCRIPT COM 'supabaseClient' (SEM CONFLITO DE ESCOPO) -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
+        // Instância nomeada como supabaseClient para eliminar conflito com window.supabase
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let listaLeadsCompleta = [];
         let listaCorretores = [];
         let modoLeitura = false;
-        let leadEmAgendamento = null;
 
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -355,6 +299,7 @@
             }
         }
 
+        // Carrega lista de corretores para o seletor de atribuição
         async function carregarEquipeCorretores() {
             try {
                 const { data, error } = await supabaseClient
@@ -376,17 +321,19 @@
             }
         }
 
+        // Busca leads e correlaciona com os dados de imóveis sem depender de Foreign Key no schema
         async function carregarLeads() {
             const tbody = document.getElementById('tabela-leads-corpo');
             tbody.innerHTML = `
                 <tr>
                     <td colspan="7" class="py-12 text-center text-slate-500">
                         <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                        <p>Buscando mensagens e agendamentos...</p>
+                        <p>Buscando mensagens recebidas...</p>
                     </td>
                 </tr>`;
 
             try {
+                // Consulta direta à tabela leads_contatos
                 const { data: leadsData, error: errLeads } = await supabaseClient
                     .from('leads_contatos')
                     .select('*')
@@ -397,7 +344,7 @@
 
                 let leads = leadsData || [];
 
-                // Hidratação dos dados dos imóveis
+                // Hidratação dos dados dos imóveis vinculados
                 const imoveisIds = [...new Set(leads.map(l => l.imovel_id).filter(Boolean))];
                 if (imoveisIds.length > 0) {
                     const { data: imoveisData, error: errImoveis } = await supabaseClient
@@ -429,6 +376,7 @@
             }
         }
 
+        // Atualiza contadores do funil
         function atualizarMetricasFunil(leads) {
             document.getElementById('kpi-leads-novos').innerText = leads.filter(l => (l.status || 'Novo') === 'Novo').length;
             document.getElementById('kpi-leads-atendimento').innerText = leads.filter(l => l.status === 'Em Atendimento').length;
@@ -438,16 +386,7 @@
             document.getElementById('contador-leads').innerText = leads.length;
         }
 
-        function formatarDataVisita(isoString) {
-            if (!isoString) return '';
-            const d = new Date(isoString);
-            const dia = String(d.getDate()).padStart(2, '0');
-            const mes = String(d.getMonth() + 1).padStart(2, '0');
-            const hora = String(d.getHours()).padStart(2, '0');
-            const min = String(d.getMinutes()).padStart(2, '0');
-            return `${dia}/${mes} às ${hora}:${min}`;
-        }
-
+        // Renderiza linhas da tabela
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
@@ -464,7 +403,7 @@
             }
 
             tbody.innerHTML = leads.map(l => {
-                const dataCriacao = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+                const dataFormatada = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
                 
                 let imovelBloco = '<span class="text-slate-500 italic">Interesse Geral</span>';
@@ -489,30 +428,12 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Badge e botão de visita
-                let blocoAgendamento = '';
-                if (l.data_agendamento) {
-                    blocoAgendamento = `
-                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono transition" title="${l.notas_agendamento ? 'Nota: ' + l.notas_agendamento : 'Alterar data da visita'}">
-                            <i class="fa-solid fa-calendar-check text-cyan-400"></i>
-                            <span>${formatarDataVisita(l.data_agendamento)}</span>
-                        </button>
-                    `;
-                } else if (l.status === 'Visita Agendada') {
-                    blocoAgendamento = `
-                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse transition">
-                            <i class="fa-solid fa-calendar-plus"></i>
-                            <span>Definir Data/Hora</span>
-                        </button>
-                    `;
-                }
-
                 const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo da equipe de atendimento. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
                 const urlWa = `https://wa.me/${zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo}?text=${msgWa}`;
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
-                    <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
+                    <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataFormatada}</td>
                     
                     <td class="py-3 px-3">
                         <span class="font-black text-white block">${l.nome}</span>
@@ -529,19 +450,16 @@
                     </td>
 
                     <td class="py-3 px-3">
-                        <div class="flex flex-col items-start gap-1">
-                            <select onchange="aoMudarStatusLead('${l.id}', this.value)" 
-                                    ${modoLeitura ? 'disabled' : ''}
-                                    class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] font-bold text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer ${modoLeitura ? 'opacity-50' : ''}">
-                                <option value="Novo" ${l.status === 'Novo' ? 'selected' : ''}>🔵 Novo</option>
-                                <option value="Em Atendimento" ${l.status === 'Em Atendimento' ? 'selected' : ''}>🟡 Em Atendimento</option>
-                                <option value="Visita Agendada" ${l.status === 'Visita Agendada' ? 'selected' : ''}>🟣 Visita Agendada</option>
-                                <option value="Proposta" ${l.status === 'Proposta' ? 'selected' : ''}>🟠 Proposta</option>
-                                <option value="Fechado" ${l.status === 'Fechado' ? 'selected' : ''}>🟢 Concluído</option>
-                                <option value="Perdido" ${l.status === 'Perdido' ? 'selected' : ''}>⚫ Perdido</option>
-                            </select>
-                            ${blocoAgendamento}
-                        </div>
+                        <select onchange="atualizarStatusLead('${l.id}', this.value)" 
+                                ${modoLeitura ? 'disabled' : ''}
+                                class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] font-bold text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer ${modoLeitura ? 'opacity-50' : ''}">
+                            <option value="Novo" ${l.status === 'Novo' ? 'selected' : ''}>🔵 Novo</option>
+                            <option value="Em Atendimento" ${l.status === 'Em Atendimento' ? 'selected' : ''}>🟡 Em Atendimento</option>
+                            <option value="Visita Agendada" ${l.status === 'Visita Agendada' ? 'selected' : ''}>🟣 Visita Agendada</option>
+                            <option value="Proposta" ${l.status === 'Proposta' ? 'selected' : ''}>🟠 Proposta</option>
+                            <option value="Fechado" ${l.status === 'Fechado' ? 'selected' : ''}>🟢 Concluído</option>
+                            <option value="Perdido" ${l.status === 'Perdido' ? 'selected' : ''}>⚫ Perdido</option>
+                        </select>
                     </td>
 
                     <td class="py-3 px-3">
@@ -554,19 +472,10 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
-                            <!-- BOTÃO DE VISITA DIRETO -->
-                            <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    ${modoLeitura ? 'disabled' : ''}
-                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-cyan-950/80 text-cyan-400 hover:text-cyan-300 border border-slate-700 hover:border-cyan-700 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
-                                    title="Agendar / Remarcar Visita">
-                                <i class="fa-solid fa-calendar-days text-xs"></i>
-                            </button>
-
                             <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow transition cursor-pointer" title="Responder no WhatsApp">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span class="hidden sm:inline">Chamar</span>
                             </a>
-
                             <button onclick="abrirModalExcluirLead('${l.id}', '${l.nome.replace(/'/g, "\\'")}')" 
                                     ${modoLeitura ? 'disabled' : ''}
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" title="Descartar">
@@ -578,18 +487,7 @@
             }).join('');
         }
 
-        // DISPARADOR DE MUDANÇA DE STATUS COM GATILHO DE VISITA
-        async function aoMudarStatusLead(leadId, novoStatus) {
-            if (modoLeitura) return;
-
-            // Se for Visita Agendada, abre o modal de imediato para garantir dia e hora
-            if (novoStatus === 'Visita Agendada') {
-                abrirModalAgendamento(leadId);
-            }
-
-            await atualizarStatusLead(leadId, novoStatus);
-        }
-
+        // Atualização Dinâmica do Status do Lead
         async function atualizarStatusLead(leadId, novoStatus) {
             if (modoLeitura) return;
             try {
@@ -602,121 +500,12 @@
                 
                 const item = listaLeadsCompleta.find(l => l.id === leadId);
                 if (item) item.status = novoStatus;
-                
                 atualizarMetricasFunil(listaLeadsCompleta);
-                renderizarTabelaLeads(listaLeadsCompleta);
 
             } catch (err) {
                 console.error(err);
                 alert('Erro ao atualizar etapa do lead.');
             }
-        }
-
-        // ==========================================
-        // MÓDULO DE AGENDAMENTO DE VISITAS
-        // ==========================================
-        function abrirModalAgendamento(leadId) {
-            if (modoLeitura) return;
-            const lead = listaLeadsCompleta.find(l => l.id === leadId);
-            if (!lead) return;
-
-            leadEmAgendamento = lead;
-
-            document.getElementById('agendamento-lead-id').value = lead.id;
-            document.getElementById('agendamento-lead-nome').innerText = lead.nome;
-            document.getElementById('agendamento-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral na Imobiliária';
-
-            // Preenche se já tiver data definida
-            if (lead.data_agendamento) {
-                const d = new Date(lead.data_agendamento);
-                d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-                document.getElementById('agendamento-data').value = d.toISOString().slice(0, 16);
-            } else {
-                document.getElementById('agendamento-data').value = '';
-            }
-
-            document.getElementById('agendamento-notas').value = lead.notas_agendamento || '';
-            document.getElementById('modal-agendar-visita').classList.remove('hidden');
-        }
-
-        function fecharModalAgendamento() {
-            document.getElementById('modal-agendar-visita').classList.add('hidden');
-            leadEmAgendamento = null;
-        }
-
-        async function salvarAgendamento() {
-            if (modoLeitura) return;
-            const leadId = document.getElementById('agendamento-lead-id').value;
-            const dataValor = document.getElementById('agendamento-data').value;
-            const notas = document.getElementById('agendamento-notas').value.trim();
-
-            if (!dataValor) {
-                alert('Por favor, defina o dia e o horário da visita.');
-                return;
-            }
-
-            const btn = document.getElementById('btn-salvar-agendamento');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
-            btn.disabled = true;
-
-            try {
-                const isoData = new Date(dataValor).toISOString();
-
-                const { error } = await supabaseClient
-                    .from('leads_contatos')
-                    .update({
-                        status: 'Visita Agendada',
-                        data_agendamento: isoData,
-                        notas_agendamento: notas || null
-                    })
-                    .eq('id', leadId);
-
-                if (error) throw error;
-
-                // Atualiza localmente
-                const item = listaLeadsCompleta.find(l => l.id === leadId);
-                if (item) {
-                    item.status = 'Visita Agendada';
-                    item.data_agendamento = isoData;
-                    item.notas_agendamento = notas;
-                }
-
-                fecharModalAgendamento();
-                atualizarMetricasFunil(listaLeadsCompleta);
-                renderizarTabelaLeads(listaLeadsCompleta);
-
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao salvar agendamento: ' + err.message);
-            } finally {
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Agendamento</span>';
-                btn.disabled = false;
-            }
-        }
-
-        function dispararConfirmacaoWhatsApp() {
-            if (!leadEmAgendamento) return;
-
-            const dataValor = document.getElementById('agendamento-data').value;
-            if (!dataValor) {
-                alert('Defina a data e a hora antes de enviar a confirmação.');
-                return;
-            }
-
-            const d = new Date(dataValor);
-            const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
-            const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            const refImovel = leadEmAgendamento.imovel ? leadEmAgendamento.imovel.codigo_ref : 'combinado';
-
-            const zapLimpo = ('' + leadEmAgendamento.whatsapp).replace(/\D/g, '');
-            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
-
-            const mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel Ref: ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
-            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
-
-            window.open(urlWa, '_blank');
         }
 
         // Atribuição de Corretor Responsável
