@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipe & Permissões - SGI Gestão Imobiliária</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- FAIXA MODO LEITURA -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. O cadastro e edição de colaboradores estão desabilitados.</span>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO TOPBAR -->
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 id="topbar-imob-nome" class="text-sm font-black text-white tracking-wide">CARREGANDO...</h1>
+                        <span id="topbar-cargo-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                            DONO
+                        </span>
+                    </div>
+                    <p id="topbar-user-nome" class="text-xs text-slate-400">Identificando usuário...</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs">
+                <button onclick="abrirModalColaborador()" id="btn-novo-membro" 
+                        class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-user-plus text-xs"></i>
+                    <span>Adicionar Colaborador</span>
+                </button>
+
+                <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO DOS MÓDULOS -->
+    <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
+        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
+            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
+            </a>
+            <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
+            </a>
+            <a href="leads.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-comments mr-1"></i> Central de Leads
+            </a>
+            <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
+                <i class="fa-solid fa-users mr-1"></i> Equipe de Corretores
+            </a>
+            <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-gear mr-1"></i> Configurações & PDF
+            </a>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
+        
+        <!-- CARDS DE RECURSOS HUMANOS -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="box-tech p-4 border-l-4 border-l-cyan-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Total de Colaboradores</span>
+                <span id="kpi-total-equipe" class="text-2xl font-black text-white mt-1 block">0</span>
+            </div>
+            <div class="box-tech p-4 border-l-4 border-l-emerald-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Corretores em Campo</span>
+                <span id="kpi-corretores" class="text-2xl font-black text-emerald-400 mt-1 block">0</span>
+            </div>
+            <div class="box-tech p-4 border-l-4 border-l-purple-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Gerência / Diretoria</span>
+                <span id="kpi-gerencia" class="text-2xl font-black text-purple-400 mt-1 block">0</span>
+            </div>
+            <div class="box-tech p-4 border-l-4 border-l-rose-500">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Acessos Desativados</span>
+                <span id="kpi-inativos" class="text-2xl font-black text-rose-400 mt-1 block">0</span>
+            </div>
+        </div>
+
+        <!-- QUADRO DE BLINDAGEM DE CARTEIRA -->
+        <div class="box-tech p-4 border border-cyan-500/30 bg-cyan-950/10 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="text-xs">
+                <h4 class="font-bold text-white">Blindagem Patrimonial de Proprietários</h4>
+                <p class="text-slate-400 mt-0.5 leading-relaxed">
+                    Corretores associados têm acesso ao atendimento de leads e geração de fichas, mas <strong>não conseguem visualizar os números de telefone dos proprietários</strong> a menos que você marque expressamente a autorização na matriz de permissões.
+                </p>
+            </div>
+        </div>
+
+        <!-- TABELA DE MEMBROS DA EQUIPE -->
+        <div class="box-tech overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
+                        <tr>
+                            <th class="py-3 px-4">Profissional</th>
+                            <th class="py-3 px-3">Cargo</th>
+                            <th class="py-3 px-3">CRECI</th>
+                            <th class="py-3 px-3">WhatsApp / Contato</th>
+                            <th class="py-3 px-3">Permissões de Acesso</th>
+                            <th class="py-3 px-3 text-center">Status</th>
+                            <th class="py-3 px-4 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-equipe-corpo" class="divide-y divide-slate-800/60">
+                        <tr>
+                            <td colspan="7" class="py-12 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
+                                <p>Carregando membros da equipe...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RODAPÉ DA TABELA -->
+            <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span>Total de <strong id="contador-equipe" class="text-white">0</strong> profissionais registrados</span>
+                <span class="font-mono text-[11px]">SGI • Controle de Acesso Baseado em Papéis (RBAC)</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DE CADASTRO E EDIÇÃO DE COLABORADOR -->
+    <div id="modal-colaborador" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="fecharModalColaborador()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 text-cyan-400 font-black text-sm uppercase tracking-wide">
+                <i class="fa-solid fa-user-gear"></i>
+                <span id="modal-titulo">Novo Colaborador</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Cadastre o corretor e defina suas regras de acesso ao catálogo e proprietários.</p>
+
+            <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="space-y-4 mt-4 text-xs">
+                <input type="hidden" id="colab-id-edicao" value="">
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nome Completo *</label>
+                    <input type="text" id="colab-nome" required placeholder="Ex: Lucas Mendes" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">WhatsApp Pessoal (com DDD) *</label>
+                        <input type="tel" id="colab-zap" required placeholder="(48) 99999-9999" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">CRECI Individual</label>
+                        <input type="text" id="colab-creci" placeholder="Ex: 34567F" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Cargo / Função *</label>
+                        <select id="colab-cargo" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                            <option value="corretor" selected>Corretor Associado</option>
+                            <option value="gerente">Gerente de Vendas</option>
+                            <option value="secretaria">Secretária / Apoio</option>
+                            <option value="dono">Dono / Sócio</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">E-mail de Login *</label>
+                        <input type="email" id="colab-email" required placeholder="corretor@imobiliaria.com" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <!-- SENHA PROVISÓRIA (APENAS PARA NOVO CADASTRO) -->
+                <div id="bloco-senha-novo">
+                    <label class="block font-bold text-slate-300 mb-1">Senha Provisória de Acesso *</label>
+                    <div class="relative flex items-center">
+                        <input type="text" id="colab-senha" minlength="6" placeholder="Mínimo 6 caracteres" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-24 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
+                        <button type="button" onclick="gerarSenhaAleatoria()" class="absolute right-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded-lg text-[10px] font-bold">
+                            Gerar Senha
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MATRIZ DE PERMISSÕES GRANULARES (JSONB) -->
+                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block">Privilégios Operacionais:</span>
+                    
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-proprietarios" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Pode visualizar telefones e contatos de proprietários</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-precos" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Pode editar preços e comissões de imóveis</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-financeiro" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Acesso ao painel financeiro e faturamento</span>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="fecharModalColaborador()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-colab" class="px-6 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Salvar Colaborador</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE SUCESSO COM LINK PARA O WHATSAPP -->
+    <div id="modal-sucesso-zap" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-sm w-full p-6 text-center border border-emerald-500/40 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-3 border border-emerald-500/30">
+                <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <h3 class="text-base font-black text-white">Colaborador Cadastrado!</h3>
+            <p class="text-xs text-slate-400 mt-1">Deseja enviar a mensagem com link de login e senha provisória diretamente para o WhatsApp dele?</p>
+
+            <a id="btn-link-zap-enviar" href="#" target="_blank" onclick="fecharModalSucessoZap()" 
+               class="mt-5 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                <span>Enviar Acesso no WhatsApp</span>
+            </a>
+
+            <button onclick="fecharModalSucessoZap()" class="mt-2 text-slate-400 hover:text-white text-xs underline">
+                Enviar mais tarde
+            </button>
+        </div>
+    </div>
+
+    <!-- RODAPÉ TÉCNICO -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
+        SGI • Sistema de Gestão Imobiliária SaaS • Gestão de Equipe & Permissões
+    </footer>
+
+    <!-- JAVASCRIPT DE OPERAÇÃO DE EQUIPE (CORRIGIDO COM 'supabaseClient') -->
+    <script>
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+
+        // Corrigido para supabaseClient
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let imobiliariaId = null;
+        let listaEquipeCompleta = [];
+        let modoLeitura = false;
+
+        async function inicializarEquipe() {
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const email = session.user.email.toLowerCase();
+
+            // MODO MASTER BYPASS
+            if (email === 'waldeckgil@gmail.com') {
+                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (GESTÃO DE EQUIPE GERAL)';
+                document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
+                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+
+                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                if (imobPiloto) {
+                    imobiliariaId = imobPiloto.id;
+                    await carregarMembrosEquipe();
+                }
+                return;
+            }
+
+            // GESTOR DA IMOBILIÁRIA (VERIFICAÇÃO DE PRIVILÉGIO DONO)
+            try {
+                const { data: usuario, error: errUser } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .single();
+
+                if (errUser || !usuario) throw new Error('Perfil não encontrado.');
+
+                if (usuario.cargo !== 'dono') {
+                    alert('Acesso Restrito: Apenas gestores e diretores podem administrar a equipe de corretores.');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                const { data: imob, error: errImob } = await supabaseClient
+                    .from('imobiliarias')
+                    .select('*')
+                    .eq('id', usuario.imobiliaria_id)
+                    .single();
+
+                if (errImob || !imob) throw new Error('Imobiliária não localizada.');
+
+                imobiliariaId = imob.id;
+                document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
+                document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email}`;
+                document.getElementById('topbar-cargo-badge').innerText = usuario.cargo.toUpperCase();
+
+                // Auditoria de Assinatura
+                const hoje = new Date().toISOString().split('T')[0];
+                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
+                modoLeitura = (imob.status === 'blocked' || vencido);
+
+                if (modoLeitura) {
+                    document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                    const btn = document.getElementById('btn-novo-membro');
+                    btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                }
+
+                await carregarMembrosEquipe();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao validar privilégios da equipe.');
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Busca colaboradores da imobiliária
+        async function carregarMembrosEquipe() {
+            const tbody = document.getElementById('tabela-equipe-corpo');
+            try {
+                const { data, error } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('imobiliaria_id', imobiliariaId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                listaEquipeCompleta = data || [];
+                atualizarMetricasRH(listaEquipeCompleta);
+                renderizarTabelaEquipe(listaEquipeCompleta);
+
+            } catch (err) {
+                console.error('Erro ao consultar equipe:', err);
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar colaboradores.</td></tr>`;
+            }
+        }
+
+        // Atualiza KPIs
+        function atualizarMetricasRH(membros) {
+            document.getElementById('kpi-total-equipe').innerText = membros.length;
+            document.getElementById('kpi-corretores').innerText = membros.filter(m => m.cargo === 'corretor').length;
+            document.getElementById('kpi-gerencia').innerText = membros.filter(m => m.cargo === 'dono' || m.cargo === 'gerente').length;
+            document.getElementById('kpi-inativos').innerText = membros.filter(m => m.ativo === false).length;
+            document.getElementById('contador-equipe').innerText = membros.length;
+        }
+
+        // Renderiza linhas da equipe
+        function renderizarTabelaEquipe(membros) {
+            const tbody = document.getElementById('tabela-equipe-corpo');
+
+            if (membros.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-12 text-center text-slate-500">
+                            <i class="fa-solid fa-users text-3xl mb-2 text-slate-600"></i>
+                            <p class="font-bold text-slate-400">Nenhum membro cadastrado.</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Clique em "Adicionar Colaborador" para incluir sua equipe.</p>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = membros.map(m => {
+                const iniciais = (m.nome_completo || 'C').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+                const perms = m.permissoes || {};
+                
+                const badgeProprietario = perms.ver_proprietarios 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px]" title="Pode ver telefones dos proprietários">Proprietários OK</span>'
+                    : '<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-500 text-[10px]" title="Telefones dos proprietários ocultos">Proprietários Ocultos</span>';
+
+                const badgePrecos = perms.editar_precos 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px]">Edita Preços</span>' 
+                    : '';
+
+                const badgeFinanceiro = perms.acesso_financeiro 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800 text-[10px]">Financeiro</span>' 
+                    : '';
+
+                const toggleClass = m.ativo ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
+                const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
+
+                return `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="py-3 px-4 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 flex items-center justify-center font-black text-xs">
+                            ${iniciais}
+                        </div>
+                        <div>
+                            <span class="font-bold text-white block">${m.nome_completo}</span>
+                            <span class="text-[11px] text-slate-500 font-mono">${m.email}</span>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${m.cargo === 'dono' ? 'bg-amber-950 text-amber-400 border border-amber-800' : 'bg-slate-800 text-slate-300'}">
+                            ${m.cargo || 'corretor'}
+                        </span>
+                    </td>
+
+                    <td class="py-3 px-3 font-mono text-slate-400">${m.creci_individual || '---'}</td>
+
+                    <td class="py-3 px-3 font-mono text-cyan-300">${m.whatsapp || '---'}</td>
+
+                    <td class="py-3 px-3">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            ${badgeProprietario}
+                            ${badgePrecos}
+                            ${badgeFinanceiro}
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3 text-center">
+                        <button onclick="alternarStatusColaborador(${m.id}, ${m.ativo})" 
+                                ${modoLeitura ? 'disabled' : ''}
+                                title="Clique para ativar ou bloquear acesso"
+                                class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}">
+                            <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
+                        </button>
+                    </td>
+
+                    <td class="py-3 px-4 text-right whitespace-nowrap">
+                        <button onclick="abrirModalEdicaoColaborador(${m.id})" 
+                                ${modoLeitura ? 'disabled' : ''}
+                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition cursor-pointer" title="Editar Privilégios">
+                            <i class="fa-regular fa-pen-to-square text-xs"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        // Alterna Ativo / Bloqueado
+        async function alternarStatusColaborador(idNum, statusAtual) {
+            if (modoLeitura) return;
+            try {
+                const { error } = await supabaseClient
+                    .from('usuarios')
+                    .update({ ativo: !statusAtual })
+                    .eq('id', idNum);
+
+                if (error) throw error;
+                await carregarMembrosEquipe();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao alterar status do colaborador.');
+            }
+        }
+
+        // Modal de Cadastro e Edição
+        function abrirModalColaborador() {
+            if (modoLeitura) return;
+            document.getElementById('form-colaborador').reset();
+            document.getElementById('colab-id-edicao').value = '';
+            document.getElementById('modal-titulo').innerText = 'Novo Colaborador';
+            document.getElementById('bloco-senha-novo').classList.remove('hidden');
+            document.getElementById('colab-senha').required = true;
+            gerarSenhaAleatoria();
+            document.getElementById('modal-colaborador').classList.remove('hidden');
+        }
+
+        function abrirModalEdicaoColaborador(idNum) {
+            if (modoLeitura) return;
+            const membro = listaEquipeCompleta.find(m => m.id === idNum);
+            if (!membro) return;
+
+            document.getElementById('colab-id-edicao').value = membro.id;
+            document.getElementById('modal-titulo').innerText = 'Editar Privilégios: ' + membro.nome_completo;
+            document.getElementById('colab-nome').value = membro.nome_completo || '';
+            document.getElementById('colab-zap').value = membro.whatsapp || '';
+            document.getElementById('colab-creci').value = membro.creci_individual || '';
+            document.getElementById('colab-cargo').value = membro.cargo || 'corretor';
+            document.getElementById('colab-email').value = membro.email || '';
+            
+            document.getElementById('bloco-senha-novo').classList.add('hidden');
+            document.getElementById('colab-senha').required = false;
+
+            const p = membro.permissoes || {};
+            document.getElementById('perm-proprietarios').checked = !!p.ver_proprietarios;
+            document.getElementById('perm-precos').checked = !!p.editar_precos;
+            document.getElementById('perm-financeiro').checked = !!p.acesso_financeiro;
+
+            document.getElementById('modal-colaborador').classList.remove('hidden');
+        }
+
+        function fecharModalColaborador() {
+            document.getElementById('modal-colaborador').classList.add('hidden');
+        }
+
+        function fecharModalSucessoZap() {
+            document.getElementById('modal-sucesso-zap').classList.add('hidden');
+        }
+
+        function gerarSenhaAleatoria() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#';
+            let senha = '';
+            for (let i = 0; i < 8; i++) {
+                senha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('colab-senha').value = senha;
+        }
+
+        // Salvar Colaborador (Criação ou Atualização)
+        async function salvarColaborador(event) {
+            event.preventDefault();
+            if (modoLeitura) return;
+
+            const btn = document.getElementById('btn-salvar-colab');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Salvando...';
+            btn.disabled = true;
+
+            const idEdicao = document.getElementById('colab-id-edicao').value;
+            const nome = document.getElementById('colab-nome').value.trim();
+            const zap = sanitizarZap(document.getElementById('colab-zap').value.trim());
+            const creci = document.getElementById('colab-creci').value.trim();
+            const cargo = document.getElementById('colab-cargo').value;
+            const email = document.getElementById('colab-email').value.trim().toLowerCase();
+            const senha = document.getElementById('colab-senha').value;
+
+            const permissoesObj = {
+                ver_proprietarios: document.getElementById('perm-proprietarios').checked,
+                editar_precos: document.getElementById('perm-precos').checked,
+                acesso_financeiro: document.getElementById('perm-financeiro').checked
+            };
+
+            try {
+                if (idEdicao) {
+                    // MODO EDIÇÃO
+                    const { error } = await supabaseClient
+                        .from('usuarios')
+                        .update({
+                            nome_completo: nome,
+                            whatsapp: zap,
+                            creci_individual: creci,
+                            cargo: cargo,
+                            permissoes: permissoesObj
+                        })
+                        .eq('id', idEdicao);
+
+                    if (error) throw error;
+                    fecharModalColaborador();
+                    await carregarMembrosEquipe();
+
+                } else {
+                    // MODO NOVO CADASTRO
+                    const tempAuthClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+                        auth: { persistSession: false, autoRefreshToken: false }
+                    });
+
+                    const { data: authData, error: authError } = await tempAuthClient.auth.signUp({
+                        email: email,
+                        password: senha,
+                        options: { data: { nome_completo: nome } }
+                    });
+
+                    if (authError) throw authError;
+                    if (!authData.user) throw new Error('Não foi possível registrar o usuário de autenticação.');
+
+                    const { error: dbError } = await supabaseClient
+                        .from('usuarios')
+                        .insert([{
+                            user_id: authData.user.id,
+                            imobiliaria_id: imobiliariaId,
+                            nome_completo: nome,
+                            whatsapp: zap,
+                            email: email,
+                            cargo: cargo,
+                            creci_individual: creci,
+                            ativo: true,
+                            permissoes: permissoesObj
+                        }]);
+
+                    if (dbError) throw dbError;
+
+                    fecharModalColaborador();
+                    await carregarMembrosEquipe();
+
+                    const linkLogin = window.location.origin + window.location.pathname.replace('equipe.html', 'login.html');
+                    const msg = encodeURIComponent(`Olá ${nome}! Seu acesso à plataforma da nossa imobiliária foi criado com sucesso:\n\n🔗 Link de Acesso: ${linkLogin}\n📧 E-mail: ${email}\n🔑 Senha Provisória: ${senha}\n\nPor favor, faça seu login e altere sua senha no primeiro acesso.`);
+                    const urlWa = `https://wa.me/${zap}?text=${msg}`;
+
+                    document.getElementById('btn-link-zap-enviar').href = urlWa;
+                    document.getElementById('modal-sucesso-zap').classList.remove('hidden');
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar colaborador: ' + (err.message || 'Verifique os dados informados.'));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Colaborador</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function sanitizarZap(num) {
+            let limpo = ('' + num).replace(/\D/g, '');
+            if (!limpo.startsWith('55')) limpo = '55' + limpo;
+            return limpo;
+        }
+
+        async function executarLogout() {
+            if (confirm('Deseja realmente sair?')) {
+                await supabaseClient.auth.signOut();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', inicializarEquipe);
+    </script>
+</body>
+</html>

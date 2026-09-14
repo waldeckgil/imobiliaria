@@ -228,39 +228,22 @@
                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 resize-none"></textarea>
             </div>
 
-
-
-<!-- AÇÕES DO MODAL COM CANCELAR E REAGENDAR -->
+            <!-- AÇÕES DO MODAL -->
             <div class="space-y-2 pt-2 border-t border-slate-800">
-                <div class="flex items-center gap-2">
-                    <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
-                            class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Salvar / Remarcar</span>
-                    </button>
+                <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
+                        class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Salvar Agendamento</span>
+                </button>
 
-                    <button onclick="cancelarVisitaAgendada()" id="btn-cancelar-visita" 
-                            class="bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-800/60 font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
-                            title="Desmarcar visita e retornar para atendimento">
-                        <i class="fa-solid fa-calendar-xmark"></i>
-                        <span class="hidden sm:inline">Desmarcar</span>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <button onclick="dispararConfirmacaoWhatsApp('confirmacao')" id="btn-whatsapp-confirmar" 
-                            class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
-                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                        <span>Confirmar Visita</span>
-                    </button>
-
-                    <button onclick="dispararConfirmacaoWhatsApp('reagendamento')" id="btn-whatsapp-reagendar" 
-                            class="bg-amber-600/90 hover:bg-amber-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
-                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                        <span>Avisar Remarcação</span>
-                    </button>
-                </div>
+                <button onclick="dispararConfirmacaoWhatsApp()" id="btn-whatsapp-agendamento" 
+                        class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Confirmar no WhatsApp do Cliente</span>
+                </button>
             </div>
+        </div>
+    </div>
 
     <!-- MODAL DE EXCLUSÃO DE LEAD -->
     <div id="modal-excluir-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
