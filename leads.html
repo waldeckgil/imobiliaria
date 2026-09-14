@@ -432,12 +432,11 @@
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-        let imobiliariaId = null;
-        let usuarioLogadoNome = 'Gestor';
-        let listaLeadsCompleta = [];
-        let listaCorretores = [];
-        let modoLeitura = false;
-        
+      
+imobiliariaId = imob.id;
+                document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
+
+
         let leadEmAgendamento = null;
         let leadEmProposta = null;
         let leadEmTimeline = null;
@@ -738,8 +737,9 @@
                     `;
                 }
 
-                const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo ${usuarioLogadoNome} da equipe de atendimento. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
+       const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo ${usuarioLogadoNome} da equipe de atendimento. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
                 const urlWa = `https://wa.me/${zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo}?text=${msgWa}`;
+
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
