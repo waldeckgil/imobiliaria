@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitrine Imobiliária</title>
+    <title>SGI • Gestão Imobiliária</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
@@ -21,277 +21,369 @@
         .dropdown-menu { display: none; }
         .group-dropdown:hover .dropdown-menu { display: block; }
         .tab-ativa { border-bottom: 2px solid #1c6ba0; color: #1c6ba0; font-weight: 700; }
+        
+        /* Fundo da Landing Page Institucional */
+        .hero-saas-bg {
+            background: linear-gradient(to bottom, rgba(6, 9, 19, 0.88), rgba(15, 23, 42, 0.95)), 
+                        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
     <!-- =========================================================================
-         1. CABEÇALHO (LOGO DINÂMICA, NAVEGAÇÃO E TELEFONE)
+         [MODO 1] LANDING PAGE INSTITUCIONAL SAAS (QUANDO NÃO HÁ ?imob= NA URL)
          ========================================================================= -->
-    <header class="bg-white border-b border-gray-200 py-4 px-4 sm:px-8 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-[1340px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
-            
-            <!-- LOGO DINÂMICA DA IMOBILIÁRIA -->
-            <a href="index.html" class="flex items-center gap-4 cursor-pointer no-underline text-inherit">
+    <div id="secao-landing-saas" class="hidden min-h-screen flex flex-col justify-between hero-saas-bg text-white">
+        
+        <!-- HEADER SAAS -->
+        <header class="border-b border-slate-800/80 py-4 px-6 sm:px-12 backdrop-blur-md bg-slate-950/40">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div id="container-logo-visual" class="text-slate-900 text-3xl font-serif tracking-tighter flex flex-col items-center">
-                        <i class="fa-solid fa-building text-2xl text-slate-800 mb-0.5" id="icone-marca"></i>
-                        <span id="header-nome-curto" class="text-2xl font-serif font-black tracking-widest leading-none">IMOBILIÁRIA</span>
-                        <span class="text-[8px] tracking-[0.4em] font-extrabold uppercase text-slate-600 mt-0.5">I M Ó V E I S</span>
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg">
+                        <i class="fa-solid fa-building-shield"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-black tracking-wider text-white">SGI • GESTÃO IMOBILIÁRIA</h1>
+                        <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Plataforma SaaS Multi-tenant</p>
                     </div>
                 </div>
 
-                <div class="border-l border-gray-300 pl-4">
-                    <p id="header-razao" class="text-sm font-bold text-slate-800 tracking-wide">Carregando...</p>
-                    <p id="header-creci" class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">CRECI ---</p>
-                    <p id="header-slogan" class="text-xs text-slate-500 italic font-serif mt-0.5">Gestão Imobiliária de Alto Padrão</p>
-                </div>
-            </a>
-
-            <!-- NAVEGAÇÃO E TELEFONE -->
-            <div class="flex items-center gap-6 text-[13px] font-bold text-slate-800 flex-wrap justify-center">
-                
-                <!-- VENDA -->
-                <div class="relative group-dropdown py-2">
-                    <button class="flex items-center gap-1 hover:text-blue-700 transition uppercase tracking-wide">
-                        VENDA <i class="fa-solid fa-caret-down text-blue-700"></i>
-                    </button>
-                    <div class="dropdown-menu absolute left-0 top-full bg-white shadow-2xl rounded-b-xl border border-gray-200 py-1.5 w-56 z-50 text-[13px]">
-                        <a href="javascript:void(0)" onclick="filtrarTipo('')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800 border-b border-gray-100">Todos os Imóveis</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Apartamento')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Apartamento</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Casa')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Casa</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Comercial')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Comercial</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Terreno')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Terreno</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Casa em Condomínio')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Casa em Condomínio</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Cobertura')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Cobertura</a>
-                        <a href="javascript:void(0)" onclick="filtrarTipo('Sítio')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Sítio</a>
-                    </div>
-                </div>
-
-                <!-- CONTATO -->
-                <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
-                    CONTATO
-                </a>
-
-                <!-- BOTÃO TELEFONE DINÂMICO -->
-                <a id="btn-telefone-header" href="tel:" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
-                    <i class="fa-solid fa-phone text-xs"></i>
-                    <span id="txt-telefone-header">Atendimento</span>
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- =========================================================================
-         2. FAIXA PRETA DE TÍTULO E BUSCA POR CÓDIGO
-         ========================================================================= -->
-    <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
-        <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
-                    Catálogo de Imóveis Disponíveis
-                </h1>
-                <p class="text-xs text-gray-300 mt-1">
-                    <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
-                </p>
-            </div>
-
-            <!-- CAMPO: BUSCAR CÓDIGO -->
-            <div class="w-full md:w-64">
-                <div class="relative flex items-center">
-                    <input type="text" id="campoBuscarCodigo" placeholder="Buscar Código (ex: 720)" 
-                           onkeydown="if(event.key === 'Enter') buscarCodigo();"
-                           class="w-full bg-black/40 border border-gray-600 rounded px-3 py-1.5 text-xs text-white placeholder-gray-400 outline-none focus:border-white">
-                    <button onclick="buscarCodigo()" class="absolute right-2 text-gray-300 hover:text-white text-xs cursor-pointer">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
+                <div class="flex items-center gap-3 text-xs">
+                    <a href="login.html" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2.5 rounded-xl border border-slate-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-cyan-400"></i>
+                        <span>Área do Cliente</span>
+                    </a>
                 </div>
             </div>
-        </div>
-    </div>
+        </header>
 
-    <!-- =========================================================================
-         3. CONTEÚDO PRINCIPAL: LISTA DE IMÓVEIS + BARRA LATERAL DE FILTROS
-         ========================================================================= -->
-    <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- CONTEÚDO HERO DA LANDING PAGE -->
+        <main class="max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center my-auto">
             
-            <!-- COLUNA ESQUERDA: LISTAGEM DE IMÓVEIS DINÂMICA (8 COLUNAS) -->
-            <div id="container-imoveis" class="lg:col-span-8 space-y-6">
-                <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
-                    <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
-                    <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
-                </div>
+            <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-6 shadow-sm">
+                <i class="fa-solid fa-rocket"></i> Tecnologia para Imobiliárias e Corretores
             </div>
 
-            <!-- COLUNA DIREITA: BARRA LATERAL AMARELA DE FILTROS (4 COLUNAS) -->
-            <div class="lg:col-span-4">
-                <div class="bg-filtro-amarelo border rounded-lg p-5 shadow-sm">
-                    <div class="flex items-center justify-between pb-3 border-b border-amber-300">
-                        <h3 class="font-black text-slate-900 uppercase tracking-wide text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-filter text-slate-700"></i> Filtrar Imóveis
-                        </h3>
-                        <button onclick="limparFiltros()" class="text-[11px] font-bold text-slate-700 underline hover:text-black cursor-pointer">
-                            Limpar
-                        </button>
-                    </div>
+            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+                Potencialize suas Vendas com uma Vitrine Digital de Alto Padrão
+            </h2>
 
-                    <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 mt-4 text-xs">
-                        
-                        <!-- FINALIDADE -->
-                        <div>
-                            <label class="block font-bold text-slate-800 mb-1">Finalidade</label>
-                            <select id="filtro-finalidade" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
-                                <option value="">Todas as Finalidades</option>
-                                <option value="Venda" selected>Comprar (Venda)</option>
-                                <option value="Locacao">Alugar (Locação)</option>
-                            </select>
-                        </div>
+            <p class="text-sm sm:text-base text-slate-300 mt-6 max-w-3xl mx-auto leading-relaxed">
+                A plataforma completa para gestão comercial imobiliária: catálogo online moderno, funil de captação de leads integrado ao WhatsApp, gestão de corretores e geração instantânea de fichas comerciais em PDF.
+            </p>
 
-                        <!-- TIPO DE IMÓVEL -->
-                        <div>
-                            <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
-                            <select id="filtro-tipo" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
-                                <option value="">Todos os Tipos</option>
-                                <option value="Apartamento">Apartamento</option>
-                                <option value="Casa">Casa</option>
-                                <option value="Terreno">Terreno</option>
-                                <option value="Comercial">Comercial</option>
-                                <option value="Cobertura">Cobertura</option>
-                            </select>
-                        </div>
-
-                        <!-- BAIRRO -->
-                        <div>
-                            <label class="block font-bold text-slate-800 mb-1">Buscar por Bairro</label>
-                            <input type="text" id="filtro-bairro" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
-                        </div>
-
-                        <!-- FAIXA DE PREÇO -->
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="block font-bold text-slate-800 mb-1">Preço Mínimo</label>
-                                <input type="number" id="filtro-preco-min" placeholder="R$ Min" class="w-full bg-white border border-amber-300 rounded p-2 text-xs outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-slate-800 mb-1">Preço Máximo</label>
-                                <input type="number" id="filtro-preco-max" placeholder="R$ Max" class="w-full bg-white border border-amber-300 rounded p-2 text-xs outline-none">
-                            </div>
-                        </div>
-
-                        <!-- DORMITÓRIOS -->
-                        <div>
-                            <label class="block font-bold text-slate-800 mb-1">Quartos Mínimos</label>
-                            <input type="hidden" id="filtro-quartos" value="0">
-                            <div class="grid grid-cols-4 gap-1">
-                                <button type="button" onclick="selecionarQuarto(1, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">1+</button>
-                                <button type="button" onclick="selecionarQuarto(2, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">2+</button>
-                                <button type="button" onclick="selecionarQuarto(3, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">3+</button>
-                                <button type="button" onclick="selecionarQuarto(4, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">4+</button>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
-                            <i class="fa-solid fa-magnifying-glass mr-1.5"></i> Filtrar Imóveis
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- =========================================================================
-         4. MODAL DE CAPTURA DE LEAD
-         ========================================================================= -->
-    <div id="modal-lead" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
-            <button onclick="fecharModalLead()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-lg cursor-pointer">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="flex items-center gap-2 text-blue-700 font-bold text-sm uppercase tracking-wide">
-                <i class="fa-regular fa-paper-plane"></i>
-                <span>Atendimento Imediato</span>
-            </div>
-
-            <h3 class="text-lg font-black text-slate-800 mt-1" id="modal-titulo-imovel">Imóvel</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Preencha abaixo para receber a ficha completa e conversar com nossa equipe.</p>
-
-            <form id="form-lead" onsubmit="enviarLead(event)" class="space-y-3 mt-4 text-xs">
-                <input type="hidden" id="lead-imovel-id" value="">
-                <input type="hidden" id="lead-imovel-ref" value="">
+            <!-- BOTÕES DE AÇÃO / CTAs -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
                 
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo *</label>
-                    <input type="text" id="lead-nome" required placeholder="Ex: João da Silva" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Seu WhatsApp (com DDD) *</label>
-                    <input type="tel" id="lead-zap" required placeholder="(00) 90000-0000" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
-                    <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel..."></textarea>
-                </div>
-
-                <button type="submit" id="btn-submit-lead" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer">
+                <!-- BOTAO WHATSAPP DO ADMINISTRADOR -->
+                <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+conhecer+mais+sobre+a+plataforma+SGI+Gest%C3%A3o+Imobili%C3%A1ria." 
+                   target="_blank" 
+                   class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black px-7 py-4 rounded-xl shadow-xl transition flex items-center justify-center gap-2.5 text-sm cursor-pointer">
                     <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Enviar e Abrir no WhatsApp</span>
-                </button>
-            </form>
-        </div>
+                    <span>Falar no WhatsApp: (21) 96412-0231</span>
+                </a>
+
+                <!-- BOTAO CADASTRO TESTE GRÁTIS -->
+                <a href="cadastro-imobiliaria.html" 
+                   class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-7 py-4 rounded-xl shadow-xl transition flex items-center justify-center gap-2.5 text-sm cursor-pointer">
+                    <span>Iniciar Teste Grátis de 30 Dias</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+
+            </div>
+
+            <!-- DIFERENCIAIS DA PLATAFORMA -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 text-left">
+                <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-md">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h3 class="text-sm font-black text-white">Vitrine Própria Exclusiva</h3>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">Catálogo dinâmico para divulgar seus imóveis nas redes sociais com link amigável.</p>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-md">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h3 class="text-sm font-black text-white">Conversão de Leads</h3>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">Captação ágil de clientes interessados com direcionamento direto para o WhatsApp.</p>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl backdrop-blur-md">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg mb-3">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <h3 class="text-sm font-black text-white">Fichas em PDF (A4)</h3>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">Gere em um clique folhetos comerciais elegantes com a marca da sua imobiliária.</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- RODAPÉ INSTITUCIONAL SAAS -->
+        <footer class="border-t border-slate-800/80 py-6 px-6 text-center text-xs text-slate-400 bg-slate-950/60 backdrop-blur-md space-y-1">
+            <p class="font-bold text-slate-300">
+                Desenvolvido por WB Projetos de Gestão Comercial | WhatsApp: (21) 96412-0231
+            </p>
+            <p class="text-[11px] text-slate-500">
+                SGI • Plataforma SaaS Imobiliária Multi-tenant • Todos os direitos reservados.
+            </p>
+        </footer>
+
     </div>
 
-    <!-- BOTÃO FLUTUANTE DO WHATSAPP (TOTALMENTE DINÂMICO) -->
-    <a id="btn-flutuante-zap" href="#" target="_blank" 
-       class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40 hidden">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
-
     <!-- =========================================================================
-         5. RODAPÉ INSTITUCIONAL (DINÂMICO)
+         [MODO 2] VITRINE PÚBLICA DA IMOBILIÁRIA (QUANDO HÁ ?imob=slug NA URL)
          ========================================================================= -->
-    <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
-        <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <div class="text-white text-xl font-serif font-black tracking-widest leading-none mb-1" id="footer-nome">IMOBILIÁRIA</div>
-                <p id="footer-creci" class="text-[10px] text-slate-500 font-bold uppercase">CRECI</p>
-                <p class="text-slate-400 mt-2 leading-relaxed" id="footer-sobre">
-                    Intermediação e consultoria imobiliária com transparência e segurança jurídica.
-                </p>
-            </div>
+    <div id="secao-vitrine-imobiliaria" class="hidden flex-col min-h-screen justify-between">
 
-            <div>
-                <h4 class="text-white font-bold uppercase text-[11px] mb-3">Atendimento</h4>
-                <p id="footer-telefone" class="leading-relaxed"><i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ---</p>
-                <p id="footer-email" class="leading-relaxed mt-1"><i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> ---</p>
-                <p id="footer-endereco" class="leading-relaxed mt-1"><i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ---</p>
-            </div>
+        <!-- CABEÇALHO DA IMOBILIÁRIA -->
+        <header class="bg-white border-b border-gray-200 py-4 px-4 sm:px-8 sticky top-0 z-40 shadow-sm">
+            <div class="max-w-[1340px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
+                
+                <a href="index.html" class="flex items-center gap-4 cursor-pointer no-underline text-inherit">
+                    <div class="flex items-center gap-3">
+                        <div id="container-logo-visual" class="text-slate-900 text-3xl font-serif tracking-tighter flex flex-col items-center">
+                            <i class="fa-solid fa-building text-2xl text-slate-800 mb-0.5" id="icone-marca"></i>
+                            <span id="header-nome-curto" class="text-2xl font-serif font-black tracking-widest leading-none">IMOBILIÁRIA</span>
+                            <span class="text-[8px] tracking-[0.4em] font-extrabold uppercase text-slate-600 mt-0.5">I M Ó V E I S</span>
+                        </div>
+                    </div>
 
-            <div>
-                <h4 class="text-white font-bold uppercase text-[11px] mb-3">Navegação</h4>
-                <ul class="space-y-1">
-                    <li><a href="javascript:void(0)" onclick="filtrarTipo('Apartamento')" class="hover:text-white">Apartamentos</a></li>
-                    <li><a href="javascript:void(0)" onclick="filtrarTipo('Casa')" class="hover:text-white">Casas</a></li>
-                    <li><a href="javascript:void(0)" onclick="filtrarTipo('Terreno')" class="hover:text-white">Terrenos</a></li>
-                    <li><a href="login.html" class="hover:text-cyan-400 font-bold text-[11px] mt-2 block"><i class="fa-solid fa-lock mr-1"></i> Área Restrita do Gestor</a></li>
-                </ul>
-            </div>
+                    <div class="border-l border-gray-300 pl-4">
+                        <p id="header-razao" class="text-sm font-bold text-slate-800 tracking-wide">Carregando...</p>
+                        <p id="header-creci" class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">CRECI ---</p>
+                        <p id="header-slogan" class="text-xs text-slate-500 italic font-serif mt-0.5">Gestão Imobiliária de Alto Padrão</p>
+                    </div>
+                </a>
 
-            <div>
-                <h4 class="text-white font-bold uppercase text-[11px] mb-3">Tecnologia Multi-tenant</h4>
-                <p class="text-[11px] text-slate-500 leading-relaxed">
-                    Plataforma SGI SaaS protegida por PostgreSQL Row Level Security (RLS). Todos os direitos reservados.
-                </p>
+                <div class="flex items-center gap-6 text-[13px] font-bold text-slate-800 flex-wrap justify-center">
+                    <div class="relative group-dropdown py-2">
+                        <button class="flex items-center gap-1 hover:text-blue-700 transition uppercase tracking-wide">
+                            VENDA <i class="fa-solid fa-caret-down text-blue-700"></i>
+                        </button>
+                        <div class="dropdown-menu absolute left-0 top-full bg-white shadow-2xl rounded-b-xl border border-gray-200 py-1.5 w-56 z-50 text-[13px]">
+                            <a href="javascript:void(0)" onclick="filtrarTipo('')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800 border-b border-gray-100">Todos os Imóveis</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Apartamento')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Apartamento</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Casa')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Casa</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Comercial')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Comercial</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Terreno')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Terreno</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Casa em Condomínio')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Casa em Condomínio</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Cobertura')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Cobertura</a>
+                            <a href="javascript:void(0)" onclick="filtrarTipo('Sítio')" class="block px-4 py-2 hover:bg-blue-50 text-slate-800">Sítio</a>
+                        </div>
+                    </div>
+
+                    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
+                        CONTATO
+                    </a>
+
+                    <a id="btn-telefone-header" href="tel:" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
+                        <i class="fa-solid fa-phone text-xs"></i>
+                        <span id="txt-telefone-header">Atendimento</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- FAIXA PRETA DE BUSCA -->
+        <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
+            <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
+                        Catálogo de Imóveis Disponíveis
+                    </h1>
+                    <p class="text-xs text-gray-300 mt-1">
+                        <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
+                    </p>
+                </div>
+
+                <div class="w-full md:w-64">
+                    <div class="relative flex items-center">
+                        <input type="text" id="campoBuscarCodigo" placeholder="Buscar Código (ex: 720)" 
+                               onkeydown="if(event.key === 'Enter') buscarCodigo();"
+                               class="w-full bg-black/40 border border-gray-600 rounded px-3 py-1.5 text-xs text-white placeholder-gray-400 outline-none focus:border-white">
+                        <button onclick="buscarCodigo()" class="absolute right-2 text-gray-300 hover:text-white text-xs cursor-pointer">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
+
+        <!-- CONTEÚDO PRINCIPAL (CATÁLOGO + FILTROS) -->
+        <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <div id="container-imoveis" class="lg:col-span-8 space-y-6">
+                    <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
+                        <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+                        <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
+                    </div>
+                </div>
+
+                <!-- BARRA LATERAL AMARELA DE FILTROS -->
+                <div class="lg:col-span-4">
+                    <div class="bg-filtro-amarelo border rounded-lg p-5 shadow-sm">
+                        <div class="flex items-center justify-between pb-3 border-b border-amber-300">
+                            <h3 class="font-black text-slate-900 uppercase tracking-wide text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-filter text-slate-700"></i> Filtrar Imóveis
+                            </h3>
+                            <button onclick="limparFiltros()" class="text-[11px] font-bold text-slate-700 underline hover:text-black cursor-pointer">
+                                Limpar
+                            </button>
+                        </div>
+
+                        <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 mt-4 text-xs">
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Finalidade</label>
+                                <select id="filtro-finalidade" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                    <option value="">Todas as Finalidades</option>
+                                    <option value="Venda" selected>Comprar (Venda)</option>
+                                    <option value="Locacao">Alugar (Locação)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
+                                <select id="filtro-tipo" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                    <option value="">Todos os Tipos</option>
+                                    <option value="Apartamento">Apartamento</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Terreno">Terreno</option>
+                                    <option value="Comercial">Comercial</option>
+                                    <option value="Cobertura">Cobertura</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Buscar por Bairro</label>
+                                <input type="text" id="filtro-bairro" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-bold text-slate-800 mb-1">Preço Mínimo</label>
+                                    <input type="number" id="filtro-preco-min" placeholder="R$ Min" class="w-full bg-white border border-amber-300 rounded p-2 text-xs outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-800 mb-1">Preço Máximo</label>
+                                    <input type="number" id="filtro-preco-max" placeholder="R$ Max" class="w-full bg-white border border-amber-300 rounded p-2 text-xs outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Quartos Mínimos</label>
+                                <input type="hidden" id="filtro-quartos" value="0">
+                                <div class="grid grid-cols-4 gap-1">
+                                    <button type="button" onclick="selecionarQuarto(1, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">1+</button>
+                                    <button type="button" onclick="selecionarQuarto(2, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">2+</button>
+                                    <button type="button" onclick="selecionarQuarto(3, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">3+</button>
+                                    <button type="button" onclick="selecionarQuarto(4, this)" class="btn-quarto bg-white border border-amber-300 py-1.5 rounded font-bold hover:bg-amber-100">4+</button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
+                                <i class="fa-solid fa-magnifying-glass mr-1.5"></i> Filtrar Imóveis
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- MODAL DE CAPTURA DE LEAD -->
+        <div id="modal-lead" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+                <button onclick="fecharModalLead()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-lg cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <div class="flex items-center gap-2 text-blue-700 font-bold text-sm uppercase tracking-wide">
+                    <i class="fa-regular fa-paper-plane"></i>
+                    <span>Atendimento Imediato</span>
+                </div>
+
+                <h3 class="text-lg font-black text-slate-800 mt-1" id="modal-titulo-imovel">Imóvel</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Preencha abaixo para receber a ficha completa e conversar com nossa equipe.</p>
+
+                <form id="form-lead" onsubmit="enviarLead(event)" class="space-y-3 mt-4 text-xs">
+                    <input type="hidden" id="lead-imovel-id" value="">
+                    <input type="hidden" id="lead-imovel-ref" value="">
+                    
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo *</label>
+                        <input type="text" id="lead-nome" required placeholder="Ex: João da Silva" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Seu WhatsApp (com DDD) *</label>
+                        <input type="tel" id="lead-zap" required placeholder="(00) 90000-0000" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
+                        <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel..."></textarea>
+                    </div>
+
+                    <button type="submit" id="btn-submit-lead" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Enviar e Abrir no WhatsApp</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- BOTÃO FLUTUANTE DO WHATSAPP DA IMOBILIÁRIA -->
+        <a id="btn-flutuante-zap" href="#" target="_blank" 
+           class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40 hidden">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+
+        <!-- RODAPÉ DA IMOBILIÁRIA -->
+        <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
+            <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-white text-xl font-serif font-black tracking-widest leading-none mb-1" id="footer-nome">IMOBILIÁRIA</div>
+                    <p id="footer-creci" class="text-[10px] text-slate-500 font-bold uppercase">CRECI</p>
+                    <p class="text-slate-400 mt-2 leading-relaxed" id="footer-sobre">
+                        Intermediação e consultoria imobiliária com transparência e segurança jurídica.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold uppercase text-[11px] mb-3">Atendimento</h4>
+                    <p id="footer-telefone" class="leading-relaxed"><i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ---</p>
+                    <p id="footer-email" class="leading-relaxed mt-1"><i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> ---</p>
+                    <p id="footer-endereco" class="leading-relaxed mt-1"><i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ---</p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold uppercase text-[11px] mb-3">Navegação</h4>
+                    <ul class="space-y-1">
+                        <li><a href="javascript:void(0)" onclick="filtrarTipo('Apartamento')" class="hover:text-white">Apartamentos</a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarTipo('Casa')" class="hover:text-white">Casas</a></li>
+                        <li><a href="javascript:void(0)" onclick="filtrarTipo('Terreno')" class="hover:text-white">Terrenos</a></li>
+                        <li><a href="login.html" class="hover:text-cyan-400 font-bold text-[11px] mt-2 block"><i class="fa-solid fa-lock mr-1"></i> Área Restrita do Gestor</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold uppercase text-[11px] mb-3">Tecnologia</h4>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        Plataforma SGI SaaS protegida por PostgreSQL Row Level Security (RLS). Todos os direitos reservados.
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
 
     <!-- =========================================================================
-         6. JAVASCRIPT: TOTALMENTE DINÂMICO E HIGIENIZADO
+         JAVASCRIPT DE ROTEAMENTO (SAAS vs VITRINE)
          ========================================================================= -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
@@ -303,41 +395,36 @@
         let tenantAtual = null;
         let listaImoveisCache = [];
 
-        // 1. Identificar a Imobiliária pela URL (?imob=slug)
+        // 1. Decisor de Roteamento (SaaS Landing Page vs Vitrine de Imobiliária)
         function identificarTenant() {
             const urlParams = new URLSearchParams(window.location.search);
             slugAtual = urlParams.get('imob');
 
             if (!slugAtual) {
-                // Se não passou slug, busca a primeira imobiliária ativa para demonstração
-                carregarPrimeiraImobiliariaAtiva();
+                // SEM SLUG: Ativa a Landing Page Institucional da WB Projetos
+                exibirLandingPageSaaS();
             } else {
+                // COM SLUG: Ativa a Vitrine da Imobiliária Parceira
+                exibirVitrineImobiliaria();
                 carregarDadosImobiliaria();
             }
         }
 
-        async function carregarPrimeiraImobiliariaAtiva() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('imobiliarias')
-                    .select('*')
-                    .eq('status', 'active')
-                    .limit(1)
-                    .single();
-
-                if (data && !error) {
-                    tenantAtual = data;
-                    aplicarDadosNaTela(data);
-                    carregarImoveisVitrine();
-                } else {
-                    exibirVitrineNaoEncontrada();
-                }
-            } catch (err) {
-                exibirVitrineNaoEncontrada();
-            }
+        // Exibe a Landing Page da sua plataforma
+        function exibirLandingPageSaaS() {
+            document.title = "SGI • Gestão Imobiliária - WB Projetos";
+            document.getElementById('secao-landing-saas').classList.remove('hidden');
+            document.getElementById('secao-vitrine-imobiliaria').classList.add('hidden');
         }
 
-        // 2. Carregar Dados da Imobiliária do Banco
+        // Prepara a tela para a vitrine
+        function exibirVitrineImobiliaria() {
+            document.getElementById('secao-landing-saas').classList.add('hidden');
+            document.getElementById('secao-vitrine-imobiliaria').classList.remove('hidden');
+            document.getElementById('secao-vitrine-imobiliaria').classList.add('flex');
+        }
+
+        // 2. Carregar Dados da Imobiliária
         async function carregarDadosImobiliaria() {
             try {
                 const { data, error } = await supabaseClient
@@ -360,7 +447,6 @@
             }
         }
 
-        // 3. Renderiza os dados reais do GESTOR DA IMOBILIÁRIA na página
         function aplicarDadosNaTela(imob) {
             document.title = `${imob.nome_fantasia} - Imóveis`;
             document.getElementById('header-nome-curto').innerText = imob.nome_fantasia.toUpperCase();
@@ -371,7 +457,6 @@
             document.getElementById('txt-telefone-header').innerText = telefoneExibicao;
             document.getElementById('btn-telefone-header').href = `tel:${telefoneExibicao.replace(/\D/g, '')}`;
 
-            // Botão Flutuante do WhatsApp
             if (imob.whatsapp_contato) {
                 const zapLink = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
                 const btnZap = document.getElementById('btn-flutuante-zap');
@@ -379,7 +464,6 @@
                 btnZap.classList.remove('hidden');
             }
 
-            // Rodapé
             document.getElementById('footer-nome').innerText = imob.nome_fantasia.toUpperCase();
             document.getElementById('footer-creci').innerText = imob.creci_juridico || '';
             document.getElementById('footer-telefone').innerHTML = `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${telefoneExibicao || 'Não informado'}`;
@@ -406,7 +490,7 @@
             `;
         }
 
-        // 4. Carregar Imóveis Reais da Tabela imoveis
+        // 3. Carregar Imóveis da Imobiliária
         async function carregarImoveisVitrine(filtros = {}) {
             if (!tenantAtual) return;
 
@@ -461,7 +545,6 @@
             }
         }
 
-        // 5. Renderizar Cards HTML
         function renderizarCardsImoveis(imoveis) {
             const container = document.getElementById('container-imoveis');
             container.innerHTML = '';
@@ -570,7 +653,6 @@
             });
         }
 
-        // Alternância de Abas no Card
         function alternarAba(codigoRef, aba) {
             const abas = ['desc', 'fotos', 'video'];
             abas.forEach(a => {
@@ -593,7 +675,6 @@
             if (img) img.src = url;
         }
 
-        // Busca Direta por Código
         function buscarCodigo() {
             const cod = document.getElementById('campoBuscarCodigo').value.trim();
             if (!cod) {
@@ -610,7 +691,6 @@
             }
         }
 
-        // Filtros
         function filtrarTipo(tipo) {
             document.getElementById('filtro-tipo').value = tipo;
             document.getElementById('titulo-categoria-atual').innerText = tipo ? `Imóveis Disponíveis: ${tipo}` : 'Todos os Imóveis Disponíveis';
@@ -644,7 +724,6 @@
             carregarImoveisVitrine();
         }
 
-        // Envio de Lead
         function abrirModalLead(idImovel, ref, titulo) {
             document.getElementById('lead-imovel-id').value = idImovel;
             document.getElementById('lead-imovel-ref').value = ref;
