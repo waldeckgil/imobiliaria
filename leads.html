@@ -726,28 +726,81 @@
             }
         }
 
-        function dispararConfirmacaoWhatsApp() {
+
+// Cancelamento de Visita Agendada (Desmarcar)
+        async function cancelarVisitaAgendada() {
+            if (modoLeitura) return;
+            const leadId = document.getElementById('agendamento-lead-id').value;
+            if (!leadId) return;
+
+            if (!confirm('Deseja desmarcar esta visita? O status voltará para "Em Atendimento".')) {
+                return;
+            }
+
+            const btn = document.getElementById('btn-cancelar-visita');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Em Atendimento',
+                        data_agendamento: null
+                    })
+                    .eq('id', leadId);
+
+                if (error) throw error;
+
+                // Atualiza lista local em memória
+                const item = listaLeadsCompleta.find(l => l.id === leadId);
+                if (item) {
+                    item.status = 'Em Atendimento';
+                    item.data_agendamento = null;
+                }
+
+                fecharModalAgendamento();
+                atualizarMetricasFunil(listaLeadsCompleta);
+                renderizarTabelaLeads(listaLeadsCompleta);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao desmarcar visita: ' + err.message);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-calendar-xmark"></i> <span class="hidden sm:inline">Desmarcar</span>';
+                btn.disabled = false;
+            }
+        }
+
+        // Disparo de Mensagem no WhatsApp (Confirmação ou Remarcação)
+        function dispararConfirmacaoWhatsApp(tipo = 'confirmacao') {
             if (!leadEmAgendamento) return;
 
             const dataValor = document.getElementById('agendamento-data').value;
             if (!dataValor) {
-                alert('Defina a data e a hora antes de enviar a confirmação.');
+                alert('Defina o dia e o horário antes de enviar a notificação.');
                 return;
             }
 
             const d = new Date(dataValor);
             const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
             const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            const refImovel = leadEmAgendamento.imovel ? leadEmAgendamento.imovel.codigo_ref : 'combinado';
+            const refImovel = leadEmAgendamento.imovel ? `Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'combinado';
 
             const zapLimpo = ('' + leadEmAgendamento.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
-            const mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel Ref: ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
-            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
+            let mensagem = '';
+            if (tipo === 'reagendamento') {
+                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos sua visita ao imóvel ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
+            } else {
+                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
+            }
 
+            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWa, '_blank');
         }
+
 
         // Atribuição de Corretor Responsável
         async function atribuirCorretorLead(leadId, corretorId) {
