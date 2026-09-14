@@ -432,8 +432,7 @@
 
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-      
-let imobiliariaId = null;
+        let imobiliariaId = null;
         let imobiliariaNomeFantasia = '';
         let usuarioLogadoNome = 'Gestor';
         let listaLeadsCompleta = [];
@@ -444,14 +443,15 @@ let imobiliariaId = null;
         let leadEmProposta = null;
         let leadEmTimeline = null;
 
-async function inicializarLeads() {
-        const { data: { session }, error } = await supabaseClient.auth.getSession();
-        if (error || !session) {
-            window.location.href = 'login.html';
-            return;
-        }
+        async function inicializarLeads() {
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
 
-        const email = session.user.email.toLowerCase();
+            const email = session.user.email.toLowerCase();
+
             // MODO MASTER BYPASS
             if (email === 'waldeckgil@gmail.com') {
                 usuarioLogadoNome = 'Waldeck (Super Admin)';
@@ -463,6 +463,7 @@ async function inicializarLeads() {
                 const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
+                    imobiliariaNomeFantasia = imobPiloto.nome_fantasia || 'nossa imobiliária';
                     document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
                     await carregarEquipeCorretores();
                     await carregarLeads();
@@ -491,6 +492,7 @@ async function inicializarLeads() {
                 if (errImob || !imob) throw new Error('Imobiliária não localizada.');
 
                 imobiliariaId = imob.id;
+                imobiliariaNomeFantasia = imob.nome_fantasia || 'nossa imobiliária';
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
@@ -611,9 +613,8 @@ async function inicializarLeads() {
         // ==========================================
         // MOTOR DE HISTÓRICO & LINHA DO TEMPO (LOG)
         // ==========================================
- async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
+        async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
             try {
-                // Tenta pegar o ID da imobiliária do próprio lead na memória
                 const leadRef = listaLeadsCompleta.find(l => l.id === leadId);
                 const idImobFinal = (leadRef && leadRef.imobiliaria_id) 
                     ? leadRef.imobiliaria_id 
@@ -643,6 +644,7 @@ async function inicializarLeads() {
                 throw err;
             }
         }
+
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
@@ -737,19 +739,19 @@ async function inicializarLeads() {
                             ` : ''}
                         </div>
                     `;
-   
-   const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+                }
+
+                // Configuração do WhatsApp Dinâmico (mensagem institucional apenas para NOVO)
+                const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
-
-                // MENSAGEM PERSONALIZADA SOMENTE SE O LEAD FOR NOVO
                 if (!l.status || l.status === 'Novo') {
                     const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
                     urlWa += `?text=${msgWa}`;
                 }
-   
-                    return `
+
+                return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
                     
@@ -824,10 +826,8 @@ async function inicializarLeads() {
                         </div>
                     </td>
                 </tr>`;
-            }
-         } ).join('');
+            }).join('');
         }
-
 
         // GATILHO DINÂMICO DE MUDANÇA DE STATUS COM AUDITORIA
         async function aoMudarStatusLead(leadId, novoStatus) {
