@@ -258,6 +258,7 @@
                                 </select>
                             </div>
 
+                            <!-- CAMPO DINÂMICO DE BUSCA POR BAIRRO -->
                             <div>
                                 <label class="block font-bold text-slate-800 mb-1">Buscar por Bairro</label>
                                 <input type="text" id="filtro-bairro" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
@@ -410,14 +411,12 @@
             }
         }
 
-        // Exibe a Landing Page da sua plataforma
         function exibirLandingPageSaaS() {
             document.title = "SGI • Gestão Imobiliária - WB Projetos";
             document.getElementById('secao-landing-saas').classList.remove('hidden');
             document.getElementById('secao-vitrine-imobiliaria').classList.add('hidden');
         }
 
-        // Prepara a tela para a vitrine
         function exibirVitrineImobiliaria() {
             document.getElementById('secao-landing-saas').classList.add('hidden');
             document.getElementById('secao-vitrine-imobiliaria').classList.remove('hidden');
