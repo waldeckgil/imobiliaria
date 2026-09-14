@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <!-- QUADRO DE BLINDAGEM DE CARTEIRA (EXPLICATIVO) -->
+        <!-- QUADRO DE BLINDAGEM DE CARTEIRA -->
         <div class="box-tech p-4 border border-cyan-500/30 bg-cyan-950/10 flex items-start gap-3">
             <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i class="fa-solid fa-shield-halved"></i>
@@ -275,19 +275,20 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Gestão de Equipe & Permissões
     </footer>
 
-    <!-- JAVASCRIPT DE OPERAÇÃO DE EQUIPE -->
+    <!-- JAVASCRIPT DE OPERAÇÃO DE EQUIPE (CORRIGIDO COM 'supabaseClient') -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Corrigido para supabaseClient
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let listaEquipeCompleta = [];
         let modoLeitura = false;
 
         async function inicializarEquipe() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (error || !session) {
                 window.location.href = 'login.html';
                 return;
@@ -302,7 +303,7 @@
                 document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-                const { data: imobPiloto } = await supabase.from('imobiliarias').select('*').limit(1).single();
+                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
                     await carregarMembrosEquipe();
@@ -312,7 +313,7 @@
 
             // GESTOR DA IMOBILIÁRIA (VERIFICAÇÃO DE PRIVILÉGIO DONO)
             try {
-                const { data: usuario, error: errUser } = await supabase
+                const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('user_id', session.user.id)
@@ -326,7 +327,7 @@
                     return;
                 }
 
-                const { data: imob, error: errImob } = await supabase
+                const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
                     .eq('id', usuario.imobiliaria_id)
@@ -363,7 +364,7 @@
         async function carregarMembrosEquipe() {
             const tbody = document.getElementById('tabela-equipe-corpo');
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('imobiliaria_id', imobiliariaId)
@@ -410,7 +411,6 @@
                 const iniciais = (m.nome_completo || 'C').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
                 const perms = m.permissoes || {};
                 
-                // Badges de permissões
                 const badgeProprietario = perms.ver_proprietarios 
                     ? '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px]" title="Pode ver telefones dos proprietários">Proprietários OK</span>'
                     : '<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-500 text-[10px]" title="Telefones dos proprietários ocultos">Proprietários Ocultos</span>';
@@ -423,7 +423,6 @@
                     ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800 text-[10px]">Financeiro</span>' 
                     : '';
 
-                // Toggle ativo
                 const toggleClass = m.ativo ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
 
@@ -481,7 +480,7 @@
         async function alternarStatusColaborador(idNum, statusAtual) {
             if (modoLeitura) return;
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('usuarios')
                     .update({ ativo: !statusAtual })
                     .eq('id', idNum);
@@ -519,7 +518,6 @@
             document.getElementById('colab-cargo').value = membro.cargo || 'corretor';
             document.getElementById('colab-email').value = membro.email || '';
             
-            // Em modo de edição, não obriga redefinição de senha
             document.getElementById('bloco-senha-novo').classList.add('hidden');
             document.getElementById('colab-senha').required = false;
 
@@ -574,7 +572,7 @@
             try {
                 if (idEdicao) {
                     // MODO EDIÇÃO
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('usuarios')
                         .update({
                             nome_completo: nome,
@@ -590,12 +588,11 @@
                     await carregarMembrosEquipe();
 
                 } else {
-                    // MODO NOVO CADASTRO: CLIENTE SUPABASE ISOLADO (persistSession: false)
+                    // MODO NOVO CADASTRO
                     const tempAuthClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
                         auth: { persistSession: false, autoRefreshToken: false }
                     });
 
-                    // Cria no Supabase Auth sem derrubar a sessão do gestor
                     const { data: authData, error: authError } = await tempAuthClient.auth.signUp({
                         email: email,
                         password: senha,
@@ -605,8 +602,7 @@
                     if (authError) throw authError;
                     if (!authData.user) throw new Error('Não foi possível registrar o usuário de autenticação.');
 
-                    // Insere na tabela usuarios vinculado ao imobiliaria_id atual
-                    const { error: dbError } = await supabase
+                    const { error: dbError } = await supabaseClient
                         .from('usuarios')
                         .insert([{
                             user_id: authData.user.id,
@@ -625,7 +621,6 @@
                     fecharModalColaborador();
                     await carregarMembrosEquipe();
 
-                    // Prepara o WhatsApp de Despacho de Acesso
                     const linkLogin = window.location.origin + window.location.pathname.replace('equipe.html', 'login.html');
                     const msg = encodeURIComponent(`Olá ${nome}! Seu acesso à plataforma da nossa imobiliária foi criado com sucesso:\n\n🔗 Link de Acesso: ${linkLogin}\n📧 E-mail: ${email}\n🔑 Senha Provisória: ${senha}\n\nPor favor, faça seu login e altere sua senha no primeiro acesso.`);
                     const urlWa = `https://wa.me/${zap}?text=${msg}`;
@@ -651,7 +646,7 @@
 
         async function executarLogout() {
             if (confirm('Deseja realmente sair?')) {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 sessionStorage.clear();
                 window.location.href = 'login.html';
             }

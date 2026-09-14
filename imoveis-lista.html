@@ -224,19 +224,20 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Gestão Operacional de Catálogo
     </footer>
 
-    <!-- JAVASCRIPT DE OPERAÇÃO DO CATÁLOGO -->
+    <!-- JAVASCRIPT DE OPERAÇÃO DO CATÁLOGO (AJUSTADO COM 'supabaseClient') -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Corrigido para não conflitar com window.supabase
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let listaImoveisCompleta = [];
         let modoLeitura = false;
 
         async function inicializarCatalogo() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (error || !session) {
                 window.location.href = 'login.html';
                 return;
@@ -251,7 +252,7 @@
                 document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-                const { data: imobPiloto } = await supabase.from('imobiliarias').select('*').limit(1).single();
+                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
                     document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
@@ -262,7 +263,7 @@
 
             // GESTOR / CORRETOR LOGADO
             try {
-                const { data: usuario, error: errUser } = await supabase
+                const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('user_id', session.user.id)
@@ -270,7 +271,7 @@
 
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
-                const { data: imob, error: errImob } = await supabase
+                const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
                     .eq('id', usuario.imobiliaria_id)
@@ -307,7 +308,7 @@
         // Busca os imóveis daquela imobiliária
         async function carregarImoveis() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
                     .eq('imobiliaria_id', imobiliariaId)
@@ -361,13 +362,11 @@
                 const foto = im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
                 const precoFormatado = Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 
-                // Badges de Status Comercial
                 let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
                 if (im.status === 'Disponível') statusBadge = 'bg-emerald-950 text-emerald-400 border-emerald-800';
                 if (im.status === 'Em Proposta') statusBadge = 'bg-amber-950 text-amber-400 border-amber-800';
                 if (im.status === 'Vendido' || im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-400 border-purple-800';
 
-                // Botão Toggle Ativo/Inativo
                 const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
 
@@ -422,7 +421,7 @@
         async function alternarVisibilidadeVitrine(imovelId, estadoAtual) {
             if (modoLeitura) return;
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('imoveis')
                     .update({ ativa: !estadoAtual })
                     .eq('id', imovelId);
@@ -482,7 +481,7 @@
             btn.disabled = true;
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('imoveis')
                     .delete()
                     .eq('id', id);
@@ -503,13 +502,12 @@
         // Logout
         async function executarLogout() {
             if (confirm('Deseja encerrar a sessão?')) {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 sessionStorage.clear();
                 window.location.href = 'login.html';
             }
         }
 
-        
         window.addEventListener('DOMContentLoaded', inicializarCatalogo);
     </script>
 </body>

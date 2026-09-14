@@ -20,7 +20,7 @@
 <body class="min-h-screen flex flex-col justify-between">
 
     <!-- =========================================================================
-         1. FAIXA DE ALERTA: MODO SOMENTE LEITURA (INADIMPLÊNCIA / TRIAL VENCIDO)
+         1. FAIXA DE ALERTA: MODO SOMENTE LEITURA
          ========================================================================= -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
@@ -61,7 +61,7 @@
                     <span>Ver Minha Vitrine</span>
                 </a>
 
-                <!-- BOTÃO + NOVO IMÓVEL (TRAVADO EM MODO LEITURA) -->
+                <!-- BOTÃO + NOVO IMÓVEL -->
                 <a id="btn-novo-imovel" href="imovel-form.html" 
                    class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow">
                     <i class="fa-solid fa-plus text-xs"></i>
@@ -78,7 +78,7 @@
     </header>
 
     <!-- =========================================================================
-         3. SUB-MENU DE NAVEGAÇÃO DOS MÓDULOS (HUB DE OPERAÇÕES)
+         3. SUB-MENU DE NAVEGAÇÃO DOS MÓDULOS
          ========================================================================= -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
         <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
@@ -105,7 +105,7 @@
          ========================================================================= -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
         
-        <!-- CARDS DE CONTROLE IMEDIATO (KPIs HOJE) -->
+        <!-- CARDS DE CONTROLE IMEDIATO (KPIs) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
             <!-- CARD 1: IMÓVEIS ATIVOS -->
@@ -173,7 +173,7 @@
                         <i class="fa-solid fa-inbox mr-1"></i> Leads Recentes
                     </button>
                     <button onclick="mudarAba('graficos')" id="tab-btn-graficos" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
-                        <i class="fa-solid fa-chart-column mr-1"></i> Imóveis por Bairro (CSS)
+                        <i class="fa-solid fa-chart-column mr-1"></i> Imóveis por Bairro
                     </button>
                 </div>
 
@@ -233,39 +233,12 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DA ABA 3: GRÁFICO EM BARRAS CSS PURO -->
+            <!-- CONTEÚDO DA ABA 3: GRÁFICO DINÂMICO DE BAIRROS (SEM TEXTOS FIXOS) -->
             <div id="aba-conteudo-graficos" class="hidden space-y-4 pt-2">
                 <div class="max-w-xl space-y-3" id="container-grafico-bairros">
                     <p class="text-xs text-slate-400 mb-2">Concentração do estoque por localização:</p>
-                    
-                    <div>
-                        <div class="flex justify-between text-xs font-bold mb-1">
-                            <span class="text-slate-300">Carvoeira</span>
-                            <span class="text-cyan-400" id="graf-carvoeira-txt">1 imóvel (100%)</span>
-                        </div>
-                        <div class="w-full bg-slate-950 rounded-full h-3.5 border border-slate-800 overflow-hidden">
-                            <div class="bg-cyan-400 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between text-xs font-bold mb-1">
-                            <span class="text-slate-300">Centro</span>
-                            <span class="text-slate-500">0 imóveis (0%)</span>
-                        </div>
-                        <div class="w-full bg-slate-950 rounded-full h-3.5 border border-slate-800 overflow-hidden">
-                            <div class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between text-xs font-bold mb-1">
-                            <span class="text-slate-300">Agronômica</span>
-                            <span class="text-slate-500">0 imóveis (0%)</span>
-                        </div>
-                        <div class="w-full bg-slate-950 rounded-full h-3.5 border border-slate-800 overflow-hidden">
-                            <div class="bg-purple-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
+                    <div id="lista-barras-bairros" class="space-y-3">
+                        <div class="text-slate-500 text-xs italic py-4">Carregando métricas de localização...</div>
                     </div>
                 </div>
             </div>
@@ -280,13 +253,12 @@
     </footer>
 
     <!-- =========================================================================
-         6. JAVASCRIPT: AUDITORIA DE SESSÃO & QUERIES SUPABASE (COM 'supabaseClient')
+         6. JAVASCRIPT DINÂMICO
          ========================================================================= -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        // Instância nomeada como supabaseClient para eliminar conflito com window.supabase
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let dadosSessao = null;
@@ -339,13 +311,13 @@
 
                 dadosImobiliaria = imob;
 
-                // Atualiza a Topbar com os dados reais do Paulo Castro e da Imobiliária
+                // Atualiza a Topbar com os dados reais da Imobiliária e do Gestor
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'dono').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
-                // 3. Auditoria Financeira (Modo Somente Leitura)
+                // 3. Auditoria Financeira
                 const hoje = new Date().toISOString().split('T')[0];
                 const estaVencido = imob.data_vencimento && imob.data_vencimento < hoje;
                 const estaBloqueado = imob.status === 'blocked' || estaVencido;
@@ -358,6 +330,7 @@
                 carregarMetricas(imob.id);
                 carregarCatalogo(imob.id);
                 carregarLeads(imob.id);
+                carregarGraficoBairros(imob.id);
 
             } catch (err) {
                 console.error(err);
@@ -379,6 +352,7 @@
                 carregarMetricas(imobPiloto.id);
                 carregarCatalogo(imobPiloto.id);
                 carregarLeads(imobPiloto.id);
+                carregarGraficoBairros(imobPiloto.id);
             }
         }
 
@@ -392,7 +366,7 @@
             }
         }
 
-        // 5. Consulta de KPIs / Métricas
+        // 5. Consulta de KPIs
         async function carregarMetricas(imobId) {
             try {
                 // Total Imóveis Ativos
@@ -463,7 +437,7 @@
                             <span class="font-bold text-white truncate max-w-xs">${im.titulo}</span>
                         </td>
                         <td class="py-3 px-3 font-mono text-cyan-400 font-bold">${im.codigo_ref}</td>
-                        <td class="py-3 px-3">${im.tipo} • ${im.bairro || 'Florianópolis'}</td>
+                        <td class="py-3 px-3">${im.tipo} • ${im.bairro || 'Localização'}</td>
                         <td class="py-3 px-3 font-bold text-slate-200">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</td>
                         <td class="py-3 px-3">
                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-300'}">
@@ -529,7 +503,61 @@
             }
         }
 
-        // 8. Controle das Abas Rápidas
+        // 8. Carregamento do Gráfico Dinâmico de Bairros (Calculado em Tempo Real)
+        async function carregarGraficoBairros(imobId) {
+            const container = document.getElementById('lista-barras-bairros');
+            try {
+                const { data: imoveis, error } = await supabaseClient
+                    .from('imoveis')
+                    .select('bairro')
+                    .eq('imobiliaria_id', imobId);
+
+                if (error) throw error;
+
+                if (!imoveis || imoveis.length === 0) {
+                    container.innerHTML = '<p class="text-xs text-slate-500 italic py-2">Nenhum imóvel cadastrado para gerar estatísticas de bairros.</p>';
+                    return;
+                }
+
+                // Agrupa contagem por bairro
+                const contagem = {};
+                imoveis.forEach(im => {
+                    const b = (im.bairro && im.bairro.trim()) ? im.bairro.trim() : 'Outros / Não Informado';
+                    contagem[b] = (contagem[b] || 0) + 1;
+                });
+
+                const total = imoveis.length;
+                const cores = ['bg-cyan-400', 'bg-emerald-400', 'bg-purple-400', 'bg-amber-400', 'bg-blue-400'];
+                let corIdx = 0;
+
+                // Ordena do maior para o menor
+                const bairrosOrdenados = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+
+                container.innerHTML = bairrosOrdenados.map(([bairro, qtd]) => {
+                    const perc = Math.round((qtd / total) * 100);
+                    const cor = cores[corIdx % cores.length];
+                    corIdx++;
+
+                    return `
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span class="text-slate-300">${bairro}</span>
+                                <span class="text-cyan-400">${qtd} ${qtd === 1 ? 'imóvel' : 'imóveis'} (${perc}%)</span>
+                            </div>
+                            <div class="w-full bg-slate-950 rounded-full h-3.5 border border-slate-800 overflow-hidden">
+                                <div class="${cor} h-full rounded-full transition-all duration-500" style="width: ${perc}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('Erro ao calcular gráfico de bairros:', err);
+                container.innerHTML = '<p class="text-xs text-red-400 py-2">Erro ao carregar métricas de bairros.</p>';
+            }
+        }
+
+        // 9. Controle das Abas Rápidas
         function mudarAba(aba) {
             const abas = ['catalogo', 'leads', 'graficos'];
             abas.forEach(a => {
@@ -547,7 +575,7 @@
             });
         }
 
-        // 9. Logout Seguro
+        // 10. Logout Seguro
         async function executarLogout() {
             if (confirm('Deseja realmente encerrar sua sessão?')) {
                 await supabaseClient.auth.signOut();
@@ -556,7 +584,6 @@
             }
         }
 
-        // Inicializa ao carregar a página
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
 </body>

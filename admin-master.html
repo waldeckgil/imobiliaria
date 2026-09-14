@@ -18,9 +18,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- =========================================================================
-         1. CABEÇALHO SOBERANO (MASTER TOPBAR)
-         ========================================================================= -->
+    <!-- CABEÇALHO SOBERANO (MASTER TOPBAR) -->
     <header class="bg-slate-950 border-b border-amber-500/30 py-3.5 px-4 sm:px-8 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
@@ -58,15 +56,13 @@
         </div>
     </header>
 
-    <!-- =========================================================================
-         2. CONTEÚDO PRINCIPAL (MÉTRICAS GLOBAIS E GESTÃO DE CLIENTES)
-         ========================================================================= -->
+    <!-- CONTEÚDO PRINCIPAL (MÉTRICAS GLOBAIS E GESTÃO DE CLIENTES) -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-8">
         
         <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <!-- CARD 1: MRR (RECEITA RECORRENTE MENSAL) -->
+            <!-- CARD 1: MRR -->
             <div class="box-master p-5 border-l-4 border-l-amber-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Receita Mensal (MRR)</span>
@@ -91,7 +87,7 @@
                 <span class="text-[10px] text-emerald-400 mt-1 block">Empresas em operação</span>
             </div>
 
-            <!-- CARD 3: TOTAL DE IMÓVEIS NA PLATAFORMA -->
+            <!-- CARD 3: TOTAL DE IMÓVEIS -->
             <div class="box-tech p-5 border-l-4 border-l-cyan-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Estoque Global de Imóveis</span>
@@ -104,7 +100,7 @@
                 <span class="text-[10px] text-slate-500 mt-1 block">Cadastrados em todo o Brasil</span>
             </div>
 
-            <!-- CARD 4: INADIMPLENTES / BLOQUEADAS -->
+            <!-- CARD 4: BLOQUEADAS -->
             <div class="box-tech p-5 border-l-4 border-l-rose-500">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Pendências / Bloqueios</span>
@@ -119,9 +115,7 @@
 
         </div>
 
-        <!-- =====================================================================
-             3. GESTÃO DE ASSINANTES (TABELA GERAL DE IMOBILIÁRIAS)
-             ===================================================================== -->
+        <!-- GESTÃO DE ASSINANTES -->
         <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-5">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div>
@@ -170,9 +164,7 @@
             </div>
         </div>
 
-        <!-- =====================================================================
-             4. CENTRAL DE COMUNICADOS GLOBAIS (BROADCAST PARA TODOS OS CORRETORES)
-             ===================================================================== -->
+        <!-- BROADCAST GLOBAL -->
         <div class="box-tech p-6 space-y-4 border border-cyan-500/30">
             <div class="border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider">
@@ -215,7 +207,6 @@
                 </div>
             </form>
 
-            <!-- LISTA DE COMUNICADOS ATIVOS -->
             <div class="pt-4 border-t border-slate-800 space-y-2">
                 <span class="text-[10px] font-black uppercase text-slate-400 block">Comunicados Ativos na Rede:</span>
                 <div id="lista-avisos-ativos" class="space-y-2">
@@ -226,29 +217,25 @@
 
     </main>
 
-    <!-- =========================================================================
-         5. RODAPÉ TÉCNICO
-         ========================================================================= -->
+    <!-- RODAPÉ TÉCNICO -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI SaaS • Sistema de Gestão Imobiliária • Console Soberano do Administrador
     </footer>
 
-    <!-- =========================================================================
-         6. JAVASCRIPT MASTER: CONTROLE GLOBAL & IMPERSONATION
-         ========================================================================= -->
+    <!-- JAVASCRIPT MASTER (CORRIGIDO COM 'supabaseClient') -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Corrigido para supabaseClient
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-        
         let listaImobiliarias = [];
         let listaImoveisGlobal = [];
 
         // 1. Trava Rígida de Exclusividade do Master
         async function inicializarMaster() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
 
             if (error || !session) {
                 window.location.href = 'login.html';
@@ -260,7 +247,7 @@
             // BLOQUEIO TOTAL PARA QUEM NÃO FOR WALDECK
             if (email !== 'waldeckgil@gmail.com') {
                 alert('Acesso Negado: Esta área é restrita ao Administrador Proprietário da Plataforma.');
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 window.location.href = 'login.html';
                 return;
             }
@@ -272,8 +259,7 @@
         // 2. Consulta de Dados Globais e Cálculo de MRR
         async function carregarDadosMaster() {
             try {
-                // Busca todas as imobiliárias
-                const { data: imobs, error: errImobs } = await supabase
+                const { data: imobs, error: errImobs } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -281,14 +267,12 @@
                 if (errImobs) throw errImobs;
                 listaImobiliarias = imobs || [];
 
-                // Busca todos os imóveis da base
-                const { data: imoveis, error: errImoveis } = await supabase
+                const { data: imoveis, error: errImoveis } = await supabaseClient
                     .from('imoveis')
                     .select('id, imobiliaria_id, ativa');
 
                 if (!errImoveis) listaImoveisGlobal = imoveis || [];
 
-                // Atualiza KPIs
                 atualizarMetricasMaster();
                 renderizarTabelaImobiliarias(listaImobiliarias);
 
@@ -429,14 +413,13 @@
             }).join('');
         }
 
-        // 5. Ação: Renovar Mensalidade (+30 Dias)
+        // 5. Renovar Mensalidade
         async function renovarMensalidade(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
 
             if (confirm(`Deseja renovar a mensalidade de "${imob.nome_fantasia}" por mais 30 dias?`)) {
                 try {
-                    // Calcula 30 dias a partir da data atual ou do vencimento futuro
                     let baseData = new Date();
                     if (imob.data_vencimento && new Date(imob.data_vencimento) > baseData) {
                         baseData = new Date(imob.data_vencimento);
@@ -444,7 +427,7 @@
                     baseData.setDate(baseData.getDate() + 30);
                     const novaData = baseData.toISOString().split('T')[0];
 
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('imobiliarias')
                         .update({
                             data_vencimento: novaData,
@@ -464,14 +447,14 @@
             }
         }
 
-        // 6. Ação: Bloquear ou Desbloquear Imobiliária
+        // 6. Bloquear ou Desbloquear Imobiliária
         async function alternarBloqueio(imobId, statusAtual) {
             const novoStatus = (statusAtual === 'blocked') ? 'active' : 'blocked';
             const acaoTexto = (novoStatus === 'blocked') ? 'bloquear o acesso de' : 'reativar';
 
             if (confirm(`Deseja realmente ${acaoTexto} esta imobiliária?`)) {
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('imobiliarias')
                         .update({ status: novoStatus })
                         .eq('id', imobId);
@@ -486,14 +469,14 @@
             }
         }
 
-        // 7. Ação: Modo Impersonate (Acessar como Suporte)
+        // 7. Modo Impersonate (Suporte Técnico)
         function acessarComoMaster(imobId, slug) {
             sessionStorage.setItem('sgi_impersonate_id', imobId);
             sessionStorage.setItem('sgi_impersonate_slug', slug);
             window.location.href = 'dashboard.html';
         }
 
-        // 8. Filtro Dinâmico de Imobiliárias
+        // 8. Filtro Dinâmico
         function filtrarImobiliarias() {
             const busca = document.getElementById('filtro-busca-imob').value.toLowerCase().trim();
             if (!busca) {
@@ -511,11 +494,11 @@
             renderizarTabelaImobiliarias(filtradas);
         }
 
-        // 9. Central de Comunicados em Massa (Broadcast)
+        // 9. Central de Comunicados em Massa
         async function carregarAvisos() {
             const container = document.getElementById('lista-avisos-ativos');
             try {
-                const { data: avisos, error } = await supabase
+                const { data: avisos, error } = await supabaseClient
                     .from('avisos_sistema')
                     .select('*')
                     .eq('ativo', true)
@@ -556,10 +539,10 @@
             const msg = document.getElementById('aviso-mensagem').value.trim();
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('avisos_sistema')
                     .insert([{
-                        imobiliaria_id: null, // NULL = Broadcast para todas as imobiliárias
+                        imobiliaria_id: null,
                         titulo: titulo,
                         mensagem: msg,
                         tipo: tipo,
@@ -584,7 +567,7 @@
         async function desativarAviso(avisoId) {
             if (confirm('Deseja retirar este comunicado do ar?')) {
                 try {
-                    await supabase.from('avisos_sistema').update({ ativo: false }).eq('id', avisoId);
+                    await supabaseClient.from('avisos_sistema').update({ ativo: false }).eq('id', avisoId);
                     await carregarAvisos();
                 } catch (err) {
                     console.error(err);
@@ -594,7 +577,7 @@
 
         async function executarLogout() {
             if (confirm('Deseja encerrar sua sessão Master?')) {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 sessionStorage.clear();
                 window.location.href = 'login.html';
             }

@@ -293,24 +293,24 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Configurações Corporativas
     </footer>
 
-    <!-- JAVASCRIPT DE CONFIGURAÇÃO & COMPILAÇÃO JSPDF -->
+    <!-- JAVASCRIPT DE CONFIGURAÇÃO & COMPILAÇÃO JSPDF (AJUSTADO COM 'supabaseClient') -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        // Corrigido para supabaseClient
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let dadosImobAtual = null;
         let listaImoveisParaPdf = [];
         let modoLeitura = false;
 
-        // Arquivos selecionados para upload
         let arquivoLogo = null;
         let arquivoBanner = null;
 
         async function inicializarConfiguracoes() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (error || !session) {
                 window.location.href = 'login.html';
                 return;
@@ -324,7 +324,7 @@
                 document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-                const { data: imobPiloto } = await supabase.from('imobiliarias').select('*').limit(1).single();
+                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
                     dadosImobAtual = imobPiloto;
@@ -336,14 +336,14 @@
 
             // GESTOR (DONO)
             try {
-                const { data: usuario } = await supabase.from('usuarios').select('*').eq('user_id', session.user.id).single();
+                const { data: usuario } = await supabaseClient.from('usuarios').select('*').eq('user_id', session.user.id).single();
                 if (!usuario || usuario.cargo !== 'dono') {
                     alert('Acesso Restrito: Apenas gestores titulares podem alterar as configurações corporativas.');
                     window.location.href = 'dashboard.html';
                     return;
                 }
 
-                const { data: imob } = await supabase.from('imobiliarias').select('*').eq('id', usuario.imobiliaria_id).single();
+                const { data: imob } = await supabaseClient.from('imobiliarias').select('*').eq('id', usuario.imobiliaria_id).single();
                 if (!imob) throw new Error('Imobiliária não localizada.');
 
                 imobiliariaId = imob.id;
@@ -456,9 +456,9 @@
                 if (arquivoLogo) {
                     const ext = arquivoLogo.name.split('.').pop();
                     const path = `${imobiliariaId}/identidade/logo_${Date.now()}.${ext}`;
-                    const { error: upErr } = await supabase.storage.from('imoveis-midias').upload(path, arquivoLogo, { upsert: true });
+                    const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, arquivoLogo, { upsert: true });
                     if (!upErr) {
-                        novaLogoUrl = supabase.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
+                        novaLogoUrl = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
                     }
                 }
 
@@ -466,9 +466,9 @@
                 if (arquivoBanner) {
                     const ext = arquivoBanner.name.split('.').pop();
                     const path = `${imobiliariaId}/identidade/banner_${Date.now()}.${ext}`;
-                    const { error: upErr } = await supabase.storage.from('imoveis-midias').upload(path, arquivoBanner, { upsert: true });
+                    const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, arquivoBanner, { upsert: true });
                     if (!upErr) {
-                        novaBannerUrl = supabase.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
+                        novaBannerUrl = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
                     }
                 }
 
@@ -494,7 +494,7 @@
                     banner_url: novaBannerUrl
                 };
 
-                const { error } = await supabase.from('imobiliarias').update(payload).eq('id', imobiliariaId);
+                const { error } = await supabaseClient.from('imobiliarias').update(payload).eq('id', imobiliariaId);
                 if (error) throw error;
 
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
@@ -517,7 +517,7 @@
         // Carrega imóveis para o gerador de PDF
         async function carregarCatalogoParaPDF() {
             try {
-                const { data: imoveis, error } = await supabase
+                const { data: imoveis, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
                     .eq('imobiliaria_id', imobiliariaId)
@@ -565,8 +565,8 @@
                 const pageWidth = doc.internal.pageSize.getWidth();
                 const pageHeight = doc.internal.pageSize.getHeight();
 
-                // 1. TOPO / CABEÇALHO COM A MARCA DA IMOBILIÁRIA
-                doc.setFillColor(13, 14, 17); // #0d0e11
+                // 1. TOPO / CABEÇALHO
+                doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
                 doc.setTextColor(255, 255, 255);
@@ -579,15 +579,15 @@
                 doc.setTextColor(150, 160, 180);
                 doc.text(`${dadosImobAtual.creci_juridico || 'CRECI'} • WhatsApp: ${dadosImobAtual.whatsapp_contato || ''}`, 15, 21);
 
-                // Tarja com Código de Referência
-                doc.setFillColor(28, 107, 160); // Azul comercial
+                // Tarja Ref
+                doc.setFillColor(28, 107, 160);
                 doc.roundedRect(pageWidth - 45, 8, 30, 11, 2, 2, 'F');
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'bold');
                 doc.text(`Ref: ${imovel.codigo_ref}`, pageWidth - 30, 15, { align: 'center' });
 
-                // 2. TÍTULO DO ANÚNCIO & LOCALIZAÇÃO
+                // 2. TÍTULO & LOCALIZAÇÃO
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(14);
                 doc.setFont('helvetica', 'bold');
@@ -599,7 +599,7 @@
                 doc.setTextColor(100, 110, 125);
                 doc.text(`${imovel.tipo} • ${imovel.bairro || 'Localização Nobre'} - ${imovel.cidade || 'Florianópolis'}/${imovel.uf || 'SC'}`, 15, 46);
 
-                // 3. FOTO DE CAPA PRINCIPAL (BLOCO CENTRAL)
+                // 3. FOTO DE CAPA
                 let posY = 52;
                 if (imovel.foto_capa) {
                     try {
@@ -616,7 +616,7 @@
                     }
                 }
 
-                // 4. QUADRO DE ESPECIFICAÇÕES TÉCNICAS (ÍCONES / MÉTRICAS)
+                // 4. QUADRO DE ESPECIFICAÇÕES
                 doc.setFillColor(245, 247, 250);
                 doc.roundedRect(15, posY, pageWidth - 30, 24, 2, 2, 'F');
 
@@ -673,7 +673,7 @@
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
-                // 7. RODAPÉ FIXO DE CONTATO & WHATSAPP
+                // 7. RODAPÉ FIXO DE CONTATO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
@@ -686,7 +686,6 @@
                 doc.setTextColor(140, 150, 165);
                 doc.text(`Material promocional gerado automaticamente via SGI SaaS • ${dadosImobAtual.nome_fantasia}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
 
-                // Salva o arquivo na memória do navegador
                 doc.save(`Ficha_${imovel.codigo_ref}_${dadosImobAtual.nome_fantasia.replace(/\s+/g, '_')}.pdf`);
 
             } catch (err) {
@@ -697,7 +696,6 @@
             }
         }
 
-        // Converte URL de imagem em Base64 para o jsPDF
         async function converterImgParaBase64(url) {
             const response = await fetch(url);
             const blob = await response.blob();
@@ -717,7 +715,7 @@
 
         async function executarLogout() {
             if (confirm('Deseja realmente sair?')) {
-                await supabase.auth.signOut();
+                await supabaseClient.auth.signOut();
                 sessionStorage.clear();
                 window.location.href = 'login.html';
             }
