@@ -433,23 +433,25 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
       
-imobiliariaId = imob.id;
-                document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
-
+let imobiliariaId = null;
+        let imobiliariaNomeFantasia = '';
+        let usuarioLogadoNome = 'Gestor';
+        let listaLeadsCompleta = [];
+        let listaCorretores = [];
+        let modoLeitura = false;
 
         let leadEmAgendamento = null;
         let leadEmProposta = null;
         let leadEmTimeline = null;
 
-        async function inicializarLeads() {
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-            if (error || !session) {
-                window.location.href = 'login.html';
-                return;
-            }
+async function inicializarLeads() {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        if (error || !session) {
+            window.location.href = 'login.html';
+            return;
+        }
 
-            const email = session.user.email.toLowerCase();
-
+        const email = session.user.email.toLowerCase();
             // MODO MASTER BYPASS
             if (email === 'waldeckgil@gmail.com') {
                 usuarioLogadoNome = 'Waldeck (Super Admin)';
