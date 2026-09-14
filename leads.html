@@ -610,11 +610,17 @@
         // ==========================================
         // MOTOR DE HISTÓRICO & LINHA DO TEMPO (LOG)
         // ==========================================
-        async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
+ async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
             try {
+                // Tenta pegar o ID da imobiliária do próprio lead na memória
+                const leadRef = listaLeadsCompleta.find(l => l.id === leadId);
+                const idImobFinal = (leadRef && leadRef.imobiliaria_id) 
+                    ? leadRef.imobiliaria_id 
+                    : (imobiliariaId || null);
+
                 const payload = {
                     lead_id: leadId,
-                    imobiliaria_id: Number(imobiliariaId),
+                    imobiliaria_id: idImobFinal,
                     autor_nome: usuarioLogadoNome || 'Gestor',
                     tipo_evento: tipoEvento,
                     descricao: descricao,
@@ -636,7 +642,6 @@
                 throw err;
             }
         }
-
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
