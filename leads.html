@@ -824,8 +824,10 @@ async function inicializarLeads() {
                         </div>
                     </td>
                 </tr>`;
-            }).join('');
+            }
+         } ).join('');
         }
+
 
         // GATILHO DINÂMICO DE MUDANÇA DE STATUS COM AUDITORIA
         async function aoMudarStatusLead(leadId, novoStatus) {
