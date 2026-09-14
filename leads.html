@@ -434,6 +434,7 @@
 
         let imobiliariaId = null;
         let imobiliariaNomeFantasia = '';
+        let imobiliariaSlug = '';
         let usuarioLogadoNome = 'Gestor';
         let listaLeadsCompleta = [];
         let listaCorretores = [];
@@ -464,6 +465,7 @@
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
                     imobiliariaNomeFantasia = imobPiloto.nome_fantasia || 'nossa imobiliária';
+                    imobiliariaSlug = imobPiloto.slug || '';
                     document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
                     await carregarEquipeCorretores();
                     await carregarLeads();
@@ -493,6 +495,7 @@
 
                 imobiliariaId = imob.id;
                 imobiliariaNomeFantasia = imob.nome_fantasia || 'nossa imobiliária';
+                imobiliariaSlug = imob.slug || '';
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
@@ -741,15 +744,19 @@
                     `;
                 }
 
-                // Configuração do WhatsApp Dinâmico (mensagem institucional apenas para NOVO)
+                // Configuração do WhatsApp Dinâmico (com link do imóvel para NOVO)
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
-              
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
-                    const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
-                    urlWa += `?text=${msgWa}`;
+                    const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
+                    const linkImovel = (l.imovel && imobiliariaSlug) 
+                        ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
+                        : '';
+
+                    const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
+                    urlWa += `?text=${encodeURIComponent(texto)}`;
                 }
 
                 return `
