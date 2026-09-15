@@ -18,7 +18,9 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- CABEÇALHO SOBERANO (MASTER TOPBAR) -->
+    <!-- =========================================================================
+         1. CABEÇALHO SOBERANO (MASTER TOPBAR)
+         ========================================================================= -->
     <header class="bg-slate-950 border-b border-amber-500/30 py-3.5 px-4 sm:px-8 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
@@ -56,13 +58,15 @@
         </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL (MÉTRICAS GLOBAIS E GESTÃO DE CLIENTES) -->
+    <!-- =========================================================================
+         2. CONTEÚDO PRINCIPAL (MÉTRICAS GLOBAIS E GESTÃO DE CLIENTES)
+         ========================================================================= -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-8">
         
         <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <!-- CARD 1: MRR -->
+            <!-- CARD 1: MRR (RECEITA RECORRENTE MENSAL) -->
             <div class="box-master p-5 border-l-4 border-l-amber-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Receita Mensal (MRR)</span>
@@ -87,7 +91,7 @@
                 <span class="text-[10px] text-emerald-400 mt-1 block">Empresas em operação</span>
             </div>
 
-            <!-- CARD 3: TOTAL DE IMÓVEIS -->
+            <!-- CARD 3: TOTAL DE IMÓVEIS NA PLATAFORMA -->
             <div class="box-tech p-5 border-l-4 border-l-cyan-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Estoque Global de Imóveis</span>
@@ -100,7 +104,7 @@
                 <span class="text-[10px] text-slate-500 mt-1 block">Cadastrados em todo o Brasil</span>
             </div>
 
-            <!-- CARD 4: BLOQUEADAS -->
+            <!-- CARD 4: INADIMPLENTES / BLOQUEADAS -->
             <div class="box-tech p-5 border-l-4 border-l-rose-500">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Pendências / Bloqueios</span>
@@ -115,14 +119,16 @@
 
         </div>
 
-        <!-- GESTÃO DE ASSINANTES -->
+        <!-- =====================================================================
+             3. GESTÃO DE ASSINANTES (TABELA GERAL DE IMOBILIÁRIAS)
+             ===================================================================== -->
         <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-5">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div>
                     <h3 class="text-base font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-building-user text-amber-400"></i> Carteira de Imobiliárias Assinantes
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, renove mensalidades, aplique bloqueios e acerte suporte via Impersonate.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, ajuste mensalidades personalizadas, renove prazos e aplique suporte via Impersonate.</p>
                 </div>
 
                 <div class="w-full sm:w-80 relative">
@@ -164,7 +170,9 @@
             </div>
         </div>
 
-        <!-- BROADCAST GLOBAL -->
+        <!-- =====================================================================
+             4. CENTRAL DE COMUNICADOS GLOBAIS (BROADCAST PARA TODOS OS CORRETORES)
+             ===================================================================== -->
         <div class="box-tech p-6 space-y-4 border border-cyan-500/30">
             <div class="border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider">
@@ -217,17 +225,63 @@
 
     </main>
 
+    <!-- =========================================================================
+         5. MODAL DE AJUSTE SOBERANO DE PLANO / MENSALIDADE
+         ========================================================================= -->
+    <div id="modal-editar-plano" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-master max-w-sm w-full p-6 shadow-2xl relative">
+            <button type="button" onclick="fecharModalEditarPlano()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg border border-amber-500/40">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-white">Ajustar Mensalidade</h3>
+                    <p id="modal-plano-imob-nome" class="text-xs text-amber-400 font-bold truncate max-w-[200px]">Imobiliária</p>
+                </div>
+            </div>
+
+            <form id="form-editar-plano" onsubmit="salvarNovoValorPlano(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="modal-plano-imob-id">
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Novo Valor Mensal (R$) *</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-slate-500 font-bold">R$</span>
+                        <input type="number" step="0.01" min="0" id="modal-plano-valor-input" required placeholder="149,00" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-amber-300 font-mono text-base font-black outline-none focus:border-amber-400">
+                    </div>
+                    <span class="text-[10px] text-slate-500 mt-1 block">Esse valor refletirá automaticamente no cálculo do MRR global.</span>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="fecharModalEditarPlano()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-plano" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Salvar Novo Valor</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- RODAPÉ TÉCNICO -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI SaaS • Sistema de Gestão Imobiliária • Console Soberano do Administrador
     </footer>
 
-    <!-- JAVASCRIPT MASTER (CORRIGIDO COM 'supabaseClient') -->
+    <!-- =========================================================================
+         6. JAVASCRIPT MASTER: CONTROLE GLOBAL, IMPERSONATION & EDIÇÃO DE PLANOS
+         ========================================================================= -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        // Corrigido para supabaseClient
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let listaImobiliarias = [];
@@ -282,7 +336,7 @@
             }
         }
 
-        // 3. Atualização dos Cards de Métricas
+        // 3. Atualização dos Cards de Métricas (MRR com valores reais)
         function atualizarMetricasMaster() {
             const totalImobs = listaImobiliarias.length;
             const hoje = new Date().toISOString().split('T')[0];
@@ -311,7 +365,7 @@
             document.getElementById('contador-imob').innerText = totalImobs;
         }
 
-        // 4. Renderização da Tabela de Imobiliárias
+        // 4. Renderização da Tabela com Botões de Ajuste de Preço
         function renderizarTabelaImobiliarias(imobs) {
             const tbody = document.getElementById('tabela-imobiliarias-corpo');
 
@@ -364,8 +418,14 @@
                         <span class="font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded text-[11px]">${qtdImoveis}</span>
                     </td>
 
-                    <td class="py-3 px-3 font-bold text-cyan-300">
-                        R$ ${Number(im.plano_valor || 149).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    <!-- VALOR DO PLANO CLICÁVEL -->
+                    <td class="py-3 px-3">
+                        <button type="button" onclick="abrirModalEditarPlano('${im.id}')" 
+                                class="hover:underline flex items-center gap-1.5 cursor-pointer text-cyan-300 hover:text-amber-400 font-bold" 
+                                title="Clique para alterar o valor da mensalidade">
+                            <span>R$ ${Number(im.plano_valor || 149).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            <i class="fa-solid fa-pen-to-square text-[10px] text-slate-500 hover:text-amber-400"></i>
+                        </button>
                     </td>
 
                     <td class="py-3 px-3 font-mono text-[11px] ${vencido ? 'text-rose-400 font-bold' : 'text-slate-300'}">
@@ -379,6 +439,13 @@
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
                             
+                            <!-- AJUSTAR VALOR DO PLANO ($) -->
+                            <button onclick="abrirModalEditarPlano('${im.id}')" 
+                                    class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-800 transition cursor-pointer" 
+                                    title="Ajustar Valor da Mensalidade (R$)">
+                                <i class="fa-solid fa-dollar-sign text-xs"></i>
+                            </button>
+
                             <!-- RENOVAR +30 DIAS -->
                             <button onclick="renovarMensalidade('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
@@ -413,7 +480,59 @@
             }).join('');
         }
 
-        // 5. Renovar Mensalidade
+        // =========================================================================
+        // 5. GESTÃO SOBERANA DO PLANO / MENSALIDADE
+        // =========================================================================
+
+        function abrirModalEditarPlano(imobId) {
+            const imob = listaImobiliarias.find(i => i.id === imobId);
+            if (!imob) return;
+
+            document.getElementById('modal-plano-imob-id').value = imob.id;
+            document.getElementById('modal-plano-imob-nome').innerText = `${imob.nome_fantasia} (/${imob.slug})`;
+            document.getElementById('modal-plano-valor-input').value = Number(imob.plano_valor || 149).toFixed(2);
+            document.getElementById('modal-editar-plano').classList.remove('hidden');
+        }
+
+        function fecharModalEditarPlano() {
+            document.getElementById('modal-editar-plano').classList.add('hidden');
+        }
+
+        async function salvarNovoValorPlano(event) {
+            event.preventDefault();
+            const imobId = document.getElementById('modal-plano-imob-id').value;
+            const novoValor = parseFloat(document.getElementById('modal-plano-valor-input').value);
+
+            if (isNaN(novoValor) || novoValor < 0) {
+                alert('Por favor, informe um valor monetário válido.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-salvar-plano');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gravando...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('imobiliarias')
+                    .update({ plano_valor: novoValor })
+                    .eq('id', imobId);
+
+                if (error) throw error;
+
+                fecharModalEditarPlano();
+                await carregarDadosMaster(); // Recarrega tabela e recalcula o MRR na hora!
+
+            } catch (err) {
+                console.error('Erro ao atualizar plano:', err);
+                alert('Erro ao atualizar valor da mensalidade: ' + (err.message || 'Verifique sua conexão.'));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Novo Valor</span>';
+                btn.disabled = false;
+            }
+        }
+
+        // 6. Renovar Mensalidade (+30 Dias)
         async function renovarMensalidade(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
@@ -447,7 +566,7 @@
             }
         }
 
-        // 6. Bloquear ou Desbloquear Imobiliária
+        // 7. Bloquear ou Desbloquear Imobiliária
         async function alternarBloqueio(imobId, statusAtual) {
             const novoStatus = (statusAtual === 'blocked') ? 'active' : 'blocked';
             const acaoTexto = (novoStatus === 'blocked') ? 'bloquear o acesso de' : 'reativar';
@@ -469,14 +588,14 @@
             }
         }
 
-        // 7. Modo Impersonate (Suporte Técnico)
+        // 8. Modo Impersonate (Suporte Técnico)
         function acessarComoMaster(imobId, slug) {
             sessionStorage.setItem('sgi_impersonate_id', imobId);
             sessionStorage.setItem('sgi_impersonate_slug', slug);
             window.location.href = 'dashboard.html';
         }
 
-        // 8. Filtro Dinâmico
+        // 9. Filtro Dinâmico
         function filtrarImobiliarias() {
             const busca = document.getElementById('filtro-busca-imob').value.toLowerCase().trim();
             if (!busca) {
@@ -494,7 +613,7 @@
             renderizarTabelaImobiliarias(filtradas);
         }
 
-        // 9. Central de Comunicados em Massa
+        // 10. Central de Comunicados em Massa
         async function carregarAvisos() {
             const container = document.getElementById('lista-avisos-ativos');
             try {

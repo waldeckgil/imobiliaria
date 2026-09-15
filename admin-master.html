@@ -14,6 +14,10 @@
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
         .box-master { background: #131722; border: 1px solid #f59e0b; border-radius: 1rem; box-shadow: 0 0 25px rgba(245, 158, 11, 0.15); }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -66,7 +70,7 @@
         <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <!-- CARD 1: MRR (RECEITA RECORRENTE MENSAL) -->
+            <!-- CARD 1: MRR -->
             <div class="box-master p-5 border-l-4 border-l-amber-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Receita Mensal (MRR)</span>
@@ -91,7 +95,7 @@
                 <span class="text-[10px] text-emerald-400 mt-1 block">Empresas em operação</span>
             </div>
 
-            <!-- CARD 3: TOTAL DE IMÓVEIS NA PLATAFORMA -->
+            <!-- CARD 3: TOTAL DE IMÓVEIS -->
             <div class="box-tech p-5 border-l-4 border-l-cyan-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Estoque Global de Imóveis</span>
@@ -104,7 +108,7 @@
                 <span class="text-[10px] text-slate-500 mt-1 block">Cadastrados em todo o Brasil</span>
             </div>
 
-            <!-- CARD 4: INADIMPLENTES / BLOQUEADAS -->
+            <!-- CARD 4: BLOQUEADAS OU INADIMPLENTES -->
             <div class="box-tech p-5 border-l-4 border-l-rose-500">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Pendências / Bloqueios</span>
@@ -128,7 +132,7 @@
                     <h3 class="text-base font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-building-user text-amber-400"></i> Carteira de Imobiliárias Assinantes
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, ajuste mensalidades personalizadas, renove prazos e aplique suporte via Impersonate.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, defina datas de vencimento arbitrárias, ajuste planos e renove mensalidades.</p>
                 </div>
 
                 <div class="w-full sm:w-80 relative">
@@ -180,7 +184,7 @@
                     <span>Canal de Broadcast Global</span>
                 </div>
                 <h3 class="text-base font-black text-white mt-1">Emitir Comunicado no Painel dos Corretores</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Envie avisos de manutenção, melhorias ou notificações importantes que aparecerão na tela de todas as imobiliárias do país.</p>
+                <p class="text-xs text-slate-400 mt-0.5">Envie avisos de manutenção, melhorias ou notificações importantes que aparecerão na tela de todas as imobiliárias.</p>
             </div>
 
             <form id="form-comunicado" onsubmit="enviarComunicado(event)" class="space-y-4 text-xs">
@@ -258,12 +262,54 @@
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2">
-                    <button type="button" onclick="fecharModalEditarPlano()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                    <button type="button" onclick="fecharModalEditarPlano()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
                         Cancelar
                     </button>
                     <button type="submit" id="btn-salvar-plano" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
                         <i class="fa-solid fa-check"></i>
                         <span>Salvar Novo Valor</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+         6. NOVO MODAL: ALTERAÇÃO MANUAL DA DATA DE VENCIMENTO
+         ========================================================================= -->
+    <div id="modal-editar-vencimento" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-sm w-full p-6 shadow-2xl relative border border-blue-500/40">
+            <button type="button" onclick="fecharModalEditarVencimento()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg border border-blue-500/40">
+                    <i class="fa-solid fa-calendar-day"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-white">Editar Data de Vencimento</h3>
+                    <p id="modal-venc-imob-nome" class="text-xs text-blue-400 font-bold truncate max-w-[200px]">Imobiliária</p>
+                </div>
+            </div>
+
+            <form id="form-editar-vencimento" onsubmit="salvarNovaDataVencimento(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="modal-venc-imob-id">
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nova Data de Vencimento *</label>
+                    <input type="date" id="modal-venc-data-input" required 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-blue-400 font-mono">
+                    <span class="text-[10px] text-slate-500 mt-1 block">Defina qualquer prazo customizado (trimestral, semestral, anual ou cortesia).</span>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="fecharModalEditarVencimento()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-vencimento" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black flex items-center gap-1.5 transition shadow cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Salvar Data</span>
                     </button>
                 </div>
             </form>
@@ -276,7 +322,7 @@
     </footer>
 
     <!-- =========================================================================
-         6. JAVASCRIPT MASTER: CONTROLE GLOBAL, IMPERSONATION & EDIÇÃO DE PLANOS
+         7. JAVASCRIPT MASTER
          ========================================================================= -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
@@ -287,7 +333,6 @@
         let listaImobiliarias = [];
         let listaImoveisGlobal = [];
 
-        // 1. Trava Rígida de Exclusividade do Master
         async function inicializarMaster() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
 
@@ -298,7 +343,6 @@
 
             const email = session.user.email.toLowerCase();
 
-            // BLOQUEIO TOTAL PARA QUEM NÃO FOR WALDECK
             if (email !== 'waldeckgil@gmail.com') {
                 alert('Acesso Negado: Esta área é restrita ao Administrador Proprietário da Plataforma.');
                 await supabaseClient.auth.signOut();
@@ -310,7 +354,6 @@
             await carregarAvisos();
         }
 
-        // 2. Consulta de Dados Globais e Cálculo de MRR
         async function carregarDadosMaster() {
             try {
                 const { data: imobs, error: errImobs } = await supabaseClient
@@ -336,7 +379,6 @@
             }
         }
 
-        // 3. Atualização dos Cards de Métricas (MRR com valores reais)
         function atualizarMetricasMaster() {
             const totalImobs = listaImobiliarias.length;
             const hoje = new Date().toISOString().split('T')[0];
@@ -365,7 +407,6 @@
             document.getElementById('contador-imob').innerText = totalImobs;
         }
 
-        // 4. Renderização da Tabela com Botões de Ajuste de Preço
         function renderizarTabelaImobiliarias(imobs) {
             const tbody = document.getElementById('tabela-imobiliarias-corpo');
 
@@ -428,8 +469,14 @@
                         </button>
                     </td>
 
-                    <td class="py-3 px-3 font-mono text-[11px] ${vencido ? 'text-rose-400 font-bold' : 'text-slate-300'}">
-                        ${dataVencFormatada}
+                    <!-- DATA DE VENCIMENTO CLICÁVEL -->
+                    <td class="py-3 px-3 font-mono text-[11px]">
+                        <button type="button" onclick="abrirModalEditarVencimento('${im.id}')" 
+                                class="hover:underline flex items-center gap-1.5 cursor-pointer ${vencido ? 'text-rose-400 font-bold' : 'text-slate-300 hover:text-blue-300'}" 
+                                title="Clique para editar a data de vencimento">
+                            <span>${dataVencFormatada}</span>
+                            <i class="fa-solid fa-calendar-pen text-[10px] text-slate-500 hover:text-blue-400"></i>
+                        </button>
                     </td>
 
                     <td class="py-3 px-3 text-center">
@@ -439,6 +486,13 @@
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
                             
+                            <!-- EDITAR DATA DE VENCIMENTO NO CALENDÁRIO -->
+                            <button onclick="abrirModalEditarVencimento('${im.id}')" 
+                                    class="p-1.5 rounded-lg bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-800 transition cursor-pointer" 
+                                    title="Alterar Data de Vencimento (Calendário)">
+                                <i class="fa-solid fa-calendar-day text-xs"></i>
+                            </button>
+
                             <!-- AJUSTAR VALOR DO PLANO ($) -->
                             <button onclick="abrirModalEditarPlano('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-800 transition cursor-pointer" 
@@ -449,7 +503,7 @@
                             <!-- RENOVAR +30 DIAS -->
                             <button onclick="renovarMensalidade('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
-                                    title="Renovar Mensalidade (+30 dias)">
+                                    title="Renovar Mensalidade (+30 dias rápidos)">
                                 <i class="fa-solid fa-calendar-plus text-xs"></i>
                             </button>
 
@@ -481,7 +535,70 @@
         }
 
         // =========================================================================
-        // 5. GESTÃO SOBERANA DO PLANO / MENSALIDADE
+        // GESTÃO DA DATA DE VENCIMENTO NO CALENDÁRIO
+        // =========================================================================
+
+        function abrirModalEditarVencimento(imobId) {
+            const imob = listaImobiliarias.find(i => i.id === imobId);
+            if (!imob) return;
+
+            document.getElementById('modal-venc-imob-id').value = imob.id;
+            document.getElementById('modal-venc-imob-nome').innerText = `${imob.nome_fantasia} (/${imob.slug})`;
+            document.getElementById('modal-venc-data-input').value = imob.data_vencimento || '';
+            document.getElementById('modal-editar-vencimento').classList.remove('hidden');
+        }
+
+        function fecharModalEditarVencimento() {
+            document.getElementById('modal-editar-vencimento').classList.add('hidden');
+        }
+
+        async function salvarNovaDataVencimento(event) {
+            event.preventDefault();
+            const imobId = document.getElementById('modal-venc-imob-id').value;
+            const novaData = document.getElementById('modal-venc-data-input').value;
+
+            if (!novaData) {
+                alert('Por favor, selecione uma data válida.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-salvar-vencimento');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gravando...';
+            btn.disabled = true;
+
+            try {
+                const hoje = new Date().toISOString().split('T')[0];
+                const payload = { data_vencimento: novaData };
+
+                // Se a nova data for válida/futura, reativa caso estivesse bloqueada
+                if (novaData >= hoje) {
+                    const imobAtual = listaImobiliarias.find(i => i.id === imobId);
+                    if (imobAtual && imobAtual.status === 'blocked') {
+                        payload.status = 'active';
+                    }
+                }
+
+                const { error } = await supabaseClient
+                    .from('imobiliarias')
+                    .update(payload)
+                    .eq('id', imobId);
+
+                if (error) throw error;
+
+                fecharModalEditarVencimento();
+                await carregarDadosMaster();
+
+            } catch (err) {
+                console.error('Erro ao atualizar vencimento:', err);
+                alert('Erro ao atualizar data de vencimento: ' + (err.message || 'Verifique sua conexão.'));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Data</span>';
+                btn.disabled = false;
+            }
+        }
+
+        // =========================================================================
+        // GESTÃO DO PLANO / MENSALIDADE
         // =========================================================================
 
         function abrirModalEditarPlano(imobId) {
@@ -521,7 +638,7 @@
                 if (error) throw error;
 
                 fecharModalEditarPlano();
-                await carregarDadosMaster(); // Recarrega tabela e recalcula o MRR na hora!
+                await carregarDadosMaster();
 
             } catch (err) {
                 console.error('Erro ao atualizar plano:', err);
@@ -532,7 +649,6 @@
             }
         }
 
-        // 6. Renovar Mensalidade (+30 Dias)
         async function renovarMensalidade(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
@@ -566,7 +682,6 @@
             }
         }
 
-        // 7. Bloquear ou Desbloquear Imobiliária
         async function alternarBloqueio(imobId, statusAtual) {
             const novoStatus = (statusAtual === 'blocked') ? 'active' : 'blocked';
             const acaoTexto = (novoStatus === 'blocked') ? 'bloquear o acesso de' : 'reativar';
@@ -588,14 +703,12 @@
             }
         }
 
-        // 8. Modo Impersonate (Suporte Técnico)
         function acessarComoMaster(imobId, slug) {
             sessionStorage.setItem('sgi_impersonate_id', imobId);
             sessionStorage.setItem('sgi_impersonate_slug', slug);
             window.location.href = 'dashboard.html';
         }
 
-        // 9. Filtro Dinâmico
         function filtrarImobiliarias() {
             const busca = document.getElementById('filtro-busca-imob').value.toLowerCase().trim();
             if (!busca) {
@@ -613,7 +726,6 @@
             renderizarTabelaImobiliarias(filtradas);
         }
 
-        // 10. Central de Comunicados em Massa
         async function carregarAvisos() {
             const container = document.getElementById('lista-avisos-ativos');
             try {

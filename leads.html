@@ -165,8 +165,8 @@
                     <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
                         <tr>
                             <th class="py-3 px-4">Recebido em</th>
-                            <th class="py-3 px-3">Cliente (Comprador)</th>
-                            <th class="py-3 px-3">Imóvel de Interesse</th>
+                            <th class="py-3 px-3">Cliente (Comprador / Proprietário)</th>
+                            <th class="py-3 px-3">Origem / Imóvel</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
                             <th class="py-3 px-3">Etapa Atual & Histórico</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
@@ -202,7 +202,7 @@
                     <i class="fa-solid fa-timeline text-base"></i>
                     <span>Linha do Tempo & Histórico do Cliente</span>
                 </div>
-                <button onclick="fecharModalTimeline()" class="text-slate-500 hover:text-white transition">
+                <button onclick="fecharModalTimeline()" class="text-slate-500 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
@@ -214,12 +214,12 @@
                     <p class="text-slate-400 font-mono text-[11px]" id="timeline-lead-contato">---</p>
                 </div>
                 <div class="text-right">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Contexto</span>
                     <span class="text-cyan-400 font-bold font-mono text-xs" id="timeline-lead-imovel">---</span>
                 </div>
             </div>
 
-            <!-- ADICIONAR NOTA MANUAL / OBSERVAÇÃO AO HISTÓRICO -->
+            <!-- ADICIONAR NOTA MANUAL / OCORRÊNCIA AO HISTÓRICO -->
             <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-2">
                 <label class="block text-[11px] font-bold uppercase text-slate-400">Inserir Nota Interna / Ocorrência</label>
                 <div class="flex gap-2">
@@ -254,9 +254,9 @@
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-cyan-400 font-black text-sm">
                     <i class="fa-solid fa-calendar-days text-base"></i>
-                    <span>Agendar Visita ao Imóvel</span>
+                    <span>Agendar Visita / Avaliação</span>
                 </div>
-                <button onclick="fecharModalAgendamento()" class="text-slate-500 hover:text-white transition">
+                <button onclick="fecharModalAgendamento()" class="text-slate-500 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
@@ -266,7 +266,7 @@
             <!-- DADOS DO CLIENTE & IMÓVEL (SOMENTE LEITURA) -->
             <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
                 <p class="text-slate-400">Cliente: <strong id="agendamento-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Imóvel: <strong id="agendamento-lead-imovel" class="text-cyan-400 font-mono">---</strong></p>
+                <p class="text-slate-400">Contexto: <strong id="agendamento-lead-imovel" class="text-cyan-400 font-mono">---</strong></p>
             </div>
 
             <!-- CAMPO DATA E HORA -->
@@ -349,7 +349,7 @@
                     <i class="fa-solid fa-hand-holding-dollar text-base"></i>
                     <span>Registrar Proposta Comercial</span>
                 </div>
-                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition">
+                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
@@ -358,8 +358,8 @@
 
             <!-- CONTEXTO DO CLIENTE E IMÓVEL -->
             <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <p class="text-slate-400">Comprador: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
+                <p class="text-slate-400">Cliente: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
+                <p class="text-slate-400">Contexto / Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
                 <p class="text-slate-400">Valor Anunciado: <strong id="proposta-valor-anuncio" class="text-emerald-400 font-mono">---</strong></p>
             </div>
 
@@ -425,7 +425,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • CRM & Linha do Tempo
     </footer>
 
-    <!-- JAVASCRIPT COM 'supabaseClient' -->
+    <!-- JAVASCRIPT DINÂMICO COMPLETO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -667,9 +667,24 @@
                 const dataCriacao = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
                 
+                // Identifica se é Captação/Avaliação de Imóvel ou Interesse em Imóvel existente
+                const ehAvaliacao = (l.mensagem && l.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
                 let imovelBloco = '<span class="text-slate-500 italic">Interesse Geral</span>';
                 let refImovelTexto = 'Geral';
-                if (l.imovel) {
+
+                if (ehAvaliacao) {
+                    imovelBloco = `
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-600/60 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 shadow-sm">
+                                <i class="fa-solid fa-calculator"></i>
+                            </div>
+                            <div class="truncate max-w-[180px]">
+                                <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase block">Captação / Avaliação</span>
+                                <span class="font-bold text-white block truncate" title="Proprietário querendo avaliar ou negociar imóvel">Novo Imóvel do Cliente</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (l.imovel) {
                     refImovelTexto = l.imovel.codigo_ref;
                     const foto = l.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
                     imovelBloco = `
@@ -696,7 +711,7 @@
                     blocoAgendamento = `
                         <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
                             <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold transition w-fit" 
+                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold transition w-fit cursor-pointer" 
                                     title="Visita combinada: clique para gerenciar">
                                 <i class="fa-solid fa-calendar-check text-cyan-400"></i>
                                 <span>${formatarDataVisita(l.data_agendamento)}</span>
@@ -713,7 +728,7 @@
                     `;
                 } else if (l.status === 'Visita Agendada') {
                     blocoAgendamento = `
-                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse transition">
+                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse transition cursor-pointer">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span>Definir Data/Hora</span>
                         </button>
@@ -727,7 +742,7 @@
                     blocoProposta = `
                         <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
                             <button onclick="abrirModalProposta('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-0.5 rounded font-mono font-black transition w-fit" 
+                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-0.5 rounded font-mono font-black transition w-fit cursor-pointer" 
                                     title="Editar valores da proposta">
                                 <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
                                 <span>${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Definir Valor'}</span>
@@ -744,19 +759,24 @@
                     `;
                 }
 
-                // Configuração do WhatsApp Dinâmico (com link do imóvel para NOVO)
+                // Configuração Inteligente do WhatsApp (Diferencia Captação vs Interesse em Imóvel)
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
-                    const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
-                    const linkImovel = (l.imovel && imobiliariaSlug) 
-                        ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
-                        : '';
+                    if (ehAvaliacao) {
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação e negociação de imóvel através do nosso site. Podemos conversar sobre os detalhes do seu imóvel?`;
+                        urlWa += `?text=${encodeURIComponent(texto)}`;
+                    } else {
+                        const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
+                        const linkImovel = (l.imovel && imobiliariaSlug) 
+                            ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
+                            : '';
 
-                    const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
-                    urlWa += `?text=${encodeURIComponent(texto)}`;
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
+                        urlWa += `?text=${encodeURIComponent(texto)}`;
+                    }
                 }
 
                 return `
@@ -772,7 +792,7 @@
                     <td class="py-3 px-3">${imovelBloco}</td>
 
                     <td class="py-3 px-3">
-                        <p class="text-slate-300 text-xs truncate max-w-xs" title="${l.mensagem || ''}">
+                        <p class="text-slate-300 text-xs line-clamp-2 max-w-xs leading-relaxed" title="${(l.mensagem || '').replace(/"/g, '&quot;')}">
                             ${l.mensagem || '<span class="text-slate-500 italic">Sem mensagem extra</span>'}
                         </p>
                     </td>
@@ -894,11 +914,17 @@
 
             leadEmAgendamento = lead;
 
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            let contextoTitulo = 'Interesse Geral na Imobiliária';
+            if (ehAvaliacao) {
+                contextoTitulo = 'Avaliação / Captação de Imóvel';
+            } else if (lead.imovel) {
+                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+            }
+
             document.getElementById('agendamento-lead-id').value = lead.id;
             document.getElementById('agendamento-lead-nome').innerText = lead.nome;
-            document.getElementById('agendamento-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral na Imobiliária';
+            document.getElementById('agendamento-lead-imovel').innerText = contextoTitulo;
 
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
@@ -957,7 +983,7 @@
                 await registrarEventoHistorico(
                     leadId,
                     'visita',
-                    `Visita agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
+                    `Visita/Avaliação agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
                     { data_visita: isoData, notas: notas }
                 ).catch(() => {});
 
@@ -1012,7 +1038,7 @@
                 await registrarEventoHistorico(
                     leadId,
                     'visita',
-                    'Visita foi cancelada/desmarcada. O cliente retornou para "Em Atendimento".'
+                    'A visita foi cancelada/desmarcada. O cliente retornou para "Em Atendimento".'
                 );
 
                 fecharModalConfirmarDesmarcar();
@@ -1041,16 +1067,20 @@
             const d = new Date(dataValor);
             const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
             const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            const refImovel = leadEmAgendamento.imovel ? `Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'combinado';
+            
+            const ehAvaliacao = (leadEmAgendamento.mensagem && leadEmAgendamento.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            const refImovel = ehAvaliacao 
+                ? 'ao seu imóvel' 
+                : (leadEmAgendamento.imovel ? `ao imóvel Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'ao imóvel combinado');
 
             const zapLimpo = ('' + leadEmAgendamento.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
             let mensagem = '';
             if (tipo === 'reagendamento') {
-                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos sua visita ao imóvel ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
+                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos nossa visita ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
             } else {
-                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
+                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos nossa visita ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
             }
 
             const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
@@ -1067,16 +1097,22 @@
 
             leadEmProposta = lead;
 
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            let contextoTitulo = 'Interesse Geral';
+            if (ehAvaliacao) {
+                contextoTitulo = 'Captação / Avaliação de Imóvel';
+            } else if (lead.imovel) {
+                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+            }
+
             document.getElementById('proposta-lead-id').value = lead.id;
             document.getElementById('proposta-lead-nome').innerText = lead.nome;
-            document.getElementById('proposta-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral';
+            document.getElementById('proposta-lead-imovel').innerText = contextoTitulo;
 
             const valorRef = lead.imovel ? (lead.imovel.valor_venda || lead.imovel.valor_locacao) : null;
             document.getElementById('proposta-valor-anuncio').innerText = valorRef 
                 ? 'R$ ' + Number(valorRef).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) 
-                : 'Sob Consulta';
+                : 'Sob Consulta / Avaliação';
 
             document.getElementById('proposta-valor-input').value = lead.valor_proposta || '';
             document.getElementById('proposta-condicoes-input').value = lead.condicoes_proposta || '';
@@ -1151,14 +1187,18 @@
             }
 
             const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const refImovel = leadEmProposta.imovel ? `Ref: ${leadEmProposta.imovel.codigo_ref}` : 'do imóvel';
+            const ehAvaliacao = (leadEmProposta.mensagem && leadEmProposta.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            const refImovel = ehAvaliacao 
+                ? 'para a negociação do seu imóvel' 
+                : (leadEmProposta.imovel ? `para o imóvel Ref: ${leadEmProposta.imovel.codigo_ref}` : 'para o imóvel');
+                
             const zapLimpo = ('' + leadEmProposta.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
-            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente sua proposta comercial para o imóvel ${refImovel}:\n\n` +
-                           `💰 *Valor Ofertado:* ${valorFormatado}\n` +
+            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente a proposta comercial ${refImovel}:\n\n` +
+                           `💰 *Valor:* ${valorFormatado}\n` +
                            (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
-                           `Nossa diretoria e o proprietário estão analisando e te retornamos em breve!`;
+                           `Nossa diretoria está acompanhando e qualquer dúvida estou à disposição!`;
 
             const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWa, '_blank');
@@ -1173,11 +1213,17 @@
 
             leadEmTimeline = lead;
 
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            let contextoTitulo = 'Interesse Geral';
+            if (ehAvaliacao) {
+                contextoTitulo = 'Captação / Avaliação';
+            } else if (lead.imovel) {
+                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+            }
+
             document.getElementById('timeline-lead-nome').innerText = lead.nome;
             document.getElementById('timeline-lead-contato').innerText = `${lead.whatsapp} ${lead.email ? '• ' + lead.email : ''}`;
-            document.getElementById('timeline-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral';
+            document.getElementById('timeline-lead-imovel').innerText = contextoTitulo;
 
             document.getElementById('timeline-nova-nota').value = '';
             document.getElementById('modal-timeline-lead').classList.remove('hidden');

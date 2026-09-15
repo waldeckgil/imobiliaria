@@ -25,7 +25,7 @@
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
-            <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos e exclusão estão desabilitadas.</span>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos, propostas e exclusões estão desabilitadas.</span>
         </div>
     </div>
 
@@ -168,7 +168,7 @@
                             <th class="py-3 px-3">Cliente (Comprador)</th>
                             <th class="py-3 px-3">Imóvel de Interesse</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
-                            <th class="py-3 px-3">Etapa do Funil & Visita</th>
+                            <th class="py-3 px-3">Etapa Atual & Histórico</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
                             <th class="py-3 px-4 text-right">Ação Direta</th>
                         </tr>
@@ -187,13 +187,68 @@
             <!-- RODAPÉ DA TABELA -->
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads cadastrados</span>
-                <span class="font-mono text-[11px]">SGI • Conversão Direta & Agendamentos</span>
+                <span class="font-mono text-[11px]">SGI • Timeline & CRM Multi-Etapas</span>
             </div>
         </div>
 
     </main>
 
-    <!-- MODAL DE AGENDAMENTO DE VISITA (NOVO) -->
+    <!-- MODAL DE LINHA DO TEMPO / HISTÓRICO COMPLETO DO CLIENTE -->
+    <div id="modal-timeline-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-cyan-400 font-black text-sm">
+                    <i class="fa-solid fa-timeline text-base"></i>
+                    <span>Linha do Tempo & Histórico do Cliente</span>
+                </div>
+                <button onclick="fecharModalTimeline()" class="text-slate-500 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- CONTEXTO DO CLIENTE E IMÓVEL -->
+            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                <div>
+                    <h4 class="font-black text-white text-sm" id="timeline-lead-nome">---</h4>
+                    <p class="text-slate-400 font-mono text-[11px]" id="timeline-lead-contato">---</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel</span>
+                    <span class="text-cyan-400 font-bold font-mono text-xs" id="timeline-lead-imovel">---</span>
+                </div>
+            </div>
+
+            <!-- ADICIONAR NOTA MANUAL / OBSERVAÇÃO AO HISTÓRICO -->
+            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                <label class="block text-[11px] font-bold uppercase text-slate-400">Inserir Nota Interna / Ocorrência</label>
+                <div class="flex gap-2">
+                    <input type="text" id="timeline-nova-nota" placeholder="Ex: Cliente pediu 2 dias para resposta, ligar na quinta-feira..." 
+                           class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    <button onclick="adicionarNotaManualHistorico()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span class="hidden sm:inline">Gravar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- LISTAGEM DA LINHA DO TEMPO (SCROLLÁVEL) -->
+            <div class="flex-1 overflow-y-auto pr-2 space-y-4" id="timeline-container-eventos">
+                <div class="py-8 text-center text-slate-500 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
+                    <p>Carregando histórico do cliente...</p>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 text-right">
+                <button onclick="fecharModalTimeline()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl text-xs transition cursor-pointer">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE AGENDAMENTO DE VISITA -->
     <div id="modal-agendar-visita" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-md w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -228,18 +283,115 @@
                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 resize-none"></textarea>
             </div>
 
-            <!-- AÇÕES DO MODAL -->
+            <!-- AÇÕES DO MODAL COM CANCELAR E REAGENDAR -->
             <div class="space-y-2 pt-2 border-t border-slate-800">
-                <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
-                        class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
+                <div class="flex items-center gap-2">
+                    <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
+                            class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Salvar / Remarcar</span>
+                    </button>
+
+                    <button onclick="cancelarVisitaAgendada()" id="btn-cancelar-visita" 
+                            class="bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-800/60 font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
+                            title="Desmarcar visita e retornar para atendimento">
+                        <i class="fa-solid fa-calendar-xmark"></i>
+                        <span class="hidden sm:inline">Desmarcar</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button onclick="dispararConfirmacaoWhatsApp('confirmacao')" id="btn-whatsapp-confirmar" 
+                            class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Confirmar Visita</span>
+                    </button>
+
+                    <button onclick="dispararConfirmacaoWhatsApp('reagendamento')" id="btn-whatsapp-reagendar" 
+                            class="bg-amber-600/90 hover:bg-amber-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Avisar Remarcação</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOMIZADO: CONFIRMAR DESMARCAR VISITA -->
+    <div id="modal-confirmar-desmarcar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-sm w-full p-6 text-center border border-amber-500/40 shadow-2xl space-y-3">
+            <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mx-auto border border-amber-500/30">
+                <i class="fa-solid fa-calendar-xmark"></i>
+            </div>
+            
+            <h3 class="text-base font-black text-white">Desmarcar Visita?</h3>
+            <p class="text-xs text-slate-400">
+                A data combinada será desmarcada e o lead retornará para o estágio 
+                <span class="text-amber-400 font-bold">"Em Atendimento"</span>. O histórico da visita permanecerá gravado.
+            </p>
+
+            <div class="flex items-center gap-2 pt-3">
+                <button onclick="fecharModalConfirmarDesmarcar()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                    Voltar
+                </button>
+                <button onclick="executarCancelamentoVisita()" id="btn-confirmar-desmarcar-acao" class="w-1/2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow">
+                    Sim, Desmarcar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE REGISTRO DE PROPOSTA COMERCIAL -->
+    <div id="modal-proposta-comercial" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 border border-purple-500/40 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-purple-400 font-black text-sm">
+                    <i class="fa-solid fa-hand-holding-dollar text-base"></i>
+                    <span>Registrar Proposta Comercial</span>
+                </div>
+                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="proposta-lead-id">
+
+            <!-- CONTEXTO DO CLIENTE E IMÓVEL -->
+            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
+                <p class="text-slate-400">Comprador: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
+                <p class="text-slate-400">Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
+                <p class="text-slate-400">Valor Anunciado: <strong id="proposta-valor-anuncio" class="text-emerald-400 font-mono">---</strong></p>
+            </div>
+
+            <!-- VALOR OFERTADO -->
+            <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Valor da Proposta Ofertada (R$)</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">R$</span>
+                    <input type="number" step="0.01" id="proposta-valor-input" placeholder="0,00" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white font-mono font-bold text-sm outline-none focus:border-purple-400">
+                </div>
+            </div>
+
+            <!-- CONDIÇÕES DE PAGAMENTO -->
+            <div>
+                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Forma de Pagamento / Condições</label>
+                <textarea id="proposta-condicoes-input" rows="3" 
+                          placeholder="Ex: Sinal de 20% + Financiamento Bancário + Carro como parte de pagamento..." 
+                          class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 resize-none"></textarea>
+            </div>
+
+            <!-- AÇÕES -->
+            <div class="space-y-2 pt-2 border-t border-slate-800">
+                <button onclick="salvarPropostaComercial()" id="btn-salvar-proposta" 
+                        class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-purple-950/40">
                     <i class="fa-solid fa-floppy-disk"></i>
-                    <span>Salvar Agendamento</span>
+                    <span>Salvar Proposta</span>
                 </button>
 
-                <button onclick="dispararConfirmacaoWhatsApp()" id="btn-whatsapp-agendamento" 
-                        class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow">
+                <button onclick="enviarPropostaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Confirmar no WhatsApp do Cliente</span>
+                    <span>Enviar Resumo da Proposta no WhatsApp</span>
                 </button>
             </div>
         </div>
@@ -252,7 +404,7 @@
                 <i class="fa-solid fa-trash-can"></i>
             </div>
             <h3 class="text-base font-black text-white">Descartar Lead?</h3>
-            <p class="text-xs text-slate-400 mt-1">Essa mensagem de contato será removida permanentemente do banco de dados.</p>
+            <p class="text-xs text-slate-400 mt-1">Essa mensagem de contato e todo o histórico deste lead serão removidos permanentemente.</p>
             <p class="text-xs font-bold text-cyan-400 mt-2" id="modal-excluir-lead-nome">---</p>
 
             <input type="hidden" id="modal-excluir-lead-id">
@@ -270,7 +422,7 @@
 
     <!-- RODAPÉ TÉCNICO -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
-        SGI • Sistema de Gestão Imobiliária SaaS • CRM & Funil de Vendas
+        SGI • Sistema de Gestão Imobiliária SaaS • CRM & Linha do Tempo
     </footer>
 
     <!-- JAVASCRIPT COM 'supabaseClient' -->
@@ -281,10 +433,16 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
+        let imobiliariaNomeFantasia = '';
+        let imobiliariaSlug = '';
+        let usuarioLogadoNome = 'Gestor';
         let listaLeadsCompleta = [];
         let listaCorretores = [];
         let modoLeitura = false;
+
         let leadEmAgendamento = null;
+        let leadEmProposta = null;
+        let leadEmTimeline = null;
 
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -297,6 +455,7 @@
 
             // MODO MASTER BYPASS
             if (email === 'waldeckgil@gmail.com') {
+                usuarioLogadoNome = 'Waldeck (Super Admin)';
                 document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (LEADS GLOBAIS)';
                 document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
                 document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
@@ -305,6 +464,8 @@
                 const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
                 if (imobPiloto) {
                     imobiliariaId = imobPiloto.id;
+                    imobiliariaNomeFantasia = imobPiloto.nome_fantasia || 'nossa imobiliária';
+                    imobiliariaSlug = imobPiloto.slug || '';
                     document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
                     await carregarEquipeCorretores();
                     await carregarLeads();
@@ -322,6 +483,8 @@
 
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
+                usuarioLogadoNome = usuario.nome_completo || usuario.email;
+
                 const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
@@ -331,6 +494,8 @@
                 if (errImob || !imob) throw new Error('Imobiliária não localizada.');
 
                 imobiliariaId = imob.id;
+                imobiliariaNomeFantasia = imob.nome_fantasia || 'nossa imobiliária';
+                imobiliariaSlug = imob.slug || '';
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
@@ -382,7 +547,7 @@
                 <tr>
                     <td colspan="7" class="py-12 text-center text-slate-500">
                         <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                        <p>Buscando mensagens e agendamentos...</p>
+                        <p>Buscando atendimentos, visitas e histórico...</p>
                     </td>
                 </tr>`;
 
@@ -448,6 +613,41 @@
             return `${dia}/${mes} às ${hora}:${min}`;
         }
 
+        // ==========================================
+        // MOTOR DE HISTÓRICO & LINHA DO TEMPO (LOG)
+        // ==========================================
+        async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
+            try {
+                const leadRef = listaLeadsCompleta.find(l => l.id === leadId);
+                const idImobFinal = (leadRef && leadRef.imobiliaria_id) 
+                    ? leadRef.imobiliaria_id 
+                    : (imobiliariaId || null);
+
+                const payload = {
+                    lead_id: leadId,
+                    imobiliaria_id: idImobFinal,
+                    autor_nome: usuarioLogadoNome || 'Gestor',
+                    tipo_evento: tipoEvento,
+                    descricao: descricao,
+                    detalhes: detalhes
+                };
+
+                const { data, error } = await supabaseClient
+                    .from('leads_historico')
+                    .insert([payload])
+                    .select();
+
+                if (error) {
+                    console.error('Falha Supabase ao registrar histórico:', error);
+                    throw error;
+                }
+                return data;
+            } catch (err) {
+                console.error('Erro ao registrar histórico:', err.message || err);
+                throw err;
+            }
+        }
+
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
@@ -489,22 +689,22 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Badge e botão de visita com exibição direta das notas
+                // Bloco de Visita
                 let blocoAgendamento = '';
                 if (l.data_agendamento) {
                     const notaTexto = l.notas_agendamento ? l.notas_agendamento.replace(/"/g, '&quot;') : '';
                     blocoAgendamento = `
-                        <div class="mt-1.5 flex flex-col gap-1 w-full max-w-[220px]">
+                        <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
                             <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-1 rounded-lg font-mono font-bold transition w-fit" 
-                                    title="Clique para editar agendamento">
+                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold transition w-fit" 
+                                    title="Visita combinada: clique para gerenciar">
                                 <i class="fa-solid fa-calendar-check text-cyan-400"></i>
                                 <span>${formatarDataVisita(l.data_agendamento)}</span>
                             </button>
                             ${l.notas_agendamento ? `
                                 <div onclick="abrirModalAgendamento('${l.id}')" 
-                                     class="cursor-pointer bg-slate-950 border border-amber-500/40 text-amber-200 text-[10px] px-2 py-1 rounded-lg flex items-start gap-1.5 shadow-sm hover:border-amber-400 transition" 
-                                     title="Clique para editar: ${notaTexto}">
+                                     class="cursor-pointer bg-slate-950 border border-amber-500/40 text-amber-200 text-[10px] px-2 py-0.5 rounded flex items-start gap-1.5 shadow-sm hover:border-amber-400 transition" 
+                                     title="Nota da visita: ${notaTexto}">
                                     <i class="fa-solid fa-note-sticky text-amber-400 text-xs mt-0.5 flex-shrink-0"></i>
                                     <span class="truncate font-medium">${l.notas_agendamento}</span>
                                 </div>
@@ -520,8 +720,44 @@
                     `;
                 }
 
-                const msgWa = encodeURIComponent(`Olá ${l.nome}! Me chamo da equipe de atendimento. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site. Como posso te ajudar hoje?`);
-                const urlWa = `https://wa.me/${zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo}?text=${msgWa}`;
+                // Bloco de Proposta
+                let blocoProposta = '';
+                if (l.valor_proposta || l.status === 'Proposta') {
+                    const condTexto = l.condicoes_proposta ? l.condicoes_proposta.replace(/"/g, '&quot;') : '';
+                    blocoProposta = `
+                        <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
+                            <button onclick="abrirModalProposta('${l.id}')" 
+                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-0.5 rounded font-mono font-black transition w-fit" 
+                                    title="Editar valores da proposta">
+                                <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
+                                <span>${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Definir Valor'}</span>
+                            </button>
+                            ${l.condicoes_proposta ? `
+                                <div onclick="abrirModalProposta('${l.id}')" 
+                                     class="cursor-pointer bg-slate-950 border border-purple-500/40 text-purple-300 text-[10px] px-2 py-0.5 rounded flex items-start gap-1.5 shadow-sm hover:border-purple-400 transition" 
+                                     title="Condições: ${condTexto}">
+                                    <i class="fa-solid fa-file-contract text-purple-400 text-xs mt-0.5 flex-shrink-0"></i>
+                                    <span class="truncate font-medium">${l.condicoes_proposta}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                // Configuração do WhatsApp Dinâmico (com link do imóvel para NOVO)
+                const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+                const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
+                
+                let urlWa = `https://wa.me/${numeroWa}`;
+                if (!l.status || l.status === 'Novo') {
+                    const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
+                    const linkImovel = (l.imovel && imobiliariaSlug) 
+                        ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
+                        : '';
+
+                    const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
+                    urlWa += `?text=${encodeURIComponent(texto)}`;
+                }
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
@@ -554,6 +790,7 @@
                                 <option value="Perdido" ${l.status === 'Perdido' ? 'selected' : ''}>⚫ Perdido</option>
                             </select>
                             ${blocoAgendamento}
+                            ${blocoProposta}
                         </div>
                     </td>
 
@@ -567,6 +804,13 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
+                            <!-- BOTÃO DE LINHA DO TEMPO (HISTÓRICO) -->
+                            <button onclick="abrirModalTimeline('${l.id}')" 
+                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition cursor-pointer" 
+                                    title="Ver Linha do Tempo / Histórico do Cliente">
+                                <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                            </button>
+
                             <!-- BOTÃO DE VISITA DIRETO -->
                             <button onclick="abrirModalAgendamento('${l.id}')" 
                                     ${modoLeitura ? 'disabled' : ''}
@@ -575,11 +819,13 @@
                                 <i class="fa-solid fa-calendar-days text-xs"></i>
                             </button>
 
+                            <!-- WHATSAPP DIRETO -->
                             <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow transition cursor-pointer" title="Responder no WhatsApp">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span class="hidden sm:inline">Chamar</span>
                             </a>
 
+                            <!-- EXCLUIR -->
                             <button onclick="abrirModalExcluirLead('${l.id}', '${l.nome.replace(/'/g, "\\'")}')" 
                                     ${modoLeitura ? 'disabled' : ''}
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" title="Descartar">
@@ -591,16 +837,29 @@
             }).join('');
         }
 
-        // DISPARADOR DE MUDANÇA DE STATUS COM GATILHO DE VISITA
+        // GATILHO DINÂMICO DE MUDANÇA DE STATUS COM AUDITORIA
         async function aoMudarStatusLead(leadId, novoStatus) {
             if (modoLeitura) return;
 
-            // Se for Visita Agendada, abre o modal de imediato para garantir dia e hora
+            const item = listaLeadsCompleta.find(l => l.id === leadId);
+            const statusAntigo = item ? (item.status || 'Novo') : 'Novo';
+
             if (novoStatus === 'Visita Agendada') {
                 abrirModalAgendamento(leadId);
+            } else if (novoStatus === 'Proposta') {
+                abrirModalProposta(leadId);
             }
 
             await atualizarStatusLead(leadId, novoStatus);
+
+            // Grava na Linha do Tempo
+            if (statusAntigo !== novoStatus) {
+                await registrarEventoHistorico(
+                    leadId, 
+                    'status', 
+                    `Etapa alterada de "${statusAntigo}" para "${novoStatus}"`
+                ).catch(() => {});
+            }
         }
 
         async function atualizarStatusLead(leadId, novoStatus) {
@@ -641,7 +900,6 @@
                 ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
                 : 'Interesse Geral na Imobiliária';
 
-            // Preenche se já tiver data definida
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
                 d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -688,13 +946,20 @@
 
                 if (error) throw error;
 
-                // Atualiza localmente
                 const item = listaLeadsCompleta.find(l => l.id === leadId);
                 if (item) {
                     item.status = 'Visita Agendada';
                     item.data_agendamento = isoData;
                     item.notas_agendamento = notas;
                 }
+
+                // Registra evento no Histórico
+                await registrarEventoHistorico(
+                    leadId,
+                    'visita',
+                    `Visita agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
+                    { data_visita: isoData, notas: notas }
+                ).catch(() => {});
 
                 fecharModalAgendamento();
                 atualizarMetricasFunil(listaLeadsCompleta);
@@ -704,35 +969,319 @@
                 console.error(err);
                 alert('Erro ao salvar agendamento: ' + err.message);
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Agendamento</span>';
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar / Remarcar</span>';
                 btn.disabled = false;
             }
         }
 
-        function dispararConfirmacaoWhatsApp() {
+        function cancelarVisitaAgendada() {
+            if (modoLeitura) return;
+            document.getElementById('modal-confirmar-desmarcar').classList.remove('hidden');
+        }
+
+        function fecharModalConfirmarDesmarcar() {
+            document.getElementById('modal-confirmar-desmarcar').classList.add('hidden');
+        }
+
+        async function executarCancelamentoVisita() {
+            if (modoLeitura) return;
+            const leadId = document.getElementById('agendamento-lead-id').value;
+            if (!leadId) return;
+
+            const btn = document.getElementById('btn-confirmar-desmarcar-acao');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Desmarcando...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Em Atendimento',
+                        data_agendamento: null
+                    })
+                    .eq('id', leadId);
+
+                if (error) throw error;
+
+                const item = listaLeadsCompleta.find(l => l.id === leadId);
+                if (item) {
+                    item.status = 'Em Atendimento';
+                    item.data_agendamento = null;
+                }
+
+                await registrarEventoHistorico(
+                    leadId,
+                    'visita',
+                    'Visita foi cancelada/desmarcada. O cliente retornou para "Em Atendimento".'
+                );
+
+                fecharModalConfirmarDesmarcar();
+                fecharModalAgendamento();
+                atualizarMetricasFunil(listaLeadsCompleta);
+                renderizarTabelaLeads(listaLeadsCompleta);
+
+            } catch (err) {
+                console.error('Erro ao desmarcar visita:', err);
+                alert('Erro ao desmarcar visita: ' + (err.message || err));
+            } finally {
+                btn.innerHTML = 'Sim, Desmarcar';
+                btn.disabled = false;
+            }
+        }
+
+        function dispararConfirmacaoWhatsApp(tipo = 'confirmacao') {
             if (!leadEmAgendamento) return;
 
             const dataValor = document.getElementById('agendamento-data').value;
             if (!dataValor) {
-                alert('Defina a data e a hora antes de enviar a confirmação.');
+                alert('Defina o dia e o horário antes de enviar a notificação.');
                 return;
             }
 
             const d = new Date(dataValor);
             const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
             const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            const refImovel = leadEmAgendamento.imovel ? leadEmAgendamento.imovel.codigo_ref : 'combinado';
+            const refImovel = leadEmAgendamento.imovel ? `Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'combinado';
 
             const zapLimpo = ('' + leadEmAgendamento.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
-            const mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel Ref: ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
-            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
+            let mensagem = '';
+            if (tipo === 'reagendamento') {
+                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos sua visita ao imóvel ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
+            } else {
+                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
+            }
 
+            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWa, '_blank');
         }
 
-        // Atribuição de Corretor Responsável
+        // ==========================================
+        // MÓDULO DE PROPOSTAS COMERCIAIS
+        // ==========================================
+        function abrirModalProposta(leadId) {
+            if (modoLeitura) return;
+            const lead = listaLeadsCompleta.find(l => l.id === leadId);
+            if (!lead) return;
+
+            leadEmProposta = lead;
+
+            document.getElementById('proposta-lead-id').value = lead.id;
+            document.getElementById('proposta-lead-nome').innerText = lead.nome;
+            document.getElementById('proposta-lead-imovel').innerText = lead.imovel 
+                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
+                : 'Interesse Geral';
+
+            const valorRef = lead.imovel ? (lead.imovel.valor_venda || lead.imovel.valor_locacao) : null;
+            document.getElementById('proposta-valor-anuncio').innerText = valorRef 
+                ? 'R$ ' + Number(valorRef).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) 
+                : 'Sob Consulta';
+
+            document.getElementById('proposta-valor-input').value = lead.valor_proposta || '';
+            document.getElementById('proposta-condicoes-input').value = lead.condicoes_proposta || '';
+
+            document.getElementById('modal-proposta-comercial').classList.remove('hidden');
+        }
+
+        function fecharModalProposta() {
+            document.getElementById('modal-proposta-comercial').classList.add('hidden');
+            leadEmProposta = null;
+        }
+
+        async function salvarPropostaComercial() {
+            if (modoLeitura) return;
+            const leadId = document.getElementById('proposta-lead-id').value;
+            const valor = document.getElementById('proposta-valor-input').value;
+            const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
+
+            const btn = document.getElementById('btn-salvar-proposta');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Proposta',
+                        valor_proposta: valor ? Number(valor) : null,
+                        condicoes_proposta: condicoes || null
+                    })
+                    .eq('id', leadId);
+
+                if (error) throw error;
+
+                const item = listaLeadsCompleta.find(l => l.id === leadId);
+                if (item) {
+                    item.status = 'Proposta';
+                    item.valor_proposta = valor ? Number(valor) : null;
+                    item.condicoes_proposta = condicoes || null;
+                }
+
+                const valorFormatado = valor ? 'R$ ' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'não especificado';
+                await registrarEventoHistorico(
+                    leadId,
+                    'proposta',
+                    `Proposta comercial registrada no valor de ${valorFormatado}` + (condicoes ? `. Condições: "${condicoes}"` : ''),
+                    { valor: valor, condicoes: condicoes }
+                ).catch(() => {});
+
+                fecharModalProposta();
+                atualizarMetricasFunil(listaLeadsCompleta);
+                renderizarTabelaLeads(listaLeadsCompleta);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar proposta: ' + (err.message || err));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Proposta</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function enviarPropostaWhatsApp() {
+            if (!leadEmProposta) return;
+
+            const valor = document.getElementById('proposta-valor-input').value;
+            const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
+
+            if (!valor) {
+                alert('Informe ao menos o valor ofertado para gerar a mensagem.');
+                return;
+            }
+
+            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const refImovel = leadEmProposta.imovel ? `Ref: ${leadEmProposta.imovel.codigo_ref}` : 'do imóvel';
+            const zapLimpo = ('' + leadEmProposta.whatsapp).replace(/\D/g, '');
+            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+
+            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente sua proposta comercial para o imóvel ${refImovel}:\n\n` +
+                           `💰 *Valor Ofertado:* ${valorFormatado}\n` +
+                           (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
+                           `Nossa diretoria e o proprietário estão analisando e te retornamos em breve!`;
+
+            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWa, '_blank');
+        }
+
+        // ==========================================
+        // MODAL DA LINHA DO TEMPO / HISTÓRICO
+        // ==========================================
+        async function abrirModalTimeline(leadId) {
+            const lead = listaLeadsCompleta.find(l => l.id === leadId);
+            if (!lead) return;
+
+            leadEmTimeline = lead;
+
+            document.getElementById('timeline-lead-nome').innerText = lead.nome;
+            document.getElementById('timeline-lead-contato').innerText = `${lead.whatsapp} ${lead.email ? '• ' + lead.email : ''}`;
+            document.getElementById('timeline-lead-imovel').innerText = lead.imovel 
+                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
+                : 'Interesse Geral';
+
+            document.getElementById('timeline-nova-nota').value = '';
+            document.getElementById('modal-timeline-lead').classList.remove('hidden');
+
+            await carregarEventosTimeline(leadId);
+        }
+
+        function fecharModalTimeline() {
+            document.getElementById('modal-timeline-lead').classList.add('hidden');
+            leadEmTimeline = null;
+        }
+
+        async function carregarEventosTimeline(leadId) {
+            const container = document.getElementById('timeline-container-eventos');
+            container.innerHTML = `
+                <div class="py-8 text-center text-slate-500 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
+                    <p>Carregando histórico do cliente...</p>
+                </div>`;
+
+            try {
+                const { data: historico, error } = await supabaseClient
+                    .from('leads_historico')
+                    .select('*')
+                    .eq('lead_id', leadId)
+                    .order('criado_em', { ascending: false });
+
+                if (error) throw error;
+
+                if (!historico || historico.length === 0) {
+                    container.innerHTML = `
+                        <div class="py-8 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl p-4">
+                            <i class="fa-solid fa-clock-rotate-left text-2xl text-slate-600 mb-2"></i>
+                            <p class="font-bold text-slate-400">Nenhum evento registrado ainda.</p>
+                            <p class="text-[11px] text-slate-600">As mudanças de etapa, visitas, propostas e notas manuais aparecerão aqui.</p>
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = historico.map(ev => {
+                    const dataHora = new Date(ev.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    
+                    let icone = 'fa-tag';
+                    let corBadge = 'text-cyan-400 bg-cyan-950/60 border-cyan-800';
+
+                    if (ev.tipo_evento === 'visita') {
+                        icone = 'fa-calendar-days';
+                        corBadge = 'text-cyan-300 bg-cyan-950/90 border-cyan-700';
+                    } else if (ev.tipo_evento === 'proposta') {
+                        icone = 'fa-hand-holding-dollar';
+                        corBadge = 'text-purple-300 bg-purple-950/90 border-purple-700';
+                    } else if (ev.tipo_evento === 'nota') {
+                        icone = 'fa-comment-dots';
+                        corBadge = 'text-amber-300 bg-amber-950/90 border-amber-700';
+                    }
+
+                    return `
+                        <div class="relative pl-6 pb-2 border-l-2 border-slate-800 last:border-l-0 text-xs">
+                            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-cyan-500 flex items-center justify-center"></div>
+                            
+                            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 space-y-1 shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded border ${corBadge} font-bold inline-flex items-center gap-1">
+                                        <i class="fa-solid ${icone}"></i>
+                                        <span>${ev.tipo_evento.toUpperCase()}</span>
+                                    </span>
+                                    <span class="text-[10px] text-slate-500 font-mono">${dataHora}</span>
+                                </div>
+                                <p class="text-white font-medium mt-1 leading-relaxed">${ev.descricao}</p>
+                                <p class="text-[10px] text-slate-500">Por: <strong class="text-slate-400">${ev.autor_nome || 'Sistema'}</strong></p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="p-4 text-center text-red-400 text-xs">Erro ao consultar linha do tempo: ${err.message || ''}</div>`;
+            }
+        }
+
+        async function adicionarNotaManualHistorico() {
+            if (!leadEmTimeline) return;
+            const input = document.getElementById('timeline-nova-nota');
+            const texto = input.value.trim();
+
+            if (!texto) {
+                alert('Digite a nota ou observação antes de salvar.');
+                return;
+            }
+
+            try {
+                await registrarEventoHistorico(leadEmTimeline.id, 'nota', texto);
+                input.value = '';
+                await carregarEventosTimeline(leadEmTimeline.id);
+            } catch (err) {
+                console.error('Falha completa na nota:', err);
+                alert('Erro ao salvar nota: ' + (err.message || JSON.stringify(err)));
+            }
+        }
+
+        // ==========================================
+        // ATRIBUIÇÃO, FILTROS E EXCLUSÃO
+        // ==========================================
         async function atribuirCorretorLead(leadId, corretorId) {
             if (modoLeitura) return;
             try {
@@ -747,8 +1296,17 @@
 
                 if (error) throw error;
 
+                const corretorObj = listaCorretores.find(c => String(c.id) === String(corretorId));
+                const nomeCorretor = corretorObj ? corretorObj.nome_completo : 'Nenhum';
+
                 const item = listaLeadsCompleta.find(l => l.id === leadId);
                 if (item) item.corretor_atribuido_id = payload.corretor_atribuido_id;
+
+                await registrarEventoHistorico(
+                    leadId,
+                    'status',
+                    `Corretor responsável definido para: ${nomeCorretor}`
+                ).catch(() => {});
 
             } catch (err) {
                 console.error(err);
@@ -756,7 +1314,6 @@
             }
         }
 
-        // Filtros em Tempo Real
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
@@ -785,7 +1342,6 @@
             renderizarTabelaLeads(listaLeadsCompleta);
         }
 
-        // Modal de Exclusão
         function abrirModalExcluirLead(id, nome) {
             if (modoLeitura) return;
             document.getElementById('modal-excluir-lead-id').value = id;
