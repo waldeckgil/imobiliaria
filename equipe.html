@@ -18,8 +18,24 @@
 
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA -->
-    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <span>MODO SUPORTE MASTER:</span>
+                <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Gestão de Equipe com Bypass RLS e Edição Liberada</span>
+            </div>
+            <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Fechar Suporte</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
             <span>MODO SOMENTE LEITURA: Assinatura pendente. O cadastro e edição de colaboradores estão desabilitados.</span>
@@ -27,7 +43,7 @@
     </div>
 
     <!-- CABEÇALHO TOPBAR -->
-    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
             <div class="flex items-center gap-3">
@@ -275,17 +291,17 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Gestão de Equipe & Permissões
     </footer>
 
-    <!-- JAVASCRIPT DE OPERAÇÃO DE EQUIPE (CORRIGIDO COM 'supabaseClient') -->
+    <!-- JAVASCRIPT -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        // Corrigido para supabaseClient
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let listaEquipeCompleta = [];
         let modoLeitura = false;
+        let isMasterSuporte = false;
 
         async function inicializarEquipe() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -295,23 +311,44 @@
             }
 
             const email = session.user.email.toLowerCase();
+            const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
+            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
+            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
-            // MODO MASTER BYPASS
+            // 1. MODO MASTER BYPASS (SUPORTE SOBERANO)
             if (email === 'waldeckgil@gmail.com') {
-                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (GESTÃO DE EQUIPE GERAL)';
-                document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
-                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
-                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                isMasterSuporte = true;
+                modoLeitura = false; // Master tem poder total para adicionar e editar corretores
 
-                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
-                if (imobPiloto) {
-                    imobiliariaId = imobPiloto.id;
+                let targetId = impersonateId;
+                let imobAlvo = null;
+
+                if (targetId) {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId).single();
+                    imobAlvo = data;
+                } else {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                    imobAlvo = data;
+                }
+
+                if (imobAlvo) {
+                    imobiliariaId = imobAlvo.id;
+
+                    // Mostra a Faixa Dourada Soberana
+                    document.getElementById('faixa-modo-suporte').classList.remove('hidden');
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
+                    document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                    document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                    
                     await carregarMembrosEquipe();
                 }
                 return;
             }
 
-            // GESTOR DA IMOBILIÁRIA (VERIFICAÇÃO DE PRIVILÉGIO DONO)
+            // 2. GESTOR DA IMOBILIÁRIA (VERIFICAÇÃO DE PRIVILÉGIO DONO)
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
@@ -323,7 +360,7 @@
 
                 if (usuario.cargo !== 'dono') {
                     alert('Acesso Restrito: Apenas gestores e diretores podem administrar a equipe de corretores.');
-                    window.location.href = 'dashboard.html';
+                    window.location.href = 'imoveis-lista.html';
                     return;
                 }
 
@@ -340,7 +377,6 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = usuario.cargo.toUpperCase();
 
-                // Auditoria de Assinatura
                 const hoje = new Date().toISOString().split('T')[0];
                 const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
                 modoLeitura = (imob.status === 'blocked' || vencido);
@@ -356,11 +392,10 @@
             } catch (err) {
                 console.error(err);
                 alert('Erro ao validar privilégios da equipe.');
-                window.location.href = 'dashboard.html';
+                window.location.href = 'login.html';
             }
         }
 
-        // Busca colaboradores da imobiliária
         async function carregarMembrosEquipe() {
             const tbody = document.getElementById('tabela-equipe-corpo');
             try {
@@ -382,7 +417,6 @@
             }
         }
 
-        // Atualiza KPIs
         function atualizarMetricasRH(membros) {
             document.getElementById('kpi-total-equipe').innerText = membros.length;
             document.getElementById('kpi-corretores').innerText = membros.filter(m => m.cargo === 'corretor').length;
@@ -391,7 +425,6 @@
             document.getElementById('contador-equipe').innerText = membros.length;
         }
 
-        // Renderiza linhas da equipe
         function renderizarTabelaEquipe(membros) {
             const tbody = document.getElementById('tabela-equipe-corpo');
 
@@ -458,17 +491,17 @@
 
                     <td class="py-3 px-3 text-center">
                         <button onclick="alternarStatusColaborador(${m.id}, ${m.ativo})" 
-                                ${modoLeitura ? 'disabled' : ''}
+                                ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
                                 title="Clique para ativar ou bloquear acesso"
-                                class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}">
+                                class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}">
                             <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
                         </button>
                     </td>
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <button onclick="abrirModalEdicaoColaborador(${m.id})" 
-                                ${modoLeitura ? 'disabled' : ''}
-                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition cursor-pointer" title="Editar Privilégios">
+                                ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" title="Editar Privilégios">
                             <i class="fa-regular fa-pen-to-square text-xs"></i>
                         </button>
                     </td>
@@ -476,9 +509,8 @@
             }).join('');
         }
 
-        // Alterna Ativo / Bloqueado
         async function alternarStatusColaborador(idNum, statusAtual) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             try {
                 const { error } = await supabaseClient
                     .from('usuarios')
@@ -493,9 +525,8 @@
             }
         }
 
-        // Modal de Cadastro e Edição
         function abrirModalColaborador() {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             document.getElementById('form-colaborador').reset();
             document.getElementById('colab-id-edicao').value = '';
             document.getElementById('modal-titulo').innerText = 'Novo Colaborador';
@@ -506,7 +537,7 @@
         }
 
         function abrirModalEdicaoColaborador(idNum) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             const membro = listaEquipeCompleta.find(m => m.id === idNum);
             if (!membro) return;
 
@@ -546,10 +577,9 @@
             document.getElementById('colab-senha').value = senha;
         }
 
-        // Salvar Colaborador (Criação ou Atualização)
         async function salvarColaborador(event) {
             event.preventDefault();
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
 
             const btn = document.getElementById('btn-salvar-colab');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Salvando...';
@@ -571,7 +601,6 @@
 
             try {
                 if (idEdicao) {
-                    // MODO EDIÇÃO
                     const { error } = await supabaseClient
                         .from('usuarios')
                         .update({
@@ -588,7 +617,6 @@
                     await carregarMembrosEquipe();
 
                 } else {
-                    // MODO NOVO CADASTRO
                     const tempAuthClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
                         auth: { persistSession: false, autoRefreshToken: false }
                     });
@@ -600,7 +628,7 @@
                     });
 
                     if (authError) throw authError;
-                    if (!authData.user) throw new Error('Não foi possível registrar o usuário de autenticação.');
+                    if (!authData.user) throw new Error('Não foi possível registrar o usuário.');
 
                     const { error: dbError } = await supabaseClient
                         .from('usuarios')
@@ -645,6 +673,10 @@
         }
 
         async function executarLogout() {
+            if (isMasterSuporte) {
+                window.close();
+                return;
+            }
             if (confirm('Deseja realmente sair?')) {
                 await supabaseClient.auth.signOut();
                 sessionStorage.clear();
