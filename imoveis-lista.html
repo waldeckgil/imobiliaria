@@ -132,8 +132,8 @@
                         <option value="">Status: Todos</option>
                         <option value="Disponível">Disponível</option>
                         <option value="Em Proposta">Em Proposta</option>
-                        <option value="Vendido">Vendido</option>
                         <option value="Alugado">Alugado</option>
+                        <option value="Vendido">Vendido</option>
                         <option value="Inativo">Inativo</option>
                     </select>
                 </div>
@@ -185,11 +185,43 @@
 
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Exibindo <strong id="contador-linhas" class="text-white">0</strong> imóveis</span>
-                <span class="font-mono text-[11px]">SGI • Controle Completo de Estoque</span>
+                <span class="font-mono text-[11px]">SGI • Controle de Estoque & Proprietários</span>
             </div>
         </div>
 
     </main>
+
+    <!-- MODAL DE FICHA DO PROPRIETÁRIO & DOCUMENTOS DA CASA -->
+    <div id="modal-proprietario-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/40 space-y-4 max-h-[90vh] flex flex-col">
+            <button type="button" onclick="fecharModalProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 text-amber-400 font-black text-sm uppercase tracking-wide border-b border-slate-800 pb-3">
+                <i class="fa-solid fa-user-tie"></i>
+                <span>Ficha do Proprietário & Documentação do Imóvel</span>
+            </div>
+
+            <!-- CONTEXTO DO IMÓVEL -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel Selecionado:</span>
+                <h4 class="font-bold text-white text-sm" id="prop-modal-imovel-titulo">---</h4>
+                <p class="text-cyan-400 font-mono text-[11px]" id="prop-modal-imovel-ref">Ref: ---</p>
+            </div>
+
+            <!-- DADOS DO PROPRIETÁRIO -->
+            <div id="prop-modal-conteudo" class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
+                <!-- Injetado dinamicamente via JS -->
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 text-right">
+                <button type="button" onclick="fecharModalProprietario()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL DE EXCLUSÃO -->
     <div id="modal-excluir" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -198,7 +230,7 @@
                 <i class="fa-solid fa-trash-can"></i>
             </div>
             <h3 class="text-base font-black text-white">Excluir Imóvel?</h3>
-            <p class="text-xs text-slate-400 mt-1">Essa ação é definitiva e removerá este anúncio e todas as suas referências.</p>
+            <p class="text-xs text-slate-400 mt-1">Essa ação é definitiva e removerá este anúncio e suas referências.</p>
             <p class="text-xs font-bold text-cyan-400 mt-2 font-mono" id="modal-excluir-ref">Ref: ---</p>
 
             <input type="hidden" id="modal-excluir-id">
@@ -228,6 +260,7 @@
 
         let imobiliariaId = null;
         let listaImoveisCompleta = [];
+        let usuarioLogado = null;
         let modoLeitura = false;
 
         async function inicializarCatalogo() {
@@ -262,6 +295,7 @@
                     .single();
 
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
+                usuarioLogado = usuario;
 
                 const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
@@ -328,7 +362,6 @@
             document.getElementById('contador-linhas').innerText = total;
         }
 
-        // RENDERIZAÇÃO DA TABELA COM BADGES VISUAIS DE DESTINAÇÃO
         function renderizarTabela(imoveis) {
             const tbody = document.getElementById('tabela-imoveis-corpo');
 
@@ -350,7 +383,6 @@
             tbody.innerHTML = imoveis.map(im => {
                 const foto = im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
                 
-                // Badge de Destinação Comercial
                 let badgeFinalidade = '';
                 if (im.finalidade === 'Ambos') {
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-purple-950 text-purple-300 border border-purple-800 inline-flex items-center gap-1"><i class="fa-solid fa-arrows-split-up-and-left text-[9px]"></i> Venda & Locação</span>';
@@ -360,7 +392,6 @@
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 inline-flex items-center gap-1"><i class="fa-solid fa-tag text-[9px]"></i> Venda</span>';
                 }
 
-                // Bloco Inteligente de Valores
                 let blocoValores = '';
                 if (im.finalidade === 'Ambos') {
                     blocoValores = `
@@ -388,7 +419,8 @@
                 let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
                 if (im.status === 'Disponível') statusBadge = 'bg-emerald-950 text-emerald-400 border-emerald-800';
                 if (im.status === 'Em Proposta') statusBadge = 'bg-amber-950 text-amber-400 border-amber-800';
-                if (im.status === 'Vendido' || im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-400 border-purple-800';
+                if (im.status === 'Alugado') statusBadge = 'bg-blue-950 text-blue-400 border border-blue-800';
+                if (im.status === 'Vendido') statusBadge = 'bg-purple-950 text-purple-400 border border-purple-800';
 
                 const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
@@ -430,11 +462,19 @@
                         </button>
                     </td>
 
-                    <td class="py-3 px-4 text-right">
+                    <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
+                            <!-- FICHA DO PROPRIETÁRIO E DOCUMENTOS DA CASA -->
+                            <button onclick="abrirModalProprietario('${im.id}')" 
+                                    class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-700/80 transition cursor-pointer" 
+                                    title="Ficha do Proprietário & Documentos da Casa">
+                                <i class="fa-solid fa-user-tie text-xs"></i>
+                            </button>
+
                             <a href="imovel-form.html?id=${im.id}" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition" title="Editar Imóvel">
                                 <i class="fa-regular fa-pen-to-square text-xs"></i>
                             </a>
+
                             <button onclick="abrirModalExcluir('${im.id}', '${im.codigo_ref}')" 
                                     ${modoLeitura ? 'disabled' : ''}
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" title="Excluir">
@@ -444,6 +484,130 @@
                     </td>
                 </tr>`;
             }).join('');
+        }
+
+        // MODAL DA FICHA DO PROPRIETÁRIO & DOCUMENTOS DA CASA
+        async function abrirModalProprietario(imovelId) {
+            const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
+            if (!imovel) return;
+
+            document.getElementById('prop-modal-imovel-titulo').innerText = imovel.titulo;
+            document.getElementById('prop-modal-imovel-ref').innerText = `Ref: ${imovel.codigo_ref} • ${imovel.bairro || ''}`;
+
+            const container = document.getElementById('prop-modal-conteudo');
+            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados do proprietário...</p></div>';
+            document.getElementById('modal-proprietario-imovel').classList.remove('hidden');
+
+            try {
+                // Checa blindagem de permissão
+                const isDonoOuGerente = usuarioLogado && (usuarioLogado.cargo === 'dono' || usuarioLogado.cargo === 'gerente');
+                const podeVerProprietarios = isDonoOuGerente || (usuarioLogado && usuarioLogado.permissoes && usuarioLogado.permissoes.ver_proprietarios);
+
+                let blocoProprietarioHtml = '';
+
+                if (imovel.proprietario_id) {
+                    const { data: prop, error } = await supabaseClient
+                        .from('clientes')
+                        .select('*')
+                        .eq('id', imovel.proprietario_id)
+                        .single();
+
+                    if (!error && prop) {
+                        const zapLimpo = ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '');
+                        const telExibicao = podeVerProprietarios ? (prop.whatsapp || prop.telefone || 'Não informado') : '(XX) XXXXX-**** (Protegido)';
+                        const cpfExibicao = podeVerProprietarios ? (prop.cpf_cnpj || 'Não informado') : '***.***.***-**';
+
+                        blocoProprietarioHtml = `
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-[10px] uppercase font-bold text-amber-400 block">Proprietário Vinculado</span>
+                                        <h3 class="text-base font-black text-white">${prop.nome}</h3>
+                                    </div>
+                                    ${podeVerProprietarios && zapLimpo ? `
+                                        <a href="https://wa.me/${zapLimpo}?text=${encodeURIComponent('Olá ' + prop.nome + '! Sou da imobiliária e falo sobre o seu imóvel Ref: ' + imovel.codigo_ref)}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                            <i class="fa-brands fa-whatsapp text-sm"></i> Chamar no Zap
+                                        </a>
+                                    ` : ''}
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800/80">
+                                    <div><span class="text-slate-500">Telefone:</span> <strong class="text-slate-200">${telExibicao}</strong></div>
+                                    <div><span class="text-slate-500">CPF/CNPJ:</span> <strong class="text-slate-200">${cpfExibicao}</strong></div>
+                                    <div><span class="text-slate-500">RG:</span> <strong class="text-slate-200">${podeVerProprietarios ? (prop.rg || 'Não informado') : '***'}</strong></div>
+                                    <div><span class="text-slate-500">E-mail:</span> <strong class="text-slate-200 truncate max-w-[140px] block">${prop.email || 'Não informado'}</strong></div>
+                                </div>
+
+                                ${prop.observacoes ? `
+                                    <div class="bg-amber-950/20 border border-amber-800/40 p-2.5 rounded-lg text-[11px]">
+                                        <span class="text-amber-400 font-bold block mb-0.5">Dados de Repasse / Observações:</span>
+                                        <p class="text-slate-300 font-mono">${prop.observacoes}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }
+                }
+
+                if (!blocoProprietarioHtml) {
+                    blocoProprietarioHtml = `
+                        <div class="bg-slate-950 p-4 rounded-xl border border-dashed border-slate-800 text-center space-y-2">
+                            <i class="fa-solid fa-user-slash text-2xl text-slate-600"></i>
+                            <p class="text-slate-400 text-xs font-bold">Nenhum proprietário vinculado a este imóvel.</p>
+                            <a href="imovel-form.html?id=${imovel.id}" class="inline-block bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-xs transition">
+                                <i class="fa-solid fa-link mr-1"></i> Vincular Dono no Cadastro
+                            </a>
+                        </div>
+                    `;
+                }
+
+                // Bloco de Documentos Anexos da Casa
+                let blocoDocsHtml = '';
+                if (imovel.documentos_anexos && imovel.documentos_anexos.length > 0) {
+                    blocoDocsHtml = `
+                        <div class="space-y-2 pt-2">
+                            <span class="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Documentos Anexados à Casa (${imovel.documentos_anexos.length}):</span>
+                            <div class="space-y-1.5">
+                                ${imovel.documentos_anexos.map(docUrl => {
+                                    const nomeDoc = decodeURIComponent(docUrl.split('/').pop().split('?')[0]);
+                                    const isPdf = nomeDoc.toLowerCase().endsWith('.pdf');
+                                    const icone = isPdf ? 'fa-file-pdf text-red-400' : 'fa-file-image text-cyan-400';
+                                    return `
+                                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                                            <div class="flex items-center gap-2 truncate max-w-[280px]">
+                                                <i class="fa-solid ${icone}"></i>
+                                                <span class="text-white truncate font-medium">${nomeDoc}</span>
+                                            </div>
+                                            <a href="${docUrl}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded text-[10px] font-bold flex items-center gap-1 transition">
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
+                                            </a>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    blocoDocsHtml = `
+                        <div class="pt-2">
+                            <span class="text-[10px] font-black uppercase text-slate-500 block mb-1">Documentos do Imóvel:</span>
+                            <p class="text-slate-500 text-[11px] italic bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                Nenhum documento (RGI, Escritura, IPTU) foi anexado a este imóvel. Você pode anexar editando o cadastro do imóvel.
+                            </p>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = blocoProprietarioHtml + blocoDocsHtml;
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<p class="text-center text-red-400 text-xs py-6">Erro ao carregar informações do proprietário.</p>';
+            }
+        }
+
+        function fecharModalProprietario() {
+            document.getElementById('modal-proprietario-imovel').classList.add('hidden');
         }
 
         async function alternarVisibilidadeVitrine(imovelId, estadoAtual) {
@@ -475,7 +639,6 @@
 
                 const matchStatus = !status || im.status === status;
 
-                // Lógica Inteligente de Filtro de Finalidade
                 let matchFinalidade = true;
                 if (finalidade === 'Venda') {
                     matchFinalidade = (im.finalidade === 'Venda' || im.finalidade === 'Ambos');
