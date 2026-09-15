@@ -22,9 +22,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- =========================================================================
-         1. CABEÇALHO SOBERANO (MASTER TOPBAR)
-         ========================================================================= -->
+    <!-- CABEÇALHO SOBERANO (MASTER TOPBAR) -->
     <header class="bg-slate-950 border-b border-amber-500/30 py-3.5 px-4 sm:px-8 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
@@ -44,15 +42,19 @@
             </div>
 
             <div class="flex items-center gap-3 text-xs">
+                <!-- CONFIGURAÇÃO RÁPIDA DE DIAS DE ALERTA -->
+                <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
+                    <i class="fa-solid fa-bell text-amber-400 text-xs"></i>
+                    <span class="text-slate-400">Alerta prévio:</span>
+                    <input type="number" id="input-dias-aviso" min="1" max="30" onchange="salvarDiasAviso(this.value)" 
+                           class="w-12 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-center text-amber-400 font-bold outline-none" title="Dias antes do vencimento para alertar o gestor">
+                    <span class="text-slate-400">dias</span>
+                </div>
+
                 <button onclick="carregarDadosMaster()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer">
                     <i class="fa-solid fa-rotate text-xs"></i>
                     <span>Atualizar Métricas</span>
                 </button>
-
-                <a href="dashboard.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-building text-xs"></i>
-                    <span>Dashboard Piloto</span>
-                </a>
 
                 <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
@@ -62,15 +64,11 @@
         </div>
     </header>
 
-    <!-- =========================================================================
-         2. CONTEÚDO PRINCIPAL (MÉTRICAS GLOBAIS E GESTÃO DE CLIENTES)
-         ========================================================================= -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-8">
         
         <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <!-- CARD 1: MRR -->
             <div class="box-master p-5 border-l-4 border-l-amber-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Receita Mensal (MRR)</span>
@@ -82,7 +80,6 @@
                 <span class="text-[10px] text-slate-500 mt-1 block">Faturamento recorrente ativo</span>
             </div>
 
-            <!-- CARD 2: IMOBILIÁRIAS ATIVAS -->
             <div class="box-tech p-5 border-l-4 border-l-emerald-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Imobiliárias Parceiras</span>
@@ -95,7 +92,6 @@
                 <span class="text-[10px] text-emerald-400 mt-1 block">Empresas em operação</span>
             </div>
 
-            <!-- CARD 3: TOTAL DE IMÓVEIS -->
             <div class="box-tech p-5 border-l-4 border-l-cyan-400">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Estoque Global de Imóveis</span>
@@ -108,7 +104,6 @@
                 <span class="text-[10px] text-slate-500 mt-1 block">Cadastrados em todo o Brasil</span>
             </div>
 
-            <!-- CARD 4: BLOQUEADAS OU INADIMPLENTES -->
             <div class="box-tech p-5 border-l-4 border-l-rose-500">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span>Pendências / Bloqueios</span>
@@ -120,19 +115,16 @@
                 </div>
                 <span class="text-[10px] text-slate-500 mt-1 block">Acesso restrito a leitura</span>
             </div>
-
         </div>
 
-        <!-- =====================================================================
-             3. GESTÃO DE ASSINANTES (TABELA GERAL DE IMOBILIÁRIAS)
-             ===================================================================== -->
+        <!-- GESTÃO DE ASSINANTES -->
         <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-5">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div>
                     <h3 class="text-base font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-building-user text-amber-400"></i> Carteira de Imobiliárias Assinantes
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, defina datas de vencimento arbitrárias, ajuste planos e renove mensalidades.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, registre mensalidades, defina vencimentos arbitrários e preste suporte.</p>
                 </div>
 
                 <div class="w-full sm:w-80 relative">
@@ -174,9 +166,7 @@
             </div>
         </div>
 
-        <!-- =====================================================================
-             4. CENTRAL DE COMUNICADOS GLOBAIS (BROADCAST PARA TODOS OS CORRETORES)
-             ===================================================================== -->
+        <!-- CENTRAL DE COMUNICADOS GLOBAIS -->
         <div class="box-tech p-6 space-y-4 border border-cyan-500/30">
             <div class="border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider">
@@ -191,7 +181,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="sm:col-span-2">
                         <label class="block font-bold text-slate-300 mb-1">Título do Comunicado *</label>
-                        <input type="text" id="aviso-titulo" required placeholder="Ex: Manutenção Programada dos Servidores às 23h" 
+                        <input type="text" id="aviso-titulo" required placeholder="Ex: Manutenção Programada às 23h" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
                     </div>
                     <div>
@@ -206,12 +196,12 @@
 
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Mensagem Completa *</label>
-                    <textarea id="aviso-mensagem" required rows="3" placeholder="Descreva os detalhes da notificação com clareza..." 
+                    <textarea id="aviso-mensagem" required rows="3" placeholder="Descreva os detalhes da notificação..." 
                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400"></textarea>
                 </div>
 
                 <div class="flex items-center justify-between pt-1">
-                    <span class="text-[11px] text-slate-500">O comunicado é gravado na tabela <code class="text-cyan-400">avisos_sistema</code> com distribuição instantânea.</span>
+                    <span class="text-[11px] text-slate-500">O comunicado é gravado na tabela <code class="text-cyan-400">avisos_sistema</code>.</span>
                     <button type="submit" id="btn-enviar-aviso" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-6 py-2.5 rounded-xl shadow-lg transition flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-paper-plane"></i>
                         <span>Transmitir Comunicado</span>
@@ -229,9 +219,102 @@
 
     </main>
 
-    <!-- =========================================================================
-         5. MODAL DE AJUSTE SOBERANO DE PLANO / MENSALIDADE
-         ========================================================================= -->
+    <!-- MODAL 1: HISTÓRICO FINANCEIRO & BAIXA DE MENSALIDADE -->
+    <div id="modal-financeiro" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-2xl w-full p-6 shadow-2xl relative border border-emerald-500/40 max-h-[90vh] overflow-y-auto">
+            <button type="button" onclick="fecharModalFinanceiro()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg border border-emerald-500/40">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-white">Controle de Mensalidades & Recibos</h3>
+                    <p id="modal-fin-imob-nome" class="text-xs text-emerald-400 font-bold truncate">Imobiliária</p>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO DE LANÇAMENTO DE PAGAMENTO -->
+            <form id="form-registrar-pagamento" onsubmit="registrarPagamento(event)" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs mb-6">
+                <span class="text-[10px] font-black uppercase text-emerald-400 block">Dar Baixa em Pagamento Recebido</span>
+                <input type="hidden" id="modal-fin-imob-id">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor Pago (R$) *</label>
+                        <input type="number" step="0.01" id="fin-valor" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono font-bold">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Data Pagamento *</label>
+                        <input type="date" id="fin-data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white font-mono">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Mês de Referência *</label>
+                        <input type="text" id="fin-mes-ref" required placeholder="Ex: Outubro/2026" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Forma de Pagamento</label>
+                        <select id="fin-forma" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                            <option value="PIX">PIX</option>
+                            <option value="Boleto">Boleto Bancário</option>
+                            <option value="Cartão">Cartão de Crédito</option>
+                            <option value="Transferência">Transferência Bancária</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Observações / Comprovante</label>
+                        <input type="text" id="fin-obs" placeholder="Ex: Pago via chave PIX Nubank" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                    <label class="flex items-center gap-2 cursor-pointer text-slate-300 text-[11px]">
+                        <input type="checkbox" id="fin-renovar-30" checked class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                        <span>Estender automaticamente vencimento em +30 dias e reativar</span>
+                    </label>
+                    <button type="submit" id="btn-salvar-pagamento" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Recebimento</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- HISTÓRICO DE MENSALIDADES PAGAS -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h4 class="text-xs font-black text-slate-300 uppercase tracking-wider">Histórico de Pagamentos Confirmados</h4>
+                    <span id="modal-fin-total-pago" class="text-xs font-bold text-emerald-400 font-mono">Total: R$ 0,00</span>
+                </div>
+
+                <div class="overflow-x-auto border border-slate-800 rounded-xl">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+                            <tr>
+                                <th class="py-2.5 px-3">Data</th>
+                                <th class="py-2.5 px-3">Referência</th>
+                                <th class="py-2.5 px-3">Forma</th>
+                                <th class="py-2.5 px-3">Valor</th>
+                                <th class="py-2.5 px-3">Observações</th>
+                                <th class="py-2.5 px-3 text-right">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-mensalidades-corpo" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                            <tr><td colspan="6" class="py-4 text-center text-slate-500">Nenhum pagamento registrado.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL 2: AJUSTE DO PLANO / MENSALIDADE -->
     <div id="modal-editar-plano" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-master max-w-sm w-full p-6 shadow-2xl relative">
             <button type="button" onclick="fecharModalEditarPlano()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -250,15 +333,13 @@
 
             <form id="form-editar-plano" onsubmit="salvarNovoValorPlano(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="modal-plano-imob-id">
-
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Novo Valor Mensal (R$) *</label>
                     <div class="relative">
                         <span class="absolute left-3 top-2.5 text-slate-500 font-bold">R$</span>
-                        <input type="number" step="0.01" min="0" id="modal-plano-valor-input" required placeholder="149,00" 
+                        <input type="number" step="0.01" min="0" id="modal-plano-valor-input" required 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-amber-300 font-mono text-base font-black outline-none focus:border-amber-400">
                     </div>
-                    <span class="text-[10px] text-slate-500 mt-1 block">Esse valor refletirá automaticamente no cálculo do MRR global.</span>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2">
@@ -274,9 +355,7 @@
         </div>
     </div>
 
-    <!-- =========================================================================
-         6. NOVO MODAL: ALTERAÇÃO MANUAL DA DATA DE VENCIMENTO
-         ========================================================================= -->
+    <!-- MODAL 3: ALTERAÇÃO MANUAL DO VENCIMENTO -->
     <div id="modal-editar-vencimento" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-sm w-full p-6 shadow-2xl relative border border-blue-500/40">
             <button type="button" onclick="fecharModalEditarVencimento()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -295,12 +374,10 @@
 
             <form id="form-editar-vencimento" onsubmit="salvarNovaDataVencimento(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="modal-venc-imob-id">
-
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Nova Data de Vencimento *</label>
                     <input type="date" id="modal-venc-data-input" required 
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-blue-400 font-mono">
-                    <span class="text-[10px] text-slate-500 mt-1 block">Defina qualquer prazo customizado (trimestral, semestral, anual ou cortesia).</span>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2">
@@ -321,9 +398,7 @@
         SGI SaaS • Sistema de Gestão Imobiliária • Console Soberano do Administrador
     </footer>
 
-    <!-- =========================================================================
-         7. JAVASCRIPT MASTER
-         ========================================================================= -->
+    <!-- JAVASCRIPT MASTER -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -350,8 +425,34 @@
                 return;
             }
 
+            await carregarConfigSistema();
             await carregarDadosMaster();
             await carregarAvisos();
+        }
+
+        // CARREGA DIAS DE AVISO DE VENCIMENTO DO SISTEMA
+        async function carregarConfigSistema() {
+            try {
+                const { data } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
+                if (data && data.dias_aviso_vencimento) {
+                    document.getElementById('input-dias-aviso').value = data.dias_aviso_vencimento;
+                } else {
+                    document.getElementById('input-dias-aviso').value = 5;
+                }
+            } catch (err) {
+                console.warn('Erro ao carregar config_sistema:', err);
+                document.getElementById('input-dias-aviso').value = 5;
+            }
+        }
+
+        async function salvarDiasAviso(dias) {
+            const num = parseInt(dias, 10);
+            if (isNaN(num) || num < 1) return;
+            try {
+                await supabaseClient.from('config_sistema').upsert({ id: 1, dias_aviso_vencimento: num });
+            } catch (err) {
+                console.error('Erro ao salvar dias de aviso:', err);
+            }
         }
 
         async function carregarDadosMaster() {
@@ -459,23 +560,23 @@
                         <span class="font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded text-[11px]">${qtdImoveis}</span>
                     </td>
 
-                    <!-- VALOR DO PLANO CLICÁVEL -->
+                    <!-- VALOR DO PLANO -->
                     <td class="py-3 px-3">
                         <button type="button" onclick="abrirModalEditarPlano('${im.id}')" 
                                 class="hover:underline flex items-center gap-1.5 cursor-pointer text-cyan-300 hover:text-amber-400 font-bold" 
-                                title="Clique para alterar o valor da mensalidade">
+                                title="Alterar valor">
                             <span>R$ ${Number(im.plano_valor || 149).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-                            <i class="fa-solid fa-pen-to-square text-[10px] text-slate-500 hover:text-amber-400"></i>
+                            <i class="fa-solid fa-pen-to-square text-[10px] text-slate-500"></i>
                         </button>
                     </td>
 
-                    <!-- DATA DE VENCIMENTO CLICÁVEL -->
+                    <!-- VENCIMENTO -->
                     <td class="py-3 px-3 font-mono text-[11px]">
                         <button type="button" onclick="abrirModalEditarVencimento('${im.id}')" 
                                 class="hover:underline flex items-center gap-1.5 cursor-pointer ${vencido ? 'text-rose-400 font-bold' : 'text-slate-300 hover:text-blue-300'}" 
-                                title="Clique para editar a data de vencimento">
+                                title="Alterar data de vencimento">
                             <span>${dataVencFormatada}</span>
-                            <i class="fa-solid fa-calendar-pen text-[10px] text-slate-500 hover:text-blue-400"></i>
+                            <i class="fa-solid fa-calendar-days text-[10px] text-slate-500"></i>
                         </button>
                     </td>
 
@@ -486,6 +587,13 @@
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
                             
+                            <!-- HISTÓRICO FINANCEIRO & BAIXA DE MENSALIDADE -->
+                            <button onclick="abrirModalFinanceiro('${im.id}')" 
+                                    class="p-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
+                                    title="Histórico de Pagamentos & Dar Baixa">
+                                <i class="fa-solid fa-receipt text-xs"></i>
+                            </button>
+
                             <!-- EDITAR DATA DE VENCIMENTO NO CALENDÁRIO -->
                             <button onclick="abrirModalEditarVencimento('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-800 transition cursor-pointer" 
@@ -500,7 +608,7 @@
                                 <i class="fa-solid fa-dollar-sign text-xs"></i>
                             </button>
 
-                            <!-- RENOVAR +30 DIAS -->
+                            <!-- RENOVAR +30 DIAS RÁPIDO -->
                             <button onclick="renovarMensalidade('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
                                     title="Renovar Mensalidade (+30 dias rápidos)">
@@ -514,14 +622,14 @@
                                 <i class="fa-solid ${estaBloqueada ? 'fa-lock-open' : 'fa-lock'} text-xs"></i>
                             </button>
 
-                            <!-- MODO IMPERSONATE (SUPORTE) -->
+                            <!-- MODO IMPERSONATE (SUPORTE OPERACIONAL) -> ABRE DIRETO NO CATÁLOGO EM NOVA ABA -->
                             <button onclick="acessarComoMaster('${im.id}', '${im.slug}')" 
                                     class="p-1.5 rounded-lg bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 transition cursor-pointer" 
-                                    title="Modo Suporte: Abrir painel desta imobiliária">
+                                    title="Modo Suporte: Abrir painel desta imobiliária (Nova Aba)">
                                 <i class="fa-solid fa-user-astronaut text-xs"></i>
                             </button>
 
-                            <!-- VER VITRINE -->
+                            <!-- VER VITRINE PÚBLICA -->
                             <a href="index.html?imob=${im.slug}" target="_blank" 
                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" 
                                title="Abrir Vitrine Pública">
@@ -535,9 +643,169 @@
         }
 
         // =========================================================================
+        // SUPORTE EM NOVA ABA: ABRE O CATÁLOGO DA IMOBILIÁRIA ESPECÍFICA
+        // =========================================================================
+        function acessarComoMaster(imobId, slug) {
+            const imob = listaImobiliarias.find(i => i.id === imobId);
+            sessionStorage.setItem('sgi_impersonate_id', imobId);
+            sessionStorage.setItem('sgi_impersonate_slug', slug);
+            sessionStorage.setItem('sgi_impersonate_nome', imob ? imob.nome_fantasia : 'Imobiliária');
+            window.open('imoveis-lista.html', '_blank');
+        }
+
+        // =========================================================================
+        // GESTÃO DO HISTÓRICO FINANCEIRO & REGISTRO DE PAGAMENTOS
+        // =========================================================================
+        async function abrirModalFinanceiro(imobId) {
+            const imob = listaImobiliarias.find(i => i.id === imobId);
+            if (!imob) return;
+
+            document.getElementById('modal-fin-imob-id').value = imob.id;
+            document.getElementById('modal-fin-imob-nome').innerText = `${imob.nome_fantasia} (/${imob.slug})`;
+            document.getElementById('fin-valor').value = Number(imob.plano_valor || 149).toFixed(2);
+            document.getElementById('fin-data').value = new Date().toISOString().split('T')[0];
+
+            // Define mês de referência atual (Ex: Outubro/2026)
+            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const dataAtual = new Date();
+            document.getElementById('fin-mes-ref').value = `${meses[dataAtual.getMonth()]}/${dataAtual.getFullYear()}`;
+            document.getElementById('fin-obs').value = '';
+
+            document.getElementById('modal-financeiro').classList.remove('hidden');
+            await carregarHistoricoMensalidades(imobId);
+        }
+
+        function fecharModalFinanceiro() {
+            document.getElementById('modal-financeiro').classList.add('hidden');
+        }
+
+        async function carregarHistoricoMensalidades(imobId) {
+            const tbody = document.getElementById('tabela-mensalidades-corpo');
+            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Carregando recibos...</td></tr>';
+
+            try {
+                const { data: mensalidades, error } = await supabaseClient
+                    .from('imobiliarias_mensalidades')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId)
+                    .order('data_pagamento', { ascending: false });
+
+                if (error) throw error;
+
+                if (!mensalidades || mensalidades.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-slate-500">Nenhum pagamento registrado nesta imobiliária.</td></tr>';
+                    document.getElementById('modal-fin-total-pago').innerText = 'Total: R$ 0,00';
+                    return;
+                }
+
+                let totalAcumulado = 0;
+
+                tbody.innerHTML = mensalidades.map(m => {
+                    totalAcumulado += Number(m.valor_pago || 0);
+                    const dtFormatada = m.data_pagamento ? m.data_pagamento.split('-').reverse().join('/') : '--/--/----';
+                    return `
+                    <tr class="hover:bg-slate-900/50">
+                        <td class="py-2.5 px-3 text-slate-300">${dtFormatada}</td>
+                        <td class="py-2.5 px-3 text-white font-bold">${m.mes_referencia}</td>
+                        <td class="py-2.5 px-3 text-cyan-400">${m.forma_pagamento || 'PIX'}</td>
+                        <td class="py-2.5 px-3 text-emerald-400 font-bold">R$ ${Number(m.valor_pago).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td class="py-2.5 px-3 text-slate-400 text-[10px] truncate max-w-[150px]" title="${m.observacoes || ''}">${m.observacoes || '-'}</td>
+                        <td class="py-2.5 px-3 text-right">
+                            <button onclick="excluirPagamento('${m.id}', '${imobId}')" class="text-red-400 hover:text-red-300 p-1" title="Excluir lançamento">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                }).join('');
+
+                document.getElementById('modal-fin-total-pago').innerText = `Total: ${totalAcumulado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+
+            } catch (err) {
+                console.error('Erro ao carregar recibos:', err);
+                tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-red-400">Falha ao buscar faturas.</td></tr>';
+            }
+        }
+
+        async function registrarPagamento(event) {
+            event.preventDefault();
+            const imobId = document.getElementById('modal-fin-imob-id').value;
+            const valor = parseFloat(document.getElementById('fin-valor').value);
+            const dataPag = document.getElementById('fin-data').value;
+            const mesRef = document.getElementById('fin-mes-ref').value.trim();
+            const forma = document.getElementById('fin-forma').value;
+            const obs = document.getElementById('fin-obs').value.trim();
+            const estenderVencimento = document.getElementById('fin-renovar-30').checked;
+
+            if (isNaN(valor) || valor <= 0) {
+                alert('Informe um valor de pagamento válido.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-salvar-pagamento');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gravando...';
+            btn.disabled = true;
+
+            try {
+                // 1. Grava no histórico
+                const { error: insErr } = await supabaseClient
+                    .from('imobiliarias_mensalidades')
+                    .insert([{
+                        imobiliaria_id: imobId,
+                        valor_pago: valor,
+                        data_pagamento: dataPag,
+                        mes_referencia: mesRef,
+                        forma_pagamento: forma,
+                        observacoes: obs
+                    }]);
+
+                if (insErr) throw insErr;
+
+                // 2. Se optou por estender vencimento
+                if (estenderVencimento) {
+                    const imob = listaImobiliarias.find(i => i.id === imobId);
+                    let baseData = new Date();
+                    if (imob && imob.data_vencimento && new Date(imob.data_vencimento) > baseData) {
+                        baseData = new Date(imob.data_vencimento);
+                    }
+                    baseData.setDate(baseData.getDate() + 30);
+                    const novaData = baseData.toISOString().split('T')[0];
+
+                    await supabaseClient
+                        .from('imobiliarias')
+                        .update({ data_vencimento: novaData, status: 'active' })
+                        .eq('id', imobId);
+                }
+
+                alert('Pagamento registrado com sucesso!');
+                document.getElementById('fin-obs').value = '';
+                await carregarHistoricoMensalidades(imobId);
+                await carregarDadosMaster();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao registrar pagamento: ' + (err.message || 'Verifique sua conexão.'));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar Recebimento</span>';
+                btn.disabled = false;
+            }
+        }
+
+        async function excluirPagamento(pagamentoId, imobId) {
+            if (confirm('Deseja excluir este registro de pagamento do histórico?')) {
+                try {
+                    const { error } = await supabaseClient.from('imobiliarias_mensalidades').delete().eq('id', pagamentoId);
+                    if (error) throw error;
+                    await carregarHistoricoMensalidades(imobId);
+                } catch (err) {
+                    console.error(err);
+                    alert('Erro ao excluir registro.');
+                }
+            }
+        }
+
+        // =========================================================================
         // GESTÃO DA DATA DE VENCIMENTO NO CALENDÁRIO
         // =========================================================================
-
         function abrirModalEditarVencimento(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
@@ -570,7 +838,6 @@
                 const hoje = new Date().toISOString().split('T')[0];
                 const payload = { data_vencimento: novaData };
 
-                // Se a nova data for válida/futura, reativa caso estivesse bloqueada
                 if (novaData >= hoje) {
                     const imobAtual = listaImobiliarias.find(i => i.id === imobId);
                     if (imobAtual && imobAtual.status === 'blocked') {
@@ -578,11 +845,7 @@
                     }
                 }
 
-                const { error } = await supabaseClient
-                    .from('imobiliarias')
-                    .update(payload)
-                    .eq('id', imobId);
-
+                const { error } = await supabaseClient.from('imobiliarias').update(payload).eq('id', imobId);
                 if (error) throw error;
 
                 fecharModalEditarVencimento();
@@ -590,7 +853,7 @@
 
             } catch (err) {
                 console.error('Erro ao atualizar vencimento:', err);
-                alert('Erro ao atualizar data de vencimento: ' + (err.message || 'Verifique sua conexão.'));
+                alert('Erro: ' + (err.message || 'Falha ao atualizar.'));
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Data</span>';
                 btn.disabled = false;
@@ -598,9 +861,8 @@
         }
 
         // =========================================================================
-        // GESTÃO DO PLANO / MENSALIDADE
+        // GESTÃO DO VALOR DO PLANO
         // =========================================================================
-
         function abrirModalEditarPlano(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
@@ -641,8 +903,8 @@
                 await carregarDadosMaster();
 
             } catch (err) {
-                console.error('Erro ao atualizar plano:', err);
-                alert('Erro ao atualizar valor da mensalidade: ' + (err.message || 'Verifique sua conexão.'));
+                console.error(err);
+                alert('Erro ao atualizar plano.');
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Novo Valor</span>';
                 btn.disabled = false;
@@ -664,10 +926,7 @@
 
                     const { error } = await supabaseClient
                         .from('imobiliarias')
-                        .update({
-                            data_vencimento: novaData,
-                            status: 'active'
-                        })
+                        .update({ data_vencimento: novaData, status: 'active' })
                         .eq('id', imobId);
 
                     if (error) throw error;
@@ -701,12 +960,6 @@
                     alert('Erro ao alterar status da imobiliária.');
                 }
             }
-        }
-
-        function acessarComoMaster(imobId, slug) {
-            sessionStorage.setItem('sgi_impersonate_id', imobId);
-            sessionStorage.setItem('sgi_impersonate_slug', slug);
-            window.location.href = 'dashboard.html';
         }
 
         function filtrarImobiliarias() {

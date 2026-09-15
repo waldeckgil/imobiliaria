@@ -17,8 +17,24 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA -->
-    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <span>MODO SUPORTE MASTER:</span>
+                <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Sessão Soberana com Bypass RLS e Edição Liberada</span>
+            </div>
+            <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Fechar Suporte</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
             <span>MODO SOMENTE LEITURA: Assinatura pendente. Ações de criação, exclusão e alteração de vitrine estão bloqueadas.</span>
@@ -26,7 +42,7 @@
     </div>
 
     <!-- CABEÇALHO TOPBAR -->
-    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
             <div class="flex items-center gap-3">
@@ -68,9 +84,6 @@
     <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
         <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
-            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
-            </a>
             <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
                 <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
             </a>
@@ -121,7 +134,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
                 
                 <div class="lg:col-span-4 relative">
-                    <input type="text" id="filtro-busca" placeholder="Buscar por código (ex: 720) ou título..." 
+                    <input type="text" id="filtro-busca" placeholder="Buscar por código ou título..." 
                            oninput="aplicarFiltros()"
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white text-xs outline-none focus:border-cyan-400">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
@@ -191,7 +204,7 @@
 
     </main>
 
-    <!-- MODAL DE FICHA DO PROPRIETÁRIO & DOCUMENTOS DA CASA -->
+    <!-- MODAL DE FICHA DO PROPRIETÁRIO -->
     <div id="modal-proprietario-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/40 space-y-4 max-h-[90vh] flex flex-col">
             <button type="button" onclick="fecharModalProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -200,20 +213,16 @@
 
             <div class="flex items-center gap-2 text-amber-400 font-black text-sm uppercase tracking-wide border-b border-slate-800 pb-3">
                 <i class="fa-solid fa-user-tie"></i>
-                <span>Ficha do Proprietário & Documentação do Imóvel</span>
+                <span>Ficha do Proprietário & Documentação</span>
             </div>
 
-            <!-- CONTEXTO DO IMÓVEL -->
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
                 <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel Selecionado:</span>
                 <h4 class="font-bold text-white text-sm" id="prop-modal-imovel-titulo">---</h4>
                 <p class="text-cyan-400 font-mono text-[11px]" id="prop-modal-imovel-ref">Ref: ---</p>
             </div>
 
-            <!-- DADOS DO PROPRIETÁRIO -->
-            <div id="prop-modal-conteudo" class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs">
-                <!-- Injetado dinamicamente via JS -->
-            </div>
+            <div id="prop-modal-conteudo" class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs"></div>
 
             <div class="pt-2 border-t border-slate-800 text-right">
                 <button type="button" onclick="fecharModalProprietario()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
@@ -230,9 +239,8 @@
                 <i class="fa-solid fa-trash-can"></i>
             </div>
             <h3 class="text-base font-black text-white">Excluir Imóvel?</h3>
-            <p class="text-xs text-slate-400 mt-1">Essa ação é definitiva e removerá este anúncio e suas referências.</p>
+            <p class="text-xs text-slate-400 mt-1">Essa ação é definitiva e removerá este anúncio.</p>
             <p class="text-xs font-bold text-cyan-400 mt-2 font-mono" id="modal-excluir-ref">Ref: ---</p>
-
             <input type="hidden" id="modal-excluir-id">
 
             <div class="flex items-center gap-2 mt-5">
@@ -262,6 +270,7 @@
         let listaImoveisCompleta = [];
         let usuarioLogado = null;
         let modoLeitura = false;
+        let isMasterSuporte = false;
 
         async function inicializarCatalogo() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -271,22 +280,45 @@
             }
 
             const email = session.user.email.toLowerCase();
+            const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
+            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
+            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
+            // 1. MODO MASTER SUPORTE OPERACIONAL
             if (email === 'waldeckgil@gmail.com') {
-                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (CATÁLOGO GERAL)';
-                document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
-                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
-                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                isMasterSuporte = true;
+                modoLeitura = false; // Master tem poder irrestrito para cadastrar/editar
 
-                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
-                if (imobPiloto) {
-                    imobiliariaId = imobPiloto.id;
-                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
-                    carregarImoveis();
+                let targetId = impersonateId;
+                let imobAlvo = null;
+
+                if (targetId) {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId).single();
+                    imobAlvo = data;
+                } else {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                    imobAlvo = data;
+                }
+
+                if (imobAlvo) {
+                    imobiliariaId = imobAlvo.id;
+
+                    // Exibe a barra de suporte
+                    document.getElementById('faixa-modo-suporte').classList.remove('hidden');
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Administrador Master';
+                    document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                    document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug}`;
+
+                    await carregarImoveis();
                 }
                 return;
             }
 
+            // 2. MODO GESTOR / CORRETOR DA CONTA
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
@@ -321,7 +353,7 @@
                     btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
 
-                carregarImoveis();
+                await carregarImoveis();
 
             } catch (err) {
                 console.error(err);
@@ -464,10 +496,9 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
-                            <!-- FICHA DO PROPRIETÁRIO E DOCUMENTOS DA CASA -->
                             <button onclick="abrirModalProprietario('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-700/80 transition cursor-pointer" 
-                                    title="Ficha do Proprietário & Documentos da Casa">
+                                    title="Ficha do Proprietário">
                                 <i class="fa-solid fa-user-tie text-xs"></i>
                             </button>
 
@@ -486,7 +517,6 @@
             }).join('');
         }
 
-        // MODAL DA FICHA DO PROPRIETÁRIO & DOCUMENTOS DA CASA
         async function abrirModalProprietario(imovelId) {
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
             if (!imovel) return;
@@ -495,13 +525,11 @@
             document.getElementById('prop-modal-imovel-ref').innerText = `Ref: ${imovel.codigo_ref} • ${imovel.bairro || ''}`;
 
             const container = document.getElementById('prop-modal-conteudo');
-            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados do proprietário...</p></div>';
+            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados...</p></div>';
             document.getElementById('modal-proprietario-imovel').classList.remove('hidden');
 
             try {
-                // Checa blindagem de permissão
-                const isDonoOuGerente = usuarioLogado && (usuarioLogado.cargo === 'dono' || usuarioLogado.cargo === 'gerente');
-                const podeVerProprietarios = isDonoOuGerente || (usuarioLogado && usuarioLogado.permissoes && usuarioLogado.permissoes.ver_proprietarios);
+                const podeVerProprietarios = isMasterSuporte || (usuarioLogado && (usuarioLogado.cargo === 'dono' || usuarioLogado.cargo === 'gerente'));
 
                 let blocoProprietarioHtml = '';
 
@@ -525,7 +553,7 @@
                                         <h3 class="text-base font-black text-white">${prop.nome}</h3>
                                     </div>
                                     ${podeVerProprietarios && zapLimpo ? `
-                                        <a href="https://wa.me/${zapLimpo}?text=${encodeURIComponent('Olá ' + prop.nome + '! Sou da imobiliária e falo sobre o seu imóvel Ref: ' + imovel.codigo_ref)}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                        <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
                                             <i class="fa-brands fa-whatsapp text-sm"></i> Chamar no Zap
                                         </a>
                                     ` : ''}
@@ -537,13 +565,6 @@
                                     <div><span class="text-slate-500">RG:</span> <strong class="text-slate-200">${podeVerProprietarios ? (prop.rg || 'Não informado') : '***'}</strong></div>
                                     <div><span class="text-slate-500">E-mail:</span> <strong class="text-slate-200 truncate max-w-[140px] block">${prop.email || 'Não informado'}</strong></div>
                                 </div>
-
-                                ${prop.observacoes ? `
-                                    <div class="bg-amber-950/20 border border-amber-800/40 p-2.5 rounded-lg text-[11px]">
-                                        <span class="text-amber-400 font-bold block mb-0.5">Dados de Repasse / Observações:</span>
-                                        <p class="text-slate-300 font-mono">${prop.observacoes}</p>
-                                    </div>
-                                ` : ''}
                             </div>
                         `;
                     }
@@ -554,55 +575,15 @@
                         <div class="bg-slate-950 p-4 rounded-xl border border-dashed border-slate-800 text-center space-y-2">
                             <i class="fa-solid fa-user-slash text-2xl text-slate-600"></i>
                             <p class="text-slate-400 text-xs font-bold">Nenhum proprietário vinculado a este imóvel.</p>
-                            <a href="imovel-form.html?id=${imovel.id}" class="inline-block bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-xs transition">
-                                <i class="fa-solid fa-link mr-1"></i> Vincular Dono no Cadastro
-                            </a>
                         </div>
                     `;
                 }
 
-                // Bloco de Documentos Anexos da Casa
-                let blocoDocsHtml = '';
-                if (imovel.documentos_anexos && imovel.documentos_anexos.length > 0) {
-                    blocoDocsHtml = `
-                        <div class="space-y-2 pt-2">
-                            <span class="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Documentos Anexados à Casa (${imovel.documentos_anexos.length}):</span>
-                            <div class="space-y-1.5">
-                                ${imovel.documentos_anexos.map(docUrl => {
-                                    const nomeDoc = decodeURIComponent(docUrl.split('/').pop().split('?')[0]);
-                                    const isPdf = nomeDoc.toLowerCase().endsWith('.pdf');
-                                    const icone = isPdf ? 'fa-file-pdf text-red-400' : 'fa-file-image text-cyan-400';
-                                    return `
-                                        <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                                            <div class="flex items-center gap-2 truncate max-w-[280px]">
-                                                <i class="fa-solid ${icone}"></i>
-                                                <span class="text-white truncate font-medium">${nomeDoc}</span>
-                                            </div>
-                                            <a href="${docUrl}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded text-[10px] font-bold flex items-center gap-1 transition">
-                                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
-                                            </a>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    blocoDocsHtml = `
-                        <div class="pt-2">
-                            <span class="text-[10px] font-black uppercase text-slate-500 block mb-1">Documentos do Imóvel:</span>
-                            <p class="text-slate-500 text-[11px] italic bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                                Nenhum documento (RGI, Escritura, IPTU) foi anexado a este imóvel. Você pode anexar editando o cadastro do imóvel.
-                            </p>
-                        </div>
-                    `;
-                }
-
-                container.innerHTML = blocoProprietarioHtml + blocoDocsHtml;
+                container.innerHTML = blocoProprietarioHtml;
 
             } catch (err) {
                 console.error(err);
-                container.innerHTML = '<p class="text-center text-red-400 text-xs py-6">Erro ao carregar informações do proprietário.</p>';
+                container.innerHTML = '<p class="text-center text-red-400 text-xs py-6">Erro ao carregar proprietário.</p>';
             }
         }
 
@@ -698,6 +679,10 @@
         }
 
         async function executarLogout() {
+            if (isMasterSuporte) {
+                window.close();
+                return;
+            }
             if (confirm('Deseja encerrar a sessão?')) {
                 await supabaseClient.auth.signOut();
                 sessionStorage.clear();
