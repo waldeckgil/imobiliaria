@@ -20,8 +20,24 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA -->
-    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <span>MODO SUPORTE MASTER:</span>
+                <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Cadastrando / Editando com Bypass Soberano</span>
+            </div>
+            <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Fechar Suporte</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FAIXA 2: MODO LEITURA -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
             <span>MODO SOMENTE LEITURA: Assinatura pendente. A gravação de imóveis está desabilitada.</span>
@@ -29,7 +45,7 @@
     </div>
 
     <!-- CABEÇALHO TOPBAR -->
-    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
             <div class="flex items-center gap-3">
@@ -154,7 +170,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
                     <div class="sm:col-span-9">
-                        <label class="block font-bold text-slate-300 mb-1">Proprietário do Imóvel (Titular / Beneficiário do Repasse)</label>
+                        <label class="block font-bold text-slate-300 mb-1">Proprietário do Imóvel</label>
                         <select id="campo-proprietario" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400">
                             <option value="">Carregando proprietários...</option>
                         </select>
@@ -170,7 +186,7 @@
                 <div class="pt-3 border-t border-slate-800/80 space-y-3">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">
-                            <i class="fa-solid fa-file-contract text-amber-400 mr-1"></i> Documentos da Casa (RGI, Escritura, IPTU, Contrato de Exclusividade)
+                            <i class="fa-solid fa-file-contract text-amber-400 mr-1"></i> Documentos da Casa (RGI, Escritura, IPTU)
                         </label>
                         <input type="file" id="input-documentos-imovel" multiple accept=".pdf,image/*" onchange="processarSelecaoDocumentos(event)" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-500 file:text-slate-950 cursor-pointer">
@@ -179,10 +195,7 @@
                 </div>
             </div>
 
-            <!-- =====================================================================
-                 3. SEÇÃO DINÂMICA: FORMALIZAÇÃO DE LOCAÇÃO & DADOS DO LOCATÁRIO
-                 (ATIVA AUTOMATICAMENTE QUANDO O STATUS COMERCIAL FOR "ALUGADO")
-                 ===================================================================== -->
+            <!-- 3. FORMALIZAÇÃO DE LOCAÇÃO SE STATUS "ALUGADO" -->
             <div id="secao-locatario-contrato" class="hidden box-tech p-6 space-y-4 border-2 border-purple-500/50 bg-gradient-to-r from-purple-950/20 to-slate-950">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-purple-800/50 pb-3">
                     <h3 class="text-sm font-black text-purple-300 uppercase tracking-wider flex items-center gap-2">
@@ -194,10 +207,9 @@
                     </span>
                 </div>
 
-                <!-- DADOS DO INQUILINO -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Nome Completo do Locatário (Inquilino) *</label>
+                        <label class="block font-bold text-slate-300 mb-1">Nome Completo do Locatário *</label>
                         <input type="text" id="loc-nome" placeholder="Ex: Carlos Eduardo Silva" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-bold">
                     </div>
@@ -226,7 +238,6 @@
                     </div>
                 </div>
 
-                <!-- CONDIÇÕES FINANCEIRAS & CALCULADORA EM TEMPO REAL -->
                 <div class="bg-slate-950/80 p-4 rounded-xl border border-purple-800/40 space-y-3">
                     <span class="text-[10px] font-black uppercase text-purple-300 block tracking-wider">
                         Condições Financeiras & Honorários da Imobiliária:
@@ -258,10 +269,9 @@
                         </div>
                     </div>
 
-                    <!-- FEEDBACK VISUAL EM TEMPO REAL DA DIVISÃO FINANCEIRA -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800">
                         <div class="bg-purple-950/40 border border-purple-800/60 p-2.5 rounded-xl flex items-center justify-between">
-                            <span class="text-slate-300 text-[11px]">Honorários da Imobiliária (Comissão):</span>
+                            <span class="text-slate-300 text-[11px]">Honorários da Imobiliária:</span>
                             <span id="txt-calc-comissao" class="font-mono font-black text-amber-300 text-sm">R$ 0,00 / mês</span>
                         </div>
                         <div class="bg-cyan-950/40 border border-cyan-800/60 p-2.5 rounded-xl flex items-center justify-between">
@@ -271,15 +281,12 @@
                     </div>
                 </div>
 
-                <!-- UPLOAD DE DOCUMENTOS DO LOCATÁRIO (RG, CPF, CONTRATO ASSINADO) -->
                 <div class="pt-2 space-y-2">
                     <label class="block font-bold text-slate-300">
-                        <i class="fa-solid fa-folder-open text-purple-400 mr-1"></i> Anexar Documentos do Locatário (RG, CPF, Comprovante de Renda, Contrato de Locação Assinado)
+                        <i class="fa-solid fa-folder-open text-purple-400 mr-1"></i> Anexar Documentos do Locatário (RG, CPF, Contrato)
                     </label>
                     <input type="file" id="input-documentos-locatario" multiple accept=".pdf,image/*" onchange="processarSelecaoDocumentosLocatario(event)" 
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-purple-500 file:text-slate-950 cursor-pointer">
-                    <p class="text-[10px] text-slate-500">Documentação do inquilino armazenada com criptografia e associada a este contrato.</p>
-                    
                     <div id="container-docs-locatario-preview" class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1"></div>
                 </div>
             </div>
@@ -452,7 +459,7 @@
 
     </main>
 
-    <!-- MODAL DE CADASTRO RÁPIDO DE PROPRIETÁRIO -->
+    <!-- MODAL NOVO PROPRIETÁRIO -->
     <div id="modal-novo-proprietario" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-md w-full p-6 shadow-2xl relative border border-amber-500/40">
             <button type="button" onclick="fecharModalNovoProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -525,10 +532,11 @@
         let imovelIdAtual = null;
         let modoEdicao = false;
         let modoLeitura = false;
+        let isMasterSuporte = false;
 
         let listaFotosEstado = [];
-        let listaDocumentosEstado = []; // Documentos da Casa
-        let listaDocsLocatarioEstado = []; // Documentos do Inquilino
+        let listaDocumentosEstado = [];
+        let listaDocsLocatarioEstado = [];
 
         async function inicializarFormulario() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -538,15 +546,39 @@
             }
 
             const email = session.user.email.toLowerCase();
+            const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
+            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
+            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
+            // 1. SUPORTE MASTER SOBERANO
             if (email === 'waldeckgil@gmail.com') {
-                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (MODO EDIÇÃO GERAL)';
-                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
-                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                isMasterSuporte = true;
+                modoLeitura = false; // Master tem poder total para editar e salvar
 
-                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
-                if (imobPiloto) imobiliariaId = imobPiloto.id;
+                let targetId = impersonateId;
+                let imobAlvo = null;
+
+                if (targetId) {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId).single();
+                    imobAlvo = data;
+                } else {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                    imobAlvo = data;
+                }
+
+                if (imobAlvo) {
+                    imobiliariaId = imobAlvo.id;
+
+                    // Mostra a Faixa Dourada Soberana
+                    document.getElementById('faixa-modo-suporte').classList.remove('hidden');
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                    document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                }
             } else {
+                // 2. USUÁRIO GESTOR / CORRETOR
                 const { data: usuario } = await supabaseClient.from('usuarios').select('*').eq('user_id', session.user.id).single();
                 if (usuario) {
                     imobiliariaId = usuario.imobiliaria_id;
@@ -582,7 +614,6 @@
             }
         }
 
-        // GATILHO DE EXIBIÇÃO DA SEÇÃO DE LOCAÇÃO
         function verificarStatusAlugado() {
             const status = document.getElementById('campo-status').value;
             const secaoLocatario = document.getElementById('secao-locatario-contrato');
@@ -590,7 +621,6 @@
             if (status === 'Alugado') {
                 secaoLocatario.classList.remove('hidden');
                 
-                // Puxa valor sugerido do aluguel se não estiver preenchido
                 const valLocacaoImovel = document.getElementById('campo-valor-locacao').value;
                 const campoValLoc = document.getElementById('loc-valor-aluguel');
                 if (!campoValLoc.value && valLocacaoImovel) {
@@ -610,7 +640,6 @@
             }
         }
 
-        // CALCULADORA EM TEMPO REAL DE HONORÁRIOS & REPASSE
         function calcularComissaoLocacao() {
             const aluguel = Number(document.getElementById('loc-valor-aluguel').value || 0);
             const taxaPct = Number(document.getElementById('loc-taxa-adm').value || 10);
@@ -622,7 +651,6 @@
             document.getElementById('txt-calc-repasse').innerText = valorRepasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' / mês';
         }
 
-        // UPLOAD DE DOCUMENTOS DO INQUILINO (LOCATÁRIO)
         function processarSelecaoDocumentosLocatario(event) {
             const files = Array.from(event.target.files);
             if (!files.length) return;
@@ -677,7 +705,6 @@
             renderizarDocumentosLocatarioPreview();
         }
 
-        // CARREGAMENTO DE PROPRIETÁRIOS
         async function carregarProprietariosSelect(selecionadoId = null) {
             const select = document.getElementById('campo-proprietario');
             try {
@@ -755,7 +782,6 @@
             }
         }
 
-        // DOCUMENTOS DA CASA
         function processarSelecaoDocumentos(event) {
             const files = Array.from(event.target.files);
             if (!files.length) return;
@@ -864,7 +890,6 @@
 
                 document.getElementById('campo-video-url').value = imovel.video_url || '';
 
-                // Carrega Fotos
                 listaFotosEstado = [];
                 if (imovel.foto_capa) {
                     listaFotosEstado.push({ url: imovel.foto_capa, isFile: false, fileObj: null, isCapa: true });
@@ -878,7 +903,6 @@
                 }
                 renderizarFotosPreview();
 
-                // Carrega Documentos da Casa
                 listaDocumentosEstado = [];
                 if (imovel.documentos_anexos && Array.isArray(imovel.documentos_anexos)) {
                     imovel.documentos_anexos.forEach(docUrl => {
@@ -893,7 +917,6 @@
                 }
                 renderizarDocumentosPreview();
 
-                // Checa se é Alugado para carregar Contrato e Inquilino
                 verificarStatusAlugado();
 
                 if (imovel.status === 'Alugado') {
@@ -918,7 +941,6 @@
                         document.getElementById('loc-data-fim').value = contrato.data_fim || '';
                         calcularComissaoLocacao();
 
-                        // Carrega Documentos do Inquilino
                         listaDocsLocatarioEstado = [];
                         if (contrato.documentos_anexos && Array.isArray(contrato.documentos_anexos)) {
                             contrato.documentos_anexos.forEach(docUrl => {
@@ -1025,10 +1047,9 @@
             renderizarFotosPreview();
         }
 
-        // SALVAMENTO ATÔMICO COM GESTÃO DE LOCAÇÃO E DOCUMENTOS
         async function salvarImovel(event) {
             event.preventDefault();
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
 
             const btn = document.getElementById('btn-salvar');
             const alerta = document.getElementById('alerta-form');
@@ -1037,7 +1058,6 @@
 
             const statusComercial = document.getElementById('campo-status').value;
 
-            // Validações da locação se estiver Alugado
             if (statusComercial === 'Alugado') {
                 const nomeInquilino = document.getElementById('loc-nome').value.trim();
                 const zapInquilino = document.getElementById('loc-zap').value.trim();
@@ -1058,7 +1078,6 @@
             try {
                 const idImovel = imovelIdAtual || crypto.randomUUID();
 
-                // 1. Upload de Fotos
                 let urlsFinais = [];
                 let urlCapaFinal = null;
 
@@ -1088,7 +1107,6 @@
 
                 if (!urlCapaFinal && urlsFinais.length > 0) urlCapaFinal = urlsFinais[0];
 
-                // 2. Upload de Documentos da Casa
                 let urlsDocumentosFinais = [];
 
                 for (let itemDoc of listaDocumentosEstado) {
@@ -1113,7 +1131,6 @@
                     }
                 }
 
-                // 3. Upload de Documentos do Locatário (se houver)
                 let urlsDocsLocatarioFinais = [];
 
                 for (let itemDocLoc of listaDocsLocatarioEstado) {
@@ -1138,7 +1155,6 @@
                     }
                 }
 
-                // Payload do Imóvel
                 const payloadImovel = {
                     imobiliaria_id: imobiliariaId,
                     codigo_ref: document.getElementById('campo-codigo-ref').value.trim(),
@@ -1182,7 +1198,6 @@
                     documentos_anexos: urlsDocumentosFinais
                 };
 
-                // Salva Imóvel
                 if (modoEdicao) {
                     const { error } = await supabaseClient
                         .from('imoveis')
@@ -1197,7 +1212,6 @@
                     if (error) throw error;
                 }
 
-                // 4. Salva Contrato de Locação e Inquilino se Alugado
                 if (statusComercial === 'Alugado') {
                     const nomeInquilino = document.getElementById('loc-nome').value.trim();
                     const zapInquilino = document.getElementById('loc-zap').value.trim();
@@ -1213,7 +1227,6 @@
                     const dataInicio = document.getElementById('loc-data-inicio').value;
                     const dataFim = document.getElementById('loc-data-fim').value;
 
-                    // Cadastra Inquilino na tabela clientes
                     let clienteId = null;
                     const { data: clienteResp } = await supabaseClient
                         .from('clientes')
@@ -1285,6 +1298,10 @@
         }
 
         async function executarLogout() {
+            if (isMasterSuporte) {
+                window.close();
+                return;
+            }
             if (confirm('Deseja realmente sair?')) {
                 await supabaseClient.auth.signOut();
                 sessionStorage.clear();
