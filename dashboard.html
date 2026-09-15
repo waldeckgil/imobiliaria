@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -128,74 +129,81 @@
             </div>
         </div>
 
-        <!-- CARDS DE CONTROLE IMEDIATO (CLICÁVEIS COM DRILL-DOWN) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- CARDS DE CONTROLE IMEDIATO (GRADE DE 5 CARDS CLICÁVEIS) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             
             <!-- CARD 1: IMÓVEIS ATIVOS -->
-            <div onclick="abrirDrilldown('imoveis-ativos')" class="box-tech p-5 border-l-4 border-l-cyan-400 cursor-pointer hover:scale-[1.02] hover:border-cyan-300 hover:shadow-xl hover:shadow-cyan-950/40 transition-all duration-200 group">
+            <div onclick="abrirDrilldown('imoveis-ativos')" class="box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer hover:scale-[1.02] hover:border-cyan-300 hover:shadow-xl hover:shadow-cyan-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-cyan-300 transition">Imóveis Ativos na Vitrine</span>
+                    <span class="group-hover:text-cyan-300 transition text-[11px]">Ativos Vitrine</span>
                     <i class="fa-solid fa-house-circle-check text-cyan-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline justify-between">
-                    <div class="flex items-baseline gap-2">
-                        <span id="kpi-imoveis-ativos" class="text-3xl font-black text-white">0</span>
-                        <span class="text-xs text-slate-400">no catálogo</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-imoveis-ativos" class="text-2xl font-black text-white">0</span>
+                        <span class="text-[10px] text-slate-400 block">no catálogo</span>
                     </div>
-                    <span class="text-[10px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
-                    </span>
+                    <span class="text-[9px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 2: LEADS ÚLTIMAS 24H -->
-            <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-5 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-950/40 transition-all duration-200 group">
+            <!-- CARD 2: IMÓVEIS ALUGADOS (NOVO - LOCAÇÃO ATIVA) -->
+            <div onclick="abrirDrilldown('imoveis-alugados')" class="box-tech p-4 border-l-4 border-l-purple-500 cursor-pointer hover:scale-[1.02] hover:border-purple-400 hover:shadow-xl hover:shadow-purple-950/40 transition-all duration-200 group bg-gradient-to-r from-purple-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-emerald-300 transition">Novos Leads (Hoje / 24h)</span>
+                    <span class="group-hover:text-purple-300 transition text-[11px]">Alugados (Locação)</span>
+                    <i class="fa-solid fa-key text-purple-400 text-base group-hover:scale-110 transition"></i>
+                </div>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-imoveis-alugados" class="text-2xl font-black text-purple-300">0</span>
+                        <span class="text-[10px] text-slate-400 block" id="kpi-receita-locacao">R$ 0/mês</span>
+                    </div>
+                    <span class="text-[9px] text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
+                </div>
+            </div>
+
+            <!-- CARD 3: LEADS ÚLTIMAS 24H -->
+            <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-4 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-950/40 transition-all duration-200 group">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span class="group-hover:text-emerald-300 transition text-[11px]">Leads Hoje (24h)</span>
                     <i class="fa-solid fa-comment-dots text-emerald-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline justify-between">
-                    <div class="flex items-baseline gap-2">
-                        <span id="kpi-leads-hoje" class="text-3xl font-black text-white">0</span>
-                        <span class="text-xs text-emerald-400 font-bold">contatos novos</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-leads-hoje" class="text-2xl font-black text-white">0</span>
+                        <span class="text-[10px] text-emerald-400 font-bold block">novos contatos</span>
                     </div>
-                    <span class="text-[10px] text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
-                    </span>
+                    <span class="text-[9px] text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 3: VISITAS E ATENDIMENTOS -->
-            <div onclick="abrirDrilldown('visitas')" class="box-tech p-5 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl hover:shadow-amber-950/40 transition-all duration-200 group">
+            <!-- CARD 4: VISITAS E ATENDIMENTOS -->
+            <div onclick="abrirDrilldown('visitas')" class="box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl hover:shadow-amber-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-amber-300 transition">Em Atendimento / Visitas</span>
+                    <span class="group-hover:text-amber-300 transition text-[11px]">Em Atendimento</span>
                     <i class="fa-solid fa-calendar-check text-amber-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline justify-between">
-                    <div class="flex items-baseline gap-2">
-                        <span id="kpi-visitas-hoje" class="text-3xl font-black text-white">0</span>
-                        <span class="text-xs text-slate-400">em negociação</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-visitas-hoje" class="text-2xl font-black text-white">0</span>
+                        <span class="text-[10px] text-slate-400 block">em negociação</span>
                     </div>
-                    <span class="text-[10px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
-                    </span>
+                    <span class="text-[9px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 4: PROPOSTAS EM ANÁLISE -->
-            <div onclick="abrirDrilldown('propostas')" class="box-tech p-5 border-l-4 border-l-purple-400 cursor-pointer hover:scale-[1.02] hover:border-purple-300 hover:shadow-xl hover:shadow-purple-950/40 transition-all duration-200 group">
+            <!-- CARD 5: PROPOSTAS EM ANÁLISE -->
+            <div onclick="abrirDrilldown('propostas')" class="box-tech p-4 border-l-4 border-l-rose-400 cursor-pointer hover:scale-[1.02] hover:border-rose-300 hover:shadow-xl hover:shadow-rose-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-purple-300 transition">Propostas em Análise</span>
-                    <i class="fa-solid fa-file-signature text-purple-400 text-base group-hover:scale-110 transition"></i>
+                    <span class="group-hover:text-rose-300 transition text-[11px]">Propostas</span>
+                    <i class="fa-solid fa-file-signature text-rose-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline justify-between">
-                    <div class="flex items-baseline gap-2">
-                        <span id="kpi-propostas-analise" class="text-3xl font-black text-white">0</span>
-                        <span class="text-xs text-purple-400 font-bold">em fechamento</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-propostas-analise" class="text-2xl font-black text-white">0</span>
+                        <span class="text-[10px] text-rose-400 font-bold block">em análise</span>
                     </div>
-                    <span class="text-[10px] text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
-                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
-                    </span>
+                    <span class="text-[9px] text-rose-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
@@ -286,9 +294,7 @@
 
     </main>
 
-    <!-- =========================================================================
-         MODAL DE DETALHAMENTO RÁPIDO / PAINEL RESUMIDO (DRILL-DOWN DOS KPIS)
-         ========================================================================= -->
+    <!-- MODAL DE DETALHAMENTO RÁPIDO / DRILL-DOWN -->
     <div id="modal-kpi-detalhes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-3xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
             
@@ -302,7 +308,6 @@
                 </button>
             </div>
 
-            <!-- CORPO SCROLLÁVEL -->
             <div class="flex-1 overflow-y-auto pr-1 space-y-2.5" id="drilldown-corpo">
                 <div class="py-8 text-center text-slate-500 text-xs">
                     <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-lg mb-2"></i>
@@ -476,8 +481,10 @@
             }
         }
 
+        // CARREGA TODAS AS MÉTRICAS INCLUINDO LOCAÇÃO
         async function carregarMetricas(imobId) {
             try {
+                // 1. Imóveis Ativos na Vitrine
                 const { count: imoveisCount } = await supabaseClient
                     .from('imoveis')
                     .select('*', { count: 'exact', head: true })
@@ -487,6 +494,22 @@
 
                 document.getElementById('kpi-imoveis-ativos').innerText = imoveisCount || 0;
 
+                // 2. Imóveis Alugados (Locação Ativa) & Soma da Receita de Comissão
+                const { data: contratosLoc, count: alugadosCount } = await supabaseClient
+                    .from('contratos_locacao')
+                    .select('valor_comissao_imobiliaria, valor_aluguel_bruto', { count: 'exact' })
+                    .eq('imobiliaria_id', imobId)
+                    .eq('status', 'Ativo');
+
+                let totalComissaoMensal = 0;
+                if (contratosLoc && contratosLoc.length > 0) {
+                    totalComissaoMensal = contratosLoc.reduce((acc, c) => acc + Number(c.valor_comissao_imobiliaria || 0), 0);
+                }
+
+                document.getElementById('kpi-imoveis-alugados').innerText = alugadosCount || 0;
+                document.getElementById('kpi-receita-locacao').innerText = totalComissaoMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês comissão';
+
+                // 3. Leads Hoje
                 const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                 const { count: leadsHojeCount } = await supabaseClient
                     .from('leads_contatos')
@@ -496,6 +519,7 @@
 
                 document.getElementById('kpi-leads-hoje').innerText = leadsHojeCount || 0;
 
+                // 4. Em Atendimento
                 const { count: visitasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -504,6 +528,7 @@
 
                 document.getElementById('kpi-visitas-hoje').innerText = visitasCount || 0;
 
+                // 5. Propostas
                 const { count: propostasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -517,9 +542,7 @@
             }
         }
 
-        // =========================================================================
-        // MOTOR DE DETALHAMENTO (DRILL-DOWN) DOS CARDS DE KPI
-        // =========================================================================
+        // MOTOR DE DETALHAMENTO (DRILL-DOWN)
         async function abrirDrilldown(tipo) {
             if (!dadosImobiliaria) return;
 
@@ -539,7 +562,7 @@
 
             try {
                 if (tipo === 'imoveis-ativos') {
-                    titulo.innerText = 'Imóveis Ativos na Vitrine';
+                    titulo.innerText = 'Imóveis Ativos na Vitrine (Disponíveis)';
                     icone.className = 'fa-solid fa-house-circle-check text-cyan-400';
 
                     const { data: imoveis, error } = await supabaseClient
@@ -551,7 +574,6 @@
                         .order('created_at', { ascending: false });
 
                     if (error) throw error;
-
                     contador.innerText = `${imoveis.length} imóveis ativos`;
 
                     if (imoveis.length === 0) {
@@ -575,6 +597,75 @@
                         </div>
                     `).join('');
 
+                } else if (tipo === 'imoveis-alugados') {
+                    // DRILL-DOWN DOS IMÓVEIS ALUGADOS & CONTRATOS ATIVOS
+                    titulo.innerText = 'Imóveis Alugados & Contratos Ativos de Locação';
+                    icone.className = 'fa-solid fa-key text-purple-400';
+
+                    const { data: contratos, error } = await supabaseClient
+                        .from('contratos_locacao')
+                        .select('*, imoveis(codigo_ref, titulo, foto_capa, bairro)')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('status', 'Ativo')
+                        .order('data_fim', { ascending: true });
+
+                    if (error) throw error;
+                    contador.innerText = `${contratos ? contratos.length : 0} contratos ativos`;
+
+                    if (!contratos || contratos.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel sob contrato de locação ativo no momento.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = contratos.map(c => {
+                        const imovel = c.imoveis || {};
+                        const dataInicioFmt = c.data_inicio ? c.data_inicio.split('-').reverse().join('/') : '--/--/----';
+                        const dataFimFmt = c.data_fim ? c.data_fim.split('-').reverse().join('/') : '--/--/----';
+                        const zapLimpo = ('' + (c.cliente_whatsapp || '')).replace(/\D/g, '');
+
+                        // Contagem de dias restantes
+                        let textoRestante = '';
+                        if (c.data_fim) {
+                            const diffDias = Math.ceil((new Date(`${c.data_fim}T23:59:59`) - new Date()) / (1000 * 60 * 60 * 24));
+                            if (diffDias > 0) {
+                                textoRestante = `<span class="text-slate-400 text-[10px]">Vence em ${diffDias} dias</span>`;
+                            } else {
+                                textoRestante = `<span class="text-rose-400 text-[10px] font-bold">Contrato Vencido</span>`;
+                            }
+                        }
+
+                        return `
+                            <div class="bg-slate-950 p-4 rounded-xl border border-purple-800/40 space-y-2 hover:border-purple-500/60 transition">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                        <div>
+                                            <span class="font-bold text-white text-xs block leading-snug">${imovel.titulo || 'Imóvel Alugado'}</span>
+                                            <span class="text-[10px] text-purple-300 font-mono">Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'}</span>
+                                        </div>
+                                    </div>
+                                    ${zapLimpo ? `
+                                        <a href="https://wa.me/${zapLimpo}?text=${encodeURIComponent('Olá ' + c.cliente_nome + '! Falo da imobiliária sobre a locação do imóvel Ref: ' + (imovel.codigo_ref || ''))}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
+                                            <i class="fa-brands fa-whatsapp"></i> Inquilino
+                                        </a>
+                                    ` : ''}
+                                </div>
+
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
+                                    <div><span class="text-slate-500 block">Locatário (Inquilino):</span> <strong class="text-white">${c.cliente_nome}</strong></div>
+                                    <div><span class="text-slate-500 block">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Sua Comissão (${c.taxa_administracao_pct}%):</span> <strong class="text-amber-300 font-mono">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong></div>
+                                    <div><span class="text-slate-500 block">Repasse Dono:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong></div>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-1 text-[10px] text-slate-400 border-t border-slate-900">
+                                    <span>Vigência: <strong>${dataInicioFmt}</strong> até <strong>${dataFimFmt}</strong></span>
+                                    <span>${textoRestante}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
                 } else if (tipo === 'leads-hoje') {
                     titulo.innerText = 'Novos Contatos / Leads (Últimas 24 Horas)';
                     icone.className = 'fa-solid fa-comment-dots text-emerald-400';
@@ -588,7 +679,6 @@
                         .order('criado_em', { ascending: false });
 
                     if (error) throw error;
-
                     contador.innerText = `${leads.length} contatos nas últimas 24h`;
 
                     if (leads.length === 0) {
@@ -627,7 +717,6 @@
                         .order('criado_em', { ascending: false });
 
                     if (error) throw error;
-
                     contador.innerText = `${leads.length} clientes em negociação`;
 
                     if (leads.length === 0) {
@@ -658,7 +747,7 @@
 
                 } else if (tipo === 'propostas') {
                     titulo.innerText = 'Propostas Comerciais em Análise';
-                    icone.className = 'fa-solid fa-file-signature text-purple-400';
+                    icone.className = 'fa-solid fa-file-signature text-rose-400';
 
                     const { data: leads, error } = await supabaseClient
                         .from('leads_contatos')
@@ -668,24 +757,23 @@
                         .order('criado_em', { ascending: false });
 
                     if (error) throw error;
-
                     contador.innerText = `${leads.length} propostas em análise`;
 
                     if (leads.length === 0) {
-                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma proposta comercial pendente de análise.</p>';
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma proposta comercial pendente.</p>';
                         return;
                     }
 
                     corpo.innerHTML = leads.map(l => `
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-purple-500/40 transition">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-rose-500/40 transition">
                             <div>
                                 <span class="font-bold text-white text-xs">${l.nome}</span>
-                                <span class="text-xs font-mono font-black text-purple-300 block mt-0.5">
+                                <span class="text-xs font-mono font-black text-rose-300 block mt-0.5">
                                     ${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Valor não informado'}
                                 </span>
                                 ${l.condicoes_proposta ? `<p class="text-[11px] text-slate-400 mt-1 italic">Condições: "${l.condicoes_proposta}"</p>` : ''}
                             </div>
-                            <a href="leads.html" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-800 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
+                            <a href="leads.html" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
                                 Ver Detalhes
                             </a>
                         </div>
@@ -729,7 +817,7 @@
                         <td class="py-3 px-3">${im.tipo} • ${im.bairro || 'Localização'}</td>
                         <td class="py-3 px-3 font-bold text-slate-200">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</td>
                         <td class="py-3 px-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-300'}">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : (im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-800 text-slate-300')}">
                                 ${im.status}
                             </span>
                         </td>
@@ -874,4 +962,4 @@
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
 </body>
-</html> 
+</html>
