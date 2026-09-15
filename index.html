@@ -293,13 +293,12 @@
                         <span class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
                             Venda, aluguel fixo ou temporada
                         </span>
-
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+<h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight" id="negocie-titulo">
                             Negocie seu imóvel com uma imobiliária especializada
                         </h2>
 
                         <p class="text-sm text-slate-600 leading-relaxed" id="negocie-texto-cidade">
-                            Avaliamos seu imóvel com atenção, conhecimento local e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação com agilidade e total segurança jurídica.
+                            Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação em sua região.
                         </p>
 
                         <!-- 3 CARDS DE BENEFÍCIOS -->
@@ -632,16 +631,26 @@
             const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
 
-            if (imob.cidade) {
-                document.getElementById('negocie-texto-cidade').innerText = 
-                    `Avaliamos seu imóvel com atenção, conhecimento local e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação em ${imob.cidade}/${imob.uf || ''}.`;
+  // Dinamiza o título com o nome da imobiliária do cliente
+            const tituloNegocie = document.getElementById('negocie-titulo');
+            if (tituloNegocie) {
+                tituloNegocie.innerText = `Negocie seu imóvel com a ${imob.nome_fantasia}`;
+            }
+
+            // Localização fluida e multi-tenant: se houver cidade cadastrada usa "em [Cidade] e região", senão usa "em sua região"
+            const txtNegocie = document.getElementById('negocie-texto-cidade');
+            if (txtNegocie) {
+                const pracaAtuacao = (imob.cidade && imob.cidade.trim()) 
+                    ? `em ${imob.cidade} e região` 
+                    : 'em sua região';
+                txtNegocie.innerText = `Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação ${pracaAtuacao}.`;
             }
         }
 
         function exibirVitrineNaoEncontrada() {
             document.getElementById('header-razao').innerText = 'Vitrine Não Localizada';
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
-            document.getElementById('contador-imoveis').innerText = '0';
+            documen.getElementById('contador-imoveis').innerText = '0';
             document.getElementById('container-imoveis').innerHTML = `
                 <div class="bg-white rounded-xl p-12 text-center text-slate-500 border border-gray-200">
                     <i class="fa-solid fa-circle-exclamation text-4xl text-amber-500 mb-3"></i>
