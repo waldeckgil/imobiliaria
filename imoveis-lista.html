@@ -17,7 +17,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA (CASO A ASSINATURA ESTEJA VENCIDA) -->
+    <!-- FAIXA MODO LEITURA -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
@@ -89,7 +89,7 @@
     <!-- ÁREA PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
         
-        <!-- RESUMO DO INVENTÁRIO (KPIs DO ESTOQUE) -->
+        <!-- RESUMO DO INVENTÁRIO -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-cyan-400">
                 <div>
@@ -116,11 +116,10 @@
             </div>
         </div>
 
-        <!-- BARRA DE FILTROS E BUSCA OPERACIONAL -->
+        <!-- BARRA DE FILTROS -->
         <div class="box-tech p-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
                 
-                <!-- BUSCA POR CÓDIGO OU TÍTULO -->
                 <div class="lg:col-span-4 relative">
                     <input type="text" id="filtro-busca" placeholder="Buscar por código (ex: 720) ou título..." 
                            oninput="aplicarFiltros()"
@@ -128,7 +127,6 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
                 </div>
 
-                <!-- FILTRO DE STATUS -->
                 <div class="lg:col-span-3">
                     <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Status: Todos</option>
@@ -140,17 +138,15 @@
                     </select>
                 </div>
 
-                <!-- FILTRO DE FINALIDADE -->
                 <div class="lg:col-span-3">
                     <select id="filtro-finalidade" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Finalidade: Todas</option>
                         <option value="Venda">Venda</option>
-                        <option value="Locação">Locação</option>
-                        <option value="Ambos">Venda ou Locação</option>
+                        <option value="Locacao">Locação</option>
+                        <option value="Ambos">Venda e Locação (Ambos)</option>
                     </select>
                 </div>
 
-                <!-- BOTÃO RESETAR -->
                 <div class="lg:col-span-2">
                     <button onclick="limparFiltros()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl border border-slate-700 transition cursor-pointer flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-rotate-left text-[10px]"></i>
@@ -161,7 +157,7 @@
             </div>
         </div>
 
-        <!-- TABELA ADMINISTRATIVA DO ESTOQUE -->
+        <!-- TABELA ADMINISTRATIVA -->
         <div class="box-tech overflow-hidden shadow-2xl">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-300">
@@ -169,8 +165,8 @@
                         <tr>
                             <th class="py-3 px-4">Imóvel</th>
                             <th class="py-3 px-3">Código</th>
-                            <th class="py-3 px-3">Tipo / Bairro</th>
-                            <th class="py-3 px-3">Preço / Encargos</th>
+                            <th class="py-3 px-3">Destinação & Tipo</th>
+                            <th class="py-3 px-3">Valores Comerciais</th>
                             <th class="py-3 px-3">Status</th>
                             <th class="py-3 px-3 text-center">Vitrine</th>
                             <th class="py-3 px-4 text-right">Ações</th>
@@ -187,16 +183,15 @@
                 </table>
             </div>
 
-            <!-- RODAPÉ DA TABELA COM CONTADOR -->
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Exibindo <strong id="contador-linhas" class="text-white">0</strong> imóveis</span>
-                <span class="font-mono text-[11px]">SGI • PostgreSQL Row Level Security Ativo</span>
+                <span class="font-mono text-[11px]">SGI • Controle Completo de Estoque</span>
             </div>
         </div>
 
     </main>
 
-    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <!-- MODAL DE EXCLUSÃO -->
     <div id="modal-excluir" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-sm w-full p-6 text-center border border-red-500/40 shadow-2xl">
             <div class="w-12 h-12 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-xl mx-auto mb-3 border border-red-500/30">
@@ -219,17 +214,16 @@
         </div>
     </div>
 
-    <!-- RODAPÉ TÉCNICO -->
+    <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Gestão Operacional de Catálogo
     </footer>
 
-    <!-- JAVASCRIPT DE OPERAÇÃO DO CATÁLOGO (AJUSTADO COM 'supabaseClient') -->
+    <!-- JAVASCRIPT -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        // Corrigido para não conflitar com window.supabase
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
@@ -245,7 +239,6 @@
 
             const email = session.user.email.toLowerCase();
 
-            // MODO MASTER BYPASS
             if (email === 'waldeckgil@gmail.com') {
                 document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (CATÁLOGO GERAL)';
                 document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
@@ -261,7 +254,6 @@
                 return;
             }
 
-            // GESTOR / CORRETOR LOGADO
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
@@ -285,7 +277,6 @@
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
-                // Auditoria Financeira
                 const hoje = new Date().toISOString().split('T')[0];
                 const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
                 modoLeitura = (imob.status === 'blocked' || vencido);
@@ -305,7 +296,6 @@
             }
         }
 
-        // Busca os imóveis daquela imobiliária
         async function carregarImoveis() {
             try {
                 const { data, error } = await supabaseClient
@@ -327,7 +317,6 @@
             }
         }
 
-        // Atualiza contadores e VGV
         function atualizarMetricasEstoque(imoveis) {
             const total = imoveis.length;
             const ativos = imoveis.filter(i => i.ativa === true && i.status === 'Disponível').length;
@@ -339,7 +328,7 @@
             document.getElementById('contador-linhas').innerText = total;
         }
 
-        // Renderiza as linhas da tabela
+        // RENDERIZAÇÃO DA TABELA COM BADGES VISUAIS DE DESTINAÇÃO
         function renderizarTabela(imoveis) {
             const tbody = document.getElementById('tabela-imoveis-corpo');
 
@@ -360,8 +349,42 @@
 
             tbody.innerHTML = imoveis.map(im => {
                 const foto = im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
-                const precoFormatado = Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 
+                // Badge de Destinação Comercial
+                let badgeFinalidade = '';
+                if (im.finalidade === 'Ambos') {
+                    badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-purple-950 text-purple-300 border border-purple-800 inline-flex items-center gap-1"><i class="fa-solid fa-arrows-split-up-and-left text-[9px]"></i> Venda & Locação</span>';
+                } else if (im.finalidade === 'Locacao' || im.finalidade === 'Locação') {
+                    badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-950 text-amber-400 border border-amber-800 inline-flex items-center gap-1"><i class="fa-solid fa-key text-[9px]"></i> Locação</span>';
+                } else {
+                    badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 inline-flex items-center gap-1"><i class="fa-solid fa-tag text-[9px]"></i> Venda</span>';
+                }
+
+                // Bloco Inteligente de Valores
+                let blocoValores = '';
+                if (im.finalidade === 'Ambos') {
+                    blocoValores = `
+                        <div class="space-y-0.5">
+                            <span class="font-black text-cyan-300 block text-xs">Venda: R$ ${Number(im.valor_venda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            <span class="font-bold text-amber-300 block text-[11px]">Aluguel: R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês</span>
+                        </div>
+                    `;
+                } else if (im.finalidade === 'Locacao' || im.finalidade === 'Locação') {
+                    blocoValores = `
+                        <div>
+                            <span class="font-black text-amber-300 block text-xs">R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês</span>
+                            <span class="text-[10px] text-slate-500">Locação Mensal</span>
+                        </div>
+                    `;
+                } else {
+                    blocoValores = `
+                        <div>
+                            <span class="font-black text-cyan-300 block text-xs">R$ ${Number(im.valor_venda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            <span class="text-[10px] text-slate-500">Valor de Venda</span>
+                        </div>
+                    `;
+                }
+
                 let statusBadge = 'bg-slate-800 text-slate-300 border-slate-700';
                 if (im.status === 'Disponível') statusBadge = 'bg-emerald-950 text-emerald-400 border-emerald-800';
                 if (im.status === 'Em Proposta') statusBadge = 'bg-amber-950 text-amber-400 border-amber-800';
@@ -379,20 +402,25 @@
                             <span class="text-[10px] text-slate-500">${im.area_util || 0} m² • ${im.quartos || 0} Quartos • ${im.vagas || 0} Vagas</span>
                         </div>
                     </td>
+
                     <td class="py-3 px-3 font-mono font-bold text-cyan-400">Ref: ${im.codigo_ref}</td>
+
                     <td class="py-3 px-3 text-slate-300">
                         <span class="font-semibold text-white block">${im.tipo}</span>
-                        <span class="text-[11px] text-slate-500">${im.bairro || 'Florianópolis'}</span>
+                        <div class="mt-1">${badgeFinalidade}</div>
+                        <span class="text-[11px] text-slate-500 block mt-0.5">${im.bairro || 'Localização'}</span>
                     </td>
+
                     <td class="py-3 px-3">
-                        <span class="font-black text-cyan-300 block">${precoFormatado}</span>
-                        <span class="text-[10px] text-slate-500">${im.finalidade}</span>
+                        ${blocoValores}
                     </td>
+
                     <td class="py-3 px-3">
                         <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${statusBadge}">
                             ${im.status}
                         </span>
                     </td>
+
                     <td class="py-3 px-3 text-center">
                         <button onclick="alternarVisibilidadeVitrine('${im.id}', ${im.ativa})" 
                                 ${modoLeitura ? 'disabled' : ''}
@@ -401,6 +429,7 @@
                             <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
                         </button>
                     </td>
+
                     <td class="py-3 px-4 text-right">
                         <div class="inline-flex items-center gap-1.5">
                             <a href="imovel-form.html?id=${im.id}" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition" title="Editar Imóvel">
@@ -417,7 +446,6 @@
             }).join('');
         }
 
-        // Alterna ativa = true/false direto no Supabase
         async function alternarVisibilidadeVitrine(imovelId, estadoAtual) {
             if (modoLeitura) return;
             try {
@@ -434,7 +462,6 @@
             }
         }
 
-        // Filtros e Busca em Tempo Real
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
@@ -447,7 +474,16 @@
                     (im.bairro && im.bairro.toLowerCase().includes(busca));
 
                 const matchStatus = !status || im.status === status;
-                const matchFinalidade = !finalidade || im.finalidade === finalidade;
+
+                // Lógica Inteligente de Filtro de Finalidade
+                let matchFinalidade = true;
+                if (finalidade === 'Venda') {
+                    matchFinalidade = (im.finalidade === 'Venda' || im.finalidade === 'Ambos');
+                } else if (finalidade === 'Locacao' || finalidade === 'Locação') {
+                    matchFinalidade = (im.finalidade === 'Locacao' || im.finalidade === 'Locação' || im.finalidade === 'Ambos');
+                } else if (finalidade === 'Ambos') {
+                    matchFinalidade = (im.finalidade === 'Ambos');
+                }
 
                 return matchBusca && matchStatus && matchFinalidade;
             });
@@ -462,7 +498,6 @@
             renderizarTabela(listaImoveisCompleta);
         }
 
-        // Modal de Exclusão
         function abrirModalExcluir(id, ref) {
             if (modoLeitura) return;
             document.getElementById('modal-excluir-id').value = id;
@@ -499,7 +534,6 @@
             }
         }
 
-        // Logout
         async function executarLogout() {
             if (confirm('Deseja encerrar a sessão?')) {
                 await supabaseClient.auth.signOut();

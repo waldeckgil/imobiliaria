@@ -13,15 +13,12 @@
     <style>
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
-        .box-destaque { background: #0b1329; border: 1px solid #38bdf8; border-radius: 1rem; }
         .tab-btn-ativo { background-color: #38bdf8; color: #020617; font-weight: 800; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- =========================================================================
-         1. FAIXA DE ALERTA: MODO SOMENTE LEITURA
-         ========================================================================= -->
+    <!-- FAIXA MODO SOMENTE LEITURA -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
@@ -29,13 +26,10 @@
         </div>
     </div>
 
-    <!-- =========================================================================
-         2. CABEÇALHO SUPERIOR (TOPBAR OPERACIONAL)
-         ========================================================================= -->
+    <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <!-- IDENTIDADE DA IMOBILIÁRIA CONECTADA -->
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
                     <i class="fa-solid fa-building"></i>
@@ -51,33 +45,27 @@
                 </div>
             </div>
 
-            <!-- BOTÕES DE AÇÃO E ATALHOS -->
+            <!-- BOTÕES DE AÇÃO -->
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
                 
-                <!-- ATALHO PARA VER A VITRINE PÚBLICA -->
+                <a href="configurar-imobiliaria.html#conf-sobre" 
+                   class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-signature text-xs"></i>
+                    <span>Editar "A Empresa"</span>
+                </a>
+
                 <a id="btn-ver-vitrine" href="index.html" target="_blank" 
                    class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     <span>Ver Minha Vitrine</span>
                 </a>
 
-
-<!-- ATALHO: PERSONALIZAR ABA "A EMPRESA" -->
-<a href="configurar-imobiliaria.html#conf-sobre" 
-   class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
-    <i class="fa-solid fa-signature text-xs"></i>
-    <span>Editar "A Empresa"</span>
-</a>
-
-
-                <!-- BOTÃO + NOVO IMÓVEL -->
                 <a id="btn-novo-imovel" href="imovel-form.html" 
                    class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow">
                     <i class="fa-solid fa-plus text-xs"></i>
                     <span>Novo Imóvel</span>
                 </a>
 
-                <!-- LOGOUT -->
                 <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
                     <span class="hidden sm:inline">Sair</span>
@@ -86,9 +74,7 @@
         </div>
     </header>
 
-    <!-- =========================================================================
-         3. SUB-MENU DE NAVEGAÇÃO DOS MÓDULOS
-         ========================================================================= -->
+    <!-- MENU DE MÓDULOS -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
         <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
             <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
@@ -109,70 +95,114 @@
         </div>
     </nav>
 
-    <!-- =========================================================================
-         4. CONTEÚDO PRINCIPAL (MÉTRICAS E ABAS OPERACIONAIS)
-         ========================================================================= -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
         
-        <!-- CARDS DE CONTROLE IMEDIATO (KPIs) -->
+        <!-- CARD DE ASSINATURA -->
+        <div id="card-monitor-assinatura" class="box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-emerald-500">
+            <div class="flex items-center gap-3.5">
+                <div id="icone-status-plano" class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Situação da Assinatura</span>
+                        <span id="badge-status-plano" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">
+                            EM DIA
+                        </span>
+                    </div>
+                    <h2 class="text-sm sm:text-base font-black text-white mt-0.5 flex items-center gap-2">
+                        <span>Próximo Vencimento:</span>
+                        <span id="txt-vencimento-data" class="font-mono text-cyan-300">--/--/----</span>
+                    </h2>
+                    <p id="txt-dias-contagem" class="text-xs text-slate-400 mt-0.5">Calculando ciclo contratual...</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <a id="btn-renovar-zap" href="https://wa.me/5521964120231" target="_blank" 
+                   class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Solicitar Renovação</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- CARDS DE CONTROLE IMEDIATO (CLICÁVEIS COM DRILL-DOWN) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
             <!-- CARD 1: IMÓVEIS ATIVOS -->
-            <div class="box-tech p-5 border-l-4 border-l-cyan-400">
+            <div onclick="abrirDrilldown('imoveis-ativos')" class="box-tech p-5 border-l-4 border-l-cyan-400 cursor-pointer hover:scale-[1.02] hover:border-cyan-300 hover:shadow-xl hover:shadow-cyan-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Imóveis Ativos na Vitrine</span>
-                    <i class="fa-solid fa-house-circle-check text-cyan-400 text-base"></i>
+                    <span class="group-hover:text-cyan-300 transition">Imóveis Ativos na Vitrine</span>
+                    <i class="fa-solid fa-house-circle-check text-cyan-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-imoveis-ativos" class="text-3xl font-black text-white">0</span>
-                    <span class="text-xs text-slate-400">no catálogo</span>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <div class="flex items-baseline gap-2">
+                        <span id="kpi-imoveis-ativos" class="text-3xl font-black text-white">0</span>
+                        <span class="text-xs text-slate-400">no catálogo</span>
+                    </div>
+                    <span class="text-[10px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </span>
                 </div>
             </div>
 
             <!-- CARD 2: LEADS ÚLTIMAS 24H -->
-            <div class="box-tech p-5 border-l-4 border-l-emerald-400">
+            <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-5 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Novos Leads (Hoje / 24h)</span>
-                    <i class="fa-solid fa-comment-dots text-emerald-400 text-base"></i>
+                    <span class="group-hover:text-emerald-300 transition">Novos Leads (Hoje / 24h)</span>
+                    <i class="fa-solid fa-comment-dots text-emerald-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-leads-hoje" class="text-3xl font-black text-white">0</span>
-                    <span class="text-xs text-emerald-400 font-bold">contatos novos</span>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <div class="flex items-baseline gap-2">
+                        <span id="kpi-leads-hoje" class="text-3xl font-black text-white">0</span>
+                        <span class="text-xs text-emerald-400 font-bold">contatos novos</span>
+                    </div>
+                    <span class="text-[10px] text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </span>
                 </div>
             </div>
 
             <!-- CARD 3: VISITAS E ATENDIMENTOS -->
-            <div class="box-tech p-5 border-l-4 border-l-amber-400">
+            <div onclick="abrirDrilldown('visitas')" class="box-tech p-5 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl hover:shadow-amber-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Em Atendimento / Visitas</span>
-                    <i class="fa-solid fa-calendar-check text-amber-400 text-base"></i>
+                    <span class="group-hover:text-amber-300 transition">Em Atendimento / Visitas</span>
+                    <i class="fa-solid fa-calendar-check text-amber-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-visitas-hoje" class="text-3xl font-black text-white">0</span>
-                    <span class="text-xs text-slate-400">em negociação</span>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <div class="flex items-baseline gap-2">
+                        <span id="kpi-visitas-hoje" class="text-3xl font-black text-white">0</span>
+                        <span class="text-xs text-slate-400">em negociação</span>
+                    </div>
+                    <span class="text-[10px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </span>
                 </div>
             </div>
 
             <!-- CARD 4: PROPOSTAS EM ANÁLISE -->
-            <div class="box-tech p-5 border-l-4 border-l-purple-400">
+            <div onclick="abrirDrilldown('propostas')" class="box-tech p-5 border-l-4 border-l-purple-400 cursor-pointer hover:scale-[1.02] hover:border-purple-300 hover:shadow-xl hover:shadow-purple-950/40 transition-all duration-200 group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Propostas em Análise</span>
-                    <i class="fa-solid fa-file-signature text-purple-400 text-base"></i>
+                    <span class="group-hover:text-purple-300 transition">Propostas em Análise</span>
+                    <i class="fa-solid fa-file-signature text-purple-400 text-base group-hover:scale-110 transition"></i>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-propostas-analise" class="text-3xl font-black text-white">0</span>
-                    <span class="text-xs text-purple-400 font-bold">em fechamento</span>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <div class="flex items-baseline gap-2">
+                        <span id="kpi-propostas-analise" class="text-3xl font-black text-white">0</span>
+                        <span class="text-xs text-purple-400 font-bold">em fechamento</span>
+                    </div>
+                    <span class="text-[10px] text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                        Ver <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </span>
                 </div>
             </div>
 
         </div>
 
-        <!-- =====================================================================
-             5. VISUALIZAÇÕES SEGMENTADAS (ABAS RÁPIDAS)
-             ===================================================================== -->
+        <!-- ABAS RÁPIDAS -->
         <div class="box-tech p-5 space-y-4">
-            
-            <!-- CABEÇALHO DAS ABAS -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs">
                     <button onclick="mudarAba('catalogo')" id="tab-btn-catalogo" class="px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer">
@@ -191,7 +221,7 @@
                 </span>
             </div>
 
-            <!-- CONTEÚDO DA ABA 1: CATÁLOGO RESUMIDO -->
+            <!-- ABA 1: CATÁLOGO RESUMIDO -->
             <div id="aba-conteudo-catalogo" class="space-y-3">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
@@ -217,7 +247,7 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DA ABA 2: LEADS RECENTES -->
+            <!-- ABA 2: LEADS RECENTES -->
             <div id="aba-conteudo-leads" class="hidden space-y-3">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-slate-300">
@@ -226,7 +256,7 @@
                                 <th class="py-3 px-3">Data/Hora</th>
                                 <th class="py-3 px-3">Cliente</th>
                                 <th class="py-3 px-3">WhatsApp</th>
-                                <th class="py-3 px-3">Imóvel de Interesse</th>
+                                <th class="py-3 px-3">Contexto / Imóvel</th>
                                 <th class="py-3 px-3">Etapa</th>
                                 <th class="py-3 px-3 text-right">Chamar no Zap</th>
                             </tr>
@@ -242,7 +272,7 @@
                 </div>
             </div>
 
-            <!-- CONTEÚDO DA ABA 3: GRÁFICO DINÂMICO DE BAIRROS (SEM TEXTOS FIXOS) -->
+            <!-- ABA 3: GRÁFICO DINÂMICO DE BAIRROS -->
             <div id="aba-conteudo-graficos" class="hidden space-y-4 pt-2">
                 <div class="max-w-xl space-y-3" id="container-grafico-bairros">
                     <p class="text-xs text-slate-400 mb-2">Concentração do estoque por localização:</p>
@@ -256,14 +286,45 @@
 
     </main>
 
-    <!-- RODAPÉ TÉCNICO -->
+    <!-- =========================================================================
+         MODAL DE DETALHAMENTO RÁPIDO / PAINEL RESUMIDO (DRILL-DOWN DOS KPIS)
+         ========================================================================= -->
+    <div id="modal-kpi-detalhes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-3xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 font-black text-sm text-cyan-400">
+                    <i class="fa-solid fa-layer-group text-base" id="drilldown-icone"></i>
+                    <span id="drilldown-titulo">Painel Resumido</span>
+                </div>
+                <button onclick="fecharDrilldown()" class="text-slate-500 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- CORPO SCROLLÁVEL -->
+            <div class="flex-1 overflow-y-auto pr-1 space-y-2.5" id="drilldown-corpo">
+                <div class="py-8 text-center text-slate-500 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-lg mb-2"></i>
+                    <p>Carregando registros detalhados...</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span id="drilldown-contador" class="text-slate-400 font-mono font-bold">0 itens listados</span>
+                <button onclick="fecharDrilldown()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Sessão Criptografada via JWT
     </footer>
 
-    <!-- =========================================================================
-         6. JAVASCRIPT DINÂMICO
-         ========================================================================= -->
+    <!-- JAVASCRIPT -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -274,7 +335,6 @@
         let dadosUsuario = null;
         let dadosImobiliaria = null;
 
-        // 1. Verificação Estrita de Sessão ao Iniciar
         async function inicializarDashboard() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
 
@@ -286,17 +346,14 @@
             dadosSessao = session;
             const emailLogado = session.user.email.toLowerCase();
 
-            // BYPASS ADMINISTRADOR MASTER (Waldeck Gil)
             if (emailLogado === 'waldeckgil@gmail.com') {
                 carregarModoMaster();
                 return;
             }
 
-            // FLUXO DO GESTOR DA IMOBILIÁRIA / CORRETOR
             await carregarPerfilOperacional(session.user.id);
         }
 
-        // 2. Carrega Perfil do Usuário e Imobiliária
         async function carregarPerfilOperacional(userId) {
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
@@ -305,11 +362,10 @@
                     .eq('user_id', userId)
                     .single();
 
-                if (errUser || !usuario) throw new Error('Perfil de colaborador não localizado na tabela de usuários.');
+                if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
                 dadosUsuario = usuario;
 
-                // Consulta a Imobiliária
                 const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
                     .select('*')
@@ -320,22 +376,13 @@
 
                 dadosImobiliaria = imob;
 
-                // Atualiza a Topbar com os dados reais da Imobiliária e do Gestor
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'dono').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
-                // 3. Auditoria Financeira
-                const hoje = new Date().toISOString().split('T')[0];
-                const estaVencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                const estaBloqueado = imob.status === 'blocked' || estaVencido;
+                atualizarPainelAssinatura(imob);
 
-                if (estaBloqueado) {
-                    aplicarTravaModoLeitura();
-                }
-
-                // Carrega Métricas e Dados das Abas
                 carregarMetricas(imob.id);
                 carregarCatalogo(imob.id);
                 carregarLeads(imob.id);
@@ -347,7 +394,61 @@
             }
         }
 
-        // Tratamento especial se o Master logar no Dashboard Operacional
+        function atualizarPainelAssinatura(imob) {
+            if (!imob.data_vencimento) {
+                document.getElementById('txt-vencimento-data').innerText = 'Não definida';
+                document.getElementById('txt-dias-contagem').innerText = 'Data de vencimento em configuração.';
+                return;
+            }
+
+            const [ano, mes, dia] = imob.data_vencimento.split('-');
+            document.getElementById('txt-vencimento-data').innerText = `${dia}/${mes}/${ano}`;
+
+            const dataVenc = new Date(`${imob.data_vencimento}T23:59:59`);
+            const dataHoje = new Date();
+            const diffTime = dataVenc.getTime() - dataHoje.getTime();
+            const diffDias = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            const cardAssinatura = document.getElementById('card-monitor-assinatura');
+            const badgeStatus = document.getElementById('badge-status-plano');
+            const iconeStatus = document.getElementById('icone-status-plano');
+            const txtContagem = document.getElementById('txt-dias-contagem');
+            const btnRenovar = document.getElementById('btn-renovar-zap');
+
+            const msgWhatsApp = encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia} (Vencimento: ${dia}/${mes}/${ano}).`);
+            btnRenovar.href = `https://wa.me/5521964120231?text=${msgWhatsApp}`;
+
+            const vencido = (diffDias < 0);
+            const bloqueado = (imob.status === 'blocked' || vencido);
+
+            if (bloqueado) {
+                aplicarTravaModoLeitura();
+            }
+
+            if (vencido) {
+                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-rose-500 bg-rose-950/20';
+                badgeStatus.innerText = 'VENCIDA';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
+                iconeStatus.className = 'w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl flex-shrink-0 border border-rose-500/30';
+                iconeStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Assinatura expirada há ${Math.abs(diffDias)} dia(s).</span> Acesso em modo somente leitura.`;
+            } else if (diffDias <= 5) {
+                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-amber-400 bg-amber-950/20';
+                badgeStatus.innerText = 'ATENÇÃO: VENCE EM BREVE';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                iconeStatus.className = 'w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/30';
+                iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam apenas ${diffDias === 0 ? 'algumas horas (vence hoje)' : diffDias + ' dia(s)'} para o vencimento.</span> Renove antecipadamente.`;
+            } else {
+                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-emerald-500';
+                badgeStatus.innerText = 'EM DIA';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
+                iconeStatus.className = 'w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30';
+                iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+                txtContagem.innerText = `Sua assinatura está ativa. Faltam ${diffDias} dias para o próximo vencimento.`;
+            }
+        }
+
         async function carregarModoMaster() {
             document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (AUDITORIA)';
             document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Administrador';
@@ -358,6 +459,7 @@
             if (imobPiloto) {
                 dadosImobiliaria = imobPiloto;
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
+                atualizarPainelAssinatura(imobPiloto);
                 carregarMetricas(imobPiloto.id);
                 carregarCatalogo(imobPiloto.id);
                 carregarLeads(imobPiloto.id);
@@ -365,7 +467,6 @@
             }
         }
 
-        // 4. Aplica Trava de Inadimplência
         function aplicarTravaModoLeitura() {
             document.getElementById('faixa-modo-leitura').classList.remove('hidden');
             const btnNovo = document.getElementById('btn-novo-imovel');
@@ -375,10 +476,8 @@
             }
         }
 
-        // 5. Consulta de KPIs
         async function carregarMetricas(imobId) {
             try {
-                // Total Imóveis Ativos
                 const { count: imoveisCount } = await supabaseClient
                     .from('imoveis')
                     .select('*', { count: 'exact', head: true })
@@ -388,7 +487,6 @@
 
                 document.getElementById('kpi-imoveis-ativos').innerText = imoveisCount || 0;
 
-                // Total Leads Hoje (24h)
                 const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                 const { count: leadsHojeCount } = await supabaseClient
                     .from('leads_contatos')
@@ -398,7 +496,6 @@
 
                 document.getElementById('kpi-leads-hoje').innerText = leadsHojeCount || 0;
 
-                // Em Atendimento / Visitas
                 const { count: visitasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -407,7 +504,6 @@
 
                 document.getElementById('kpi-visitas-hoje').innerText = visitasCount || 0;
 
-                // Propostas em Análise
                 const { count: propostasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -421,7 +517,191 @@
             }
         }
 
-        // 6. Carregamento da Aba: Catálogo Resumido
+        // =========================================================================
+        // MOTOR DE DETALHAMENTO (DRILL-DOWN) DOS CARDS DE KPI
+        // =========================================================================
+        async function abrirDrilldown(tipo) {
+            if (!dadosImobiliaria) return;
+
+            const modal = document.getElementById('modal-kpi-detalhes');
+            const titulo = document.getElementById('drilldown-titulo');
+            const icone = document.getElementById('drilldown-icone');
+            const corpo = document.getElementById('drilldown-corpo');
+            const contador = document.getElementById('drilldown-contador');
+
+            corpo.innerHTML = `
+                <div class="py-8 text-center text-slate-500 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
+                    <p>Consultando banco de dados...</p>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+
+            try {
+                if (tipo === 'imoveis-ativos') {
+                    titulo.innerText = 'Imóveis Ativos na Vitrine';
+                    icone.className = 'fa-solid fa-house-circle-check text-cyan-400';
+
+                    const { data: imoveis, error } = await supabaseClient
+                        .from('imoveis')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('ativa', true)
+                        .eq('status', 'Disponível')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    contador.innerText = `${imoveis.length} imóveis ativos`;
+
+                    if (imoveis.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel ativo na vitrine no momento.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = imoveis.map(im => `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-cyan-500/40 transition">
+                            <div class="flex items-center gap-3">
+                                <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                <div>
+                                    <span class="font-bold text-white text-xs block leading-snug truncate max-w-[280px]">${im.titulo}</span>
+                                    <span class="text-[10px] text-slate-400 font-mono">Ref: <strong class="text-cyan-400">${im.codigo_ref}</strong> • ${im.tipo} • ${im.bairro || 'Localização'}</span>
+                                    <span class="text-[11px] font-black text-cyan-300 block mt-0.5">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</span>
+                                </div>
+                            </div>
+                            <a href="imovel-form.html?id=${im.id}" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
+                                <i class="fa-regular fa-pen-to-square mr-1"></i> Editar
+                            </a>
+                        </div>
+                    `).join('');
+
+                } else if (tipo === 'leads-hoje') {
+                    titulo.innerText = 'Novos Contatos / Leads (Últimas 24 Horas)';
+                    icone.className = 'fa-solid fa-comment-dots text-emerald-400';
+
+                    const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                    const { data: leads, error } = await supabaseClient
+                        .from('leads_contatos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .gte('criado_em', ontem)
+                        .order('criado_em', { ascending: false });
+
+                    if (error) throw error;
+
+                    contador.innerText = `${leads.length} contatos nas últimas 24h`;
+
+                    if (leads.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum lead novo recebido nas últimas 24h.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = leads.map(l => {
+                        const hora = new Date(l.criado_em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
+                        return `
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-emerald-500/40 transition">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-white text-xs">${l.nome}</span>
+                                        <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded">${hora}</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1 max-w-sm">${l.mensagem || 'Interesse direto na vitrine'}</p>
+                                </div>
+                                <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 whitespace-nowrap shadow">
+                                    <i class="fa-brands fa-whatsapp"></i> Chamar
+                                </a>
+                            </div>
+                        `;
+                    }).join('');
+
+                } else if (tipo === 'visitas') {
+                    titulo.innerText = 'Clientes em Atendimento e Visitas Agendadas';
+                    icone.className = 'fa-solid fa-calendar-check text-amber-400';
+
+                    const { data: leads, error } = await supabaseClient
+                        .from('leads_contatos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .in('status', ['Em Atendimento', 'Visita Agendada'])
+                        .order('criado_em', { ascending: false });
+
+                    if (error) throw error;
+
+                    contador.innerText = `${leads.length} clientes em negociação`;
+
+                    if (leads.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum atendimento ou visita em andamento.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = leads.map(l => {
+                        const dataVisita = l.data_agendamento ? new Date(l.data_agendamento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : null;
+                        return `
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-amber-500/40 transition">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-white text-xs">${l.nome}</span>
+                                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded ${l.status === 'Visita Agendada' ? 'bg-cyan-950 text-cyan-300 border border-cyan-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">
+                                            ${l.status}
+                                        </span>
+                                    </div>
+                                    <span class="text-[11px] text-cyan-300 font-mono block mt-0.5">${l.whatsapp}</span>
+                                    ${dataVisita ? `<span class="text-[10px] text-amber-300 block font-bold mt-1"><i class="fa-solid fa-calendar mr-1"></i> Marcada para: ${dataVisita}</span>` : ''}
+                                </div>
+                                <a href="leads.html" class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
+                                    Abrir CRM
+                                </a>
+                            </div>
+                        `;
+                    }).join('');
+
+                } else if (tipo === 'propostas') {
+                    titulo.innerText = 'Propostas Comerciais em Análise';
+                    icone.className = 'fa-solid fa-file-signature text-purple-400';
+
+                    const { data: leads, error } = await supabaseClient
+                        .from('leads_contatos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('status', 'Proposta')
+                        .order('criado_em', { ascending: false });
+
+                    if (error) throw error;
+
+                    contador.innerText = `${leads.length} propostas em análise`;
+
+                    if (leads.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma proposta comercial pendente de análise.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = leads.map(l => `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-purple-500/40 transition">
+                            <div>
+                                <span class="font-bold text-white text-xs">${l.nome}</span>
+                                <span class="text-xs font-mono font-black text-purple-300 block mt-0.5">
+                                    ${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Valor não informado'}
+                                </span>
+                                ${l.condicoes_proposta ? `<p class="text-[11px] text-slate-400 mt-1 italic">Condições: "${l.condicoes_proposta}"</p>` : ''}
+                            </div>
+                            <a href="leads.html" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-800 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (err) {
+                console.error(err);
+                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar detalhes.</p>';
+            }
+        }
+
+        function fecharDrilldown() {
+            document.getElementById('modal-kpi-detalhes').classList.add('hidden');
+        }
+
         async function carregarCatalogo(imobId) {
             const tbody = document.getElementById('tabela-catalogo-corpo');
             try {
@@ -465,7 +745,6 @@
             }
         }
 
-        // 7. Carregamento da Aba: Leads Recentes
         async function carregarLeads(imobId) {
             const tbody = document.getElementById('tabela-leads-corpo');
             try {
@@ -486,12 +765,16 @@
                 tbody.innerHTML = leads.map(l => {
                     const dataFormatada = new Date(l.criado_em).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                     const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
+                    const ehAvaliacao = (l.mensagem && l.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+
                     return `
                         <tr class="hover:bg-slate-900/50 transition">
                             <td class="py-3 px-3 text-slate-400 text-[11px]">${dataFormatada}</td>
                             <td class="py-3 px-3 font-bold text-white">${l.nome}</td>
                             <td class="py-3 px-3 font-mono text-cyan-300">${l.whatsapp}</td>
-                            <td class="py-3 px-3 text-slate-300 truncate max-w-[180px]">${l.mensagem || 'Interesse pelo site'}</td>
+                            <td class="py-3 px-3 text-slate-300 truncate max-w-[180px]">
+                                ${ehAvaliacao ? '<span class="text-emerald-400 font-bold">🏷️ Avaliação / Captação</span>' : (l.mensagem || 'Interesse pelo site')}
+                            </td>
                             <td class="py-3 px-3">
                                 <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-400 border border-blue-800">
                                     ${l.status || 'Novo'}
@@ -512,7 +795,6 @@
             }
         }
 
-        // 8. Carregamento do Gráfico Dinâmico de Bairros (Calculado em Tempo Real)
         async function carregarGraficoBairros(imobId) {
             const container = document.getElementById('lista-barras-bairros');
             try {
@@ -528,7 +810,6 @@
                     return;
                 }
 
-                // Agrupa contagem por bairro
                 const contagem = {};
                 imoveis.forEach(im => {
                     const b = (im.bairro && im.bairro.trim()) ? im.bairro.trim() : 'Outros / Não Informado';
@@ -539,7 +820,6 @@
                 const cores = ['bg-cyan-400', 'bg-emerald-400', 'bg-purple-400', 'bg-amber-400', 'bg-blue-400'];
                 let corIdx = 0;
 
-                // Ordena do maior para o menor
                 const bairrosOrdenados = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
 
                 container.innerHTML = bairrosOrdenados.map(([bairro, qtd]) => {
@@ -566,7 +846,6 @@
             }
         }
 
-        // 9. Controle das Abas Rápidas
         function mudarAba(aba) {
             const abas = ['catalogo', 'leads', 'graficos'];
             abas.forEach(a => {
@@ -584,7 +863,6 @@
             });
         }
 
-        // 10. Logout Seguro
         async function executarLogout() {
             if (confirm('Deseja realmente encerrar sua sessão?')) {
                 await supabaseClient.auth.signOut();
@@ -596,4 +874,4 @@
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
 </body>
-</html>
+</html> 

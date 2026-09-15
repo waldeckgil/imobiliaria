@@ -31,7 +31,7 @@
 <body class="bg-gray-100 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
     <!-- =========================================================================
-         [MODO 1] LANDING PAGE INSTITUCIONAL SAAS (SEM ?imob=)
+         [MODO 1] LANDING PAGE INSTITUCIONAL SAAS (QUANDO NÃO HÁ ?imob= NA URL)
          ========================================================================= -->
     <div id="secao-landing-saas" class="hidden min-h-screen flex flex-col justify-between hero-saas-bg text-white">
         <header class="border-b border-slate-800/80 py-4 px-6 sm:px-12 backdrop-blur-md bg-slate-950/40">
@@ -93,11 +93,11 @@
     </div>
 
     <!-- =========================================================================
-         [MODO 2] VITRINE PÚBLICA DA IMOBILIÁRIA (COM ?imob=slug)
+         [MODO 2] VITRINE PÚBLICA DA IMOBILIÁRIA (QUANDO HÁ ?imob=slug NA URL)
          ========================================================================= -->
     <div id="secao-vitrine-imobiliaria" class="hidden flex-col min-h-screen justify-between">
 
-        <!-- CABEÇALHO -->
+        <!-- CABEÇALHO DA IMOBILIÁRIA -->
         <header class="bg-white border-b border-gray-200 py-4 px-4 sm:px-8 sticky top-0 z-40 shadow-sm">
             <div class="max-w-[1340px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
                 
@@ -117,13 +117,14 @@
                     </div>
                 </a>
 
-                <!-- MENU SUPERIOR -->
+                <!-- MENU DE NAVEGAÇÃO SUPERIOR -->
                 <div class="flex items-center gap-5 text-[13px] font-bold text-slate-800 flex-wrap justify-center">
                     
                     <a href="javascript:void(0)" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         Início
                     </a>
 
+                    <!-- ABA "A EMPRESA" -->
                     <a href="#secao-empresa" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         A Empresa
                     </a>
@@ -142,7 +143,7 @@
                         </div>
                     </div>
 
-                    <!-- DROPDOWN SERVIÇOS -->
+                    <!-- DROPDOWN SERVIÇOS (AVALIE E NEGOCIE) -->
                     <div class="relative group-dropdown py-2">
                         <button class="flex items-center gap-1 hover:text-blue-700 transition uppercase tracking-wide text-emerald-700 font-extrabold">
                             SERVIÇOS <i class="fa-solid fa-caret-down text-emerald-700"></i>
@@ -205,7 +206,7 @@
                     </div>
                 </div>
 
-                <!-- BARRA LATERAL DE FILTROS COM ATUALIZAÇÃO INSTANTÂNEA -->
+                <!-- BARRA LATERAL AMARELA DE FILTROS -->
                 <div class="lg:col-span-4">
                     <div class="bg-filtro-amarelo border rounded-lg p-5 shadow-sm">
                         <div class="flex items-center justify-between pb-3 border-b border-amber-300">
@@ -220,17 +221,17 @@
                         <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 mt-4 text-xs">
                             <div>
                                 <label class="block font-bold text-slate-800 mb-1">Finalidade</label>
-                                <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
-                                    <option value="" selected>Todas as Finalidades</option>
-                                    <option value="Venda">Comprar (Venda)</option>
+                                <select id="filtro-finalidade" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                    <option value="">Todas as Finalidades</option>
+                                    <option value="Venda" selected>Comprar (Venda)</option>
                                     <option value="Locacao">Alugar (Locação)</option>
                                 </select>
                             </div>
 
                             <div>
                                 <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
-                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
-                                    <option value="" selected>Todos os Tipos</option>
+                                <select id="filtro-tipo" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                    <option value="">Todos os Tipos</option>
                                     <option value="Apartamento">Apartamento</option>
                                     <option value="Casa">Casa</option>
                                     <option value="Terreno">Terreno</option>
@@ -240,7 +241,7 @@
 
                             <div>
                                 <label class="block font-bold text-slate-800 mb-1">Buscar por Bairro</label>
-                                <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
+                                <input type="text" id="filtro-bairro" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
                             </div>
 
                             <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
@@ -253,7 +254,9 @@
             </div>
         </main>
 
-        <!-- SEÇÃO: "A EMPRESA" (DINÂMICA) -->
+        <!-- =====================================================================
+             NOVA SEÇÃO: "A EMPRESA" (DINÂMICA PARA CADA GESTOR)
+             ===================================================================== -->
         <section id="secao-empresa" class="bg-white border-y border-gray-200 py-16 px-4 sm:px-8">
             <div class="max-w-5xl mx-auto">
                 <div class="text-center max-w-3xl mx-auto">
@@ -272,11 +275,13 @@
             </div>
         </section>
 
-        <!-- SEÇÃO: "NEGOCIE SEU IMÓVEL / AVALIE SEU IMÓVEL" (MULTI-TENANT REAL) -->
+        <!-- =====================================================================
+             NOVA SEÇÃO: "NEGOCIE SEU IMÓVEL / AVALIE SEU IMÓVEL"
+             ===================================================================== -->
         <section id="secao-negocie" class="bg-slate-50 py-16 px-4 sm:px-8 border-b border-gray-200">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- COLUNA ESQUERDA -->
+                <!-- COLUNA ESQUERDA: APRESENTAÇÃO & CARDS DE BENEFÍCIOS -->
                 <div class="lg:col-span-7 space-y-6">
                     <div class="rounded-2xl overflow-hidden shadow-md max-h-72">
                         <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80" 
@@ -288,8 +293,7 @@
                         <span class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
                             Venda, aluguel fixo ou temporada
                         </span>
-
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight" id="negocie-titulo">
+<h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight" id="negocie-titulo">
                             Negocie seu imóvel com uma imobiliária especializada
                         </h2>
 
@@ -297,33 +301,33 @@
                             Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação em sua região.
                         </p>
 
-                        <!-- CARDS DE BENEFÍCIOS -->
+                        <!-- 3 CARDS DE BENEFÍCIOS -->
                         <div class="space-y-3 pt-2">
                             <div class="bg-emerald-50/70 border border-emerald-200/80 p-4 rounded-xl">
                                 <h4 class="text-sm font-black text-emerald-950 flex items-center gap-2">
                                     <i class="fa-solid fa-check text-emerald-700"></i> Avaliação prática
                                 </h4>
-                                <p class="text-xs text-slate-600 mt-1 pl-5">Análise de mercado com base nos valores reais praticados na região.</p>
+                                <p class="text-xs text-slate-600 mt-1 pl-5">Análise inicial de mercado com base no valor real praticado na região.</p>
                             </div>
 
                             <div class="bg-emerald-50/70 border border-emerald-200/80 p-4 rounded-xl">
                                 <h4 class="text-sm font-black text-emerald-950 flex items-center gap-2">
-                                    <i class="fa-solid fa-check text-emerald-700"></i> Atendimento especializado
+                                    <i class="fa-solid fa-check text-emerald-700"></i> Atendimento local
                                 </h4>
-                                <p class="text-xs text-slate-600 mt-1 pl-5">Corretores capacitados para acompanhar as visitas e orientar cada etapa da negociação.</p>
+                                <p class="text-xs text-slate-600 mt-1 pl-5">Especialistas prontos para acompanhar as visitas e orientar cada etapa.</p>
                             </div>
 
                             <div class="bg-emerald-50/70 border border-emerald-200/80 p-4 rounded-xl">
                                 <h4 class="text-sm font-black text-emerald-950 flex items-center gap-2">
                                     <i class="fa-solid fa-check text-emerald-700"></i> Mais visibilidade
                                 </h4>
-                                <p class="text-xs text-slate-600 mt-1 pl-5">Divulgação estratégica para compradores e interessados qualificados.</p>
+                                <p class="text-xs text-slate-600 mt-1 pl-5">Divulgação qualificada para compradores e interessados prontos para fechar negócio.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- COLUNA DIREITA: FORMULÁRIO -->
+                <!-- COLUNA DIREITA: FORMULÁRIO DE AVALIAÇÃO / CAPTAÇÃO -->
                 <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-xl space-y-4 sticky top-24">
                     <span class="inline-block bg-blue-100 text-blue-800 text-[11px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
                         Avaliação de imóvel
@@ -360,7 +364,7 @@
 
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">Descrição do Imóvel *</label>
-                            <textarea id="aval-desc" rows="3" required placeholder="Exemplo: Casa de 3 quartos com piscina, apartamento central..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-600 resize-none"></textarea>
+                            <textarea id="aval-desc" rows="3" required placeholder="Exemplo: Casa de 3 quartos com piscina, apartamento no centro, terreno plano..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-600 resize-none"></textarea>
                         </div>
 
                         <button type="submit" id="btn-submit-avaliacao" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer mt-2">
@@ -373,7 +377,9 @@
             </div>
         </section>
 
-        <!-- MODAL DE CAPTURA DE LEAD (IMÓVEL ESPECÍFICO) -->
+        <!-- =====================================================================
+             MODAL DE CAPTURA DE LEAD (DE IMÓVEL ESPECÍFICO)
+             ===================================================================== -->
         <div id="modal-lead" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
             <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
                 <button onclick="fecharModalLead()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-lg cursor-pointer">
@@ -415,14 +421,16 @@
             </div>
         </div>
 
-        <!-- MODAL OFICIAL LGPD -->
+        <!-- =====================================================================
+             MODAL OBRIGATÓRIO DE POLÍTICA DE PRIVACIDADE E TERMOS DE USO (LGPD)
+             ===================================================================== -->
         <div id="modal-lgpd" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[60] flex items-center justify-center p-4 hidden">
             <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
                 
                 <div class="flex items-center justify-between border-b border-gray-200 pb-3">
                     <div class="flex items-center gap-2 text-blue-700 font-black text-sm">
                         <i class="fa-solid fa-shield-halved text-lg"></i>
-                        <span>POLÍTICA DE PRIVACIDADE E TERMOS DE USO</span>
+                        <span id="lgpd-modal-titulo">POLÍTICA DE PRIVACIDADE E TERMOS DE USO</span>
                     </div>
                     <button onclick="fecharModalLGPD()" class="text-gray-400 hover:text-gray-700 text-lg cursor-pointer">
                         <i class="fa-solid fa-xmark"></i>
@@ -430,22 +438,34 @@
                 </div>
 
                 <div class="flex-1 overflow-y-auto pr-2 space-y-3 text-xs text-slate-600 leading-relaxed border border-gray-200 p-4 rounded-xl bg-slate-50">
-                    <p class="font-bold text-slate-800">
+                    <p class="font-bold text-slate-800" id="lgpd-intro-texto">
                         A sua privacidade é de extrema importância para nós. É política da <span class="text-blue-700 font-black nome-imob-termo">Imobiliária</span> respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar em nosso portal e demais canais operados para a prestação de serviços de intermediação e gestão imobiliária.
                     </p>
 
                     <h4 class="font-bold text-slate-900 uppercase pt-2">1. Coleta e Uso de Informações Pessoais</h4>
-                    <p>• <strong>Finalidade:</strong> Solicitamos informações pessoais (como nome, e-mail, telefone, dados de preferência de imóveis) apenas quando realmente precisamos delas para agendamento de visitas, propostas ou atendimento personalizado.</p>
+                    <p>• <strong>Finalidade:</strong> Solicitamos informações pessoais (como nome, e-mail, telefone, CPF e dados de preferência de imóveis) apenas quando realmente precisamos delas para lhe fornecer um serviço adequado, como o agendamento de visitas, simulações de financiamento, propostas de compra/locação ou atendimento personalizado.</p>
                     <p>• <strong>Transparência:</strong> Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento, informando sempre o motivo da coleta e a forma como será utilizada.</p>
-                    <p>• <strong>Retenção & Proteção:</strong> Apenas retemos as informações coletadas pelo tempo necessário para fornecer o serviço solicitado ou cumprir obrigações legais, protegendo os dados contra acessos não autorizados.</p>
+                    <p>• <strong>Retenção:</strong> Apenas retemos as informações coletadas pelo tempo necessário para fornecer o serviço solicitado ou cumprir obrigações legais. Quando armazenamos dados, protegemos por meios comercialmente aceitáveis e previstos em lei para evitar perdas, roubos, bem como acesso, divulgação, cópia, uso ou modificação não autorizados.</p>
+                    <p>• <strong>Compartilhamento:</strong> Não compartilhamos informações de identificação pessoal publicamente ou com terceiros, exceto quando necessário para a execução dos serviços imobiliários (ex: análise de crédito, cartórios, construtoras parceiras) ou quando exigido por lei.</p>
 
-                    <h4 class="font-bold text-slate-900 uppercase pt-2">2. Links Externos e Cookies</h4>
-                    <p>Utilizamos cookies para melhorar a experiência de navegação e direcionar conteúdos relevantes. Nosso portal pode conter links para parceiros externos com políticas próprias.</p>
+                    <h4 class="font-bold text-slate-900 uppercase pt-2">2. Links para Sites Externos</h4>
+                    <p>Nosso site pode conter links para sites externos (como portais de financiamento, parceiros ou órgãos públicos) que não são operados por nós. Esteja ciente de que não temos controle sobre o conteúdo e as práticas desses sites e não podemos aceitar responsabilidade por suas respectivas políticas de privacidade.</p>
+
+                    <h4 class="font-bold text-slate-900 uppercase pt-2">3. Direitos do Usuário e Cookies</h4>
+                    <p>• <strong>Recusa de Dados:</strong> Você é livre para recusar a nossa solicitação de informações pessoais, entendendo que talvez não possamos fornecer alguns dos serviços imobiliários desejados.</p>
+                    <p>• <strong>Cookies e Tecnologias:</strong> Utilizamos cookies para melhorar a sua experiência de navegação, analisar o tráfego do site e direcionar conteúdos ou anúncios relevantes ao seu interesse no setor imobiliário. O uso continuado de nosso site será considerado como aceitação de nossas práticas de privacidade.</p>
+
+                    <h4 class="font-bold text-slate-900 uppercase pt-2">4. Compromisso do Usuário</h4>
+                    <p>O usuário se compromete a fazer uso adequado dos conteúdos e da informação oferecidos no site da imobiliária, obrigando-se a não se envolver em atividades ilegais, difusão de conteúdo discriminatório ou danos aos sistemas físicos e lógicos.</p>
+
+                    <h4 class="font-bold text-slate-900 uppercase pt-2">Termos e Condições de Uso do Portal</h4>
+                    <p>Ao acessar o site da imobiliária, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis. Os materiais e anúncios são fornecidos "como estão", sujeitos a alteração de valores e disponibilidade sem aviso prévio.</p>
 
                     <h4 class="font-bold text-slate-900 uppercase pt-2">Do Termo de Aceite Obrigatório (LGPD)</h4>
-                    <p>Para a utilização dos serviços e envio de solicitações através da plataforma da <span class="nome-imob-termo font-black text-blue-700">Imobiliária</span>, o usuário declara ter lido e concordado com todos os termos descritos. O consentimento é formalizado eletronicamente com registro probatório de data e hora para fins de conformidade com a LGPD.</p>
+                    <p>Para a utilização contínua dos serviços, cadastros, simulações ou envio de propostas através da plataforma da <span class="nome-imob-termo font-black text-blue-700">Imobiliária</span>, o usuário declara expressamente ter lido, compreendido e concordado com todos os termos descritos nesta Política de Privacidade e Termos de Uso. O consentimento é formalizado eletronicamente com gravação de data e hora para fins de conformidade com a Lei Geral de Proteção de Dados (LGPD).</p>
                 </div>
 
+                <!-- CHECKBOX DE OPT-IN OBRIGATÓRIO -->
                 <div class="bg-blue-50 border border-blue-200 p-3.5 rounded-xl flex items-start gap-3">
                     <input type="checkbox" id="check-aceite-lgpd" onchange="alternarBotaoLGPD(this.checked)" 
                            class="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer">
@@ -454,6 +474,7 @@
                     </label>
                 </div>
 
+                <!-- BOTÃO QUE INICIA DESABILITADO (DISABLED = TRUE) -->
                 <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-200">
                     <button type="button" onclick="fecharModalLGPD()" class="px-4 py-2.5 rounded-xl bg-gray-200 hover:bg-gray-300 text-slate-700 font-bold text-xs transition cursor-pointer">
                         Voltar
@@ -468,13 +489,13 @@
             </div>
         </div>
 
-        <!-- WHATSAPP FLUTUANTE -->
+        <!-- BOTÃO FLUTUANTE DO WHATSAPP DA IMOBILIÁRIA -->
         <a id="btn-flutuante-zap" href="#" target="_blank" 
            class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40 hidden">
             <i class="fa-brands fa-whatsapp"></i>
         </a>
 
-        <!-- RODAPÉ -->
+        <!-- RODAPÉ DA IMOBILIÁRIA -->
         <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
@@ -497,6 +518,7 @@
                     <ul class="space-y-1">
                         <li><a href="#secao-empresa" class="hover:text-white">A Empresa</a></li>
                         <li><a href="#secao-negocie" class="hover:text-white">Avalie seu Imóvel</a></li>
+                        <li><a href="javascript:void(0)" onclick="abrirModalLGPDVisualizacao()" class="hover:text-cyan-400">Política de Privacidade & Termos</a></li>
                         <li><a href="login.html" class="hover:text-cyan-400 font-bold text-[11px] mt-2 block"><i class="fa-solid fa-lock mr-1"></i> Área Restrita do Gestor</a></li>
                     </ul>
                 </div>
@@ -512,7 +534,9 @@
 
     </div>
 
-    <!-- JAVASCRIPT DINÂMICO -->
+    <!-- =========================================================================
+         JAVASCRIPT DE CONTROLE, CAPTAÇÃO E REGISTRO DE CONSENTIMENTO LGPD
+         ========================================================================= -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -522,6 +546,8 @@
         let slugAtual = null;
         let tenantAtual = null;
         let listaImoveisCache = [];
+
+        // Armazena a operação pendente para execução após o aceite do Modal LGPD
         let operacaoPendenteLGPD = null;
 
         function identificarTenant() {
@@ -587,24 +613,12 @@
                 btnZap.classList.remove('hidden');
             }
 
+            // Seção "A Empresa"
             document.getElementById('empresa-titulo').innerText = `Sobre a ${imob.nome_fantasia}`;
             document.getElementById('empresa-texto').innerText = imob.sobre_corretor || 
                 `${imob.nome_fantasia} é referência em consultoria e intermediação imobiliária, atuando com transparência, seriedade e excelência para realizar o melhor negócio para você.`;
 
-            // Dinamiza Seção "Negocie seu Imóvel" sem município estático
-            const tituloNegocie = document.getElementById('negocie-titulo');
-            if (tituloNegocie) {
-                tituloNegocie.innerText = `Negocie seu imóvel com a ${imob.nome_fantasia}`;
-            }
-
-            const txtNegocie = document.getElementById('negocie-texto-cidade');
-            if (txtNegocie) {
-                const pracaAtuacao = (imob.cidade && imob.cidade.trim()) 
-                    ? `em ${imob.cidade} e região` 
-                    : 'em sua região';
-                txtNegocie.innerText = `Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação ${pracaAtuacao}.`;
-            }
-
+            // Parametrização da Política de Privacidade
             document.querySelectorAll('.nome-imob-termo').forEach(el => {
                 el.innerText = imob.nome_fantasia;
             });
@@ -616,12 +630,27 @@
             
             const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
+
+  // Dinamiza o título com o nome da imobiliária do cliente
+            const tituloNegocie = document.getElementById('negocie-titulo');
+            if (tituloNegocie) {
+                tituloNegocie.innerText = `Negocie seu imóvel com a ${imob.nome_fantasia}`;
+            }
+
+            // Localização fluida e multi-tenant: se houver cidade cadastrada usa "em [Cidade] e região", senão usa "em sua região"
+            const txtNegocie = document.getElementById('negocie-texto-cidade');
+            if (txtNegocie) {
+                const pracaAtuacao = (imob.cidade && imob.cidade.trim()) 
+                    ? `em ${imob.cidade} e região` 
+                    : 'em sua região';
+                txtNegocie.innerText = `Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação ${pracaAtuacao}.`;
+            }
         }
 
         function exibirVitrineNaoEncontrada() {
             document.getElementById('header-razao').innerText = 'Vitrine Não Localizada';
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
-            document.getElementById('contador-imoveis').innerText = '0';
+            documen.getElementById('contador-imoveis').innerText = '0';
             document.getElementById('container-imoveis').innerHTML = `
                 <div class="bg-white rounded-xl p-12 text-center text-slate-500 border border-gray-200">
                     <i class="fa-solid fa-circle-exclamation text-4xl text-amber-500 mb-3"></i>
@@ -631,7 +660,6 @@
             `;
         }
 
-        // BUSCA COM CORREÇÃO DE FILTRO: LOCAÇÃO, VENDA E AMBOS
         async function carregarImoveisVitrine(filtros = {}) {
             if (!tenantAtual) return;
 
@@ -650,21 +678,11 @@
                     .eq('ativa', true)
                     .eq('status', 'Disponível');
 
-                // Filtro Preciso de Finalidade (Locação traz Locação e Ambos; Venda traz Venda e Ambos)
-                if (filtros.finalidade) {
-                    if (filtros.finalidade === 'Venda') {
-                        query = query.in('finalidade', ['Venda', 'Ambos']);
-                    } else if (filtros.finalidade === 'Locacao' || filtros.finalidade === 'Locação') {
-                        query = query.in('finalidade', ['Locacao', 'Locação', 'Ambos']);
-                    } else {
-                        query = query.eq('finalidade', filtros.finalidade);
-                    }
-                }
-
+                if (filtros.finalidade) query = query.eq('finalidade', filtros.finalidade);
                 if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
                 if (filtros.bairro) query = query.ilike('bairro', `%${filtros.bairro}%`);
 
-                const { data, error } = await query.order('created_at', { ascending: false }).limit(30);
+                const { data, error } = await query.order('created_at', { ascending: false }).limit(20);
                 if (error) throw error;
 
                 listaImoveisCache = data || [];
@@ -674,13 +692,13 @@
                     container.innerHTML = `
                         <div class="bg-white rounded-lg p-12 text-center text-slate-500 border border-gray-200">
                             <i class="fa-solid fa-house-chimney-crack text-4xl text-amber-500 mb-3"></i>
-                            <h3 class="text-base font-bold text-slate-800">Nenhum imóvel encontrado nesta categoria</h3>
-                            <p class="text-xs text-slate-400 mt-1">Tente ajustar a finalidade ou selecione "Todas as Finalidades" para ver o catálogo completo.</p>
+                            <h3 class="text-base font-bold text-slate-800">Nenhum imóvel disponível no momento</h3>
+                            <p class="text-xs text-slate-400 mt-1">Essa imobiliária ainda não cadastrou imóveis ou tente ajustar seus filtros.</p>
                         </div>`;
                     return;
                 }
 
-                renderizarCardsImoveis(listaImoveisCache, filtros.finalidade);
+                renderizarCardsImoveis(listaImoveisCache);
 
             } catch (err) {
                 console.error('Erro ao consultar imóveis:', err);
@@ -692,50 +710,21 @@
             }
         }
 
-        // RENDERIZAÇÃO INTELIGENTE DE VALORES DE ACORDO COM O FILTRO
-        function renderizarCardsImoveis(imoveis, filtroFinalidadeAtual = '') {
+        function renderizarCardsImoveis(imoveis) {
             const container = document.getElementById('container-imoveis');
             container.innerHTML = '';
 
             imoveis.forEach(imovel => {
-                let precoExibido = 0;
-                let rotuloFinalidade = 'Valor';
-
-                // Se o cliente filtrou por locação, dá prioridade ao valor de aluguel
-                if (filtroFinalidadeAtual === 'Locacao' || filtroFinalidadeAtual === 'Locação') {
-                    precoExibido = imovel.valor_locacao || imovel.valor_venda || 0;
-                    rotuloFinalidade = 'Aluguel (Locação)';
-                } else if (filtroFinalidadeAtual === 'Venda') {
-                    precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
-                    rotuloFinalidade = 'Venda';
-                } else {
-                    if (imovel.finalidade === 'Ambos') {
-                        rotuloFinalidade = 'Venda ou Aluguel';
-                        precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
-                    } else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') {
-                        rotuloFinalidade = 'Aluguel (Locação)';
-                        precoExibido = imovel.valor_locacao || 0;
-                    } else {
-                        rotuloFinalidade = 'Venda';
-                        precoExibido = imovel.valor_venda || 0;
-                    }
-                }
-
-                const precoFormatado = Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const precoFormatado = Number(imovel.valor_venda || imovel.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const fotoCapa = imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80';
                 
-                // Badge de finalidade sobre a foto
-                let badgeFoto = 'Venda';
-                if (imovel.finalidade === 'Ambos') badgeFoto = 'Venda & Locação';
-                else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') badgeFoto = 'Locação';
-
                 const card = `
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
                     <div class="grid grid-cols-1 md:grid-cols-12">
                         <div class="md:col-span-5 relative bg-slate-900 min-h-[240px]">
                             <img src="${fotoCapa}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px]">
                             <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow">
-                                ${badgeFoto}
+                                ${imovel.finalidade}
                             </div>
                             <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm">
                                 Ref: ${imovel.codigo_ref}
@@ -761,9 +750,8 @@
 
                             <div class="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
-                                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">${rotuloFinalidade}</span>
+                                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">Valor</span>
                                     <span class="text-xl font-extrabold azul-preco leading-none">${precoFormatado}</span>
-                                    ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Opção Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
                                 </div>
 
                                 <div class="flex items-center gap-2">
@@ -808,7 +796,6 @@
 
         function limparFiltros() {
             document.getElementById('form-filtros').reset();
-            document.getElementById('filtro-finalidade').value = '';
             carregarImoveisVitrine();
         }
 
@@ -823,6 +810,10 @@
             document.getElementById('modal-lead').classList.add('hidden');
         }
 
+        // =========================================================================
+        // MOTOR DE ACEITE OBRIGATÓRIO (OPT-IN LGPD)
+        // =========================================================================
+
         function alternarBotaoLGPD(marcado) {
             const btn = document.getElementById('btn-concordar-lgpd');
             btn.disabled = !marcado;
@@ -835,20 +826,34 @@
             }
         }
 
+        function abrirModalLGPDVisualizacao() {
+            document.getElementById('check-aceite-lgpd').checked = false;
+            alternarBotaoLGPD(false);
+            operacaoPendenteLGPD = null;
+            document.getElementById('modal-lgpd').classList.remove('hidden');
+        }
+
         function fecharModalLGPD() {
             document.getElementById('modal-lgpd').classList.add('hidden');
             operacaoPendenteLGPD = null;
         }
 
+        // 1. Acionamento da Avaliação de Imóvel (Chama Modal LGPD)
         function iniciarEnvioAvaliacao(event) {
             event.preventDefault();
+            const nome = document.getElementById('aval-nome').value.trim();
+            const email = document.getElementById('aval-email').value.trim();
+            const zap = sanitizarZap(document.getElementById('aval-zap').value.trim());
+            const cep = document.getElementById('aval-cep').value.trim();
+            const desc = document.getElementById('aval-desc').value.trim();
+
             operacaoPendenteLGPD = {
                 tipo: 'avaliacao',
-                nome: document.getElementById('aval-nome').value.trim(),
-                email: document.getElementById('aval-email').value.trim(),
-                zap: sanitizarZap(document.getElementById('aval-zap').value.trim()),
-                cep: document.getElementById('aval-cep').value.trim(),
-                desc: document.getElementById('aval-desc').value.trim()
+                nome: nome,
+                email: email,
+                zap: zap,
+                cep: cep,
+                desc: desc
             };
 
             document.getElementById('check-aceite-lgpd').checked = false;
@@ -856,15 +861,22 @@
             document.getElementById('modal-lgpd').classList.remove('hidden');
         }
 
+        // 2. Acionamento do Lead do Imóvel (Chama Modal LGPD)
         function iniciarEnvioLeadImovel(event) {
             event.preventDefault();
+            const idImovel = document.getElementById('lead-imovel-id').value;
+            const refImovel = document.getElementById('lead-imovel-ref').value;
+            const nome = document.getElementById('lead-nome').value.trim();
+            const zap = sanitizarZap(document.getElementById('lead-zap').value.trim());
+            const msg = document.getElementById('lead-msg').value.trim();
+
             operacaoPendenteLGPD = {
                 tipo: 'imovel',
-                idImovel: document.getElementById('lead-imovel-id').value,
-                refImovel: document.getElementById('lead-imovel-ref').value,
-                nome: document.getElementById('lead-nome').value.trim(),
-                zap: sanitizarZap(document.getElementById('lead-zap').value.trim()),
-                msg: document.getElementById('lead-msg').value.trim()
+                idImovel: idImovel,
+                refImovel: refImovel,
+                nome: nome,
+                zap: zap,
+                msg: msg
             };
 
             document.getElementById('check-aceite-lgpd').checked = false;
@@ -872,6 +884,7 @@
             document.getElementById('modal-lgpd').classList.remove('hidden');
         }
 
+        // 3. Execução Final após o Clique em "Concordar e Continuar"
         async function executarConfirmacaoComLGPD() {
             if (!operacaoPendenteLGPD) {
                 fecharModalLGPD();
@@ -887,6 +900,7 @@
 
             try {
                 if (dados.tipo === 'avaliacao') {
+                    // Monta a mensagem estruturada com as informações da captação
                     const mensagemFormatada = `[SOLICITAÇÃO DE AVALIAÇÃO / CAPTAÇÃO DE IMÓVEL]\n` +
                         `• CEP do Imóvel: ${dados.cep || 'Não informado'}\n` +
                         `• Descrição do Imóvel: ${dados.desc}\n` +
@@ -908,6 +922,7 @@
 
                     if (!errLead && leadResp) leadCriadoId = leadResp.id;
 
+                    // Registro Probatório na tabela de auditoria LGPD
                     await supabaseClient.from('termos_aceite_logs').insert([{
                         imobiliaria_id: tenantAtual.id,
                         lead_id: leadCriadoId,
@@ -918,6 +933,7 @@
                         user_agent: navigator.userAgent
                     }]);
 
+                    // Mensagem para o WhatsApp do Gestor
                     const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '');
                     const textoZap = encodeURIComponent(`Olá! Me chamo ${dados.nome}. Gostaria de solicitar a avaliação/negociação do meu imóvel:\n\n` +
                         `📍 *CEP:* ${dados.cep || 'Não informado'}\n` +
