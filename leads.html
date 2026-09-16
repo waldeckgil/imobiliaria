@@ -98,7 +98,6 @@
             </a>
             <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
                 <i class="fa-solid fa-users mr-1"></i> Equipe & Permissões
-         
             </a>
             <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
                 <i class="fa-solid fa-gear mr-1"></i> Configurações & Publicidade
@@ -398,6 +397,110 @@
         </div>
     </div>
 
+    <!-- MODAL DE CONVERSÃO: FECHAMENTO DE VENDA DIRETO PELO CRM -->
+    <div id="modal-fechar-venda-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 border border-amber-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-amber-400 font-black text-sm">
+                    <i class="fa-solid fa-handshake text-base"></i>
+                    <span>Converter Atendimento em Venda Fechada</span>
+                </div>
+                <button onclick="fecharModalVendaLead()" class="text-slate-500 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <input type="hidden" id="fechar-lead-id">
+            <input type="hidden" id="fechar-imovel-id">
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
+                <p class="text-slate-400">Cliente Comprador: <strong id="fechar-cliente-nome" class="text-white font-bold">---</strong></p>
+                <p class="text-slate-400">Imóvel: <strong id="fechar-imovel-titulo" class="text-cyan-300 font-bold">---</strong></p>
+                <p class="text-slate-400">Referência: <strong id="fechar-imovel-ref" class="text-cyan-400 font-mono">---</strong> • Anúncio: <strong id="fechar-valor-anuncio" class="text-emerald-400 font-mono">R$ 0,00</strong></p>
+            </div>
+
+            <form id="form-fechar-venda-lead" onsubmit="confirmarVendaPeloCRM(event)" class="space-y-3 text-xs flex-1 overflow-y-auto pr-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor Fechado de Venda (R$) *</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
+                            <input type="number" step="0.01" id="fechar-valor-real" required oninput="calcularRateioCRM()" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Data do Fechamento *</label>
+                        <input type="date" id="fechar-data-venda" required 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Comissão Total Negociada (%) *</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" id="fechar-comissao-total-pct" required oninput="calcularRateioCRM()" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
+                            <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Corretor Fechador *</label>
+                        <select id="fechar-corretor-select" required onchange="aoMudarCorretorCRM()" 
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Fatia do Corretor sobre a Comissão (%) *</label>
+                    <div class="relative">
+                        <input type="number" step="0.5" id="fechar-comissao-corretor-pct" required oninput="calcularRateioCRM()" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                        <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
+                    </div>
+                </div>
+
+                <!-- SIMULAÇÃO FINANCEIRA INSTANTÂNEA -->
+                <div class="bg-slate-950/90 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                        Rateio Financeiro Instantâneo:
+                    </span>
+                    <div class="grid grid-cols-3 gap-2 text-[11px] pt-1">
+                        <div>
+                            <span class="text-slate-500 block">Comissão Total:</span>
+                            <strong id="fechar-sim-comissao-total" class="text-amber-400 font-mono">R$ 0,00</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">Imobiliária:</span>
+                            <strong id="fechar-sim-imob" class="text-emerald-400 font-mono">R$ 0,00</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">Corretor:</span>
+                            <strong id="fechar-sim-corretor" class="text-cyan-300 font-mono">R$ 0,00</strong>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800 text-[11px] flex justify-between">
+                        <span class="text-slate-400">Repasse Líquido ao Proprietário:</span>
+                        <strong id="fechar-sim-repasse" class="text-white font-mono text-xs">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalVendaLead()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-confirmar-venda-crm" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Concluir Venda & Gerar Financeiro</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL DE EXCLUSÃO DE LEAD -->
     <div id="modal-excluir-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-sm w-full p-6 text-center border border-red-500/40 shadow-2xl">
@@ -433,6 +536,7 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
+        let dadosImobiliaria = null;
         let imobiliariaNomeFantasia = '';
         let imobiliariaSlug = '';
         let usuarioLogadoNome = 'Gestor';
@@ -444,6 +548,7 @@
         let leadEmAgendamento = null;
         let leadEmProposta = null;
         let leadEmTimeline = null;
+        let leadEmFechamento = null;
 
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -454,13 +559,11 @@
 
             const email = session.user.email.toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
-            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
-            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
             // 1. MODO MASTER SUPORTE OPERACIONAL
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
-                modoLeitura = false; // Master tem permissão total de alteração
+                modoLeitura = false;
                 usuarioLogadoNome = 'Waldeck (Super Admin)';
 
                 let targetId = impersonateId;
@@ -476,10 +579,10 @@
 
                 if (imobAlvo) {
                     imobiliariaId = imobAlvo.id;
+                    dadosImobiliaria = imobAlvo;
                     imobiliariaNomeFantasia = imobAlvo.nome_fantasia || 'nossa imobiliária';
                     imobiliariaSlug = imobAlvo.slug || '';
 
-                    // Exibe a Faixa Dourada Soberana
                     document.getElementById('faixa-modo-suporte').classList.remove('hidden');
                     document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
 
@@ -516,6 +619,7 @@
                 if (errImob || !imob) throw new Error('Imobiliária não localizada.');
 
                 imobiliariaId = imob.id;
+                dadosImobiliaria = imob;
                 imobiliariaNomeFantasia = imob.nome_fantasia || 'nossa imobiliária';
                 imobiliariaSlug = imob.slug || '';
                 document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
@@ -545,7 +649,7 @@
             try {
                 const { data, error } = await supabaseClient
                     .from('usuarios')
-                    .select('id, nome_completo, cargo')
+                    .select('id, nome_completo, cargo, comissao_venda_pct')
                     .eq('imobiliaria_id', imobiliariaId)
                     .eq('ativo', true);
 
@@ -554,8 +658,13 @@
 
                 const selectFiltro = document.getElementById('filtro-corretor');
                 selectFiltro.innerHTML = '<option value="">Corretor: Todos</option>';
+
+                const selectModalFechar = document.getElementById('fechar-corretor-select');
+                selectModalFechar.innerHTML = '<option value="">Selecione o corretor...</option>';
+
                 listaCorretores.forEach(c => {
                     selectFiltro.innerHTML += `<option value="${c.id}">${c.nome_completo} (${c.cargo})</option>`;
+                    selectModalFechar.innerHTML += `<option value="${c.id}">${c.nome_completo}</option>`;
                 });
             } catch (err) {
                 console.warn('Falha ao carregar lista de corretores:', err);
@@ -787,6 +896,16 @@
                     }
                 }
 
+                // Botão de Converter em Venda caso o lead tenha imóvel vinculado e ainda não esteja Fechado
+                const botaoConverterVenda = (l.imovel_id && l.status !== 'Fechado') ? `
+                    <button onclick="abrirModalFecharVendaLead('${l.id}')" 
+                            ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                            class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-400 border border-amber-700/80 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
+                            title="Converter Atendimento em Venda Fechada">
+                        <i class="fa-solid fa-handshake text-xs"></i>
+                    </button>
+                ` : '';
+
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
@@ -832,6 +951,8 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
+                            ${botaoConverterVenda}
+
                             <button onclick="abrirModalTimeline('${l.id}')" 
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition cursor-pointer" 
                                     title="Linha do Tempo do Cliente">
@@ -871,6 +992,10 @@
                 abrirModalAgendamento(leadId);
             } else if (novoStatus === 'Proposta') {
                 abrirModalProposta(leadId);
+            } else if (novoStatus === 'Fechado' && item && item.imovel_id) {
+                // Abre o fechamento de venda formal caso tenha imóvel associado
+                abrirModalFecharVendaLead(leadId);
+                return;
             }
 
             await atualizarStatusLead(leadId, novoStatus);
@@ -903,6 +1028,155 @@
             } catch (err) {
                 console.error(err);
                 alert('Erro ao atualizar etapa do lead.');
+            }
+        }
+
+        // MODAL DE CONVERSÃO DO LEAD EM VENDA FECHADA
+        function abrirModalFecharVendaLead(leadId) {
+            if (modoLeitura && !isMasterSuporte) return;
+            const lead = listaLeadsCompleta.find(l => l.id === leadId);
+            if (!lead || !lead.imovel) {
+                alert('Este lead não possui um imóvel vinculado do catálogo para registro de venda.');
+                return;
+            }
+
+            leadEmFechamento = lead;
+
+            document.getElementById('fechar-lead-id').value = lead.id;
+            document.getElementById('fechar-imovel-id').value = lead.imovel.id;
+            document.getElementById('fechar-cliente-nome').innerText = lead.nome;
+            document.getElementById('fechar-imovel-titulo').innerText = lead.imovel.titulo;
+            document.getElementById('fechar-imovel-ref').innerText = `Ref: ${lead.imovel.codigo_ref}`;
+            document.getElementById('fechar-valor-anuncio').innerText = Number(lead.imovel.valor_venda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            // Sugere o valor da proposta negociada ou o valor de anúncio
+            const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
+            document.getElementById('fechar-valor-real').value = valorSugerido;
+            document.getElementById('fechar-data-venda').value = new Date().toISOString().split('T')[0];
+
+            // Puxa a comissão padrão da imobiliária
+            const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) ? dadosImobiliaria.comissao_venda_padrao_pct : 6.0;
+            document.getElementById('fechar-comissao-total-pct').value = comissaoPadrao;
+
+            // Seleciona o corretor atribuído ou deixa vazio
+            const selCorretor = document.getElementById('fechar-corretor-select');
+            selCorretor.value = lead.corretor_atribuido_id || '';
+
+            aoMudarCorretorCRM();
+            calcularRateioCRM();
+
+            document.getElementById('modal-fechar-venda-lead').classList.remove('hidden');
+        }
+
+        function fecharModalVendaLead() {
+            document.getElementById('modal-fechar-venda-lead').classList.add('hidden');
+            leadEmFechamento = null;
+        }
+
+        function aoMudarCorretorCRM() {
+            const corretorId = document.getElementById('fechar-corretor-select').value;
+            const corretor = listaCorretores.find(c => String(c.id) === String(corretorId));
+            if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
+                document.getElementById('fechar-comissao-corretor-pct').value = corretor.comissao_venda_pct;
+            } else {
+                document.getElementById('fechar-comissao-corretor-pct').value = 30.0;
+            }
+            calcularRateioCRM();
+        }
+
+        function calcularRateioCRM() {
+            const valorVenda = Number(document.getElementById('fechar-valor-real').value) || 0;
+            const comissaoTotalPct = Number(document.getElementById('fechar-comissao-total-pct').value) || 0;
+            const comissaoCorretorPct = Number(document.getElementById('fechar-comissao-corretor-pct').value) || 0;
+
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+
+            document.getElementById('fechar-sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('fechar-sim-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('fechar-sim-corretor').innerText = valorComissaoCorretor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('fechar-sim-repasse').innerText = valorRepasseProprietario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        async function confirmarVendaPeloCRM(event) {
+            event.preventDefault();
+            if (modoLeitura && !isMasterSuporte) return;
+
+            const btn = document.getElementById('btn-confirmar-venda-crm');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Concluindo venda...';
+
+            const leadId = document.getElementById('fechar-lead-id').value;
+            const imovelId = document.getElementById('fechar-imovel-id').value;
+            const valorVenda = Number(document.getElementById('fechar-valor-real').value);
+            const dataVenda = document.getElementById('fechar-data-venda').value;
+            const comissaoTotalPct = Number(document.getElementById('fechar-comissao-total-pct').value);
+            const corretorId = document.getElementById('fechar-corretor-select').value;
+            const comissaoCorretorPct = Number(document.getElementById('fechar-comissao-corretor-pct').value);
+
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+
+            const corretorObj = listaCorretores.find(c => String(c.id) === String(corretorId));
+            const corretorNome = corretorObj ? corretorObj.nome_completo : null;
+
+            try {
+                // 1. Grava a transação na tabela de vendas fechadas
+                const { error: errVenda } = await supabaseClient
+                    .from('vendas_fechadas')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        imovel_id: imovelId,
+                        cliente_comprador_nome: leadEmFechamento.nome,
+                        corretor_id: corretorId ? Number(corretorId) : null,
+                        corretor_nome: corretorNome,
+                        valor_venda_real: valorVenda,
+                        comissao_total_pct: comissaoTotalPct,
+                        valor_comissao_total: valorComissaoTotal,
+                        comissao_corretor_pct: comissaoCorretorPct,
+                        valor_comissao_corretor: valorComissaoCorretor,
+                        valor_comissao_imobiliaria: valorComissaoImobiliaria,
+                        valor_repasse_proprietario: valorRepasseProprietario,
+                        data_venda: dataVenda,
+                        status_pagamento: 'Recebido'
+                    }]);
+
+                if (errVenda) throw errVenda;
+
+                // 2. Atualiza o imóvel para Vendido e pausa na vitrine
+                await supabaseClient
+                    .from('imoveis')
+                    .update({ status: 'Vendido', ativa: false })
+                    .eq('id', imovelId);
+
+                // 3. Atualiza o lead para Fechado
+                await supabaseClient
+                    .from('leads_contatos')
+                    .update({ status: 'Fechado' })
+                    .eq('id', leadId);
+
+                // 4. Registra no histórico do lead
+                await registrarEventoHistorico(
+                    leadId,
+                    'fechamento',
+                    `Venda formal concluída! Imóvel vendido por R$ ${valorVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Casa'}.`,
+                    { valor_venda: valorVenda, comissao_total: valorComissaoTotal }
+                ).catch(() => {});
+
+                fecharModalVendaLead();
+                alert('Venda concluída com sucesso! Os lançamentos já constam no Dashboard Financeiro.');
+                await carregarLeads();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao registrar fechamento: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Concluir Venda & Gerar Financeiro</span>';
             }
         }
 
@@ -1270,6 +1544,9 @@
                     } else if (ev.tipo_evento === 'nota') {
                         icone = 'fa-comment-dots';
                         corBadge = 'text-amber-300 bg-amber-950/90 border-amber-700';
+                    } else if (ev.tipo_evento === 'fechamento') {
+                        icone = 'fa-handshake';
+                        corBadge = 'text-emerald-300 bg-emerald-950/90 border-emerald-700';
                     }
 
                     return `

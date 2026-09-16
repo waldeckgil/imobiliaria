@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações & PDF - SGI Gestão Imobiliária</title>
+    <title>Configurações & Publicidades  - SGI Gestão Imobiliária</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
@@ -19,16 +19,40 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA -->
-    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+    <!-- FAIXA 1: MODO SUPORTE MASTER (QUANDO O ADMINISTRADOR ESTIVER ATENDENDO) -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <span>MODO SUPORTE MASTER:</span>
+                <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Sessão Soberana com Bypass RLS e Edição Liberada</span>
+            </div>
+            <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Fechar Suporte</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
+    <div id="faixa-modo-leitura" class="hidden bg-rose-600 text-white px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
-            <span>MODO SOMENTE LEITURA: Assinatura pendente. A atualização cadastral e financeira está bloqueada.</span>
+            <span>MODO SOMENTE LEITURA: Sua assinatura expirou. Entre em contato com a administração da plataforma para regularizar e reativar as edições.</span>
+        </div>
+    </div>
+
+    <!-- FAIXA 3: ALERTA PRÉ-VENCIMENTO (AMARELO - CONFIGURÁVEL) -->
+    <div id="faixa-alerta-vencimento" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+            <i class="fa-solid fa-bell text-base animate-bounce"></i>
+            <span id="txt-faixa-alerta-msg">AVISO: Sua mensalidade vence em breve. Efetue o pagamento para evitar o bloqueio dos serviços.</span>
         </div>
     </div>
 
     <!-- CABEÇALHO TOPBAR -->
-    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
             <div class="flex items-center gap-3">
@@ -63,20 +87,17 @@
     <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
         <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
-            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
-            </a>
             <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
                 <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
             </a>
             <a href="leads.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-comments mr-1"></i> Central de Leads
+                <i class="fa-solid fa-comments mr-1"></i> Central de Atendimentos
             </a>
             <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-users mr-1"></i> Equipe de Corretores
+                <i class="fa-solid fa-users mr-1"></i> Equipe & Permissões
             </a>
             <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
-                <i class="fa-solid fa-gear mr-1"></i> Configurações & PDF
+                <i class="fa-solid fa-gear mr-1"></i> Configurações & Publicidades
             </a>
         </div>
     </nav>
@@ -92,26 +113,54 @@
                     <h2 class="text-xl font-black text-white mt-1 flex items-center gap-2">
                         <span>Plano Profissional Multi-tenant</span>
                         <span id="badge-status-plano" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">
-                            Ativo
+                            Ativo • Em Dia
                         </span>
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Isolamento criptografado por PostgreSQL RLS • Armazenamento em CDN Global</p>
+                    <p id="txt-status-desc" class="text-xs text-slate-400 mt-1">Sua conta está regular e operando normalmente.</p>
                 </div>
 
                 <div class="flex items-center gap-4 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs">
                     <div>
                         <span class="text-[10px] text-slate-500 font-bold uppercase block">Mensalidade</span>
-                        <span id="txt-plano-valor" class="text-base font-black text-cyan-300">R$ 149,00</span>
+                        <span id="txt-plano-valor" class="text-base font-black text-cyan-300">R$ 0,00</span>
                     </div>
                     <div class="border-l border-slate-800 pl-4">
                         <span class="text-[10px] text-slate-500 font-bold uppercase block">Próximo Vencimento</span>
                         <span id="txt-plano-vencimento" class="text-base font-black text-white">--/--/----</span>
                     </div>
                     <div class="border-l border-slate-800 pl-4">
-                        <span class="text-[10px] text-slate-500 font-bold uppercase block">Ciclo</span>
+                        <span class="text-[10px] text-slate-500 font-bold uppercase block">Situação</span>
                         <span id="txt-dias-restantes" class="text-xs font-bold text-emerald-400">Em dia</span>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- HISTÓRICO DE MENSALIDADES QUITADAS PELO CLIENTE -->
+        <div class="box-tech p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-cyan-400"></i>
+                    <h3 class="text-sm font-black text-white uppercase tracking-wider">Histórico de Mensalidades Confirmadas</h3>
+                </div>
+                <span class="text-[10px] text-slate-500">Recibos validados pelo Administrador Master</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300 font-mono">
+                    <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+                        <tr>
+                            <th class="py-2 px-3">Data do Pagamento</th>
+                            <th class="py-2 px-3">Mês de Referência</th>
+                            <th class="py-2 px-3">Forma</th>
+                            <th class="py-2 px-3">Valor Quitado</th>
+                            <th class="py-2 px-3 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-faturas-gestor" class="divide-y divide-slate-800/60 text-[11px]">
+                        <tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Carregando histórico financeiro...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -159,7 +208,6 @@
                 </h3>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <!-- UPLOAD DE LOGOTIPO -->
                     <div class="space-y-2">
                         <label class="block font-bold text-slate-300">Logotipo da Imobiliária</label>
                         <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-700">
@@ -171,7 +219,6 @@
                         </div>
                     </div>
 
-                    <!-- UPLOAD DE BANNER -->
                     <div class="space-y-2">
                         <label class="block font-bold text-slate-300">Banner Institucional / Fachada</label>
                         <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-700">
@@ -293,18 +340,19 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Configurações Corporativas
     </footer>
 
-    <!-- JAVASCRIPT DE CONFIGURAÇÃO & COMPILAÇÃO JSPDF (AJUSTADO COM 'supabaseClient') -->
+    <!-- JAVASCRIPT DE CONFIGURAÇÃO & COMPILAÇÃO JSPDF -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
 
-        // Corrigido para supabaseClient
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
         let imobiliariaId = null;
         let dadosImobAtual = null;
         let listaImoveisParaPdf = [];
         let modoLeitura = false;
+        let isMasterSuporte = false;
+        let diasAvisoGlobal = 5;
 
         let arquivoLogo = null;
         let arquivoBanner = null;
@@ -316,30 +364,63 @@
                 return;
             }
 
-            const email = session.user.email.toLowerCase();
-
-            // BYPASS MASTER
-            if (email === 'waldeckgil@gmail.com') {
-                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (CONFIGURAÇÕES GERAIS)';
-                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
-                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
-
-                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
-                if (imobPiloto) {
-                    imobiliariaId = imobPiloto.id;
-                    dadosImobAtual = imobPiloto;
-                    preencherFormulario(imobPiloto);
-                    await carregarCatalogoParaPDF();
-                }
-                return;
+            // Lê dias de aviso configurados pelo Administrador Master
+            try {
+                const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
+                if (cfg && cfg.dias_aviso_vencimento) diasAvisoGlobal = cfg.dias_aviso_vencimento;
+            } catch (e) {
+                console.warn(e);
             }
 
-            // GESTOR (DONO)
+            const email = session.user.email.toLowerCase();
+            const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
+            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
+            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
+
+            // 1. SUPORTE MASTER SOBERANO
+            if (email === 'waldeckgil@gmail.com') {
+                isMasterSuporte = true;
+                modoLeitura = false; // Master tem poder total para editar
+
+                let targetId = impersonateId;
+                let imobAlvo = null;
+
+                if (targetId) {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId).single();
+                    imobAlvo = data;
+                } else {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                    imobAlvo = data;
+                }
+
+                if (imobAlvo) {
+                    imobiliariaId = imobAlvo.id;
+                    dadosImobAtual = imobAlvo;
+
+                    // Exibe a barra de suporte
+                    document.getElementById('faixa-modo-suporte').classList.remove('hidden');
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Administrador Master';
+                    document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                    document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug}`;
+
+                    avaliarVencimento(imobAlvo);
+                    preencherFormulario(imobAlvo);
+                    await carregarCatalogoParaPDF();
+                    await carregarHistoricoFaturasGestor(imobAlvo.id);
+                    return;
+                }
+            }
+
+            // 2. GESTOR (DONO) DA CONTA
             try {
                 const { data: usuario } = await supabaseClient.from('usuarios').select('*').eq('user_id', session.user.id).single();
                 if (!usuario || usuario.cargo !== 'dono') {
                     alert('Acesso Restrito: Apenas gestores titulares podem alterar as configurações corporativas.');
-                    window.location.href = 'dashboard.html';
+                    window.location.href = 'imoveis-lista.html';
                     return;
                 }
 
@@ -353,28 +434,118 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email}`;
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
-                // Auditoria de Vencimento
-                const hoje = new Date().toISOString().split('T')[0];
-                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                modoLeitura = (imob.status === 'blocked' || vencido);
+                avaliarVencimento(imob);
+                preencherFormulario(imob);
+                await carregarCatalogoParaPDF();
+                await carregarHistoricoFaturasGestor(imob.id);
 
-                if (modoLeitura) {
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao carregar dados da imobiliária.');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // AVALIAÇÃO DA RÉGUA DE COBRANÇA (3 ESTADOS DINÂMICOS)
+        function avaliarVencimento(imob) {
+            const hoje = new Date();
+            hoje.setHours(0,0,0,0);
+
+            if (!imob.data_vencimento) {
+                document.getElementById('txt-plano-vencimento').innerText = 'Indefinido';
+                return;
+            }
+
+            const [ano, mes, dia] = imob.data_vencimento.split('-');
+            const dataVenc = new Date(ano, mes - 1, dia);
+            dataVenc.setHours(0,0,0,0);
+
+            document.getElementById('txt-plano-vencimento').innerText = `${dia}/${mes}/${ano}`;
+
+            const diffTempo = dataVenc.getTime() - hoje.getTime();
+            const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
+
+            const badgeStatus = document.getElementById('badge-status-plano');
+            const txtDesc = document.getElementById('txt-status-desc');
+            const txtCiclo = document.getElementById('txt-dias-restantes');
+
+            // 1. ESTADO: VENCIDO (BLOQUEIO / MODO LEITURA)
+            if (diffDias < 0 || imob.status === 'blocked') {
+                if (!isMasterSuporte) {
+                    modoLeitura = true;
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
                     const btn = document.getElementById('btn-salvar-config');
                     btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
 
-                preencherFormulario(imob);
-                await carregarCatalogoParaPDF();
+                document.getElementById('faixa-alerta-vencimento').classList.add('hidden');
+                badgeStatus.innerText = 'Pendente / Vencida';
+                badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800';
+                txtDesc.innerText = 'Sua assinatura expirou. Regularize para reativar as funções completas do sistema.';
+                txtCiclo.innerText = `Vencido há ${Math.abs(diffDias)} dias`;
+                txtCiclo.className = 'text-xs font-bold text-rose-400';
+            } 
+            // 2. ESTADO: AVISO PRÉVIO (AMARELO - DENTRO DOS DIAS CONFIGURADOS)
+            else if (diffDias <= diasAvisoGlobal) {
+                modoLeitura = false;
+                document.getElementById('faixa-alerta-vencimento').classList.remove('hidden');
+                document.getElementById('txt-faixa-alerta-msg').innerText = `ATENÇÃO: Sua mensalidade vence em ${diffDias === 0 ? 'HOJE' : diffDias + ' dia(s)'} (${dia}/${mes}/${ano}). Envie o comprovante PIX para evitar interrupções.`;
 
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao carregar dados da imobiliária.');
-                window.location.href = 'dashboard.html';
+                badgeStatus.innerText = 'Atenção • Vencimento Próximo';
+                badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800';
+                txtDesc.innerText = `Seu ciclo atual se encerra em ${diffDias} dias. Prepare seu pagamento.`;
+                txtCiclo.innerText = `Faltam ${diffDias} dias`;
+                txtCiclo.className = 'text-xs font-bold text-amber-400';
+            } 
+            // 3. ESTADO: EM DIA (VERDE)
+            else {
+                modoLeitura = false;
+                badgeStatus.innerText = 'Ativo • Em Dia';
+                badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800';
+                txtDesc.innerText = 'Sua assinatura está regular e operando em conformidade.';
+                txtCiclo.innerText = `Em dia (Faltam ${diffDias} dias)`;
+                txtCiclo.className = 'text-xs font-bold text-emerald-400';
             }
         }
 
-        // Preenche formulário com os dados salvos
+        // CARREGA RECIBOS HISTÓRICOS APROVADOS PELO ADMINISTRADOR
+        async function carregarHistoricoFaturasGestor(imobId) {
+            const tbody = document.getElementById('tabela-faturas-gestor');
+            try {
+                const { data: mensalidades, error } = await supabaseClient
+                    .from('imobiliarias_mensalidades')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId)
+                    .order('data_pagamento', { ascending: false });
+
+                if (error) throw error;
+
+                if (!mensalidades || mensalidades.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Nenhum recibo de pagamento registrado até o momento.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = mensalidades.map(m => {
+                    const dtFormatada = m.data_pagamento ? m.data_pagamento.split('-').reverse().join('/') : '--/--/----';
+                    return `
+                    <tr class="hover:bg-slate-900/40">
+                        <td class="py-2.5 px-3 text-slate-300">${dtFormatada}</td>
+                        <td class="py-2.5 px-3 text-white font-bold">${m.mes_referencia}</td>
+                        <td class="py-2.5 px-3 text-cyan-400">${m.forma_pagamento || 'PIX'}</td>
+                        <td class="py-2.5 px-3 text-emerald-400 font-bold">R$ ${Number(m.valor_pago).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td class="py-2.5 px-3 text-right">
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">Quitado</span>
+                        </td>
+                    </tr>`;
+                }).join('');
+
+            } catch (err) {
+                console.warn('Erro ao carregar recibos:', err);
+                tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Histórico financeiro em manutenção.</td></tr>';
+            }
+        }
+
+        // Preenche formulário com os dados cadastrados
         function preencherFormulario(imob) {
             document.getElementById('conf-nome-fantasia').value = imob.nome_fantasia || '';
             document.getElementById('conf-razao-social').value = imob.razao_social || '';
@@ -397,27 +568,7 @@
             if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
             if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
 
-            // Dados da Assinatura
             document.getElementById('txt-plano-valor').innerText = Number(imob.plano_valor || 149).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            
-            if (imob.data_vencimento) {
-                const [ano, mes, dia] = imob.data_vencimento.split('-');
-                document.getElementById('txt-plano-vencimento').innerText = `${dia}/${mes}/${ano}`;
-
-                const dataVenc = new Date(imob.data_vencimento);
-                const dataHoje = new Date();
-                const diffDias = Math.ceil((dataVenc - dataHoje) / (1000 * 60 * 60 * 24));
-
-                if (diffDias > 0) {
-                    document.getElementById('txt-dias-restantes').innerText = `Faltam ${diffDias} dias`;
-                    document.getElementById('txt-dias-restantes').className = 'text-xs font-bold text-emerald-400';
-                } else {
-                    document.getElementById('txt-dias-restantes').innerText = `Vencido há ${Math.abs(diffDias)} dias`;
-                    document.getElementById('txt-dias-restantes').className = 'text-xs font-bold text-rose-400';
-                    document.getElementById('badge-status-plano').innerText = 'Pendente';
-                    document.getElementById('badge-status-plano').className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800';
-                }
-            }
         }
 
         function previewUploadLogo(e) {
@@ -437,7 +588,7 @@
         // Salvar Configurações e Mídias
         async function salvarConfiguracoes(event) {
             event.preventDefault();
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
 
             const btn = document.getElementById('btn-salvar-config');
             const alerta = document.getElementById('alerta-config');
@@ -452,7 +603,6 @@
                 let novaLogoUrl = dadosImobAtual.logo_url;
                 let novaBannerUrl = dadosImobAtual.banner_url;
 
-                // Upload de Logo se selecionado
                 if (arquivoLogo) {
                     const ext = arquivoLogo.name.split('.').pop();
                     const path = `${imobiliariaId}/identidade/logo_${Date.now()}.${ext}`;
@@ -462,7 +612,6 @@
                     }
                 }
 
-                // Upload de Banner se selecionado
                 if (arquivoBanner) {
                     const ext = arquivoBanner.name.split('.').pop();
                     const path = `${imobiliariaId}/identidade/banner_${Date.now()}.${ext}`;
@@ -472,7 +621,6 @@
                     }
                 }
 
-                // Atualização no banco
                 const payload = {
                     nome_fantasia: document.getElementById('conf-nome-fantasia').value.trim(),
                     razao_social: document.getElementById('conf-razao-social').value.trim(),
@@ -499,7 +647,7 @@
 
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = 'Configurações institucionais e visuais atualizadas com sucesso!';
+                alertaTexto.innerText = 'Configurações corporativas e dados visuais salvos com sucesso!';
                 alerta.classList.remove('hidden');
 
             } catch (err) {
@@ -514,7 +662,6 @@
             }
         }
 
-        // Carrega imóveis para o gerador de PDF
         async function carregarCatalogoParaPDF() {
             try {
                 const { data: imoveis, error } = await supabaseClient
@@ -565,7 +712,7 @@
                 const pageWidth = doc.internal.pageSize.getWidth();
                 const pageHeight = doc.internal.pageSize.getHeight();
 
-                // 1. TOPO / CABEÇALHO
+                // 1. CABEÇALHO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
@@ -597,7 +744,7 @@
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(100, 110, 125);
-                doc.text(`${imovel.tipo} • ${imovel.bairro || 'Localização Nobre'} - ${imovel.cidade || 'Florianópolis'}/${imovel.uf || 'SC'}`, 15, 46);
+                doc.text(`${imovel.tipo} • ${imovel.bairro || 'Bairro'} - ${imovel.cidade || ''}/${imovel.uf || ''}`, 15, 46);
 
                 // 3. FOTO DE CAPA
                 let posY = 52;
@@ -640,7 +787,7 @@
 
                 posY += 30;
 
-                // 5. VALORES EM DESTAQUE
+                // 5. VALORES
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'bold');
@@ -669,11 +816,11 @@
                 doc.setFontSize(9);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(70, 80, 95);
-                const descTexto = imovel.descricao || 'Imóvel com alto padrão de acabamento, excelente localização e documentação pronta para transferência imediata.';
+                const descTexto = imovel.descricao || 'Imóvel com alto padrão de acabamento, excelente localização e documentação regularizada.';
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
-                // 7. RODAPÉ FIXO DE CONTATO
+                // 7. RODAPÉ DE CONTATO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
@@ -684,7 +831,7 @@
 
                 doc.setFontSize(8);
                 doc.setTextColor(140, 150, 165);
-                doc.text(`Material promocional gerado automaticamente via SGI SaaS • ${dadosImobAtual.nome_fantasia}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+                doc.text(`Material promocional gerado via SGI SaaS • ${dadosImobAtual.nome_fantasia}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
 
                 doc.save(`Ficha_${imovel.codigo_ref}_${dadosImobAtual.nome_fantasia.replace(/\s+/g, '_')}.pdf`);
 
@@ -714,6 +861,10 @@
         }
 
         async function executarLogout() {
+            if (isMasterSuporte) {
+                window.close();
+                return;
+            }
             if (confirm('Deseja realmente sair?')) {
                 await supabaseClient.auth.signOut();
                 sessionStorage.clear();

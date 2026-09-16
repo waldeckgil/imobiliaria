@@ -25,7 +25,7 @@
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
                 <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
-                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Sessão Soberana com Bypass RLS</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Sessão Soberana com Bypass RLS e Visão Financeira Plena</span>
             </div>
             <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
@@ -63,7 +63,6 @@
 
             <!-- BOTÕES DE AÇÃO -->
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
-                
                 <a href="configurar-imobiliaria.html#conf-sobre" 
                    class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-signature text-xs"></i>
@@ -114,7 +113,7 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
         
-        <!-- CARD DE ASSINATURA -->
+        <!-- CARD DE ASSINATURA SAAS -->
         <div id="card-monitor-assinatura" class="box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-emerald-500">
             <div class="flex items-center gap-3.5">
                 <div id="icone-status-plano" class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30">
@@ -144,11 +143,11 @@
             </div>
         </div>
 
-        <!-- CARDS DE CONTROLE IMEDIATO (GRADE DE 5 CARDS CLICÁVEIS) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <!-- CARDS DE CONTROLE IMEDIATO (GRADE DE 6 CARDS COM VENDIDOS E ALUGADOS REVISADOS) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
             
             <!-- CARD 1: IMÓVEIS ATIVOS -->
-            <div onclick="abrirDrilldown('imoveis-ativos')" class="box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer hover:scale-[1.02] hover:border-cyan-300 hover:shadow-xl hover:shadow-cyan-950/40 transition-all duration-200 group">
+            <div onclick="abrirDrilldown('imoveis-ativos')" class="box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer hover:scale-[1.02] hover:border-cyan-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-cyan-300 transition text-[11px]">Ativos Vitrine</span>
                     <i class="fa-solid fa-house-circle-check text-cyan-400 text-base group-hover:scale-110 transition"></i>
@@ -156,16 +155,16 @@
                 <div class="mt-2 flex items-baseline justify-between">
                     <div>
                         <span id="kpi-imoveis-ativos" class="text-2xl font-black text-white">0</span>
-                        <span class="text-[10px] text-slate-400 block">no catálogo</span>
+                        <span class="text-[10px] text-slate-400 block">disponíveis</span>
                     </div>
                     <span class="text-[9px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 2: IMÓVEIS ALUGADOS (LOCAÇÃO ATIVA) -->
-            <div onclick="abrirDrilldown('imoveis-alugados')" class="box-tech p-4 border-l-4 border-l-purple-500 cursor-pointer hover:scale-[1.02] hover:border-purple-400 hover:shadow-xl hover:shadow-purple-950/40 transition-all duration-200 group bg-gradient-to-r from-purple-950/10 to-transparent">
+            <!-- CARD 2: IMÓVEIS ALUGADOS (LOCAÇÃO ATIVA REVISADO) -->
+            <div onclick="abrirDrilldown('imoveis-alugados')" class="box-tech p-4 border-l-4 border-l-purple-500 cursor-pointer hover:scale-[1.02] hover:border-purple-400 hover:shadow-xl transition group bg-gradient-to-r from-purple-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-purple-300 transition text-[11px]">Alugados (Locação)</span>
+                    <span class="group-hover:text-purple-300 transition text-[11px]">Alugados</span>
                     <i class="fa-solid fa-key text-purple-400 text-base group-hover:scale-110 transition"></i>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between">
@@ -177,10 +176,25 @@
                 </div>
             </div>
 
-            <!-- CARD 3: LEADS ÚLTIMAS 24H -->
-            <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-4 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-950/40 transition-all duration-200 group">
+            <!-- CARD 3: NOVO CARD - IMÓVEIS VENDIDOS -->
+            <div onclick="abrirDrilldown('imoveis-vendidos')" class="box-tech p-4 border-l-4 border-l-amber-500 cursor-pointer hover:scale-[1.02] hover:border-amber-400 hover:shadow-xl transition group bg-gradient-to-r from-amber-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-emerald-300 transition text-[11px]">Leads Hoje (24h)</span>
+                    <span class="group-hover:text-amber-300 transition text-[11px]">Vendidos</span>
+                    <i class="fa-solid fa-handshake text-amber-400 text-base group-hover:scale-110 transition"></i>
+                </div>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-imoveis-vendidos" class="text-2xl font-black text-amber-400">0</span>
+                        <span class="text-[10px] text-slate-400 block" id="kpi-total-vgv-vendido">R$ 0 VGV</span>
+                    </div>
+                    <span class="text-[9px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
+                </div>
+            </div>
+
+            <!-- CARD 4: LEADS HOJE -->
+            <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-4 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl transition group">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span class="group-hover:text-emerald-300 transition text-[11px]">Leads Hoje</span>
                     <i class="fa-solid fa-comment-dots text-emerald-400 text-base group-hover:scale-110 transition"></i>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between">
@@ -192,23 +206,23 @@
                 </div>
             </div>
 
-            <!-- CARD 4: VISITAS E ATENDIMENTOS -->
-            <div onclick="abrirDrilldown('visitas')" class="box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl hover:shadow-amber-950/40 transition-all duration-200 group">
+            <!-- CARD 5: EM ATENDIMENTO -->
+            <div onclick="abrirDrilldown('visitas')" class="box-tech p-4 border-l-4 border-l-cyan-500 cursor-pointer hover:scale-[1.02] hover:border-cyan-400 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="group-hover:text-amber-300 transition text-[11px]">Em Atendimento</span>
-                    <i class="fa-solid fa-calendar-check text-amber-400 text-base group-hover:scale-110 transition"></i>
+                    <span class="group-hover:text-cyan-300 transition text-[11px]">Em Atendimento</span>
+                    <i class="fa-solid fa-calendar-check text-cyan-400 text-base group-hover:scale-110 transition"></i>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between">
                     <div>
                         <span id="kpi-visitas-hoje" class="text-2xl font-black text-white">0</span>
                         <span class="text-[10px] text-slate-400 block">em negociação</span>
                     </div>
-                    <span class="text-[9px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
+                    <span class="text-[9px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 5: PROPOSTAS EM ANÁLISE -->
-            <div onclick="abrirDrilldown('propostas')" class="box-tech p-4 border-l-4 border-l-rose-400 cursor-pointer hover:scale-[1.02] hover:border-rose-300 hover:shadow-xl hover:shadow-rose-950/40 transition-all duration-200 group">
+            <!-- CARD 6: PROPOSTAS -->
+            <div onclick="abrirDrilldown('propostas')" class="box-tech p-4 border-l-4 border-l-rose-400 cursor-pointer hover:scale-[1.02] hover:border-rose-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-rose-300 transition text-[11px]">Propostas</span>
                     <i class="fa-solid fa-file-signature text-rose-400 text-base group-hover:scale-110 transition"></i>
@@ -224,10 +238,10 @@
 
         </div>
 
-        <!-- ABAS RÁPIDAS -->
+        <!-- ABAS OPERACIONAIS E DASHBOARD FINANCEIRO -->
         <div class="box-tech p-5 space-y-4">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs">
+                <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs flex-wrap">
                     <button onclick="mudarAba('catalogo')" id="tab-btn-catalogo" class="px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer">
                         <i class="fa-solid fa-list mr-1"></i> Catálogo Resumido
                     </button>
@@ -237,10 +251,15 @@
                     <button onclick="mudarAba('graficos')" id="tab-btn-graficos" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
                         <i class="fa-solid fa-chart-column mr-1"></i> Imóveis por Bairro
                     </button>
+                    
+                    <!-- ABA EXCLUSIVA DO DASHBOARD FINANCEIRO (BLINDADA POR PERMISSÃO) -->
+                    <button onclick="mudarAba('financeiro')" id="tab-btn-financeiro" class="px-3.5 py-1.5 rounded-lg text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer border border-amber-500/30">
+                        <i class="fa-solid fa-coins mr-1"></i> Dashboard Financeiro & Repasses
+                    </button>
                 </div>
 
                 <span class="text-[11px] text-slate-500 font-mono">
-                    Atualizado em tempo real via PostgreSQL
+                    Conexão Ativa com PostgreSQL
                 </span>
             </div>
 
@@ -305,6 +324,125 @@
                 </div>
             </div>
 
+            <!-- ABA 4: NOVO DASHBOARD FINANCEIRO & EXTRATO MÊS A MÊS -->
+            <div id="aba-conteudo-financeiro" class="hidden space-y-6 pt-2">
+                
+                <!-- BARRA DE CONTROLE & SELETOR DE MÊS -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
+                            <i class="fa-solid fa-calculator"></i> Gestão de Receitas, Taxas & Repasses
+                        </span>
+                        <h3 class="text-base font-black text-white mt-0.5">Extrato Financeiro Consolidado</h3>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <label class="text-xs font-bold text-slate-400 whitespace-nowrap">Mês de Referência:</label>
+                        <select id="filtro-mes-financeiro" onchange="carregarDashboardFinanceiro()" 
+                                class="bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-cyan-300 font-mono font-bold outline-none focus:border-cyan-400 w-full sm:w-44">
+                            <!-- Opções geradas via JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4 CARDS DO DASHBOARD FINANCEIRO -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    <!-- CARD FIN 1: ALUGUÉIS COBRADOS (BRUTO) -->
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-purple-500 border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Aluguéis do Mês</span>
+                        <span id="fin-kpi-aluguel-bruto" class="text-2xl font-black text-white font-mono mt-1 block">R$ 0,00</span>
+                        <span class="text-[10px] text-purple-400 block mt-0.5">Cobrança total dos inquilinos</span>
+                    </div>
+
+                    <!-- CARD FIN 2: HONORÁRIOS DA IMOBILIÁRIA (RECEBIDOS VS PENDENTES) -->
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-emerald-400 border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Taxa da Imobiliária</span>
+                        <span id="fin-kpi-taxa-imob-recebida" class="text-2xl font-black text-emerald-400 font-mono mt-1 block">R$ 0,00</span>
+                        <div class="flex items-center justify-between text-[10px] mt-0.5">
+                            <span class="text-emerald-400">Quitado</span>
+                            <span id="fin-kpi-taxa-imob-pendente" class="text-amber-400 font-mono">Pendente: R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <!-- CARD FIN 3: REPASSE AOS PROPRIETÁRIOS -->
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-cyan-400 border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Repasse aos Proprietários</span>
+                        <span id="fin-kpi-repasse-proprietarios" class="text-2xl font-black text-cyan-300 font-mono mt-1 block">R$ 0,00</span>
+                        <span class="text-[10px] text-slate-400 block mt-0.5">Líquido destinado aos donos</span>
+                    </div>
+
+                    <!-- CARD FIN 4: VENDAS FECHADAS NO MÊS -->
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-amber-400 border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Comissões de Vendas</span>
+                        <span id="fin-kpi-comissao-vendas" class="text-2xl font-black text-amber-300 font-mono mt-1 block">R$ 0,00</span>
+                        <span id="fin-kpi-vgv-vendas-mes" class="text-[10px] text-slate-400 block mt-0.5">VGV fechado: R$ 0,00</span>
+                    </div>
+
+                </div>
+
+                <!-- TABELA 1: EXTRATO MÊS A MÊS DE LOCAÇÕES -->
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <h4 class="text-xs font-black uppercase text-purple-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-receipt"></i> 1. Extrato de Aluguéis, Retenções & Repasses
+                        </h4>
+                        <span class="text-[10px] text-slate-500">Mês selecionado</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300 font-mono">
+                            <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+                                <tr>
+                                    <th class="py-2.5 px-3">Imóvel (Ref)</th>
+                                    <th class="py-2.5 px-3">Inquilino</th>
+                                    <th class="py-2.5 px-3">Aluguel Bruto</th>
+                                    <th class="py-2.5 px-3">Taxa Imob (%)</th>
+                                    <th class="py-2.5 px-3">Retenção Imob</th>
+                                    <th class="py-2.5 px-3">Repasse Dono</th>
+                                    <th class="py-2.5 px-3">Inquilino</th>
+                                    <th class="py-2.5 px-3 text-right">Repasse Dono</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-fin-locacoes-corpo" class="divide-y divide-slate-800/60 text-[11px]">
+                                <tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TABELA 2: HISTÓRICO MÊS A MÊS DE VENDAS FECHADAS -->
+                <div class="space-y-3 pt-4 border-t border-slate-800">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-handshake"></i> 2. Histórico de Imóveis Vendidos no Mês
+                        </h4>
+                        <span class="text-[10px] text-slate-500">Rateio de comissões por imóvel</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-300 font-mono">
+                            <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+                                <tr>
+                                    <th class="py-2.5 px-3">Data</th>
+                                    <th class="py-2.5 px-3">Imóvel (Ref)</th>
+                                    <th class="py-2.5 px-3">Comprador</th>
+                                    <th class="py-2.5 px-3">Corretor</th>
+                                    <th class="py-2.5 px-3">Valor Venda</th>
+                                    <th class="py-2.5 px-3">Comissão Imob</th>
+                                    <th class="py-2.5 px-3">Comissão Corretor</th>
+                                    <th class="py-2.5 px-3 text-right">Repasse Dono</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela-fin-vendas-corpo" class="divide-y divide-slate-800/60 text-[11px]">
+                                <tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Carregando vendas fechadas...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
     </main>
@@ -355,6 +493,7 @@
         let dadosUsuario = null;
         let dadosImobiliaria = null;
         let isMasterSuporte = false;
+        let temPermissaoFinanceira = false;
 
         async function inicializarDashboard() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -369,6 +508,7 @@
 
             // MODO MASTER / SUPORTE
             if (emailLogado === 'waldeckgil@gmail.com') {
+                temPermissaoFinanceira = true;
                 await carregarModoMaster();
                 return;
             }
@@ -379,9 +519,8 @@
 
         async function carregarModoMaster() {
             isMasterSuporte = true;
+            temPermissaoFinanceira = true;
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
-            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
-            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
             let imobAlvo = null;
 
@@ -396,7 +535,6 @@
             if (imobAlvo) {
                 dadosImobiliaria = imobAlvo;
 
-                // Mostra faixa soberana de suporte
                 document.getElementById('faixa-modo-suporte').classList.remove('hidden');
                 document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
 
@@ -408,10 +546,12 @@
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug}`;
 
                 atualizarPainelAssinatura(imobAlvo);
+                popularSeletorMeses();
                 carregarMetricas(imobAlvo.id);
                 carregarCatalogo(imobAlvo.id);
                 carregarLeads(imobAlvo.id);
                 carregarGraficoBairros(imobAlvo.id);
+                carregarDashboardFinanceiro();
             }
         }
 
@@ -426,6 +566,15 @@
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
                 dadosUsuario = usuario;
+
+                // VERIFICAÇÃO DE PRIVILÉGIO FINANCEIRO (RBAC)
+                temPermissaoFinanceira = (usuario.cargo === 'dono' || (usuario.permissoes && usuario.permissoes.acesso_financeiro === true));
+
+                // Se não tem permissão financeira, esconde a aba e controles
+                if (!temPermissaoFinanceira) {
+                    const btnFin = document.getElementById('tab-btn-financeiro');
+                    if (btnFin) btnFin.classList.add('hidden');
+                }
 
                 const { data: imob, error: errImob } = await supabaseClient
                     .from('imobiliarias')
@@ -443,15 +592,43 @@
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
                 atualizarPainelAssinatura(imob);
+                popularSeletorMeses();
 
                 carregarMetricas(imob.id);
                 carregarCatalogo(imob.id);
                 carregarLeads(imob.id);
                 carregarGraficoBairros(imob.id);
 
+                if (temPermissaoFinanceira) {
+                    carregarDashboardFinanceiro();
+                }
+
             } catch (err) {
                 console.error(err);
                 alert(err.message || 'Erro ao carregar dados operacionais.');
+            }
+        }
+
+        function popularSeletorMeses() {
+            const select = document.getElementById('filtro-mes-financeiro');
+            select.innerHTML = '';
+
+            const hoje = new Date();
+            const mesesNomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+            // Gera os últimos 12 meses
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+                const mesNum = String(d.getMonth() + 1).padStart(2, '0');
+                const ano = d.getFullYear();
+                const valorRef = `${mesNum}/${ano}`;
+                const labelRef = `${mesesNomes[d.getMonth()]} / ${ano}`;
+
+                const opt = document.createElement('option');
+                opt.value = valorRef;
+                opt.innerText = labelRef;
+                if (i === 0) opt.selected = true;
+                select.appendChild(opt);
             }
         }
 
@@ -483,7 +660,11 @@
             const bloqueado = (imob.status === 'blocked' || vencido);
 
             if (bloqueado && !isMasterSuporte) {
-                aplicarTravaModoLeitura();
+                document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                const btnNovo = document.getElementById('btn-novo-imovel');
+                if (btnNovo) {
+                    btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                }
             }
 
             if (vencido) {
@@ -499,27 +680,18 @@
                 badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
                 iconeStatus.className = 'w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam apenas ${diffDias === 0 ? 'algumas horas (vence hoje)' : diffDias + ' dia(s)'} para o vencimento.</span> Renove antecipadamente.`;
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam apenas ${diffDias === 0 ? 'algumas horas' : diffDias + ' dia(s)'} para o vencimento.</span>`;
             } else {
                 cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-emerald-500';
                 badgeStatus.innerText = 'EM DIA';
                 badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
                 iconeStatus.className = 'w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
-                txtContagem.innerText = `Sua assinatura está ativa. Faltam ${diffDias} dias para o próximo vencimento.`;
+                txtContagem.innerText = `Sua assinatura está ativa. Faltam ${diffDias} dias para o próximo ciclo.`;
             }
         }
 
-        function aplicarTravaModoLeitura() {
-            document.getElementById('faixa-modo-leitura').classList.remove('hidden');
-            const btnNovo = document.getElementById('btn-novo-imovel');
-            if (btnNovo) {
-                btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
-                btnNovo.title = 'Ação desabilitada por pendência financeira na assinatura.';
-            }
-        }
-
-        // CARREGA TODAS AS MÉTRICAS INCLUINDO LOCAÇÃO
+        // CARREGA TODAS AS MÉTRICAS (INCLUINDO VENDIDOS E ALUGADOS)
         async function carregarMetricas(imobId) {
             try {
                 // 1. Imóveis Ativos na Vitrine
@@ -532,7 +704,7 @@
 
                 document.getElementById('kpi-imoveis-ativos').innerText = imoveisCount || 0;
 
-                // 2. Imóveis Alugados (Locação Ativa) & Soma da Receita de Comissão
+                // 2. Imóveis Alugados (Locação Ativa) & Comissão Mensal
                 const { data: contratosLoc, count: alugadosCount } = await supabaseClient
                     .from('contratos_locacao')
                     .select('valor_comissao_imobiliaria, valor_aluguel_bruto', { count: 'exact' })
@@ -545,9 +717,23 @@
                 }
 
                 document.getElementById('kpi-imoveis-alugados').innerText = alugadosCount || 0;
-                document.getElementById('kpi-receita-locacao').innerText = totalComissaoMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês comissão';
+                document.getElementById('kpi-receita-locacao').innerText = totalComissaoMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
 
-                // 3. Leads Hoje
+                // 3. Imóveis Vendidos (Novo Card) & Total VGV Fechado
+                const { data: vendas, count: vendasCount } = await supabaseClient
+                    .from('vendas_fechadas')
+                    .select('valor_venda_real', { count: 'exact' })
+                    .eq('imobiliaria_id', imobId);
+
+                let totalVgvVendido = 0;
+                if (vendas && vendas.length > 0) {
+                    totalVgvVendido = vendas.reduce((acc, v) => acc + Number(v.valor_venda_real || 0), 0);
+                }
+
+                document.getElementById('kpi-imoveis-vendidos').innerText = vendasCount || 0;
+                document.getElementById('kpi-total-vgv-vendido').innerText = totalVgvVendido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' VGV';
+
+                // 4. Leads Hoje
                 const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                 const { count: leadsHojeCount } = await supabaseClient
                     .from('leads_contatos')
@@ -557,7 +743,7 @@
 
                 document.getElementById('kpi-leads-hoje').innerText = leadsHojeCount || 0;
 
-                // 4. Em Atendimento
+                // 5. Em Atendimento
                 const { count: visitasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -566,7 +752,7 @@
 
                 document.getElementById('kpi-visitas-hoje').innerText = visitasCount || 0;
 
-                // 5. Propostas
+                // 6. Propostas
                 const { count: propostasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -577,6 +763,198 @@
 
             } catch (err) {
                 console.error('Erro ao consultar KPIs:', err);
+            }
+        }
+
+        // MOTOR DO DASHBOARD FINANCEIRO MÊS A MÊS
+        async function carregarDashboardFinanceiro() {
+            if (!temPermissaoFinanceira || !dadosImobiliaria) return;
+
+            const mesReferencia = document.getElementById('filtro-mes-financeiro').value;
+            const imobId = dadosImobiliaria.id;
+
+            const tbodyLoc = document.getElementById('tabela-fin-locacoes-corpo');
+            const tbodyVendas = document.getElementById('tabela-fin-vendas-corpo');
+
+            try {
+                // A. Carregar Vendas Fechadas no Mês Selecionado
+                const [mesNum, anoNum] = mesReferencia.split('/');
+                const inicioMes = `${anoNum}-${mesNum}-01`;
+                const fimMes = new Date(Number(anoNum), Number(mesNum), 0).toISOString().split('T')[0];
+
+                const { data: vendasMes, error: errVendas } = await supabaseClient
+                    .from('vendas_fechadas')
+                    .select('*, imoveis(codigo_ref, titulo)')
+                    .eq('imobiliaria_id', imobId)
+                    .gte('data_venda', inicioMes)
+                    .lte('data_venda', fimMes)
+                    .order('data_venda', { ascending: false });
+
+                if (errVendas) throw errVendas;
+
+                let somaVgvMes = 0;
+                let somaComissaoImobVendas = 0;
+
+                (vendasMes || []).forEach(v => {
+                    somaVgvMes += Number(v.valor_venda_real || 0);
+                    somaComissaoImobVendas += Number(v.valor_comissao_imobiliaria || 0);
+                });
+
+                document.getElementById('fin-kpi-comissao-vendas').innerText = somaComissaoImobVendas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-vgv-vendas-mes').innerText = `VGV fechado: ${somaVgvMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+
+                if (!vendasMes || vendasMes.length === 0) {
+                    tbodyVendas.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-500 font-sans">Nenhuma venda fechada registrada neste mês de referência.</td></tr>';
+                } else {
+                    tbodyVendas.innerHTML = vendasMes.map(v => {
+                        const ref = v.imoveis ? v.imoveis.codigo_ref : '---';
+                        const dtFormatada = v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----';
+                        return `
+                        <tr class="hover:bg-slate-900/40">
+                            <td class="py-2.5 px-3 text-slate-400">${dtFormatada}</td>
+                            <td class="py-2.5 px-3 font-bold text-cyan-400">Ref: ${ref}</td>
+                            <td class="py-2.5 px-3 text-white">${v.cliente_comprador_nome}</td>
+                            <td class="py-2.5 px-3 text-slate-300">${v.corretor_nome || 'Direto / Casa'}</td>
+                            <td class="py-2.5 px-3 font-bold text-white">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-2.5 px-3 font-bold text-emerald-400">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-2.5 px-3 font-bold text-cyan-300">R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-2.5 px-3 text-right font-bold text-slate-200">R$ ${Number(v.valor_repasse_proprietario).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        </tr>`;
+                    }).join('');
+                }
+
+                // B. Carregar Contratos de Locação Ativos e Recebíveis do Mês
+                const { data: contratosAtivos, error: errContratos } = await supabaseClient
+                    .from('contratos_locacao')
+                    .select('*, imoveis(codigo_ref, titulo)')
+                    .eq('imobiliaria_id', imobId)
+                    .eq('status', 'Ativo');
+
+                if (errContratos) throw errContratos;
+
+                // Busca se já existem mensalidades registradas na tabela de recebíveis para este mês
+                const { data: recebiveisMes, error: errRec } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId)
+                    .eq('mes_referencia', mesReferencia);
+
+                const mapaRecebiveis = {};
+                (recebiveisMes || []).forEach(r => { mapaRecebiveis[r.contrato_id] = r; });
+
+                let totalAluguelBruto = 0;
+                let taxaImobRecebida = 0;
+                let taxaImobPendente = 0;
+                let totalRepasseDonos = 0;
+
+                if (!contratosAtivos || contratosAtivos.length === 0) {
+                    tbodyLoc.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-500 font-sans">Nenhum contrato ativo de locação no momento.</td></tr>';
+                } else {
+                    tbodyLoc.innerHTML = contratosAtivos.map(ct => {
+                        const ref = ct.imoveis ? ct.imoveis.codigo_ref : '---';
+                        const bruto = Number(ct.valor_aluguel_bruto || 0);
+                        const pctTaxa = Number(ct.taxa_administracao_pct || 10);
+                        const valorTaxaImob = Number(ct.valor_comissao_imobiliaria || (bruto * pctTaxa / 100));
+                        const valorRepasse = Number(ct.valor_repasse_proprietario || (bruto - valorTaxaImob));
+
+                        const recExistente = mapaRecebiveis[ct.id];
+                        const statusInquilino = recExistente ? recExistente.status_inquilino : 'Pendente';
+                        const statusRepasse = recExistente ? recExistente.status_repasse : 'Aguardando';
+
+                        totalAluguelBruto += bruto;
+                        totalRepasseDonos += valorRepasse;
+
+                        if (statusInquilino === 'Pago') {
+                            taxaImobRecebida += valorTaxaImob;
+                        } else {
+                            taxaImobPendente += valorTaxaImob;
+                        }
+
+                        const badgeInquilino = (statusInquilino === 'Pago')
+                            ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Pago</span>'
+                            : `<button onclick="darBaixaAluguelInquilino('${ct.id}', '${ct.imovel_id}', ${bruto}, ${pctTaxa}, ${valorTaxaImob}, ${valorRepasse})" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-800 cursor-pointer">Receber</button>`;
+
+                        const badgeRepasse = (statusRepasse === 'Repassado')
+                            ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">Repassado</span>'
+                            : `<button onclick="confirmarRepasseDono('${ct.id}')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Repassar</button>`;
+
+                        return `
+                        <tr class="hover:bg-slate-900/40">
+                            <td class="py-2.5 px-3 font-bold text-cyan-400">Ref: ${ref}</td>
+                            <td class="py-2.5 px-3 text-white font-bold">${ct.cliente_nome}</td>
+                            <td class="py-2.5 px-3 font-bold text-white">R$ ${bruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-2.5 px-3 text-slate-400 font-mono">${pctTaxa}%</td>
+                            <td class="py-2.5 px-3 font-bold text-emerald-400">R$ ${valorTaxaImob.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-2.5 px-3 font-bold text-cyan-300">R$ ${valorRepasse.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td class="py-2.5 px-3">${badgeInquilino}</td>
+                            <td class="py-2.5 px-3 text-right">${badgeRepasse}</td>
+                        </tr>`;
+                    }).join('');
+                }
+
+                document.getElementById('fin-kpi-aluguel-bruto').innerText = totalAluguelBruto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-taxa-imob-recebida').innerText = taxaImobRecebida.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-taxa-imob-pendente').innerText = `Pendente: ${taxaImobPendente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                document.getElementById('fin-kpi-repasse-proprietarios').innerText = totalRepasseDonos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            } catch (err) {
+                console.error('Erro ao consultar dados financeiros:', err);
+                tbodyLoc.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-red-400 font-sans">Erro ao carregar extrato de locação.</td></tr>';
+                tbodyVendas.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-red-400 font-sans">Erro ao carregar vendas do mês.</td></tr>';
+            }
+        }
+
+        async function darBaixaAluguelInquilino(contratoId, imovelId, bruto, pctTaxa, taxaImob, repasse) {
+            const mesRef = document.getElementById('filtro-mes-financeiro').value;
+            const imobId = dadosImobiliaria.id;
+            const hoje = new Date().toISOString().split('T')[0];
+
+            try {
+                const { error } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .upsert([{
+                        imobiliaria_id: imobId,
+                        contrato_id: contratoId,
+                        imovel_id: imovelId,
+                        mes_referencia: mesRef,
+                        data_vencimento: hoje,
+                        valor_aluguel: bruto,
+                        taxa_adm_pct: pctTaxa,
+                        valor_taxa_imobiliaria: taxaImob,
+                        valor_repasse_proprietario: repasse,
+                        status_inquilino: 'Pago',
+                        data_pagamento_inquilino: hoje
+                    }], { onConflict: 'imobiliaria_id, contrato_id, mes_referencia' });
+
+                if (error) throw error;
+                await carregarDashboardFinanceiro();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao registrar recebimento de aluguel.');
+            }
+        }
+
+        async function confirmarRepasseDono(contratoId) {
+            const mesRef = document.getElementById('filtro-mes-financeiro').value;
+            const imobId = dadosImobiliaria.id;
+            const hoje = new Date().toISOString().split('T')[0];
+
+            try {
+                const { error } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .update({
+                        status_repasse: 'Repassado',
+                        data_repasse: hoje
+                    })
+                    .eq('imobiliaria_id', imobId)
+                    .eq('contrato_id', contratoId)
+                    .eq('mes_referencia', mesRef);
+
+                if (error) throw error;
+                await carregarDashboardFinanceiro();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao confirmar repasse ao proprietário.');
             }
         }
 
@@ -629,8 +1007,8 @@
                                     <span class="text-[11px] font-black text-cyan-300 block mt-0.5">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</span>
                                 </div>
                             </div>
-                            <a href="imovel-form.html?id=${im.id}" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
-                                <i class="fa-regular fa-pen-to-square mr-1"></i> Editar
+                            <a href="imoveis-lista.html" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
+                                Ver Catálogo
                             </a>
                         </div>
                     `).join('');
@@ -650,7 +1028,7 @@
                     contador.innerText = `${contratos ? contratos.length : 0} contratos ativos`;
 
                     if (!contratos || contratos.length === 0) {
-                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel sob contrato de locação ativo no momento.</p>';
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum contrato de locação ativo.</p>';
                         return;
                     }
 
@@ -659,16 +1037,6 @@
                         const dataInicioFmt = c.data_inicio ? c.data_inicio.split('-').reverse().join('/') : '--/--/----';
                         const dataFimFmt = c.data_fim ? c.data_fim.split('-').reverse().join('/') : '--/--/----';
                         const zapLimpo = ('' + (c.cliente_whatsapp || '')).replace(/\D/g, '');
-
-                        let textoRestante = '';
-                        if (c.data_fim) {
-                            const diffDias = Math.ceil((new Date(`${c.data_fim}T23:59:59`) - new Date()) / (1000 * 60 * 60 * 24));
-                            if (diffDias > 0) {
-                                textoRestante = `<span class="text-slate-400 text-[10px]">Vence em ${diffDias} dias</span>`;
-                            } else {
-                                textoRestante = `<span class="text-rose-400 text-[10px] font-bold">Contrato Vencido</span>`;
-                            }
-                        }
 
                         return `
                             <div class="bg-slate-950 p-4 rounded-xl border border-purple-800/40 space-y-2 hover:border-purple-500/60 transition">
@@ -681,22 +1049,65 @@
                                         </div>
                                     </div>
                                     ${zapLimpo ? `
-                                        <a href="https://wa.me/${zapLimpo}?text=${encodeURIComponent('Olá ' + c.cliente_nome + '! Falo da imobiliária sobre a locação do imóvel Ref: ' + (imovel.codigo_ref || ''))}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
+                                        <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
                                             <i class="fa-brands fa-whatsapp"></i> Inquilino
                                         </a>
                                     ` : ''}
                                 </div>
 
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
-                                    <div><span class="text-slate-500 block">Locatário (Inquilino):</span> <strong class="text-white">${c.cliente_nome}</strong></div>
-                                    <div><span class="text-slate-500 block">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
-                                    <div><span class="text-slate-500 block">Sua Comissão (${c.taxa_administracao_pct}%):</span> <strong class="text-amber-300 font-mono">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong></div>
+                                    <div><span class="text-slate-500 block">Locatário:</span> <strong class="text-white">${c.cliente_nome}</strong></div>
+                                    <div><span class="text-slate-500 block">Aluguel:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Taxa Imob (${c.taxa_administracao_pct}%):</span> <strong class="text-amber-300 font-mono">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong></div>
                                     <div><span class="text-slate-500 block">Repasse Dono:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong></div>
                                 </div>
 
                                 <div class="flex items-center justify-between pt-1 text-[10px] text-slate-400 border-t border-slate-900">
                                     <span>Vigência: <strong>${dataInicioFmt}</strong> até <strong>${dataFimFmt}</strong></span>
-                                    <span>${textoRestante}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                } else if (tipo === 'imoveis-vendidos') {
+                    titulo.innerText = 'Histórico Geral de Imóveis Vendidos';
+                    icone.className = 'fa-solid fa-handshake text-amber-400';
+
+                    const { data: vendas, error } = await supabaseClient
+                        .from('vendas_fechadas')
+                        .select('*, imoveis(codigo_ref, titulo, foto_capa)')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .order('data_venda', { ascending: false });
+
+                    if (error) throw error;
+                    contador.innerText = `${vendas ? vendas.length : 0} imóveis vendidos`;
+
+                    if (!vendas || vendas.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma venda registrada até o momento.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = vendas.map(v => {
+                        const imovel = v.imoveis || {};
+                        const dtFormatada = v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----';
+                        return `
+                            <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30 space-y-2 hover:border-amber-400 transition">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                        <div>
+                                            <span class="font-bold text-white text-xs block">${imovel.titulo || 'Imóvel Vendido'}</span>
+                                            <span class="text-[10px] text-amber-300 font-mono">Ref: ${imovel.codigo_ref || '---'} • Vendido em: ${dtFormatada}</span>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Fechado</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                                    <div><span class="text-slate-500 block">Comprador:</span> <strong class="text-white">${v.cliente_comprador_nome}</strong></div>
+                                    <div><span class="text-slate-500 block">Valor Venda:</span> <strong class="text-white font-mono">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Comissão Imob:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Corretor (${v.corretor_nome || 'Casa'}):</span> <strong class="text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')}</strong></div>
                                 </div>
                             </div>
                         `;
@@ -742,8 +1153,8 @@
                     }).join('');
 
                 } else if (tipo === 'visitas') {
-                    titulo.innerText = 'Clientes em Atendimento e Visitas Agendadas';
-                    icone.className = 'fa-solid fa-calendar-check text-amber-400';
+                    titulo.innerText = 'Clientes em Atendimento e Visitas';
+                    icone.className = 'fa-solid fa-calendar-check text-cyan-400';
 
                     const { data: leads, error } = await supabaseClient
                         .from('leads_contatos')
@@ -756,30 +1167,21 @@
                     contador.innerText = `${leads.length} clientes em negociação`;
 
                     if (leads.length === 0) {
-                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum atendimento ou visita em andamento.</p>';
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum atendimento em andamento.</p>';
                         return;
                     }
 
-                    corpo.innerHTML = leads.map(l => {
-                        const dataVisita = l.data_agendamento ? new Date(l.data_agendamento).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : null;
-                        return `
-                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-amber-500/40 transition">
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-bold text-white text-xs">${l.nome}</span>
-                                        <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded ${l.status === 'Visita Agendada' ? 'bg-cyan-950 text-cyan-300 border border-cyan-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">
-                                            ${l.status}
-                                        </span>
-                                    </div>
-                                    <span class="text-[11px] text-cyan-300 font-mono block mt-0.5">${l.whatsapp}</span>
-                                    ${dataVisita ? `<span class="text-[10px] text-amber-300 block font-bold mt-1"><i class="fa-solid fa-calendar mr-1"></i> Marcada para: ${dataVisita}</span>` : ''}
-                                </div>
-                                <a href="leads.html" class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
-                                    Abrir CRM
-                                </a>
+                    corpo.innerHTML = leads.map(l => `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
+                            <div>
+                                <span class="font-bold text-white text-xs">${l.nome}</span>
+                                <span class="text-[11px] text-cyan-300 font-mono block mt-0.5">${l.whatsapp}</span>
                             </div>
-                        `;
-                    }).join('');
+                            <a href="leads.html" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                                Abrir Atendimento
+                            </a>
+                        </div>
+                    `).join('');
 
                 } else if (tipo === 'propostas') {
                     titulo.innerText = 'Propostas Comerciais em Análise';
@@ -801,15 +1203,14 @@
                     }
 
                     corpo.innerHTML = leads.map(l => `
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-rose-500/40 transition">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
                             <div>
                                 <span class="font-bold text-white text-xs">${l.nome}</span>
                                 <span class="text-xs font-mono font-black text-rose-300 block mt-0.5">
                                     ${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Valor não informado'}
                                 </span>
-                                ${l.condicoes_proposta ? `<p class="text-[11px] text-slate-400 mt-1 italic">Condições: "${l.condicoes_proposta}"</p>` : ''}
                             </div>
-                            <a href="leads.html" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap">
+                            <a href="leads.html" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold px-3 py-1.5 rounded-lg text-xs transition">
                                 Ver Detalhes
                             </a>
                         </div>
@@ -853,7 +1254,7 @@
                         <td class="py-3 px-3">${im.tipo} • ${im.bairro || 'Localização'}</td>
                         <td class="py-3 px-3 font-bold text-slate-200">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</td>
                         <td class="py-3 px-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : (im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-800 text-slate-300')}">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : (im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : (im.status === 'Vendido' ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-slate-800 text-slate-300'))}">
                                 ${im.status}
                             </span>
                         </td>
@@ -889,7 +1290,6 @@
                 tbody.innerHTML = leads.map(l => {
                     const dataFormatada = new Date(l.criado_em).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                     const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
-                    const ehAvaliacao = (l.mensagem && l.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
 
                     return `
                         <tr class="hover:bg-slate-900/50 transition">
@@ -897,7 +1297,7 @@
                             <td class="py-3 px-3 font-bold text-white">${l.nome}</td>
                             <td class="py-3 px-3 font-mono text-cyan-300">${l.whatsapp}</td>
                             <td class="py-3 px-3 text-slate-300 truncate max-w-[180px]">
-                                ${ehAvaliacao ? '<span class="text-emerald-400 font-bold">🏷️ Avaliação / Captação</span>' : (l.mensagem || 'Interesse pelo site')}
+                                ${l.mensagem || 'Interesse pelo site'}
                             </td>
                             <td class="py-3 px-3">
                                 <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-400 border border-blue-800">
@@ -971,7 +1371,7 @@
         }
 
         function mudarAba(aba) {
-            const abas = ['catalogo', 'leads', 'graficos'];
+            const abas = ['catalogo', 'leads', 'graficos', 'financeiro'];
             abas.forEach(a => {
                 const container = document.getElementById(`aba-conteudo-${a}`);
                 const btn = document.getElementById(`tab-btn-${a}`);
@@ -981,10 +1381,16 @@
                         btn.className = 'px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer';
                     } else {
                         container.classList.add('hidden');
-                        btn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
+                        btn.className = (a === 'financeiro')
+                            ? 'px-3.5 py-1.5 rounded-lg text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer border border-amber-500/30'
+                            : 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
                     }
                 }
             });
+
+            if (aba === 'financeiro') {
+                carregarDashboardFinanceiro();
+            }
         }
 
         async function executarLogout() {

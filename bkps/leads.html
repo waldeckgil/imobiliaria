@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central de Leads & CRM - SGI Gestão Imobiliária</title>
+    <title>Central de Atendimentos & CRM - SGI Gestão Imobiliária</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
@@ -21,8 +21,24 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA MODO LEITURA -->
-    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-50">
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <span>MODO SUPORTE MASTER:</span>
+                <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Sessão Soberana com Bypass RLS e Edição Liberada</span>
+            </div>
+            <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Fechar Suporte</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
             <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos, propostas e exclusões estão desabilitadas.</span>
@@ -30,7 +46,7 @@
     </div>
 
     <!-- CABEÇALHO TOPBAR -->
-    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-40 backdrop-blur-md">
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
             <div class="flex items-center gap-3">
@@ -78,13 +94,14 @@
                 <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
             </a>
             <a href="leads.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
-                <i class="fa-solid fa-comments mr-1"></i> Central de Leads
+                <i class="fa-solid fa-comments mr-1"></i> Central de Atendimentos
             </a>
             <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-users mr-1"></i> Equipe de Corretores
+                <i class="fa-solid fa-users mr-1"></i> Equipe & Permissões
+         
             </a>
             <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-gear mr-1"></i> Configurações & PDF
+                <i class="fa-solid fa-gear mr-1"></i> Configurações & Publicidade
             </a>
         </div>
     </nav>
@@ -120,7 +137,6 @@
         <div class="box-tech p-4">
             <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-12 gap-3 text-xs">
                 
-                <!-- BUSCA POR CLIENTE OU TELEFONE -->
                 <div class="lg:col-span-5 relative">
                     <input type="text" id="filtro-busca" placeholder="Buscar por nome, WhatsApp ou mensagem..." 
                            oninput="aplicarFiltros()"
@@ -128,7 +144,6 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
                 </div>
 
-                <!-- FILTRO POR ETAPA -->
                 <div class="lg:col-span-3">
                     <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Funil: Todos os Estágios</option>
@@ -141,14 +156,12 @@
                     </select>
                 </div>
 
-                <!-- FILTRO POR CORRETOR -->
                 <div class="lg:col-span-3">
                     <select id="filtro-corretor" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Corretor: Todos</option>
                     </select>
                 </div>
 
-                <!-- RESET -->
                 <div class="lg:col-span-1">
                     <button onclick="limparFiltros()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl border border-slate-700 transition cursor-pointer flex items-center justify-center" title="Limpar Filtros">
                         <i class="fa-solid fa-rotate-left text-xs"></i>
@@ -158,15 +171,15 @@
             </div>
         </div>
 
-        <!-- TABELA / GRADE DE ATENDIMENTOS -->
+        <!-- TABELA DE ATENDIMENTOS -->
         <div class="box-tech overflow-hidden shadow-2xl">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-300">
                     <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
                         <tr>
                             <th class="py-3 px-4">Recebido em</th>
-                            <th class="py-3 px-3">Cliente (Comprador)</th>
-                            <th class="py-3 px-3">Imóvel de Interesse</th>
+                            <th class="py-3 px-3">Cliente (Comprador / Proprietário)</th>
+                            <th class="py-3 px-3">Origem / Imóvel</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
                             <th class="py-3 px-3">Etapa Atual & Histórico</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
@@ -184,7 +197,6 @@
                 </table>
             </div>
 
-            <!-- RODAPÉ DA TABELA -->
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads cadastrados</span>
                 <span class="font-mono text-[11px]">SGI • Timeline & CRM Multi-Etapas</span>
@@ -202,28 +214,26 @@
                     <i class="fa-solid fa-timeline text-base"></i>
                     <span>Linha do Tempo & Histórico do Cliente</span>
                 </div>
-                <button onclick="fecharModalTimeline()" class="text-slate-500 hover:text-white transition">
+                <button onclick="fecharModalTimeline()" class="text-slate-500 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
 
-            <!-- CONTEXTO DO CLIENTE E IMÓVEL -->
             <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
                 <div>
                     <h4 class="font-black text-white text-sm" id="timeline-lead-nome">---</h4>
                     <p class="text-slate-400 font-mono text-[11px]" id="timeline-lead-contato">---</p>
                 </div>
                 <div class="text-right">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Contexto</span>
                     <span class="text-cyan-400 font-bold font-mono text-xs" id="timeline-lead-imovel">---</span>
                 </div>
             </div>
 
-            <!-- ADICIONAR NOTA MANUAL / OBSERVAÇÃO AO HISTÓRICO -->
             <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-2">
                 <label class="block text-[11px] font-bold uppercase text-slate-400">Inserir Nota Interna / Ocorrência</label>
                 <div class="flex gap-2">
-                    <input type="text" id="timeline-nova-nota" placeholder="Ex: Cliente pediu 2 dias para resposta, ligar na quinta-feira..." 
+                    <input type="text" id="timeline-nova-nota" placeholder="Ex: Cliente pediu 2 dias para resposta..." 
                            class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     <button onclick="adicionarNotaManualHistorico()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
                         <i class="fa-solid fa-paper-plane"></i>
@@ -232,7 +242,6 @@
                 </div>
             </div>
 
-            <!-- LISTAGEM DA LINHA DO TEMPO (SCROLLÁVEL) -->
             <div class="flex-1 overflow-y-auto pr-2 space-y-4" id="timeline-container-eventos">
                 <div class="py-8 text-center text-slate-500 text-xs">
                     <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
@@ -254,36 +263,32 @@
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-cyan-400 font-black text-sm">
                     <i class="fa-solid fa-calendar-days text-base"></i>
-                    <span>Agendar Visita ao Imóvel</span>
+                    <span>Agendar Visita / Avaliação</span>
                 </div>
-                <button onclick="fecharModalAgendamento()" class="text-slate-500 hover:text-white transition">
+                <button onclick="fecharModalAgendamento()" class="text-slate-500 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
 
             <input type="hidden" id="agendamento-lead-id">
 
-            <!-- DADOS DO CLIENTE & IMÓVEL (SOMENTE LEITURA) -->
             <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
                 <p class="text-slate-400">Cliente: <strong id="agendamento-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Imóvel: <strong id="agendamento-lead-imovel" class="text-cyan-400 font-mono">---</strong></p>
+                <p class="text-slate-400">Contexto: <strong id="agendamento-lead-imovel" class="text-cyan-400 font-mono">---</strong></p>
             </div>
 
-            <!-- CAMPO DATA E HORA -->
             <div>
                 <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Data e Hora do Compromisso</label>
                 <input type="datetime-local" id="agendamento-data" 
                        class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
             </div>
 
-            <!-- CAMPO OBSERVAÇÕES -->
             <div>
                 <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Notas / Instruções de Acesso</label>
-                <textarea id="agendamento-notas" rows="3" placeholder="Ex: Buscar chaves na portaria, cliente vai acompanhado da esposa..." 
+                <textarea id="agendamento-notas" rows="3" placeholder="Ex: Buscar chaves na portaria..." 
                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 resize-none"></textarea>
             </div>
 
-            <!-- AÇÕES DO MODAL COM CANCELAR E REAGENDAR -->
             <div class="space-y-2 pt-2 border-t border-slate-800">
                 <div class="flex items-center gap-2">
                     <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
@@ -294,7 +299,7 @@
 
                     <button onclick="cancelarVisitaAgendada()" id="btn-cancelar-visita" 
                             class="bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-800/60 font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
-                            title="Desmarcar visita e retornar para atendimento">
+                            title="Desmarcar visita">
                         <i class="fa-solid fa-calendar-xmark"></i>
                         <span class="hidden sm:inline">Desmarcar</span>
                     </button>
@@ -317,7 +322,7 @@
         </div>
     </div>
 
-    <!-- MODAL CUSTOMIZADO: CONFIRMAR DESMARCAR VISITA -->
+    <!-- MODAL CONFIRMAR DESMARCAR VISITA -->
     <div id="modal-confirmar-desmarcar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-sm w-full p-6 text-center border border-amber-500/40 shadow-2xl space-y-3">
             <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mx-auto border border-amber-500/30">
@@ -327,7 +332,7 @@
             <h3 class="text-base font-black text-white">Desmarcar Visita?</h3>
             <p class="text-xs text-slate-400">
                 A data combinada será desmarcada e o lead retornará para o estágio 
-                <span class="text-amber-400 font-bold">"Em Atendimento"</span>. O histórico da visita permanecerá gravado.
+                <span class="text-amber-400 font-bold">"Em Atendimento"</span>.
             </p>
 
             <div class="flex items-center gap-2 pt-3">
@@ -349,21 +354,19 @@
                     <i class="fa-solid fa-hand-holding-dollar text-base"></i>
                     <span>Registrar Proposta Comercial</span>
                 </div>
-                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition">
+                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
 
             <input type="hidden" id="proposta-lead-id">
 
-            <!-- CONTEXTO DO CLIENTE E IMÓVEL -->
             <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <p class="text-slate-400">Comprador: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
+                <p class="text-slate-400">Cliente: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
+                <p class="text-slate-400">Contexto / Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
                 <p class="text-slate-400">Valor Anunciado: <strong id="proposta-valor-anuncio" class="text-emerald-400 font-mono">---</strong></p>
             </div>
 
-            <!-- VALOR OFERTADO -->
             <div>
                 <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Valor da Proposta Ofertada (R$)</label>
                 <div class="relative">
@@ -373,15 +376,13 @@
                 </div>
             </div>
 
-            <!-- CONDIÇÕES DE PAGAMENTO -->
             <div>
                 <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Forma de Pagamento / Condições</label>
                 <textarea id="proposta-condicoes-input" rows="3" 
-                          placeholder="Ex: Sinal de 20% + Financiamento Bancário + Carro como parte de pagamento..." 
+                          placeholder="Ex: Sinal de 20% + Financiamento Bancário..." 
                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 resize-none"></textarea>
             </div>
 
-            <!-- AÇÕES -->
             <div class="space-y-2 pt-2 border-t border-slate-800">
                 <button onclick="salvarPropostaComercial()" id="btn-salvar-proposta" 
                         class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-purple-950/40">
@@ -391,7 +392,7 @@
 
                 <button onclick="enviarPropostaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Enviar Resumo da Proposta no WhatsApp</span>
+                    <span>Enviar Resumo no WhatsApp</span>
                 </button>
             </div>
         </div>
@@ -406,7 +407,6 @@
             <h3 class="text-base font-black text-white">Descartar Lead?</h3>
             <p class="text-xs text-slate-400 mt-1">Essa mensagem de contato e todo o histórico deste lead serão removidos permanentemente.</p>
             <p class="text-xs font-bold text-cyan-400 mt-2" id="modal-excluir-lead-nome">---</p>
-
             <input type="hidden" id="modal-excluir-lead-id">
 
             <div class="flex items-center gap-2 mt-5">
@@ -425,7 +425,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • CRM & Linha do Tempo
     </footer>
 
-    <!-- JAVASCRIPT COM 'supabaseClient' -->
+    <!-- JAVASCRIPT COMPLETO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -439,6 +439,7 @@
         let listaLeadsCompleta = [];
         let listaCorretores = [];
         let modoLeitura = false;
+        let isMasterSuporte = false;
 
         let leadEmAgendamento = null;
         let leadEmProposta = null;
@@ -452,28 +453,49 @@
             }
 
             const email = session.user.email.toLowerCase();
+            const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
+            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
+            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
-            // MODO MASTER BYPASS
+            // 1. MODO MASTER SUPORTE OPERACIONAL
             if (email === 'waldeckgil@gmail.com') {
+                isMasterSuporte = true;
+                modoLeitura = false; // Master tem permissão total de alteração
                 usuarioLogadoNome = 'Waldeck (Super Admin)';
-                document.getElementById('topbar-imob-nome').innerText = 'PAINEL MASTER (LEADS GLOBAIS)';
-                document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
-                document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
-                document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-                const { data: imobPiloto } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
-                if (imobPiloto) {
-                    imobiliariaId = imobPiloto.id;
-                    imobiliariaNomeFantasia = imobPiloto.nome_fantasia || 'nossa imobiliária';
-                    imobiliariaSlug = imobPiloto.slug || '';
-                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobPiloto.slug}`;
+                let targetId = impersonateId;
+                let imobAlvo = null;
+
+                if (targetId) {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId).single();
+                    imobAlvo = data;
+                } else {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                    imobAlvo = data;
+                }
+
+                if (imobAlvo) {
+                    imobiliariaId = imobAlvo.id;
+                    imobiliariaNomeFantasia = imobAlvo.nome_fantasia || 'nossa imobiliária';
+                    imobiliariaSlug = imobAlvo.slug || '';
+
+                    // Exibe a Faixa Dourada Soberana
+                    document.getElementById('faixa-modo-suporte').classList.remove('hidden');
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
+                    document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                    document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug}`;
+
                     await carregarEquipeCorretores();
                     await carregarLeads();
                 }
                 return;
             }
 
-            // GESTOR / CORRETOR LOGADO
+            // 2. GESTOR / CORRETOR LOGADO
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
@@ -501,7 +523,6 @@
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
 
-                // Auditoria Financeira
                 const hoje = new Date().toISOString().split('T')[0];
                 const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
                 modoLeitura = (imob.status === 'blocked' || vencido);
@@ -562,7 +583,6 @@
 
                 let leads = leadsData || [];
 
-                // Hidratação dos dados dos imóveis
                 const imoveisIds = [...new Set(leads.map(l => l.imovel_id).filter(Boolean))];
                 if (imoveisIds.length > 0) {
                     const { data: imoveisData, error: errImoveis } = await supabaseClient
@@ -613,9 +633,6 @@
             return `${dia}/${mes} às ${hora}:${min}`;
         }
 
-        // ==========================================
-        // MOTOR DE HISTÓRICO & LINHA DO TEMPO (LOG)
-        // ==========================================
         async function registrarEventoHistorico(leadId, tipoEvento, descricao, detalhes = null) {
             try {
                 const leadRef = listaLeadsCompleta.find(l => l.id === leadId);
@@ -637,10 +654,7 @@
                     .insert([payload])
                     .select();
 
-                if (error) {
-                    console.error('Falha Supabase ao registrar histórico:', error);
-                    throw error;
-                }
+                if (error) throw error;
                 return data;
             } catch (err) {
                 console.error('Erro ao registrar histórico:', err.message || err);
@@ -667,9 +681,23 @@
                 const dataCriacao = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
                 
+                const ehAvaliacao = (l.mensagem && l.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
                 let imovelBloco = '<span class="text-slate-500 italic">Interesse Geral</span>';
                 let refImovelTexto = 'Geral';
-                if (l.imovel) {
+
+                if (ehAvaliacao) {
+                    imovelBloco = `
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-600/60 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 shadow-sm">
+                                <i class="fa-solid fa-calculator"></i>
+                            </div>
+                            <div class="truncate max-w-[180px]">
+                                <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase block">Captação / Avaliação</span>
+                                <span class="font-bold text-white block truncate">Novo Imóvel do Cliente</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (l.imovel) {
                     refImovelTexto = l.imovel.codigo_ref;
                     const foto = l.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
                     imovelBloco = `
@@ -689,15 +717,13 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Bloco de Visita
                 let blocoAgendamento = '';
                 if (l.data_agendamento) {
                     const notaTexto = l.notas_agendamento ? l.notas_agendamento.replace(/"/g, '&quot;') : '';
                     blocoAgendamento = `
                         <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
                             <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold transition w-fit" 
-                                    title="Visita combinada: clique para gerenciar">
+                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold transition w-fit cursor-pointer">
                                 <i class="fa-solid fa-calendar-check text-cyan-400"></i>
                                 <span>${formatarDataVisita(l.data_agendamento)}</span>
                             </button>
@@ -713,22 +739,20 @@
                     `;
                 } else if (l.status === 'Visita Agendada') {
                     blocoAgendamento = `
-                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse transition">
+                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse transition cursor-pointer">
                             <i class="fa-solid fa-calendar-plus"></i>
                             <span>Definir Data/Hora</span>
                         </button>
                     `;
                 }
 
-                // Bloco de Proposta
                 let blocoProposta = '';
                 if (l.valor_proposta || l.status === 'Proposta') {
                     const condTexto = l.condicoes_proposta ? l.condicoes_proposta.replace(/"/g, '&quot;') : '';
                     blocoProposta = `
                         <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
                             <button onclick="abrirModalProposta('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-0.5 rounded font-mono font-black transition w-fit" 
-                                    title="Editar valores da proposta">
+                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-0.5 rounded font-mono font-black transition w-fit cursor-pointer">
                                 <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
                                 <span>${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Definir Valor'}</span>
                             </button>
@@ -744,19 +768,23 @@
                     `;
                 }
 
-                // Configuração do WhatsApp Dinâmico (com link do imóvel para NOVO)
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
-                    const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
-                    const linkImovel = (l.imovel && imobiliariaSlug) 
-                        ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
-                        : '';
+                    if (ehAvaliacao) {
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação e negociação de imóvel através do nosso site. Podemos conversar sobre os detalhes do seu imóvel?`;
+                        urlWa += `?text=${encodeURIComponent(texto)}`;
+                    } else {
+                        const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
+                        const linkImovel = (l.imovel && imobiliariaSlug) 
+                            ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
+                            : '';
 
-                    const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
-                    urlWa += `?text=${encodeURIComponent(texto)}`;
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
+                        urlWa += `?text=${encodeURIComponent(texto)}`;
+                    }
                 }
 
                 return `
@@ -772,7 +800,7 @@
                     <td class="py-3 px-3">${imovelBloco}</td>
 
                     <td class="py-3 px-3">
-                        <p class="text-slate-300 text-xs truncate max-w-xs" title="${l.mensagem || ''}">
+                        <p class="text-slate-300 text-xs line-clamp-2 max-w-xs leading-relaxed" title="${(l.mensagem || '').replace(/"/g, '&quot;')}">
                             ${l.mensagem || '<span class="text-slate-500 italic">Sem mensagem extra</span>'}
                         </p>
                     </td>
@@ -780,8 +808,8 @@
                     <td class="py-3 px-3">
                         <div class="flex flex-col items-start gap-1">
                             <select onchange="aoMudarStatusLead('${l.id}', this.value)" 
-                                    ${modoLeitura ? 'disabled' : ''}
-                                    class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] font-bold text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer ${modoLeitura ? 'opacity-50' : ''}">
+                                    ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                    class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] font-bold text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-50' : ''}">
                                 <option value="Novo" ${l.status === 'Novo' ? 'selected' : ''}>🔵 Novo</option>
                                 <option value="Em Atendimento" ${l.status === 'Em Atendimento' ? 'selected' : ''}>🟡 Em Atendimento</option>
                                 <option value="Visita Agendada" ${l.status === 'Visita Agendada' ? 'selected' : ''}>🟣 Visita Agendada</option>
@@ -796,39 +824,35 @@
 
                     <td class="py-3 px-3">
                         <select onchange="atribuirCorretorLead('${l.id}', this.value)" 
-                                ${modoLeitura ? 'disabled' : ''}
-                                class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] text-slate-300 outline-none focus:border-cyan-400 cursor-pointer ${modoLeitura ? 'opacity-50' : ''}">
+                                ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] text-slate-300 outline-none focus:border-cyan-400 cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-50' : ''}">
                             ${opcoesCorretores}
                         </select>
                     </td>
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
-                            <!-- BOTÃO DE LINHA DO TEMPO (HISTÓRICO) -->
                             <button onclick="abrirModalTimeline('${l.id}')" 
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition cursor-pointer" 
-                                    title="Ver Linha do Tempo / Histórico do Cliente">
+                                    title="Linha do Tempo do Cliente">
                                 <i class="fa-solid fa-clock-rotate-left text-xs"></i>
                             </button>
 
-                            <!-- BOTÃO DE VISITA DIRETO -->
                             <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    ${modoLeitura ? 'disabled' : ''}
-                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-cyan-950/80 text-cyan-400 hover:text-cyan-300 border border-slate-700 hover:border-cyan-700 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
-                                    title="Agendar / Remarcar Visita">
+                                    ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-cyan-950/80 text-cyan-400 hover:text-cyan-300 border border-slate-700 hover:border-cyan-700 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
+                                    title="Agendar Visita">
                                 <i class="fa-solid fa-calendar-days text-xs"></i>
                             </button>
 
-                            <!-- WHATSAPP DIRETO -->
-                            <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow transition cursor-pointer" title="Responder no WhatsApp">
+                            <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow transition cursor-pointer" title="WhatsApp">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span class="hidden sm:inline">Chamar</span>
                             </a>
 
-                            <!-- EXCLUIR -->
                             <button onclick="abrirModalExcluirLead('${l.id}', '${l.nome.replace(/'/g, "\\'")}')" 
-                                    ${modoLeitura ? 'disabled' : ''}
-                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" title="Descartar">
+                                    ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" title="Descartar">
                                 <i class="fa-regular fa-trash-can text-xs"></i>
                             </button>
                         </div>
@@ -837,9 +861,8 @@
             }).join('');
         }
 
-        // GATILHO DINÂMICO DE MUDANÇA DE STATUS COM AUDITORIA
         async function aoMudarStatusLead(leadId, novoStatus) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
 
             const item = listaLeadsCompleta.find(l => l.id === leadId);
             const statusAntigo = item ? (item.status || 'Novo') : 'Novo';
@@ -852,7 +875,6 @@
 
             await atualizarStatusLead(leadId, novoStatus);
 
-            // Grava na Linha do Tempo
             if (statusAntigo !== novoStatus) {
                 await registrarEventoHistorico(
                     leadId, 
@@ -863,7 +885,7 @@
         }
 
         async function atualizarStatusLead(leadId, novoStatus) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             try {
                 const { error } = await supabaseClient
                     .from('leads_contatos')
@@ -884,21 +906,24 @@
             }
         }
 
-        // ==========================================
-        // MÓDULO DE AGENDAMENTO DE VISITAS
-        // ==========================================
         function abrirModalAgendamento(leadId) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             const lead = listaLeadsCompleta.find(l => l.id === leadId);
             if (!lead) return;
 
             leadEmAgendamento = lead;
 
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            let contextoTitulo = 'Interesse Geral na Imobiliária';
+            if (ehAvaliacao) {
+                contextoTitulo = 'Avaliação / Captação de Imóvel';
+            } else if (lead.imovel) {
+                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+            }
+
             document.getElementById('agendamento-lead-id').value = lead.id;
             document.getElementById('agendamento-lead-nome').innerText = lead.nome;
-            document.getElementById('agendamento-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral na Imobiliária';
+            document.getElementById('agendamento-lead-imovel').innerText = contextoTitulo;
 
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
@@ -918,7 +943,7 @@
         }
 
         async function salvarAgendamento() {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             const leadId = document.getElementById('agendamento-lead-id').value;
             const dataValor = document.getElementById('agendamento-data').value;
             const notas = document.getElementById('agendamento-notas').value.trim();
@@ -953,11 +978,10 @@
                     item.notas_agendamento = notas;
                 }
 
-                // Registra evento no Histórico
                 await registrarEventoHistorico(
                     leadId,
                     'visita',
-                    `Visita agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
+                    `Visita/Avaliação agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
                     { data_visita: isoData, notas: notas }
                 ).catch(() => {});
 
@@ -975,7 +999,7 @@
         }
 
         function cancelarVisitaAgendada() {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             document.getElementById('modal-confirmar-desmarcar').classList.remove('hidden');
         }
 
@@ -984,7 +1008,7 @@
         }
 
         async function executarCancelamentoVisita() {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             const leadId = document.getElementById('agendamento-lead-id').value;
             if (!leadId) return;
 
@@ -1012,7 +1036,7 @@
                 await registrarEventoHistorico(
                     leadId,
                     'visita',
-                    'Visita foi cancelada/desmarcada. O cliente retornou para "Em Atendimento".'
+                    'A visita foi cancelada/desmarcada. O cliente retornou para "Em Atendimento".'
                 );
 
                 fecharModalConfirmarDesmarcar();
@@ -1041,42 +1065,49 @@
             const d = new Date(dataValor);
             const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
             const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            const refImovel = leadEmAgendamento.imovel ? `Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'combinado';
+            
+            const ehAvaliacao = (leadEmAgendamento.mensagem && leadEmAgendamento.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            const refImovel = ehAvaliacao 
+                ? 'ao seu imóvel' 
+                : (leadEmAgendamento.imovel ? `ao imóvel Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'ao imóvel combinado');
 
             const zapLimpo = ('' + leadEmAgendamento.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
             let mensagem = '';
             if (tipo === 'reagendamento') {
-                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos sua visita ao imóvel ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
+                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos nossa visita ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
             } else {
-                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos sua visita ao imóvel ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
+                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos nossa visita ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
             }
 
             const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWa, '_blank');
         }
 
-        // ==========================================
-        // MÓDULO DE PROPOSTAS COMERCIAIS
-        // ==========================================
         function abrirModalProposta(leadId) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             const lead = listaLeadsCompleta.find(l => l.id === leadId);
             if (!lead) return;
 
             leadEmProposta = lead;
 
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            let contextoTitulo = 'Interesse Geral';
+            if (ehAvaliacao) {
+                contextoTitulo = 'Captação / Avaliação de Imóvel';
+            } else if (lead.imovel) {
+                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+            }
+
             document.getElementById('proposta-lead-id').value = lead.id;
             document.getElementById('proposta-lead-nome').innerText = lead.nome;
-            document.getElementById('proposta-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral';
+            document.getElementById('proposta-lead-imovel').innerText = contextoTitulo;
 
             const valorRef = lead.imovel ? (lead.imovel.valor_venda || lead.imovel.valor_locacao) : null;
             document.getElementById('proposta-valor-anuncio').innerText = valorRef 
                 ? 'R$ ' + Number(valorRef).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) 
-                : 'Sob Consulta';
+                : 'Sob Consulta / Avaliação';
 
             document.getElementById('proposta-valor-input').value = lead.valor_proposta || '';
             document.getElementById('proposta-condicoes-input').value = lead.condicoes_proposta || '';
@@ -1090,7 +1121,7 @@
         }
 
         async function salvarPropostaComercial() {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             const leadId = document.getElementById('proposta-lead-id').value;
             const valor = document.getElementById('proposta-valor-input').value;
             const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
@@ -1151,33 +1182,40 @@
             }
 
             const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const refImovel = leadEmProposta.imovel ? `Ref: ${leadEmProposta.imovel.codigo_ref}` : 'do imóvel';
+            const ehAvaliacao = (leadEmProposta.mensagem && leadEmProposta.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            const refImovel = ehAvaliacao 
+                ? 'para a negociação do seu imóvel' 
+                : (leadEmProposta.imovel ? `para o imóvel Ref: ${leadEmProposta.imovel.codigo_ref}` : 'para o imóvel');
+                
             const zapLimpo = ('' + leadEmProposta.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
-            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente sua proposta comercial para o imóvel ${refImovel}:\n\n` +
-                           `💰 *Valor Ofertado:* ${valorFormatado}\n` +
+            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente a proposta comercial ${refImovel}:\n\n` +
+                           `💰 *Valor:* ${valorFormatado}\n` +
                            (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
-                           `Nossa diretoria e o proprietário estão analisando e te retornamos em breve!`;
+                           `Nossa diretoria está acompanhando e qualquer dúvida estou à disposição!`;
 
             const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWa, '_blank');
         }
 
-        // ==========================================
-        // MODAL DA LINHA DO TEMPO / HISTÓRICO
-        // ==========================================
         async function abrirModalTimeline(leadId) {
             const lead = listaLeadsCompleta.find(l => l.id === leadId);
             if (!lead) return;
 
             leadEmTimeline = lead;
 
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            let contextoTitulo = 'Interesse Geral';
+            if (ehAvaliacao) {
+                contextoTitulo = 'Captação / Avaliação';
+            } else if (lead.imovel) {
+                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+            }
+
             document.getElementById('timeline-lead-nome').innerText = lead.nome;
             document.getElementById('timeline-lead-contato').innerText = `${lead.whatsapp} ${lead.email ? '• ' + lead.email : ''}`;
-            document.getElementById('timeline-lead-imovel').innerText = lead.imovel 
-                ? `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}` 
-                : 'Interesse Geral';
+            document.getElementById('timeline-lead-imovel').innerText = contextoTitulo;
 
             document.getElementById('timeline-nova-nota').value = '';
             document.getElementById('modal-timeline-lead').classList.remove('hidden');
@@ -1274,16 +1312,13 @@
                 input.value = '';
                 await carregarEventosTimeline(leadEmTimeline.id);
             } catch (err) {
-                console.error('Falha completa na nota:', err);
-                alert('Erro ao salvar nota: ' + (err.message || JSON.stringify(err)));
+                console.error('Falha na nota:', err);
+                alert('Erro ao salvar nota: ' + (err.message || ''));
             }
         }
 
-        // ==========================================
-        // ATRIBUIÇÃO, FILTROS E EXCLUSÃO
-        // ==========================================
         async function atribuirCorretorLead(leadId, corretorId) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             try {
                 const payload = {
                     corretor_atribuido_id: corretorId ? Number(corretorId) : null
@@ -1343,7 +1378,7 @@
         }
 
         function abrirModalExcluirLead(id, nome) {
-            if (modoLeitura) return;
+            if (modoLeitura && !isMasterSuporte) return;
             document.getElementById('modal-excluir-lead-id').value = id;
             document.getElementById('modal-excluir-lead-nome').innerText = `Lead: ${nome}`;
             document.getElementById('modal-excluir-lead').classList.remove('hidden');
@@ -1379,6 +1414,10 @@
         }
 
         async function executarLogout() {
+            if (isMasterSuporte) {
+                window.close();
+                return;
+            }
             if (confirm('Deseja realmente sair?')) {
                 await supabaseClient.auth.signOut();
                 sessionStorage.clear();

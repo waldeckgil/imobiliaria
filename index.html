@@ -572,7 +572,21 @@
 
         function aplicarDadosNaTela(imob) {
             document.title = `${imob.nome_fantasia} - Imóveis`;
-            document.getElementById('header-nome-curto').innerText = imob.nome_fantasia.toUpperCase();
+
+            // RENDERIZAÇÃO CONDICIONAL DA LOGO OFICIAL
+            const containerLogo = document.getElementById('container-logo-visual');
+            if (imob.logo_url && imob.logo_url.trim() !== '') {
+                containerLogo.className = "flex items-center justify-center";
+                containerLogo.innerHTML = `
+                    <img src="${imob.logo_url}" 
+                         alt="${imob.nome_fantasia}" 
+                         class="max-h-12 max-w-[200px] object-contain">
+                `;
+            } else {
+                // Fallback: Preserva o layout tipográfico clássico caso não haja logo cadastrada
+                document.getElementById('header-nome-curto').innerText = imob.nome_fantasia.toUpperCase();
+            }
+
             document.getElementById('header-razao').innerText = imob.razao_social || imob.nome_fantasia;
             document.getElementById('header-creci').innerText = imob.creci_juridico || '';
             
