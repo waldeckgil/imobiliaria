@@ -376,7 +376,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (STATUS ALUGADO & REPASSES MENSAIS) -->
+    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (STATUS ALUGADO & REPASSES MENSAIS COM ANEXOS) -->
     <div id="modal-registrar-locacao" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-purple-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalLocacao()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -413,6 +413,19 @@
                         <input type="text" id="loc-inquilino-cpf" placeholder="000.000.000-00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
                     </div>
+                </div>
+
+                <!-- NOVO CAMPO: ANEXO DE DOCUMENTOS DO INQUILINO -->
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-paperclip text-purple-400"></i>
+                        <span>Documentos do Inquilino (RG, CNH, Comprovante ou Contrato em PDF/Foto)</span>
+                    </label>
+                    <div class="bg-slate-950 border border-slate-700 rounded-xl p-2.5 flex items-center gap-3">
+                        <input type="file" id="loc-documentos" accept=".pdf,image/*" multiple
+                               class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white cursor-pointer">
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Anexe um ou mais arquivos. Eles serão armazenados em nuvem de forma segura vinculados a este contrato.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -637,7 +650,7 @@
                 // 2. Contratos Ativos de Locação (Mapeia Inquilino por Imóvel)
                 const { data: contratos } = await supabaseClient
                     .from('contratos_locacao')
-                    .select('imovel_id, cliente_nome, status')
+                    .select('imovel_id, cliente_nome, status, documentos_anexos')
                     .eq('imobiliaria_id', imobiliariaId)
                     .eq('status', 'Ativo');
 
@@ -718,7 +731,6 @@
             tbody.innerHTML = imoveis.map(im => {
                 const foto = im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
                 
-                // Finalidade
                 let badgeFinalidade = '';
                 const ehLocacao = (im.finalidade === 'Locacao' || im.finalidade === 'Locação');
                 const ehAmbos = (im.finalidade === 'Ambos');
@@ -774,7 +786,7 @@
                 const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
 
-                // BOTÕES INTELIGENTES SEPARADOS: VENDA VS LOCAÇÃO
+                // BOTÕES INTELIGENTES: VENDA VS LOCAÇÃO
                 let botoesFechamento = '';
                 if (im.status === 'Disponível' || im.status === 'Em Proposta') {
                     if (ehLocacao) {
@@ -987,7 +999,7 @@
         }
 
         // ==========================================
-        // FLUXO 1: MODAL DE FECHAMENTO DE VENDA
+        // FLUXO 1: FECHAMENTO DE VENDA
         // ==========================================
         function abrirModalVenda(imovelId) {
             if (modoLeitura) return;
@@ -1111,7 +1123,7 @@
         }
 
         // ==========================================
-        // FLUXO 2: MODAL DE FECHAMENTO DE LOCAÇÃO
+        // FLUXO 2: FECHAMENTO DE LOCAÇÃO COM DOCUMENTOS
         // ==========================================
         function abrirModalLocacao(imovelId) {
             if (modoLeitura) return;
@@ -1128,6 +1140,7 @@
             document.getElementById('loc-inquilino-nome').value = '';
             document.getElementById('loc-inquilino-zap').value = '';
             document.getElementById('loc-inquilino-cpf').value = '';
+            document.getElementById('loc-documentos').value = '';
             
             document.getElementById('loc-valor-aluguel').value = imovel.valor_locacao || '';
             const taxaAdmPadrao = (dadosImobAtual && dadosImobAtual.taxa_locacao_padrao_pct) ? dadosImobAtual.taxa_locacao_padrao_pct : 10.0;
@@ -1138,7 +1151,6 @@
             const hojeIso = hoje.toISOString().split('T')[0];
             document.getElementById('loc-data-inicio').value = hojeIso;
 
-            // Sugere término para 12 meses à frente
             const dataFim = new Date(hoje.getFullYear() + 1, hoje.getMonth(), hoje.getDate());
             document.getElementById('loc-data-fim').value = dataFim.toISOString().split('T')[0];
 
@@ -1168,7 +1180,7 @@
 
             const btn = document.getElementById('btn-confirmar-locacao');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando contrato...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando contrato e documentos...';
 
             const imovelId = document.getElementById('loc-imovel-id').value;
             const inquilinoNome = document.getElementById('loc-inquilino-nome').value.trim();
@@ -1183,8 +1195,31 @@
             const taxaImob = (valorAluguel * taxaAdmPct) / 100;
             const repasseDono = valorAluguel - taxaImob;
 
+            // UPLOAD SEGURO DE DOCUMENTOS DO INQUILINO NO SUPABASE STORAGE
+            const fileInput = document.getElementById('loc-documentos');
+            let docsUrls = [];
+
             try {
-                // 1. Grava o contrato em contratos_locacao
+                if (fileInput.files && fileInput.files.length > 0) {
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Armazenando documentos em nuvem...';
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        const file = fileInput.files[i];
+                        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+                        const path = `${imobiliariaId}/contratos/doc_inquilino_${Date.now()}_${i}_${cleanName}`;
+                        
+                        const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, file, { upsert: true });
+                        if (!upErr) {
+                            const url = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
+                            docsUrls.push(url);
+                        } else {
+                            console.warn('Erro ao subir documento:', upErr);
+                        }
+                    }
+                }
+
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando contrato e financeiro...';
+
+                // 1. Grava o contrato em contratos_locacao com o array de documentos anexos
                 const { data: contratoData, error: errContrato } = await supabaseClient
                     .from('contratos_locacao')
                     .insert([{
@@ -1200,6 +1235,7 @@
                         dia_vencimento_aluguel: diaVencimento,
                         data_inicio: dataInicio,
                         data_fim: dataFim,
+                        documentos_anexos: docsUrls.length > 0 ? docsUrls : null,
                         status: 'Ativo'
                     }])
                     .select()
@@ -1234,7 +1270,7 @@
                     }]);
 
                 fecharModalLocacao();
-                alert('Contrato de locação registrado com sucesso! O imóvel agora está ALUGADO e constará no Dashboard Financeiro.');
+                alert(`Contrato de locação registrado com sucesso! ${docsUrls.length > 0 ? docsUrls.length + ' documento(s) anexado(s).' : ''}`);
                 await carregarDadosAuxiliares();
                 await carregarImoveis();
 
