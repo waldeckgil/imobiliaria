@@ -37,7 +37,7 @@
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
-            <span>MODO SOMENTE LEITURA: Assinatura pendente. Ações de criação, exclusão, venda e alteração de vitrine estão bloqueadas.</span>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. Ações de criação, exclusão, venda, locação e alteração de vitrine estão bloqueadas.</span>
         </div>
     </div>
 
@@ -123,7 +123,7 @@
                 <i class="fa-solid fa-globe text-emerald-400/30 text-2xl sm:text-3xl"></i>
             </div>
 
-            <!-- CARD REVISADO: IMÓVEIS ALUGADOS -->
+            <!-- CARD DE IMÓVEIS ALUGADOS -->
             <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-purple-500 bg-purple-950/10">
                 <div>
                     <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóveis Alugados</span>
@@ -132,7 +132,7 @@
                 <i class="fa-solid fa-key text-purple-400/30 text-2xl sm:text-3xl"></i>
             </div>
 
-            <!-- NOVO CARD: IMÓVEIS VENDIDOS -->
+            <!-- CARD DE IMÓVEIS VENDIDOS -->
             <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-amber-500 bg-amber-950/10">
                 <div>
                     <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóveis Vendidos</span>
@@ -268,7 +268,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE REGISTRO DE VENDA (STATUS VENDIDO & COMISSÕES) -->
+    <!-- MODAL 1: REGISTRO DE VENDA (STATUS VENDIDO & COMISSÕES) -->
     <div id="modal-registrar-venda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalVenda()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -321,7 +321,7 @@
                     </div>
 
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Corretor que Fechou *</label>
+                        <label class="block font-bold text-slate-300 mb-1">Corretor Fechador *</label>
                         <select id="venda-corretor-select" required onchange="aoSelecionarCorretorVenda()" 
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
                             <option value="">Selecione o corretor...</option>
@@ -338,18 +338,18 @@
                     </div>
                 </div>
 
-                <!-- SIMULADOR E RESUMO FINANCEIRO EM TEMPO REAL -->
+                <!-- SIMULADOR FINANCEIRO DE VENDA -->
                 <div class="bg-slate-950/90 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
                     <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
                         Rateio Financeiro Instantâneo:
                     </span>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] pt-1">
+                    <div class="grid grid-cols-3 gap-2 text-[11px] pt-1">
                         <div>
                             <span class="text-slate-500 block">Comissão Total:</span>
                             <strong id="sim-comissao-total" class="text-amber-400 font-mono">R$ 0,00</strong>
                         </div>
                         <div>
-                            <span class="text-slate-500 block">Fatia da Imobiliária:</span>
+                            <span class="text-slate-500 block">Fatia Imobiliária:</span>
                             <strong id="sim-comissao-imob" class="text-emerald-400 font-mono">R$ 0,00</strong>
                         </div>
                         <div>
@@ -370,6 +370,116 @@
                     <button type="submit" id="btn-confirmar-venda" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
                         <i class="fa-solid fa-check"></i>
                         <span>Confirmar Venda & Atualizar Status</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (STATUS ALUGADO & REPASSES MENSAIS) -->
+    <div id="modal-registrar-locacao" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-purple-500/50 space-y-4 max-h-[92vh] flex flex-col">
+            <button type="button" onclick="fecharModalLocacao()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 text-purple-400 font-black text-sm uppercase tracking-wide border-b border-slate-800 pb-3">
+                <i class="fa-solid fa-key"></i>
+                <span>Registrar Contrato de Locação & Inquilino</span>
+            </div>
+
+            <input type="hidden" id="loc-imovel-id">
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
+                <p class="text-slate-400">Imóvel: <strong id="loc-imovel-titulo" class="text-white font-bold">---</strong></p>
+                <p class="text-slate-400">Código: <strong id="loc-imovel-ref" class="text-purple-300 font-mono">Ref: ---</strong> • Proprietário: <strong id="loc-proprietario-nome" class="text-amber-400">---</strong></p>
+            </div>
+
+            <form id="form-locacao" onsubmit="confirmarFechamentoLocacao(event)" class="space-y-3.5 text-xs flex-1 overflow-y-auto pr-1">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nome Completo do Inquilino (Locatário) *</label>
+                    <input type="text" id="loc-inquilino-nome" required placeholder="Ex: Carlos Eduardo de Souza" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">WhatsApp do Inquilino *</label>
+                        <input type="tel" id="loc-inquilino-zap" required placeholder="(21) 99999-9999" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">CPF / CNPJ do Inquilino</label>
+                        <input type="text" id="loc-inquilino-cpf" placeholder="000.000.000-00" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Aluguel Bruto (R$) *</label>
+                        <div class="relative">
+                            <span class="absolute left-2.5 top-2 text-xs font-bold text-slate-500">R$</span>
+                            <input type="number" step="0.01" id="loc-valor-aluguel" required oninput="calcularRateioLocacao()" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-8 pr-2 text-purple-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Taxa Imob (%) *</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" id="loc-taxa-adm-pct" required oninput="calcularRateioLocacao()" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-7 text-amber-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
+                            <span class="absolute right-2.5 top-2 text-slate-500 font-bold">%</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Dia Vencimento *</label>
+                        <input type="number" min="1" max="31" id="loc-dia-vencimento" value="10" required 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-purple-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Início do Contrato *</label>
+                        <input type="date" id="loc-data-inicio" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Término do Contrato *</label>
+                        <input type="date" id="loc-data-fim" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
+                    </div>
+                </div>
+
+                <!-- SIMULADOR FINANCEIRO DE LOCAÇÃO MENSAL -->
+                <div class="bg-slate-950/90 border border-purple-500/40 rounded-xl p-3.5 space-y-2">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-purple-400 block">
+                        Fluxo Mensal de Aluguel:
+                    </span>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] pt-1">
+                        <div>
+                            <span class="text-slate-500 block">Aluguel do Inquilino:</span>
+                            <strong id="sim-loc-bruto" class="text-white font-mono">R$ 0,00</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">Taxa da Imobiliária:</span>
+                            <strong id="sim-loc-taxa-imob" class="text-emerald-400 font-mono">R$ 0,00/mês</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 block">Repasse ao Dono:</span>
+                            <strong id="sim-loc-repasse-dono" class="text-cyan-300 font-mono">R$ 0,00/mês</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="fecharModalLocacao()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-confirmar-locacao" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black flex items-center gap-1.5 transition shadow cursor-pointer">
+                        <i class="fa-solid fa-key"></i>
+                        <span>Confirmar Locação & Criar Contrato</span>
                     </button>
                 </div>
             </form>
@@ -434,7 +544,7 @@
             // 1. MODO MASTER SUPORTE OPERACIONAL
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
-                modoLeitura = false; // Master tem poder irrestrito
+                modoLeitura = false;
 
                 let targetId = impersonateId;
                 let imobAlvo = null;
@@ -610,9 +720,12 @@
                 
                 // Finalidade
                 let badgeFinalidade = '';
-                if (im.finalidade === 'Ambos') {
+                const ehLocacao = (im.finalidade === 'Locacao' || im.finalidade === 'Locação');
+                const ehAmbos = (im.finalidade === 'Ambos');
+
+                if (ehAmbos) {
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-purple-950 text-purple-300 border border-purple-800 inline-flex items-center gap-1"><i class="fa-solid fa-arrows-split-up-and-left text-[9px]"></i> Venda & Locação</span>';
-                } else if (im.finalidade === 'Locacao' || im.finalidade === 'Locação') {
+                } else if (ehLocacao) {
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-950 text-amber-400 border border-amber-800 inline-flex items-center gap-1"><i class="fa-solid fa-key text-[9px]"></i> Locação</span>';
                 } else {
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 inline-flex items-center gap-1"><i class="fa-solid fa-tag text-[9px]"></i> Venda</span>';
@@ -627,16 +740,16 @@
                     ? `<div class="flex items-center gap-1.5 mt-1 text-[11px] text-purple-300 font-bold"><i class="fa-solid fa-key text-purple-400 text-xs"></i> <span>Inquilino: ${nomeInquilino || 'Contrato Ativo'}</span></div>`
                     : '';
 
-                // Bloco de Valores Comerciais
+                // Valores Comerciais
                 let blocoValores = '';
-                if (im.finalidade === 'Ambos') {
+                if (ehAmbos) {
                     blocoValores = `
                         <div class="space-y-0.5">
                             <span class="font-black text-cyan-300 block text-xs">Venda: R$ ${Number(im.valor_venda || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                             <span class="font-bold text-amber-300 block text-[11px]">Aluguel: R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês</span>
                         </div>
                     `;
-                } else if (im.finalidade === 'Locacao' || im.finalidade === 'Locação') {
+                } else if (ehLocacao) {
                     blocoValores = `
                         <div>
                             <span class="font-black text-amber-300 block text-xs">R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês</span>
@@ -661,14 +774,44 @@
                 const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
 
-                const botaoRegistrarVenda = (im.status !== 'Vendido') ? `
-                    <button onclick="abrirModalVenda('${im.id}')" 
-                            ${modoLeitura ? 'disabled' : ''}
-                            class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-400 hover:text-amber-300 border border-amber-700/80 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
-                            title="Registrar Venda / Fechamento">
-                        <i class="fa-solid fa-handshake text-xs"></i>
-                    </button>
-                ` : '';
+                // BOTÕES INTELIGENTES SEPARADOS: VENDA VS LOCAÇÃO
+                let botoesFechamento = '';
+                if (im.status === 'Disponível' || im.status === 'Em Proposta') {
+                    if (ehLocacao) {
+                        botoesFechamento = `
+                            <button onclick="abrirModalLocacao('${im.id}')" 
+                                    ${modoLeitura ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-purple-950/80 hover:bg-purple-900 text-purple-300 hover:text-purple-200 border border-purple-700/80 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
+                                    title="Registrar Locação (Alugar Imóvel)">
+                                <i class="fa-solid fa-key text-xs"></i>
+                            </button>
+                        `;
+                    } else if (ehAmbos) {
+                        botoesFechamento = `
+                            <button onclick="abrirModalLocacao('${im.id}')" 
+                                    ${modoLeitura ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-purple-950/80 hover:bg-purple-900 text-purple-300 hover:text-purple-200 border border-purple-700/80 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
+                                    title="Registrar Locação (Alugar Imóvel)">
+                                <i class="fa-solid fa-key text-xs"></i>
+                            </button>
+                            <button onclick="abrirModalVenda('${im.id}')" 
+                                    ${modoLeitura ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-400 hover:text-amber-300 border border-amber-700/80 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
+                                    title="Registrar Venda do Imóvel">
+                                <i class="fa-solid fa-handshake text-xs"></i>
+                            </button>
+                        `;
+                    } else {
+                        botoesFechamento = `
+                            <button onclick="abrirModalVenda('${im.id}')" 
+                                    ${modoLeitura ? 'disabled' : ''}
+                                    class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-400 hover:text-amber-300 border border-amber-700/80 transition cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}" 
+                                    title="Registrar Venda do Imóvel">
+                                <i class="fa-solid fa-handshake text-xs"></i>
+                            </button>
+                        `;
+                    }
+                }
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
@@ -688,7 +831,6 @@
                         <span class="text-[11px] text-slate-500 block mt-0.5">${im.bairro || 'Localização'}</span>
                     </td>
 
-                    <!-- NOVA COLUNA: PROPRIETÁRIO & INQUILINO -->
                     <td class="py-3 px-3">
                         <div class="flex items-center gap-1.5">
                             <i class="fa-solid fa-user-tie text-amber-400 text-xs"></i>
@@ -718,7 +860,7 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
-                            ${botaoRegistrarVenda}
+                            ${botoesFechamento}
 
                             <button onclick="abrirModalProprietario('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-700/80 transition cursor-pointer" 
@@ -749,7 +891,6 @@
             document.getElementById('prop-modal-imovel-titulo').innerText = imovel.titulo;
             document.getElementById('prop-modal-imovel-ref').innerText = `Ref: ${imovel.codigo_ref} • ${imovel.bairro || ''}`;
 
-            // Valor Pretendido Líquido
             document.getElementById('prop-valor-pretendido-input').value = imovel.valor_pretendido_proprietario || '';
 
             const container = document.getElementById('prop-modal-conteudo');
@@ -845,7 +986,9 @@
             imovelEmFocoProprietarioId = null;
         }
 
-        // MODAL E CÁLCULO DE FECHAMENTO DE VENDA
+        // ==========================================
+        // FLUXO 1: MODAL DE FECHAMENTO DE VENDA
+        // ==========================================
         function abrirModalVenda(imovelId) {
             if (modoLeitura) return;
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
@@ -860,7 +1003,6 @@
             document.getElementById('venda-valor-fechado').value = imovel.valor_venda || '';
             document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
 
-            // Puxa a comissão padrão definida nas configurações da imobiliária
             const comissaoPadraoImob = (dadosImobAtual && dadosImobAtual.comissao_venda_padrao_pct) ? dadosImobAtual.comissao_venda_padrao_pct : 6.0;
             document.getElementById('venda-comissao-total-pct').value = comissaoPadraoImob;
 
@@ -927,7 +1069,6 @@
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
-                // 1. Grava a transação na tabela de vendas fechadas
                 const { error: errVenda } = await supabaseClient
                     .from('vendas_fechadas')
                     .insert([{
@@ -949,13 +1090,9 @@
 
                 if (errVenda) throw errVenda;
 
-                // 2. Atualiza o status do imóvel para Vendido e pausa na vitrine
                 const { error: errImovel } = await supabaseClient
                     .from('imoveis')
-                    .update({
-                        status: 'Vendido',
-                        ativa: false
-                    })
+                    .update({ status: 'Vendido', ativa: false })
                     .eq('id', imovelId);
 
                 if (errImovel) throw errImovel;
@@ -966,10 +1103,147 @@
 
             } catch (err) {
                 console.error(err);
-                alert('Erro ao registrar fechamento de venda: ' + err.message);
+                alert('Erro ao registrar venda: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar Venda & Atualizar Status</span>';
+            }
+        }
+
+        // ==========================================
+        // FLUXO 2: MODAL DE FECHAMENTO DE LOCAÇÃO
+        // ==========================================
+        function abrirModalLocacao(imovelId) {
+            if (modoLeitura) return;
+            const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
+            if (!imovel) return;
+
+            document.getElementById('loc-imovel-id').value = imovel.id;
+            document.getElementById('loc-imovel-titulo').innerText = imovel.titulo;
+            document.getElementById('loc-imovel-ref').innerText = `Ref: ${imovel.codigo_ref}`;
+            
+            const prop = imovel.proprietario_id ? mapaClientes[imovel.proprietario_id] : null;
+            document.getElementById('loc-proprietario-nome').innerText = prop ? prop.nome : 'Não informado';
+
+            document.getElementById('loc-inquilino-nome').value = '';
+            document.getElementById('loc-inquilino-zap').value = '';
+            document.getElementById('loc-inquilino-cpf').value = '';
+            
+            document.getElementById('loc-valor-aluguel').value = imovel.valor_locacao || '';
+            const taxaAdmPadrao = (dadosImobAtual && dadosImobAtual.taxa_locacao_padrao_pct) ? dadosImobAtual.taxa_locacao_padrao_pct : 10.0;
+            document.getElementById('loc-taxa-adm-pct').value = taxaAdmPadrao;
+            document.getElementById('loc-dia-vencimento').value = 10;
+
+            const hoje = new Date();
+            const hojeIso = hoje.toISOString().split('T')[0];
+            document.getElementById('loc-data-inicio').value = hojeIso;
+
+            // Sugere término para 12 meses à frente
+            const dataFim = new Date(hoje.getFullYear() + 1, hoje.getMonth(), hoje.getDate());
+            document.getElementById('loc-data-fim').value = dataFim.toISOString().split('T')[0];
+
+            calcularRateioLocacao();
+            document.getElementById('modal-registrar-locacao').classList.remove('hidden');
+        }
+
+        function fecharModalLocacao() {
+            document.getElementById('modal-registrar-locacao').classList.add('hidden');
+        }
+
+        function calcularRateioLocacao() {
+            const valorAluguel = Number(document.getElementById('loc-valor-aluguel').value) || 0;
+            const taxaAdmPct = Number(document.getElementById('loc-taxa-adm-pct').value) || 0;
+
+            const taxaImob = (valorAluguel * taxaAdmPct) / 100;
+            const repasseDono = valorAluguel - taxaImob;
+
+            document.getElementById('sim-loc-bruto').innerText = valorAluguel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('sim-loc-taxa-imob').innerText = taxaImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
+            document.getElementById('sim-loc-repasse-dono').innerText = repasseDono.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
+        }
+
+        async function confirmarFechamentoLocacao(event) {
+            event.preventDefault();
+            if (modoLeitura) return;
+
+            const btn = document.getElementById('btn-confirmar-locacao');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando contrato...';
+
+            const imovelId = document.getElementById('loc-imovel-id').value;
+            const inquilinoNome = document.getElementById('loc-inquilino-nome').value.trim();
+            const inquilinoZap = document.getElementById('loc-inquilino-zap').value.trim();
+            const inquilinoCpf = document.getElementById('loc-inquilino-cpf').value.trim();
+            const valorAluguel = Number(document.getElementById('loc-valor-aluguel').value);
+            const taxaAdmPct = Number(document.getElementById('loc-taxa-adm-pct').value);
+            const diaVencimento = Number(document.getElementById('loc-dia-vencimento').value);
+            const dataInicio = document.getElementById('loc-data-inicio').value;
+            const dataFim = document.getElementById('loc-data-fim').value;
+
+            const taxaImob = (valorAluguel * taxaAdmPct) / 100;
+            const repasseDono = valorAluguel - taxaImob;
+
+            try {
+                // 1. Grava o contrato em contratos_locacao
+                const { data: contratoData, error: errContrato } = await supabaseClient
+                    .from('contratos_locacao')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        imovel_id: imovelId,
+                        cliente_nome: inquilinoNome,
+                        cliente_whatsapp: inquilinoZap,
+                        cliente_cpf_cnpj: inquilinoCpf,
+                        valor_aluguel_bruto: valorAluguel,
+                        taxa_administracao_pct: taxaAdmPct,
+                        valor_comissao_imobiliaria: taxaImob,
+                        valor_repasse_proprietario: repasseDono,
+                        dia_vencimento_aluguel: diaVencimento,
+                        data_inicio: dataInicio,
+                        data_fim: dataFim,
+                        status: 'Ativo'
+                    }])
+                    .select()
+                    .single();
+
+                if (errContrato) throw errContrato;
+
+                // 2. Atualiza o status do imóvel para Alugado e pausa na vitrine
+                const { error: errImovel } = await supabaseClient
+                    .from('imoveis')
+                    .update({ status: 'Alugado', ativa: false })
+                    .eq('id', imovelId);
+
+                if (errImovel) throw errImovel;
+
+                // 3. Cria a primeira competência na tabela de recebíveis mensais
+                const mesAtual = String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear();
+                await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        contrato_id: contratoData.id,
+                        imovel_id: imovelId,
+                        mes_referencia: mesAtual,
+                        data_vencimento: dataInicio,
+                        valor_aluguel: valorAluguel,
+                        taxa_adm_pct: taxaAdmPct,
+                        valor_taxa_imobiliaria: taxaImob,
+                        valor_repasse_proprietario: repasseDono,
+                        status_inquilino: 'Pendente',
+                        status_repasse: 'Aguardando'
+                    }]);
+
+                fecharModalLocacao();
+                alert('Contrato de locação registrado com sucesso! O imóvel agora está ALUGADO e constará no Dashboard Financeiro.');
+                await carregarDadosAuxiliares();
+                await carregarImoveis();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao registrar locação: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-key"></i> <span>Confirmar Locação & Criar Contrato</span>';
             }
         }
 
