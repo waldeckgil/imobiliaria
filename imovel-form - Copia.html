@@ -159,52 +159,18 @@
                 </div>
             </div>
 
-            <!-- 2. GALERIA DE FOTOS & MÍDIAS (VITRINE & FOLHETO PDF) - PROMOVIDO PARA O TOPO -->
-            <div class="box-tech p-6 space-y-4 border border-cyan-500/30 bg-cyan-950/10">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-                    <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-photo-film"></i> 2. Fotos do Imóvel & Tour em Vídeo (Vitrine & Folheto PDF)
-                    </h3>
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
-                        Mídias Públicas de Divulgação
-                    </span>
-                </div>
-
-                <div class="bg-slate-950/80 p-3.5 rounded-xl border border-cyan-500/20 text-xs text-slate-400 space-y-1">
-                    <p class="font-bold text-slate-300 flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-info text-cyan-400"></i> Como funciona a foto de divulgação:
-                    </p>
-                    <p class="text-[11px] leading-relaxed">
-                        Selecione as fotos da casa abaixo. A foto marcada com a tag <span class="bg-cyan-400 text-slate-950 font-black px-1.5 py-0.5 rounded text-[9px]">CAPA</span> será usada como imagem principal da vitrine pública e estampará automaticamente as fichas comerciais em PDF geradas para o WhatsApp. Clique na estrela (<i class="fa-solid fa-star text-cyan-400"></i>) sobre qualquer foto para elegê-la como Capa.
-                    </p>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Fotos Oficiais do Imóvel *</label>
-                    <input type="file" id="input-fotos" multiple accept="image/*" onchange="processarSelecaoFotos(event)" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-cyan-500 file:text-slate-950 cursor-pointer">
-                </div>
-
-                <div id="container-fotos-preview" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2"></div>
-
-                <div class="pt-2 border-t border-slate-800/80">
-                    <label class="block font-bold text-slate-300 mb-1">Link de Vídeo Tour (YouTube)</label>
-                    <input type="url" id="campo-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                </div>
-            </div>
-
-            <!-- 3. PROPRIETÁRIO DO IMÓVEL (EXCLUSIVO) -->
+            <!-- 2. VÍNCULO DO PROPRIETÁRIO & DOCUMENTOS DA CASA -->
             <div class="box-tech p-6 space-y-4 border border-amber-500/30 bg-amber-950/10">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                     <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-user-tie"></i> 3. Proprietário do Imóvel (Controle Interno)
+                        <i class="fa-solid fa-user-tie"></i> 2. Proprietário & Documentos do Imóvel
                     </h3>
-                    <span class="text-[11px] text-slate-400">Vínculo cadastral sigiloso para apuração de repasses e comissões.</span>
+                    <span class="text-[11px] text-slate-400">Controle interno protegido (visível apenas a usuários autorizados).</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
                     <div class="sm:col-span-9">
-                        <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado</label>
+                        <label class="block font-bold text-slate-300 mb-1">Proprietário do Imóvel</label>
                         <select id="campo-proprietario" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400">
                             <option value="">Carregando proprietários...</option>
                         </select>
@@ -216,31 +182,11 @@
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- 4. DOCUMENTOS CARTORÁRIOS DO IMÓVEL (RGI, ESCRITURA, IPTU) - ISOLADO -->
-            <div class="box-tech p-6 space-y-4 border border-slate-700 bg-slate-900/40">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-                    <h3 class="text-sm font-black text-slate-200 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-file-contract text-amber-400"></i> 4. Documentos da Casa (RGI, Escritura, IPTU)
-                    </h3>
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
-                        Anexos Cartorários Internos
-                    </span>
-                </div>
-
-                <div class="bg-amber-950/20 border border-amber-800/40 p-3 rounded-xl text-[11px] text-amber-300 flex items-start gap-2.5">
-                    <i class="fa-solid fa-shield-halved text-base text-amber-400 mt-0.5"></i>
-                    <div>
-                        <strong class="block text-white">Atenção - Documentos Administrativos e Jurídicos:</strong>
-                        <span>Esta gaveta destina-se apenas a certidões de matrícula, RGI, escrituras e carnês de IPTU. <strong>Não envie fotos da casa neste campo</strong> (use a Seção 2 acima para as fotos de vitrine).</span>
-                    </div>
-                </div>
-
-                <div class="space-y-3">
+                <div class="pt-3 border-t border-slate-800/80 space-y-3">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">
-                            Anexar Certidões e Contratos (PDF ou Imagem)
+                            <i class="fa-solid fa-file-contract text-amber-400 mr-1"></i> Documentos da Casa (RGI, Escritura, IPTU)
                         </label>
                         <input type="file" id="input-documentos-imovel" multiple accept=".pdf,image/*" onchange="processarSelecaoDocumentos(event)" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-500 file:text-slate-950 cursor-pointer">
@@ -249,145 +195,12 @@
                 </div>
             </div>
 
-            <!-- 5. VALORES FINANCEIROS GERAIS DO IMÓVEL -->
-            <div class="box-tech p-6 space-y-4">
-                <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
-                    <i class="fa-solid fa-dollar-sign"></i> 5. Valores Comerciais de Anúncio
-                </h3>
-
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor de Venda (R$)</label>
-                        <input type="number" step="0.01" id="campo-valor-venda" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor de Locação (R$/mês)</label>
-                        <input type="number" step="0.01" id="campo-valor-locacao" oninput="sincronizarValorLocacao(this.value)" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-amber-300 font-black text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Condomínio Mensal (R$)</label>
-                        <input type="number" step="0.01" id="campo-valor-condominio" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">IPTU Anual (R$)</label>
-                        <input type="number" step="0.01" id="campo-valor-iptu" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. MÉTRICAS FÍSICAS & CARACTERÍSTICAS -->
-            <div class="box-tech p-6 space-y-4">
-                <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
-                    <i class="fa-solid fa-ruler-combined"></i> 6. Métricas Físicas & Características
-                </h3>
-
-                <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Dormitórios</label>
-                        <input type="number" id="campo-quartos" value="1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Suítes</label>
-                        <input type="number" id="campo-suites" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Banheiros</label>
-                        <input type="number" id="campo-banheiros" value="1" min="1" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Vagas</label>
-                        <input type="number" id="campo-vagas" value="1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Área Útil (m²)</label>
-                        <input type="number" step="0.01" id="campo-area-util" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Área Total (m²)</label>
-                        <input type="number" step="0.01" id="campo-area-total" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-6 pt-2">
-                    <label class="flex items-center gap-2 text-slate-300 font-bold cursor-pointer">
-                        <input type="checkbox" id="campo-mobiliado" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
-                        <span>Mobiliado / Semi-mobiliado</span>
-                    </label>
-                    <label class="flex items-center gap-2 text-slate-300 font-bold cursor-pointer">
-                        <input type="checkbox" id="campo-pet" checked class="rounded border-slate-700 text-cyan-500 focus:ring-0">
-                        <span>Aceita Animais (Pet Friendly)</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- 7. LOCALIZAÇÃO -->
-            <div class="box-tech p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-map-location-dot"></i> 7. Localização (Busca Automática via CEP)
-                    </h3>
-                    <span id="viacep-status" class="text-[11px] text-slate-500 font-bold hidden">
-                        <i class="fa-solid fa-spinner fa-spin text-cyan-400 mr-1"></i> Buscando CEP...
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">CEP *</label>
-                        <input type="text" id="campo-cep" required placeholder="00000-000" onblur="consultarViaCEP(this.value)" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block font-bold text-slate-300 mb-1">Logradouro (Rua / Avenida)</label>
-                        <input type="text" id="campo-logradouro" placeholder="Nome da rua" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Número</label>
-                        <input type="text" id="campo-numero" placeholder="123" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Complemento</label>
-                        <input type="text" id="campo-complemento" placeholder="Apto, Bloco" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Bairro *</label>
-                        <input type="text" id="campo-bairro" required placeholder="Bairro" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Cidade *</label>
-                        <input type="text" id="campo-cidade" required placeholder="Cidade" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">UF *</label>
-                        <input type="text" id="campo-uf" required placeholder="UF" maxlength="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs uppercase outline-none focus:border-cyan-400">
-                    </div>
-                </div>
-
-                <div class="bg-amber-950/30 border border-amber-800/40 p-3.5 rounded-xl flex items-center justify-between gap-3">
-                    <div>
-                        <span class="text-xs font-bold text-amber-300 block">Blindagem de Captação contra Concorrentes</span>
-                        <span class="text-[11px] text-slate-400">Ocultar rua e número na vitrine pública. Exibirá apenas bairro e cidade.</span>
-                    </div>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="campo-exibir-endereco" class="rounded border-amber-700 text-amber-500 focus:ring-0">
-                        <span class="text-xs font-bold text-slate-300 whitespace-nowrap">Mostrar endereço completo</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- FORMALIZAÇÃO DE LOCAÇÃO CONDICIONAL (SE STATUS "ALUGADO") -->
+            <!-- 3. FORMALIZAÇÃO DE LOCAÇÃO SE STATUS "ALUGADO" -->
             <div id="secao-locatario-contrato" class="hidden box-tech p-6 space-y-4 border-2 border-purple-500/50 bg-gradient-to-r from-purple-950/20 to-slate-950">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-purple-800/50 pb-3">
                     <h3 class="text-sm font-black text-purple-300 uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-file-signature text-purple-400 text-base"></i> 
-                        <span>Formalização de Locação & Dados do Locatário (Inquilino)</span>
+                        <span>3. Formalização de Locação & Dados do Locatário (Inquilino)</span>
                     </h3>
                     <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">
                         Contrato Ativo
@@ -478,7 +291,160 @@
                 </div>
             </div>
 
-            <!-- BOTÕES DE SALVAMENTO -->
+            <!-- 4. VALORES FINANCEIROS GERAIS DO IMÓVEL -->
+            <div class="box-tech p-6 space-y-4">
+                <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
+                    <i class="fa-solid fa-dollar-sign"></i> 4. Valores de Anúncio
+                </h3>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor de Venda (R$)</label>
+                        <input type="number" step="0.01" id="campo-valor-venda" placeholder="0,00" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor de Locação (R$/mês)</label>
+                        <input type="number" step="0.01" id="campo-valor-locacao" oninput="sincronizarValorLocacao(this.value)" placeholder="0,00" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-amber-300 font-black text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Condomínio Mensal (R$)</label>
+                        <input type="number" step="0.01" id="campo-valor-condominio" placeholder="0,00" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">IPTU Anual (R$)</label>
+                        <input type="number" step="0.01" id="campo-valor-iptu" placeholder="0,00" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. MÉTRICAS FÍSICAS -->
+            <div class="box-tech p-6 space-y-4">
+                <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
+                    <i class="fa-solid fa-ruler-combined"></i> 5. Métricas Físicas & Características
+                </h3>
+
+                <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Dormitórios</label>
+                        <input type="number" id="campo-quartos" value="1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Suítes</label>
+                        <input type="number" id="campo-suites" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Banheiros</label>
+                        <input type="number" id="campo-banheiros" value="1" min="1" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Vagas</label>
+                        <input type="number" id="campo-vagas" value="1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Área Útil (m²)</label>
+                        <input type="number" step="0.01" id="campo-area-util" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Área Total (m²)</label>
+                        <input type="number" step="0.01" id="campo-area-total" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 pt-2">
+                    <label class="flex items-center gap-2 text-slate-300 font-bold cursor-pointer">
+                        <input type="checkbox" id="campo-mobiliado" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Mobiliado / Semi-mobiliado</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-slate-300 font-bold cursor-pointer">
+                        <input type="checkbox" id="campo-pet" checked class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Aceita Animais (Pet Friendly)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 6. LOCALIZAÇÃO -->
+            <div class="box-tech p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot"></i> 6. Localização (Busca Automática via CEP)
+                    </h3>
+                    <span id="viacep-status" class="text-[11px] text-slate-500 font-bold hidden">
+                        <i class="fa-solid fa-spinner fa-spin text-cyan-400 mr-1"></i> Buscando CEP...
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">CEP *</label>
+                        <input type="text" id="campo-cep" required placeholder="00000-000" onblur="consultarViaCEP(this.value)" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block font-bold text-slate-300 mb-1">Logradouro (Rua / Avenida)</label>
+                        <input type="text" id="campo-logradouro" placeholder="Nome da rua" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Número</label>
+                        <input type="text" id="campo-numero" placeholder="123" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Complemento</label>
+                        <input type="text" id="campo-complemento" placeholder="Apto, Bloco" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Bairro *</label>
+                        <input type="text" id="campo-bairro" required placeholder="Bairro" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Cidade *</label>
+                        <input type="text" id="campo-cidade" required placeholder="Cidade" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">UF *</label>
+                        <input type="text" id="campo-uf" required placeholder="UF" maxlength="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs uppercase outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="bg-amber-950/30 border border-amber-800/40 p-3.5 rounded-xl flex items-center justify-between gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-amber-300 block">Blindagem de Captação contra Concorrentes</span>
+                        <span class="text-[11px] text-slate-400">Ocultar rua e número na vitrine pública. Exibirá apenas bairro e cidade.</span>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="campo-exibir-endereco" class="rounded border-amber-700 text-amber-500 focus:ring-0">
+                        <span class="text-xs font-bold text-slate-300 whitespace-nowrap">Mostrar endereço completo</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 7. FOTOS & VÍDEO -->
+            <div class="box-tech p-6 space-y-4">
+                <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
+                    <i class="fa-solid fa-photo-film"></i> 7. Fotos & Tour em Vídeo
+                </h3>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Link de Vídeo Tour (YouTube)</label>
+                    <input type="url" id="campo-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Fotos do Imóvel</label>
+                    <input type="file" id="input-fotos" multiple accept="image/*" onchange="processarSelecaoFotos(event)" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-cyan-500 file:text-slate-950 cursor-pointer">
+                </div>
+
+                <div id="container-fotos-preview" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2"></div>
+            </div>
+
+            <!-- BOTÕES SALVAR -->
             <div class="flex items-center justify-end gap-3 pt-4">
                 <a href="imoveis-lista.html" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
                     Cancelar
@@ -579,7 +545,7 @@
                 return;
             }
 
-            const email = (session.user.email || '').toLowerCase();
+            const email = session.user.email.toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
             const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
             const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
@@ -587,7 +553,7 @@
             // 1. SUPORTE MASTER SOBERANO
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
-                modoLeitura = false;
+                modoLeitura = false; // Master tem poder total para editar e salvar
 
                 let targetId = impersonateId;
                 let imobAlvo = null;
@@ -603,10 +569,11 @@
                 if (imobAlvo) {
                     imobiliariaId = imobAlvo.id;
 
+                    // Mostra a Faixa Dourada Soberana
                     document.getElementById('faixa-modo-suporte').classList.remove('hidden');
-                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia || 'Imobiliária'} (/${imobAlvo.slug || ''})`;
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
 
-                    document.getElementById('topbar-imob-nome').innerText = `${(imobAlvo.nome_fantasia || 'IMOBILIÁRIA').toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
                     document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                     document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
                 }
@@ -617,7 +584,7 @@
                     imobiliariaId = usuario.imobiliaria_id;
                     const { data: imob } = await supabaseClient.from('imobiliarias').select('*').eq('id', imobiliariaId).single();
                     if (imob) {
-                        document.getElementById('topbar-imob-nome').innerText = (imob.nome_fantasia || 'IMOBILIÁRIA').toUpperCase();
+                        document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
                         document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
 
                         const hoje = new Date().toISOString().split('T')[0];
