@@ -23,166 +23,183 @@
         ::-webkit-scrollbar-track { background: #0b0f19; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Animação suave para menus e modais */
+        .dropdown-enter {
+            animation: dropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes dropdownFade {
+            from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between" onclick="fecharMenusAcoesFora(event)">
 
     <!-- CONTAINER FLUTUANTE DE TOASTS PROFISSIONAIS (SUBSTITUI OS ALERTS NATIVOS) -->
     <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none max-w-sm w-full"></div>
 
-    <!-- CABEÇALHO SOBERANO (MASTER TOPBAR) -->
+    <!-- CABEÇALHO SOBERANO (MASTER TOPBAR RESPONSIVO) -->
     <header class="bg-slate-950 border-b border-amber-500/30 py-3.5 px-4 sm:px-8 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg">
-                    👑
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-sm font-black text-white tracking-wide">SGI • PAINEL SUPER ADMIN MASTER</h1>
-                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">
-                            PROPRIETÁRIO
-                        </span>
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg shrink-0">
+                        👑
                     </div>
-                    <p class="text-xs text-slate-400">waldeckgil@gmail.com • Sessão Soberana com Bypass RLS</p>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-sm font-black text-white tracking-wide">SGI • SUPER ADMIN MASTER</h1>
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/40">
+                                SOBERANO
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">waldeckgil@gmail.com • Sessão Master</p>
+                    </div>
                 </div>
+
+                <!-- Botão de logout rápido mobile -->
+                <button onclick="executarLogout()" class="md:hidden p-2 rounded-lg bg-red-950/40 text-red-400 border border-red-800/60 text-xs">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
             </div>
 
-            <div class="flex items-center gap-3 text-xs">
+            <div class="flex flex-wrap items-center justify-end gap-2.5 text-xs w-full md:w-auto">
                 <!-- CONFIGURAÇÃO RÁPIDA DE DIAS DE ALERTA -->
                 <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
                     <i class="fa-solid fa-bell text-amber-400 text-xs"></i>
-                    <span class="text-slate-400">Alerta p/ Pgto:</span>
+                    <span class="text-slate-400 text-[11px]">Alerta pgto:</span>
                     <input type="number" id="input-dias-aviso" min="1" max="30" onchange="salvarDiasAviso(this.value)" 
-                           class="w-12 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-center text-amber-400 font-bold outline-none" title="Dias antes do vencimento para alertar o gestor">
-                    <span class="text-slate-400">Dias Antecede a dt de venc.</span>
+                           class="w-10 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-amber-400 font-bold outline-none text-xs" title="Dias antes do vencimento para alertar o gestor">
+                    <span class="text-slate-400 text-[11px]">dias antes</span>
                 </div>
 
-                <button onclick="carregarDadosMaster()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer">
+                <button onclick="carregarDadosMaster()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer text-xs">
                     <i class="fa-solid fa-rotate text-xs"></i>
-                    <span>Atualizar Métricas</span>
+                    <span>Atualizar</span>
                 </button>
 
-                <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                <button onclick="executarLogout()" class="hidden md:flex bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-1.5 rounded-xl border border-red-800/60 items-center gap-1.5 transition cursor-pointer text-xs">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
-                    <span>Encerrar Sessão</span>
+                    <span>Sair</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-8">
+    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6 sm:space-y-8">
         
         <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             
             <!-- MRR -->
-            <div class="box-master p-4 border-l-4 border-l-amber-400 flex flex-col justify-between">
+            <div class="box-master p-3.5 sm:p-4 border-l-4 border-l-amber-400 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
-                        <span>Receita Mensal (MRR)</span>
-                        <i class="fa-solid fa-sack-dollar text-amber-400 text-base"></i>
+                    <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
+                        <span>Recorrência (MRR)</span>
+                        <i class="fa-solid fa-sack-dollar text-amber-400 text-sm sm:text-base"></i>
                     </div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-mrr" class="text-2xl font-black text-amber-400">R$ 0,00</span>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <span id="kpi-mrr" class="text-xl sm:text-2xl font-black text-amber-400">R$ 0,00</span>
                     </div>
                 </div>
-                <span class="text-[10px] text-slate-500 mt-2 block">Recorrência mensal ativa</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Receita mensal ativa</span>
             </div>
 
             <!-- CARD INTERATIVO: ESTOQUE GLOBAL DE PAGAMENTOS -->
-            <div class="box-tech p-4 border-l-4 border-l-indigo-400 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group" 
+            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-indigo-400 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group" 
                  onclick="abrirModalHistoricoGlobal()" title="Clique para abrir o Histórico Geral e Estoque de Pagamentos">
                 <div>
-                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                    <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                         <span>Total Arrecadado</span>
-                        <i class="fa-solid fa-receipt text-indigo-400 text-base group-hover:scale-110 transition"></i>
+                        <i class="fa-solid fa-vault text-indigo-400 text-sm sm:text-base group-hover:scale-110 transition"></i>
                     </div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-total-arrecadado" class="text-2xl font-black text-indigo-300">R$ 0,00</span>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <span id="kpi-total-arrecadado" class="text-xl sm:text-2xl font-black text-indigo-300">R$ 0,00</span>
                     </div>
                 </div>
-                <div class="mt-2 flex items-center justify-between text-[10px] text-indigo-400 group-hover:underline">
-                    <span>Estoque de Pagamentos</span>
-                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                <div class="mt-2 flex items-center justify-between text-[9px] sm:text-[10px] text-indigo-400 group-hover:underline font-bold">
+                    <span>Ver Estoque</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
                 </div>
             </div>
 
             <!-- IMOBILIÁRIAS ATIVAS -->
-            <div class="box-tech p-4 border-l-4 border-l-emerald-400 flex flex-col justify-between">
+            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-emerald-400 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                    <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                         <span>Imobiliárias</span>
-                        <i class="fa-solid fa-building-circle-check text-emerald-400 text-base"></i>
+                        <i class="fa-solid fa-building-circle-check text-emerald-400 text-sm sm:text-base"></i>
                     </div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-imobiliarias-ativas" class="text-2xl font-black text-white">0</span>
-                        <span id="kpi-imobiliarias-total" class="text-xs text-slate-400">de 0</span>
+                    <div class="mt-2 flex items-baseline gap-1.5">
+                        <span id="kpi-imobiliarias-ativas" class="text-xl sm:text-2xl font-black text-white">0</span>
+                        <span id="kpi-imobiliarias-total" class="text-[10px] text-slate-400">de 0</span>
                     </div>
                 </div>
-                <span class="text-[10px] text-emerald-400 mt-2 block">Empresas em operação</span>
+                <span class="text-[9px] sm:text-[10px] text-emerald-400 mt-2 block">Em operação</span>
             </div>
 
             <!-- ESTOQUE DE IMÓVEIS -->
-            <div class="box-tech p-4 border-l-4 border-l-cyan-400 flex flex-col justify-between">
+            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-cyan-400 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
-                        <span>Imóveis na Rede</span>
-                        <i class="fa-solid fa-house-laptop text-cyan-400 text-base"></i>
+                    <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
+                        <span>Imóveis</span>
+                        <i class="fa-solid fa-house-laptop text-cyan-400 text-sm sm:text-base"></i>
                     </div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-imoveis-global" class="text-2xl font-black text-white">0</span>
-                        <span class="text-xs text-cyan-400">anúncios</span>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <span id="kpi-imoveis-global" class="text-xl sm:text-2xl font-black text-white">0</span>
+                        <span class="text-[10px] text-cyan-400">anúncios</span>
                     </div>
                 </div>
-                <span class="text-[10px] text-slate-500 mt-2 block">Total cadastrado</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Total na rede</span>
             </div>
 
             <!-- BLOQUEADAS / PENDÊNCIAS -->
-            <div class="box-tech p-4 border-l-4 border-l-rose-500 flex flex-col justify-between">
+            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-rose-500 flex flex-col justify-between col-span-2 sm:col-span-1">
                 <div>
-                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                    <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                         <span>Pendências</span>
-                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base"></i>
+                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm sm:text-base"></i>
                     </div>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-bloqueadas" class="text-2xl font-black text-rose-400">0</span>
-                        <span class="text-xs text-slate-400">bloqueadas</span>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <span id="kpi-bloqueadas" class="text-xl sm:text-2xl font-black text-rose-400">0</span>
+                        <span class="text-[10px] text-slate-400">bloqueadas</span>
                     </div>
                 </div>
-                <span class="text-[10px] text-slate-500 mt-2 block">Acesso restrito</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Acesso restrito</span>
             </div>
         </div>
 
         <!-- GESTÃO DE ASSINANTES -->
-        <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-5">
+        <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-4 sm:p-5">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div>
-                    <h3 class="text-base font-black text-white flex items-center gap-2">
+                    <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-building-user text-amber-400"></i> Carteira de Imobiliárias Assinantes
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, registre mensalidades com anexo, defina gratuidades, altere vencimentos e preste suporte.</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Gerencie contratos, lance mensalidades com anexo, defina gratuidades e preste suporte.</p>
                 </div>
 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
                     <button onclick="abrirModalHistoricoGlobal()" class="bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="Ver todo o histórico financeiro com filtros avançados">
-                        <i class="fa-solid fa-receipt text-xs"></i>
-                        <span>Estoque de Pagamentos</span>
+                        <i class="fa-solid fa-vault text-xs"></i>
+                        <span class="hidden sm:inline">Estoque de Pagamentos</span>
+                        <span class="sm:hidden">Estoque</span>
                     </button>
 
                     <div class="w-full sm:w-72 relative">
-                        <input type="text" id="filtro-busca-imob" placeholder="Buscar por nome, slug, e-mail ou CRECI..." 
+                        <input type="text" id="filtro-busca-imob" placeholder="Buscar imobiliária, slug..." 
                                oninput="filtrarImobiliarias()"
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white outline-none focus:border-amber-400">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-8 pr-3 text-xs text-white outline-none focus:border-amber-400">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- TABELA DE ASSINANTES -->
-            <div class="overflow-x-auto">
+            <!-- VISUALIZAÇÃO DESKTOP: TABELA -->
+            <div class="hidden md:block overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-300">
                     <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
                         <tr>
@@ -192,7 +209,7 @@
                             <th class="py-3 px-3">Plano Mensal</th>
                             <th class="py-3 px-3">Vencimento</th>
                             <th class="py-3 px-3 text-center">Status</th>
-                            <th class="py-3 px-4 text-right">Ações de Gestão & Suporte</th>
+                            <th class="py-3 px-4 text-right">Ações de Gestão</th>
                         </tr>
                     </thead>
                     <tbody id="tabela-imobiliarias-corpo" class="divide-y divide-slate-800/60">
@@ -206,33 +223,38 @@
                 </table>
             </div>
 
+            <!-- VISUALIZAÇÃO MOBILE: CARDS RESPONSIVOS (OTIMIZADOS PARA CELULAR) -->
+            <div id="lista-imobiliarias-mobile" class="md:hidden space-y-3">
+                <!-- Preenchido via JavaScript -->
+            </div>
+
             <div class="bg-slate-950/80 px-4 py-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
-                <span>Total de <strong id="contador-imob" class="text-white">0</strong> imobiliárias listadas</span>
-                <span class="font-mono text-[11px] text-amber-400/80">SGI Master Engine • PostgreSQL RLS Bypass Ativo</span>
+                <span>Total de <strong id="contador-imob" class="text-white">0</strong> cadastradas</span>
+                <span class="font-mono text-[10px] sm:text-[11px] text-amber-400/80">SGI Master Engine • Bypass Ativo</span>
             </div>
         </div>
 
         <!-- CENTRAL DE COMUNICADOS GLOBAIS -->
-        <div class="box-tech p-6 space-y-4 border border-cyan-500/30">
+        <div class="box-tech p-4 sm:p-6 space-y-4 border border-cyan-500/30">
             <div class="border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-cyan-400 font-black text-xs uppercase tracking-wider">
                     <i class="fa-solid fa-bullhorn"></i>
                     <span>Canal de Broadcast Global</span>
                 </div>
-                <h3 class="text-base font-black text-white mt-1">Emitir Comunicado no Painel dos Corretores</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Envie avisos de manutenção, melhorias ou notificações importantes que aparecerão na tela de todas as imobiliárias.</p>
+                <h3 class="text-sm sm:text-base font-black text-white mt-1">Emitir Comunicado no Painel das Imobiliárias</h3>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Envie avisos de manutenção ou alertas que surgirão na tela de todos os assinantes.</p>
             </div>
 
             <form id="form-comunicado" onsubmit="enviarComunicado(event)" class="space-y-4 text-xs">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="sm:col-span-2">
                         <label class="block font-bold text-slate-300 mb-1">Título do Comunicado *</label>
                         <input type="text" id="aviso-titulo" required placeholder="Ex: Manutenção Programada às 23h" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400 text-xs">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Tipo de Alerta *</label>
-                        <select id="aviso-tipo" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                        <select id="aviso-tipo" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400 text-xs">
                             <option value="info">ℹ️ Informativo (Azul)</option>
                             <option value="aviso">⚠️ Aviso Importante (Amarelo)</option>
                             <option value="urgente">🚨 Alerta Urgente (Vermelho)</option>
@@ -243,20 +265,20 @@
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Mensagem Completa *</label>
                     <textarea id="aviso-mensagem" required rows="3" placeholder="Descreva os detalhes da notificação..." 
-                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400"></textarea>
+                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400 text-xs"></textarea>
                 </div>
 
                 <div class="flex items-center justify-between pt-1">
-                    <span class="text-[11px] text-slate-500">O comunicado é gravado na tabela <code class="text-cyan-400">avisos_sistema</code>.</span>
-                    <button type="submit" id="btn-enviar-aviso" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-6 py-2.5 rounded-xl shadow-lg transition flex items-center gap-1.5 cursor-pointer">
+                    <span class="text-[10px] sm:text-[11px] text-slate-500">Gravado na tabela <code class="text-cyan-400">avisos_sistema</code>.</span>
+                    <button type="submit" id="btn-enviar-aviso" class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-5 py-2 sm:px-6 sm:py-2.5 rounded-xl shadow-lg transition flex items-center gap-1.5 cursor-pointer text-xs">
                         <i class="fa-solid fa-paper-plane"></i>
-                        <span>Transmitir Comunicado</span>
+                        <span>Transmitir</span>
                     </button>
                 </div>
             </form>
 
             <div class="pt-4 border-t border-slate-800 space-y-2">
-                <span class="text-[10px] font-black uppercase text-slate-400 block">Comunicados Ativos na Rede:</span>
+                <span class="text-[10px] font-black uppercase text-slate-400 block">Comunicados Ativos:</span>
                 <div id="lista-avisos-ativos" class="space-y-2">
                     <p class="text-xs text-slate-500 italic">Nenhum comunicado ativo no momento.</p>
                 </div>
@@ -266,14 +288,14 @@
     </main>
 
     <!-- MODAL 1: HISTÓRICO FINANCEIRO, RECIBOS COM ANEXO DE COMPROVANTE & DATA/HORA -->
-    <div id="modal-financeiro" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-3xl w-full p-6 shadow-2xl relative border border-emerald-500/40 max-h-[90vh] overflow-y-auto">
-            <button type="button" onclick="fecharModalFinanceiro()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+    <div id="modal-financeiro" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative border border-emerald-500/40 max-h-[92vh] overflow-y-auto">
+            <button type="button" onclick="fecharModalFinanceiro()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg border border-emerald-500/40">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg border border-emerald-500/40 shrink-0">
                     <i class="fa-solid fa-receipt"></i>
                 </div>
                 <div>
@@ -282,8 +304,8 @@
                 </div>
             </div>
 
-            <!-- FORMULÁRIO DE LANÇAMENTO DE PAGAMENTO COM ANEXO -->
-            <form id="form-registrar-pagamento" onsubmit="registrarPagamento(event)" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 text-xs mb-6">
+            <!-- FORMULÁRIO DE LANÇAMENTO DE PAGAMENTO COM ANEXO RESILIENTE -->
+            <form id="form-registrar-pagamento" onsubmit="registrarPagamento(event)" class="bg-slate-950 p-3.5 sm:p-4 rounded-xl border border-slate-800 space-y-3 text-xs mb-6">
                 <span class="text-[10px] font-black uppercase text-emerald-400 block">Dar Baixa em Pagamento Recebido</span>
                 <input type="hidden" id="modal-fin-imob-id">
 
@@ -318,8 +340,8 @@
                         <input type="text" id="fin-obs" placeholder="Ex: Pago via chave PIX Nubank" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white">
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante (PIX/PDF)</label>
-                        <input type="file" id="fin-arquivo-comprovante" accept="image/*,application/pdf" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-black file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer">
+                        <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante (Imagem / PDF)</label>
+                        <input type="file" id="fin-arquivo-comprovante" accept="image/*,application/pdf" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1 text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-[10px] file:font-black file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer">
                     </div>
                 </div>
 
@@ -328,7 +350,7 @@
                         <input type="checkbox" id="fin-renovar-30" checked class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
                         <span>Estender automaticamente vencimento em +30 dias e reativar</span>
                     </label>
-                    <button type="submit" id="btn-salvar-pagamento" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                    <button type="submit" id="btn-salvar-pagamento" class="w-full sm:w-auto px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-check"></i>
                         <span>Confirmar Recebimento</span>
                     </button>
@@ -367,13 +389,13 @@
 
     <!-- MODAL 2: AJUSTE DO PLANO / MENSALIDADE & GRATUIDADE -->
     <div id="modal-editar-plano" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-master max-w-sm w-full p-6 shadow-2xl relative">
-            <button type="button" onclick="fecharModalEditarPlano()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+        <div class="box-master max-w-sm w-full p-5 sm:p-6 shadow-2xl relative">
+            <button type="button" onclick="fecharModalEditarPlano()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg border border-amber-500/40">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg border border-amber-500/40 shrink-0">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
                 </div>
                 <div>
@@ -419,13 +441,13 @@
 
     <!-- MODAL 3: ALTERAÇÃO MANUAL DO VENCIMENTO -->
     <div id="modal-editar-vencimento" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-sm w-full p-6 shadow-2xl relative border border-blue-500/40">
-            <button type="button" onclick="fecharModalEditarVencimento()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+        <div class="box-tech max-w-sm w-full p-5 sm:p-6 shadow-2xl relative border border-blue-500/40">
+            <button type="button" onclick="fecharModalEditarVencimento()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg border border-blue-500/40">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg border border-blue-500/40 shrink-0">
                     <i class="fa-solid fa-calendar-day"></i>
                 </div>
                 <div>
@@ -456,16 +478,16 @@
     </div>
 
     <!-- MODAL 4: CENTRAL DE ESTOQUE E HISTÓRICO GLOBAL DE PAGAMENTOS COM FILTROS AVANÇADOS -->
-    <div id="modal-historico-global" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-5xl w-full p-6 shadow-2xl relative border border-indigo-500/40 max-h-[92vh] flex flex-col">
-            <button type="button" onclick="fecharModalHistoricoGlobal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+    <div id="modal-historico-global" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-5xl w-full p-4 sm:p-6 shadow-2xl relative border border-indigo-500/40 max-h-[94vh] flex flex-col">
+            <button type="button" onclick="fecharModalHistoricoGlobal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <!-- TOPO DO MODAL -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/40">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/40 shrink-0">
                         <i class="fa-solid fa-vault"></i>
                     </div>
                     <div>
@@ -473,14 +495,14 @@
                         <p class="text-xs text-indigo-300">Histórico unificado com data, hora precisa, anexos e filtros por período e imobiliária.</p>
                     </div>
                 </div>
-                <div class="bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 text-right">
-                    <span class="text-[10px] text-slate-400 uppercase font-bold block">Total Filtrado do Período</span>
-                    <span id="global-total-arrecadado-modal" class="text-base font-black text-emerald-400 font-mono">R$ 0,00</span>
+                <div class="bg-slate-950 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-slate-800 text-right w-full sm:w-auto">
+                    <span class="text-[9px] sm:text-[10px] text-slate-400 uppercase font-bold block">Total Filtrado do Período</span>
+                    <span id="global-total-arrecadado-modal" class="text-sm sm:text-base font-black text-emerald-400 font-mono">R$ 0,00</span>
                 </div>
             </div>
 
             <!-- ÁREA DE FILTROS AVANÇADOS -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
                 <!-- 1. FILTRO DE IMOBILIÁRIA -->
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Filtrar Imobiliária:</label>
@@ -552,13 +574,13 @@
 
     <!-- MODAL 5: EXCLUSÃO CRÍTICA DE IMOBILIÁRIA (PURGE TOTAL COM CONFIRMAÇÃO E AUDITORIA) -->
     <div id="modal-excluir-imob" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border-2 border-rose-600">
-            <button type="button" onclick="fecharModalExcluirImob()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+        <div class="box-tech max-w-lg w-full p-5 sm:p-6 shadow-2xl relative border-2 border-rose-600">
+            <button type="button" onclick="fecharModalExcluirImob()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
             <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
-                <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center text-2xl border border-rose-500/40">
+                <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center text-2xl border border-rose-500/40 shrink-0">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div>
@@ -618,7 +640,7 @@
 
     <!-- MODAL 6: MODAL DE CONFIRMAÇÃO CUSTOMIZADO (SUBSTITUI O WINDOW.CONFIRM NATIVO) -->
     <div id="modal-confirm-custom" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[9990] flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 shadow-2xl relative border border-amber-500/40">
+        <div class="box-tech max-w-md w-full p-5 sm:p-6 shadow-2xl relative border border-amber-500/40">
             <div class="flex items-start gap-3.5 mb-4">
                 <div id="modal-confirm-icone-box" class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg border border-amber-500/40 shrink-0">
                     <i id="modal-confirm-icone" class="fa-solid fa-circle-question"></i>
@@ -656,6 +678,9 @@
         let listaImoveisGlobal = [];
         let listaHistoricoGlobal = [];
 
+        // AVATAR SVG VETORIAL NATIVO (SUBSTITUI O VIA.PLACEHOLDER QUE CAÍA)
+        const DEFAULT_LOGO_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' rx='8' fill='%231e293b'/><path d='M20 11L10 19H13V29H18V23H22V29H27V19H30L20 11Z' fill='%23f59e0b'/></svg>";
+
         // =========================================================================
         // SISTEMA DE NOTIFICAÇÃO TOAST E CONFIRMAÇÃO CUSTOMIZADA (SEM ALERTS NATIVOS)
         // =========================================================================
@@ -677,14 +702,14 @@
             };
 
             toast.className = `flex items-center gap-3 p-3.5 rounded-xl border shadow-2xl backdrop-blur-md transition-all duration-300 transform translate-y-3 opacity-0 text-xs font-semibold pointer-events-auto ${cores[tipo] || cores.info}`;
-            toast.innerHTML = `<i class="fa-solid ${icones[tipo] || icones.info} text-base shrink-0"></i><span class="flex-1">${mensagem}</span>`;
+            toast.innerHTML = `<i class="fa-solid ${icones[tipo] || icones.info} text-base shrink-0"></i><span class="flex-1 leading-snug">${mensagem}</span>`;
             
             container.appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-y-3', 'opacity-0'); }, 10);
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-3');
                 setTimeout(() => toast.remove(), 300);
-            }, 3800);
+            }, 4000);
         }
 
         let resolverConfirmacao = null;
@@ -728,7 +753,32 @@
         }
 
         // =========================================================================
-        // FORMATAÇÃO COMPLETA DE DATA E HORA (COM HORÁRIO PRECISO)
+        // CONTROLE DO MENU SUSPENSO DE AÇÕES INTELIGENTES
+        // =========================================================================
+        function alternarMenuAcoes(event, menuId) {
+            event.stopPropagation();
+            const todosMenus = document.querySelectorAll('[id^="dropdown-acoes-"]');
+            todosMenus.forEach(m => {
+                if (m.id !== menuId) m.classList.add('hidden');
+            });
+            const menuAlvo = document.getElementById(menuId);
+            if (menuAlvo) {
+                menuAlvo.classList.toggle('hidden');
+                if (!menuAlvo.classList.contains('hidden')) {
+                    menuAlvo.classList.add('dropdown-enter');
+                }
+            }
+        }
+
+        function fecharMenusAcoesFora(event) {
+            if (!event.target.closest('[id^="dropdown-acoes-"]') && !event.target.closest('[id^="btn-toggle-acoes-"]')) {
+                const todosMenus = document.querySelectorAll('[id^="dropdown-acoes-"]');
+                todosMenus.forEach(m => m.classList.add('hidden'));
+            }
+        }
+
+        // =========================================================================
+        // FORMATAÇÃO COMPLETA DE DATA E HORA COM HORÁRIO PRECISO
         // =========================================================================
         function formatarDataHora(criadoEm, dataPagamento) {
             if (criadoEm) {
@@ -761,26 +811,39 @@
         }
 
         // =========================================================================
-        // EXTRAÇÃO DE COMPROVANTE (URL OU SALVO EM OBSERVAÇÕES)
+        // EXTRAÇÃO RESILIENTE DE COMPROVANTE (URL OU SALVO EM BASE64)
         // =========================================================================
         function extrairUrlComprovante(registro) {
-            if (registro.comprovante_url && registro.comprovante_url.startsWith('http')) {
+            if (registro.comprovante_url && (registro.comprovante_url.startsWith('http') || registro.comprovante_url.startsWith('data:'))) {
                 return registro.comprovante_url;
             }
-            if (registro.observacoes && registro.observacoes.includes('http')) {
-                const match = registro.observacoes.match(/https?:\/\/[^\s]+/);
-                if (match) return match[0];
+            if (registro.observacoes) {
+                const matchBase64 = registro.observacoes.match(/data:image\/[a-zA-Z]+;base64,[^\s]+/);
+                if (matchBase64) return matchBase64[0];
+
+                const matchHttp = registro.observacoes.match(/https?:\/\/[^\s]+/);
+                if (matchHttp) return matchHttp[0];
             }
             return null;
         }
 
         function limparObservacaoVisual(obs) {
             if (!obs) return '-';
-            return obs.replace(/\|?\s*\[?COMPROVANTE\]?:?\s*https?:\/\/[^\s]+/gi, '').trim() || '-';
+            return obs.replace(/\|?\s*\[?COMPROVANTE\]?:?\s*(https?:\/\/[^\s]+|data:image\/[^\s]+)/gi, '').trim() || '-';
+        }
+
+        // Converte arquivo para Base64 local quando Storage não responder
+        function lerArquivoComoBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
         }
 
         // =========================================================================
-        // INICIALIZAÇÃO E CARREGAMENTO
+        // INICIALIZAÇÃO
         // =========================================================================
         async function inicializarMaster() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -804,7 +867,6 @@
             await carregarAvisos();
         }
 
-        // CARREGA DIAS DE AVISO DE VENCIMENTO DO SISTEMA
         async function carregarConfigSistema() {
             try {
                 const { data } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
@@ -814,7 +876,6 @@
                     document.getElementById('input-dias-aviso').value = 5;
                 }
             } catch (err) {
-                console.warn('Erro ao carregar config_sistema:', err);
                 document.getElementById('input-dias-aviso').value = 5;
             }
         }
@@ -826,7 +887,7 @@
                 await supabaseClient.from('config_sistema').upsert({ id: 1, dias_aviso_vencimento: num });
                 mostrarToast('Regra de alerta de vencimento atualizada com sucesso!', 'sucesso');
             } catch (err) {
-                console.error('Erro ao salvar dias de aviso:', err);
+                console.error(err);
                 mostrarToast('Falha ao atualizar regra de aviso.', 'erro');
             }
         }
@@ -853,7 +914,7 @@
                 popularSelectImobiliariasFiltro();
 
             } catch (err) {
-                console.error('Erro ao carregar dados do Master:', err);
+                console.error('Erro no master:', err);
                 mostrarToast('Erro ao consultar banco de dados master.', 'erro');
             }
         }
@@ -873,7 +934,7 @@
                     document.getElementById('global-total-arrecadado-modal').innerText = formatado;
                 }
             } catch (err) {
-                console.warn('Erro ao consultar histórico de pagamentos:', err);
+                console.warn('Histórico mensalidades:', err);
             }
         }
 
@@ -906,16 +967,130 @@
             document.getElementById('contador-imob').innerText = totalImobs;
         }
 
+        // =========================================================================
+        // GERAÇÃO DO NOVO MENU DE AÇÕES INTELIGENTE (COM ÍCONE + TEXTO EXPLICATIVO)
+        // =========================================================================
+        function gerarMenuAcoesHtml(im, estaBloqueada, prefixo = 'desktop') {
+            const menuId = `dropdown-acoes-${prefixo}-${im.id}`;
+            const btnId = `btn-toggle-acoes-${prefixo}-${im.id}`;
+
+            return `
+            <div class="relative inline-block text-left">
+                <!-- BOTÃO PRINCIPAL CLARO E DESCRITIVO -->
+                <button id="${btnId}" type="button" onclick="alternarMenuAcoes(event, '${menuId}')" 
+                        class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-slate-700/80 hover:border-amber-500/60 font-black text-xs inline-flex items-center gap-2 transition cursor-pointer shadow">
+                    <i class="fa-solid fa-gear text-amber-400"></i>
+                    <span>Gerenciar</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] opacity-70"></i>
+                </button>
+
+                <!-- PAINEL SUSPENSO EXPLICATIVO COM TODAS AS 7 AÇÕES -->
+                <div id="${menuId}" class="hidden absolute right-0 mt-2 w-72 bg-slate-950 border border-slate-700 rounded-2xl shadow-2xl z-50 p-2 text-left space-y-1 backdrop-blur-xl">
+                    <div class="px-3 py-1.5 border-b border-slate-800 text-[10px] font-black uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                        <span>Ações Disponíveis</span>
+                        <span class="text-amber-400 font-mono">/${im.slug}</span>
+                    </div>
+
+                    <!-- 1. RECIBOS & BAIXA (VERDE) -->
+                    <button onclick="abrirModalFinanceiro('${im.id}')" 
+                            class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left cursor-pointer group">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm border border-emerald-500/40 shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">Recibos & Financeiro</span>
+                            <span class="block text-[10px] text-slate-400">Lançar pagamento, ver faturas e anexar PIX</span>
+                        </div>
+                    </button>
+
+                    <!-- 2. ALTERAR VENCIMENTO (AZUL) -->
+                    <button onclick="abrirModalEditarVencimento('${im.id}')" 
+                            class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left cursor-pointer group">
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm border border-blue-500/40 shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">Alterar Vencimento</span>
+                            <span class="block text-[10px] text-slate-400">Ajustar dia do vencimento no calendário</span>
+                        </div>
+                    </button>
+
+                    <!-- 3. AJUSTAR PREÇO / GRATUIDADE (ÂMBAR) -->
+                    <button onclick="abrirModalEditarPlano('${im.id}')" 
+                            class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left cursor-pointer group">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm border border-amber-500/40 shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">Preço / Cortesia</span>
+                            <span class="block text-[10px] text-slate-400">Mudar mensalidade ou conceder gratuidade</span>
+                        </div>
+                    </button>
+
+                    <!-- 4. RENOVAÇÃO EXPRESSA +30 DIAS (TEAL) -->
+                    <button onclick="renovarMensalidade('${im.id}')" 
+                            class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left cursor-pointer group">
+                        <div class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-300 flex items-center justify-center text-sm border border-teal-500/40 shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">Renovação Expressa</span>
+                            <span class="block text-[10px] text-slate-400">Adicionar +30 dias sem abrir modal</span>
+                        </div>
+                    </button>
+
+                    <!-- 5. BLOQUEAR / DESBLOQUEAR (ROSE / ESMERALDA) -->
+                    <button onclick="alternarBloqueio('${im.id}', '${im.status}')" 
+                            class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left cursor-pointer group">
+                        <div class="w-8 h-8 rounded-lg ${estaBloqueada ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' : 'bg-slate-800 text-slate-400 border-slate-700'} flex items-center justify-center text-sm border shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid ${estaBloqueada ? 'fa-lock-open' : 'fa-lock'}"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">${estaBloqueada ? 'Desbloquear Acesso' : 'Bloquear Acesso'}</span>
+                            <span class="block text-[10px] text-slate-400">${estaBloqueada ? 'Liberar imobiliária agora' : 'Suspender acesso por inadimplência'}</span>
+                        </div>
+                    </button>
+
+                    <!-- 6. MODO SUPORTE OPERACIONAL (ÍNDIGO) -->
+                    <button onclick="acessarComoMaster('${im.id}', '${im.slug}')" 
+                            class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left cursor-pointer group">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-sm border border-indigo-500/40 shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">Modo Suporte (Impersonate)</span>
+                            <span class="block text-[10px] text-slate-400">Abrir painel desta imobiliária em nova aba</span>
+                        </div>
+                    </button>
+
+                    <!-- 7. VER VITRINE PÚBLICA (CIANO) -->
+                    <a href="index.html?imob=${im.slug}" target="_blank" 
+                       class="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-slate-900 transition text-left group">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-sm border border-cyan-500/40 shrink-0 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </div>
+                        <div>
+                            <span class="block font-bold text-white text-xs">Vitrine Pública</span>
+                            <span class="block text-[10px] text-slate-400">Abrir catálogo de imóveis público</span>
+                        </div>
+                    </a>
+                </div>
+            </div>`;
+        }
+
         function renderizarTabelaImobiliarias(imobs) {
             const tbody = document.getElementById('tabela-imobiliarias-corpo');
+            const mobileContainer = document.getElementById('lista-imobiliarias-mobile');
 
             if (imobs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">Nenhuma imobiliária localizada com os filtros informados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">Nenhuma imobiliária localizada.</td></tr>`;
+                mobileContainer.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs box-tech">Nenhuma imobiliária localizada.</div>`;
                 return;
             }
 
             const hoje = new Date().toISOString().split('T')[0];
 
+            // 1. RENDERIZAÇÃO TABELA DESKTOP
             tbody.innerHTML = imobs.map(im => {
                 const qtdImoveis = listaImoveisGlobal.filter(i => i.imobiliaria_id === im.id).length;
                 const vencido = im.data_vencimento && im.data_vencimento < hoje;
@@ -935,19 +1110,19 @@
                     : '--/--/----';
 
                 const zapLimpo = ('' + (im.whatsapp_contato || '')).replace(/\D/g, '');
+                const logoSrc = im.logo_url || DEFAULT_LOGO_SVG;
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
-                    <!-- NOME & BOTÃO DE EXCLUSÃO CRÍTICA DEDICADO -->
                     <td class="py-3 px-4">
                         <div class="flex items-center gap-2.5">
-                            <img src="${im.logo_url || 'https://via.placeholder.com/40?text=Imob'}" class="w-8 h-8 rounded-lg object-contain bg-white/5 border border-slate-700 p-0.5">
+                            <img src="${logoSrc}" class="w-8 h-8 rounded-lg object-contain bg-slate-900 border border-slate-700 p-0.5 shrink-0" onerror="this.src='${DEFAULT_LOGO_SVG}'">
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-1.5">
                                     <span class="font-black text-white truncate max-w-[150px] sm:max-w-[200px]" title="${im.nome_fantasia}">${im.nome_fantasia}</span>
                                     <button type="button" onclick="abrirModalExcluirImob('${im.id}')" 
                                             class="p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-rose-950/60 transition cursor-pointer" 
-                                            title="Excluir apenas esta imobiliária (Purge definitivo com confirmação)">
+                                            title="Excluir apenas esta imobiliária (Purge definitivo)">
                                         <i class="fa-solid fa-trash-can text-[11px]"></i>
                                     </button>
                                 </div>
@@ -995,67 +1170,76 @@
                         ${badgeStatus}
                     </td>
 
-                    <!-- AÇÕES DE GESTÃO & SUPORTE COM DESIGN REFINADO -->
-                    <td class="py-3 px-4 text-right whitespace-nowrap">
-                        <div class="inline-flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
-                            
-                            <!-- 1. RECIBOS & BAIXA (VERDE) -->
-                            <button onclick="abrirModalFinanceiro('${im.id}')" 
-                                    class="w-7 h-7 rounded-lg bg-emerald-950/80 hover:bg-emerald-800 text-emerald-400 border border-emerald-700/60 flex items-center justify-center transition cursor-pointer shadow" 
-                                    title="Gestão de Recibos & Dar Baixa">
-                                <i class="fa-solid fa-receipt text-xs"></i>
-                            </button>
-
-                            <!-- 2. ALTERAR VENCIMENTO NO CALENDÁRIO (AZUL) -->
-                            <button onclick="abrirModalEditarVencimento('${im.id}')" 
-                                    class="w-7 h-7 rounded-lg bg-blue-950/80 hover:bg-blue-800 text-blue-300 border border-blue-700/60 flex items-center justify-center transition cursor-pointer shadow" 
-                                    title="Alterar Data de Vencimento (Calendário)">
-                                <i class="fa-solid fa-calendar-day text-xs"></i>
-                            </button>
-
-                            <!-- 3. VALOR DA MENSALIDADE / GRATUIDADE (ÂMBAR) -->
-                            <button onclick="abrirModalEditarPlano('${im.id}')" 
-                                    class="w-7 h-7 rounded-lg bg-amber-950/80 hover:bg-amber-800 text-amber-300 border border-amber-700/60 flex items-center justify-center transition cursor-pointer shadow" 
-                                    title="Ajustar Preço / Conceder Gratuidade">
-                                <i class="fa-solid fa-hand-holding-dollar text-xs"></i>
-                            </button>
-
-                            <!-- 4. RENOVAÇÃO EXPRESSA +30 DIAS (TEAL) -->
-                            <button onclick="renovarMensalidade('${im.id}')" 
-                                    class="w-7 h-7 rounded-lg bg-teal-950/80 hover:bg-teal-800 text-teal-300 border border-teal-700/60 flex items-center justify-center transition cursor-pointer shadow" 
-                                    title="Renovação Expressa (+30 dias)">
-                                <i class="fa-solid fa-calendar-plus text-xs"></i>
-                            </button>
-
-                            <!-- 5. BLOQUEAR / DESBLOQUEAR (LARANJA / CINZA) -->
-                            <button onclick="alternarBloqueio('${im.id}', '${im.status}')" 
-                                    class="w-7 h-7 rounded-lg ${estaBloqueada ? 'bg-amber-950 text-amber-400 border-amber-700' : 'bg-slate-900 text-slate-400 border-slate-700'} hover:opacity-80 border flex items-center justify-center transition cursor-pointer shadow" 
-                                    title="${estaBloqueada ? 'Desbloquear Imobiliária' : 'Bloquear Acesso'}">
-                                <i class="fa-solid ${estaBloqueada ? 'fa-lock-open' : 'fa-lock'} text-xs"></i>
-                            </button>
-
-                            <!-- 6. MODO SUPORTE OPERACIONAL (ÍNDIGO) -->
-                            <button onclick="acessarComoMaster('${im.id}', '${im.slug}')" 
-                                    class="w-7 h-7 rounded-lg bg-indigo-950/80 hover:bg-indigo-800 text-indigo-300 border border-indigo-700/60 flex items-center justify-center transition cursor-pointer shadow" 
-                                    title="Modo Suporte: Acessar como Gestor (Nova Aba)">
-                                <i class="fa-solid fa-user-astronaut text-xs"></i>
-                            </button>
-
-                            <!-- 7. VER VITRINE PÚBLICA (CIANO) -->
-                            <a href="index.html?imob=${im.slug}" target="_blank" 
-                               class="w-7 h-7 rounded-lg bg-cyan-950/80 hover:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center transition shadow" 
-                               title="Abrir Vitrine Pública">
-                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-                            </a>
-
-                        </div>
+                    <!-- NOVO MENU UNIFICADO E DESCRITIVO -->
+                    <td class="py-3 px-4 text-right">
+                        ${gerarMenuAcoesHtml(im, estaBloqueada, 'desk')}
                     </td>
                 </tr>`;
+            }).join('');
+
+            // 2. RENDERIZAÇÃO CARDS MOBILE (SMARTPHONES)
+            mobileContainer.innerHTML = imobs.map(im => {
+                const qtdImoveis = listaImoveisGlobal.filter(i => i.imobiliaria_id === im.id).length;
+                const vencido = im.data_vencimento && im.data_vencimento < hoje;
+                const estaBloqueada = im.status === 'blocked' || vencido;
+                const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
+                const ehGratuito = valorPlano === 0;
+
+                let badgeStatus = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Ativa</span>';
+                if (im.status === 'blocked') {
+                    badgeStatus = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-950 text-rose-400 border border-rose-800">Bloqueada</span>';
+                } else if (vencido) {
+                    badgeStatus = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-950 text-amber-400 border border-amber-800">Vencida</span>';
+                }
+
+                const dataVencFormatada = im.data_vencimento ? im.data_vencimento.split('-').reverse().join('/') : '--/--/----';
+                const logoSrc = im.logo_url || DEFAULT_LOGO_SVG;
+
+                return `
+                <div class="box-tech p-3.5 space-y-3">
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <img src="${logoSrc}" class="w-9 h-9 rounded-lg object-contain bg-slate-900 border border-slate-700 p-0.5 shrink-0" onerror="this.src='${DEFAULT_LOGO_SVG}'">
+                            <div class="truncate">
+                                <span class="font-bold text-white text-xs block truncate">${im.nome_fantasia}</span>
+                                <span class="text-[10px] font-mono text-cyan-400">/${im.slug}</span>
+                            </div>
+                        </div>
+                        <div class="shrink-0 flex items-center gap-1.5">
+                            ${badgeStatus}
+                            <button type="button" onclick="abrirModalExcluirImob('${im.id}')" class="p-1.5 text-slate-500 hover:text-rose-400">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
+                            <span class="text-slate-500 block text-[9px] uppercase font-bold">Plano Mensal</span>
+                            <span class="font-bold text-amber-300">
+                                ${ehGratuito ? 'Gratuito (Cortesia)' : `R$ ${valorPlano.toFixed(2)}`}
+                            </span>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
+                            <span class="text-slate-500 block text-[9px] uppercase font-bold">Vencimento</span>
+                            <span class="font-mono font-bold ${vencido ? 'text-rose-400' : 'text-slate-300'}">
+                                ${dataVencFormatada}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-[11px] text-slate-400">
+                            <strong class="text-white">${qtdImoveis}</strong> imóveis cadastrados
+                        </span>
+                        ${gerarMenuAcoesHtml(im, estaBloqueada, 'mob')}
+                    </div>
+                </div>`;
             }).join('');
         }
 
         // =========================================================================
-        // MODO SUPORTE OPERACIONAL (IMPERSONATE)
+        // MODO SUPORTE (IMPERSONATE)
         // =========================================================================
         function acessarComoMaster(imobId, slug) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
@@ -1066,7 +1250,7 @@
         }
 
         // =========================================================================
-        // GESTÃO DO HISTÓRICO FINANCEIRO, RECIBOS E ANEXO DE COMPROVANTES
+        // GESTÃO FINANCEIRA E REGISTRO DE PAGAMENTOS COM ANEXO RESILIENTE (STORAGE + BASE64)
         // =========================================================================
         async function abrirModalFinanceiro(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
@@ -1119,7 +1303,7 @@
                     const obsTexto = limparObservacaoVisual(m.observacoes);
 
                     const compHTML = urlComp
-                        ? `<a href="${urlComp}" target="_blank" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/80 text-indigo-300 hover:text-white transition font-sans text-[10px]" title="Ver Comprovante Anexo"><i class="fa-solid fa-paperclip"></i> Anexo</a>`
+                        ? `<button type="button" onclick="abrirComprovanteEmNovaAba('${urlComp}')" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/80 text-indigo-300 hover:text-white transition font-sans text-[10px] cursor-pointer" title="Ver Comprovante Anexo"><i class="fa-solid fa-paperclip"></i> Anexo</button>`
                         : `<span class="text-slate-600 font-sans text-[10px]">Sem anexo</span>`;
 
                     return `
@@ -1141,38 +1325,52 @@
                 document.getElementById('modal-fin-total-pago').innerText = `Total: ${totalAcumulado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
 
             } catch (err) {
-                console.error('Erro ao carregar recibos:', err);
+                console.error('Erro faturas:', err);
                 tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-red-400">Falha ao buscar faturas.</td></tr>';
             }
         }
 
-        async function uploadComprovanteArquivo(file, imobId) {
+        function abrirComprovanteEmNovaAba(urlOuBase64) {
+            const w = window.open('');
+            if (urlOuBase64.startsWith('data:image')) {
+                w.document.write(`<body style="margin:0;background:#060913;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${urlOuBase64}" style="max-width:95vw;max-height:95vh;border-radius:8px;box-shadow:0 0 30px rgba(0,0,0,0.8);"/></body>`);
+            } else {
+                w.location.href = urlOuBase64;
+            }
+        }
+
+        // Upload resiliente: tenta Supabase Storage; se falhar (400), usa Data-URI Base64 sem travar
+        async function processarArquivoComprovanteResiliente(file, imobId) {
             if (!file) return null;
+
+            // 1. Tenta envio ao storage se o bucket existir
             try {
                 const ext = file.name.split('.').pop();
                 const path = `comp_${imobId}_${Date.now()}.${ext}`;
 
-                // Tenta gravar no bucket comprovantes
                 let { error: errUp } = await supabaseClient.storage
                     .from('comprovantes')
                     .upload(path, file, { cacheControl: '3600', upsert: true });
 
-                if (errUp) {
-                    // Fallback para o bucket documentos_sistema
-                    const { error: errDoc } = await supabaseClient.storage
-                        .from('documentos_sistema')
-                        .upload(path, file, { cacheControl: '3600', upsert: true });
-                    
-                    if (errDoc) throw errDoc;
-                    const { data } = supabaseClient.storage.from('documentos_sistema').getPublicUrl(path);
+                if (!errUp) {
+                    const { data } = supabaseClient.storage.from('comprovantes').getPublicUrl(path);
                     return data.publicUrl;
                 }
+            } catch (errStorage) {
+                console.warn('Bucket de storage não disponível. Usando Base64 resiliente.');
+            }
 
-                const { data } = supabaseClient.storage.from('comprovantes').getPublicUrl(path);
-                return data.publicUrl;
-            } catch (err) {
-                console.warn('Não foi possível salvar no storage:', err);
-                mostrarToast('Aviso: Comprovante não pôde ser gravado no storage. Pagamento registrado.', 'aviso');
+            // 2. Fallback de Segurança: Converte em Data-URI se for menor que 2.5MB
+            try {
+                if (file.size <= 2.5 * 1024 * 1024) {
+                    const base64 = await lerArquivoComoBase64(file);
+                    return base64;
+                } else {
+                    mostrarToast('Aviso: Arquivo maior que 2.5MB. Pagamento será salvo sem anexo embutido.', 'aviso');
+                    return null;
+                }
+            } catch (errB64) {
+                console.error('Erro na leitura do arquivo:', errB64);
                 return null;
             }
         }
@@ -1198,17 +1396,16 @@
             btn.disabled = true;
 
             try {
-                // Upload de arquivo comprovante se selecionado
+                // Processa o anexo sem nunca quebrar o fluxo
                 let comprovanteUrl = null;
                 if (fileInput.files && fileInput.files[0]) {
-                    comprovanteUrl = await uploadComprovanteArquivo(fileInput.files[0], imobId);
+                    comprovanteUrl = await processarArquivoComprovanteResiliente(fileInput.files[0], imobId);
                 }
 
                 if (comprovanteUrl) {
                     obs = obs ? `${obs} | [COMPROVANTE]: ${comprovanteUrl}` : `[COMPROVANTE]: ${comprovanteUrl}`;
                 }
 
-                // Inserção compatível no banco
                 const payload = {
                     imobiliaria_id: imobId,
                     valor_pago: valor,
@@ -1239,7 +1436,7 @@
                         .eq('id', imobId);
                 }
 
-                mostrarToast('Pagamento registrado e recibo emitido com sucesso!', 'sucesso');
+                mostrarToast('Pagamento e comprovante registrados com sucesso!', 'sucesso');
                 document.getElementById('fin-obs').value = '';
                 document.getElementById('fin-arquivo-comprovante').value = '';
                 
@@ -1247,7 +1444,7 @@
                 await carregarDadosMaster();
 
             } catch (err) {
-                console.error(err);
+                console.error('Erro ao registrar:', err);
                 mostrarToast('Erro ao registrar pagamento: ' + (err.message || 'Verifique sua conexão.'), 'erro');
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar Recebimento</span>';
@@ -1258,7 +1455,7 @@
         async function excluirPagamento(pagamentoId, imobId) {
             const confirmou = await solicitarConfirmacaoMaster(
                 'Excluir Registro de Pagamento',
-                'Deseja realmente apagar este recibo do histórico de faturamento?',
+                'Deseja realmente apagar este recibo do histórico financeiro?',
                 'Excluir Recibo',
                 'rose'
             );
@@ -1281,7 +1478,7 @@
         }
 
         // =========================================================================
-        // GESTÃO DA DATA DE VENCIMENTO NO CALENDÁRIO
+        // VENCIMENTO & PLANO
         // =========================================================================
         function abrirModalEditarVencimento(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
@@ -1303,7 +1500,7 @@
             const novaData = document.getElementById('modal-venc-data-input').value;
 
             if (!novaData) {
-                mostrarToast('Por favor, selecione uma data válida.', 'aviso');
+                mostrarToast('Selecione uma data válida.', 'aviso');
                 return;
             }
 
@@ -1330,7 +1527,7 @@
                 await carregarDadosMaster();
 
             } catch (err) {
-                console.error('Erro ao atualizar vencimento:', err);
+                console.error(err);
                 mostrarToast('Falha ao atualizar vencimento.', 'erro');
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Data</span>';
@@ -1338,9 +1535,6 @@
             }
         }
 
-        // =========================================================================
-        // GESTÃO DO VALOR DO PLANO & GRATUIDADE (CORTESIA SAAS)
-        // =========================================================================
         function abrirModalEditarPlano(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
@@ -1383,7 +1577,7 @@
             const novoValor = parseFloat(document.getElementById('modal-plano-valor-input').value);
 
             if (isNaN(novoValor) || novoValor < 0) {
-                mostrarToast('Por favor, informe um valor monetário válido.', 'aviso');
+                mostrarToast('Informe um valor monetário válido.', 'aviso');
                 return;
             }
 
@@ -1393,9 +1587,7 @@
 
             try {
                 const payload = { plano_valor: novoValor };
-                if (novoValor === 0) {
-                    payload.status = 'active';
-                }
+                if (novoValor === 0) payload.status = 'active';
 
                 const { error } = await supabaseClient
                     .from('imobiliarias')
@@ -1423,7 +1615,7 @@
 
             const confirmou = await solicitarConfirmacaoMaster(
                 'Renovação Expressa de Mensalidade',
-                `Deseja estender o vencimento de "${imob.nome_fantasia}" por mais 30 dias a partir da data atual?`,
+                `Deseja estender o vencimento de "${imob.nome_fantasia}" por mais 30 dias?`,
                 'Renovar +30 Dias',
                 'emerald'
             );
@@ -1444,7 +1636,7 @@
 
                     if (error) throw error;
 
-                    mostrarToast(`Mensalidade estendida com sucesso até ${novaData.split('-').reverse().join('/')}!`, 'sucesso');
+                    mostrarToast(`Mensalidade estendida até ${novaData.split('-').reverse().join('/')}!`, 'sucesso');
                     await carregarDadosMaster();
 
                 } catch (err) {
@@ -1474,7 +1666,7 @@
                         .eq('id', imobId);
 
                     if (error) throw error;
-                    mostrarToast(`Status alterado para ${novoStatus === 'blocked' ? 'Bloqueada' : 'Ativa'} com sucesso.`, 'sucesso');
+                    mostrarToast(`Status alterado para ${novoStatus === 'blocked' ? 'Bloqueada' : 'Ativa'}.`, 'sucesso');
                     await carregarDadosMaster();
 
                 } catch (err) {
@@ -1502,7 +1694,7 @@
         }
 
         // =========================================================================
-        // CENTRAL DE ESTOQUE E HISTÓRICO GLOBAL DE PAGAMENTOS COM FILTROS AVANÇADOS
+        // CENTRAL DE ESTOQUE GLOBAL DE PAGAMENTOS
         // =========================================================================
         function popularSelectImobiliariasFiltro() {
             const select = document.getElementById('filtro-global-imob');
@@ -1546,22 +1738,15 @@
 
             let filtrados = [...listaHistoricoGlobal];
 
-            // 1. Filtro por Imobiliária
             if (imobSelecionada) {
                 filtrados = filtrados.filter(p => p.imobiliaria_id === imobSelecionada);
             }
-
-            // 2. Filtro por Data Inicial
             if (dataInicio) {
                 filtrados = filtrados.filter(p => (p.data_pagamento || p.criado_em.split('T')[0]) >= dataInicio);
             }
-
-            // 3. Filtro por Data Final
             if (dataFim) {
                 filtrados = filtrados.filter(p => (p.data_pagamento || p.criado_em.split('T')[0]) <= dataFim);
             }
-
-            // 4. Busca textual
             if (termoBusca) {
                 filtrados = filtrados.filter(p => {
                     const imob = listaImobiliarias.find(i => i.id === p.imobiliaria_id);
@@ -1593,13 +1778,13 @@
             tbody.innerHTML = pagamentos.map(p => {
                 subtotal += Number(p.valor_pago || 0);
                 const imob = listaImobiliarias.find(i => i.id === p.imobiliaria_id);
-                const nomeImob = imob ? imob.nome_fantasia : 'Imobiliária Desconhecida/Excluída';
+                const nomeImob = imob ? imob.nome_fantasia : 'Imobiliária Excluída';
                 const dtHoraHTML = formatarDataHora(p.criado_em, p.data_pagamento);
                 const urlComp = extrairUrlComprovante(p);
                 const obsTexto = limparObservacaoVisual(p.observacoes);
 
                 const compHTML = urlComp
-                    ? `<a href="${urlComp}" target="_blank" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/80 text-indigo-300 hover:text-white transition font-sans text-[10px]" title="Abrir Comprovante"><i class="fa-solid fa-paperclip"></i> Anexo</a>`
+                    ? `<button type="button" onclick="abrirComprovanteEmNovaAba('${urlComp}')" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/80 text-indigo-300 hover:text-white transition font-sans text-[10px] cursor-pointer" title="Abrir Comprovante"><i class="fa-solid fa-paperclip"></i> Anexo</button>`
                     : `<span class="text-slate-600 font-sans text-[10px]">Sem anexo</span>`;
 
                 return `
@@ -1628,7 +1813,7 @@
         }
 
         // =========================================================================
-        // EXCLUSÃO CRÍTICA E PURGE TOTAL DE UMA IMOBILIÁRIA ESPECÍFICA
+        // EXCLUSÃO CRÍTICA E EXPURGO TOTAL DE UMA IMOBILIÁRIA
         // =========================================================================
         function abrirModalExcluirImob(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
@@ -1683,16 +1868,14 @@
             btn.disabled = true;
 
             try {
-                // 1. REGISTRA LOG DE AUDITORIA NO BANCO ANTES DO EXPURGO
                 await supabaseClient.from('avisos_sistema').insert([{
                     imobiliaria_id: null,
                     titulo: `[AUDITORIA MASTER] Exclusão da Imobiliária: ${nomeEsperado}`,
-                    mensagem: `A imobiliária "${nomeEsperado}" (ID: ${imobId}) foi expurgada do sistema pelo Administrador Soberano. Motivo: ${motivo}`,
+                    mensagem: `A imobiliária "${nomeEsperado}" (ID: ${imobId}) foi expurgada pelo Administrador Soberano. Motivo: ${motivo}`,
                     tipo: 'urgente',
                     ativo: true
                 }]);
 
-                // 2. PURGE EM CASCATA RESPEITANDO RESTRIÇÕES DE INTEGRIDADE REFERENCIAL
                 await supabaseClient.from('locacao_mensalidades_recebiveis').delete().eq('imobiliaria_id', imobId);
                 await supabaseClient.from('contratos_locacao').delete().eq('imobiliaria_id', imobId);
                 await supabaseClient.from('vendas_fechadas').delete().eq('imobiliaria_id', imobId);
@@ -1705,7 +1888,6 @@
                 await supabaseClient.from('avisos_sistema').delete().eq('imobiliaria_id', imobId);
                 await supabaseClient.from('usuarios').delete().eq('imobiliaria_id', imobId);
 
-                // 3. EXCLUSÃO FINAL DO REGISTRO NA TABELA IMOBILIARIAS
                 const { error: errDeleteImob } = await supabaseClient
                     .from('imobiliarias')
                     .delete()
@@ -1719,7 +1901,7 @@
                 await carregarAvisos();
 
             } catch (err) {
-                console.error('Falha na exclusão segura:', err);
+                console.error('Falha na exclusão:', err);
                 mostrarToast('Erro durante a exclusão: ' + (err.message || 'Verifique restrições.'), 'erro');
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Excluir Definitivamente</span>';
@@ -1728,7 +1910,7 @@
         }
 
         // =========================================================================
-        // CANAL DE COMUNICADOS GLOBAIS
+        // AVISOS GLOBAIS
         // =========================================================================
         async function carregarAvisos() {
             const container = document.getElementById('lista-avisos-ativos');
@@ -1759,7 +1941,7 @@
                 `).join('');
 
             } catch (err) {
-                console.warn('Erro ao carregar avisos:', err);
+                console.warn('Avisos:', err);
             }
         }
 
@@ -1794,7 +1976,7 @@
                 console.error(err);
                 mostrarToast('Erro ao emitir comunicado.', 'erro');
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Transmitir Comunicado</span>';
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Transmitir</span>';
                 btn.disabled = false;
             }
         }
@@ -1822,7 +2004,7 @@
         async function executarLogout() {
             const confirmou = await solicitarConfirmacaoMaster(
                 'Encerrar Sessão',
-                'Deseja realmente sair do console soberano Super Admin Master?',
+                'Deseja realmente sair do console Super Admin Master?',
                 'Sair do Sistema',
                 'rose'
             );
