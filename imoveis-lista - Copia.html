@@ -102,47 +102,12 @@
         </div>
     </nav>
 
-    <!-- ÁREA PRINCIPAL -->
+ <!-- ÁREA PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
-        
-        <!-- RESUMO DO INVENTÁRIO (4 CARDS ESTRATÉGICOS) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-cyan-400">
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Total em Carteira</span>
-                    <span id="kpi-total-estoque" class="text-2xl font-black text-white">0</span>
-                </div>
-                <i class="fa-solid fa-boxes-stacked text-cyan-400/30 text-2xl sm:text-3xl"></i>
-            </div>
-
-            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-emerald-400">
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Ativos Vitrine</span>
-                    <span id="kpi-ativos-vitrine" class="text-2xl font-black text-emerald-400">0</span>
-                </div>
-                <i class="fa-solid fa-globe text-emerald-400/30 text-2xl sm:text-3xl"></i>
-            </div>
-
-            <!-- CARD DE IMÓVEIS ALUGADOS -->
-            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-purple-500 bg-purple-950/10">
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóveis Alugados</span>
-                    <span id="kpi-alugados" class="text-2xl font-black text-purple-300">0</span>
-                </div>
-                <i class="fa-solid fa-key text-purple-400/30 text-2xl sm:text-3xl"></i>
-            </div>
-
-            <!-- CARD DE IMÓVEIS VENDIDOS -->
-            <div class="box-tech p-4 flex items-center justify-between border-l-4 border-l-amber-500 bg-amber-950/10">
-                <div>
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóveis Vendidos</span>
-                    <span id="kpi-vendidos" class="text-2xl font-black text-amber-400">0</span>
-                </div>
-                <i class="fa-solid fa-handshake text-amber-400/30 text-2xl sm:text-3xl"></i>
-            </div>
-        </div>
 
         <!-- BARRA DE FILTROS -->
+
+
         <div class="box-tech p-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
                 
@@ -697,17 +662,9 @@
             }
         }
 
-        function atualizarMetricasEstoque(imoveis) {
-            const total = imoveis.length;
-            const ativos = imoveis.filter(i => i.ativa === true && i.status === 'Disponível').length;
-            const alugados = imoveis.filter(i => i.status === 'Alugado').length;
-            const vendidos = imoveis.filter(i => i.status === 'Vendido').length;
-
-            document.getElementById('kpi-total-estoque').innerText = total;
-            document.getElementById('kpi-ativos-vitrine').innerText = ativos;
-            document.getElementById('kpi-alugados').innerText = alugados;
-            document.getElementById('kpi-vendidos').innerText = vendidos;
-            document.getElementById('contador-linhas').innerText = total;
+function atualizarMetricasEstoque(imoveis) {
+            const contador = document.getElementById('contador-linhas');
+            if (contador) contador.innerText = imoveis.length;
         }
 
         function renderizarTabela(imoveis) {
