@@ -911,9 +911,71 @@
             }
         }
 
+// =========================================================================
+        // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
         // =========================================================================
-        // MOTOR JSPDF: GERAÇÃO DA FICHA COMERCIAL DIRETA DA LINHA DO IMÓVEL
-        // =========================================================================
+        function sanitizarTextoPdf(texto) {
+            if (!texto) return '';
+            // Remove emojis e caracteres fora do Latin-1 que quebram a fonte do jsPDF
+            return texto
+                .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu, '')
+                .replace(/[^\x00-\xFF]/g, ' ')
+                .trim();
+        }
+
+        // Converte qualquer formato (WebP, PNG, JPG) para JPEG puro compatível com jsPDF via Canvas
+        async function converterImgParaJpegSeguro(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+
+                img.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth || img.width || 800;
+                        canvas.height = img.naturalHeight || img.height || 600;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Fundo branco sólido (evita transparência preta de WebP/PNG)
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // Exporta garantidamente como JPEG real
+                        resolve(canvas.toDataURL('image/jpeg', 0.85));
+                    } catch (err) {
+                        reject(err);
+                    }
+                };
+
+                img.onerror = () => {
+                    // Fallback se crossOrigin for bloqueado: tenta via blob
+                    fetch(url)
+                        .then(r => r.blob())
+                        .then(blob => {
+                            const blobUrl = URL.createObjectURL(blob);
+                            const fallbackImg = new Image();
+                            fallbackImg.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = fallbackImg.naturalWidth || 800;
+                                canvas.height = fallbackImg.naturalHeight || 600;
+                                const ctx = canvas.getContext('2d');
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.drawImage(fallbackImg, 0, 0);
+                                URL.revokeObjectURL(blobUrl);
+                                resolve(canvas.toDataURL('image/jpeg', 0.85));
+                            };
+                            fallbackImg.onerror = reject;
+                            fallbackImg.src = blobUrl;
+                        })
+                        .catch(reject);
+                };
+
+                img.src = url;
+            });
+        }
+
         async function gerarFichaPDFIndividual(imovelId) {
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
             if (!imovel) return;
@@ -944,14 +1006,14 @@
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(15);
                 doc.setFont('helvetica', 'bold');
-                doc.text(imobNome.toUpperCase(), 15, 14);
+                doc.text(sanitizarTextoPdf(imobNome).toUpperCase(), 15, 14);
 
                 doc.setFontSize(8.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(150, 160, 180);
-                const creci = (dadosImobAtual && dadosImobAtual.creci_juridico) ? dadosImobAtual.creci_juridico : 'CRECI Jurídico';
+                const creci = (dadosImobAtual && dadosImobAtual.creci_juridico) ? dadosImobAtual.creci_juridico : 'CRECI';
                 const fone = (dadosImobAtual && (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato)) ? (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato) : '';
-                doc.text(`${creci} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
+                doc.text(`${sanitizarTextoPdf(creci)} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
 
                 // Tarja Código de Referência
                 doc.setFillColor(28, 107, 160);
@@ -965,30 +1027,33 @@
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(13);
                 doc.setFont('helvetica', 'bold');
-                const splitTitulo = doc.splitTextToSize(imovel.titulo || 'Imóvel para Negociação', pageWidth - 30);
+                const tituloLimpo = sanitizarTextoPdf(imovel.titulo || 'Imóvel para Negociação');
+                const splitTitulo = doc.splitTextToSize(tituloLimpo, pageWidth - 30);
                 doc.text(splitTitulo, 15, 37);
 
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(100, 110, 125);
-                const tipoTexto = imovel.tipo || 'Residencial';
-                const localTexto = `${imovel.bairro || 'Localização Privilegiada'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`;
+                const tipoTexto = sanitizarTextoPdf(imovel.tipo || 'Residencial');
+                const localTexto = sanitizarTextoPdf(`${imovel.bairro || 'Localização Privilegiada'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${tipoTexto} • ${localTexto}`, 15, 45);
 
-                // 3. FOTO DE CAPA COM FALLBACK SEGURO
+                // 3. FOTO DE CAPA REAL (COM CONVERSÃO DE WEBP E FALLBACK PARA FOTOS[0])
                 let posY = 51;
-                if (imovel.foto_capa) {
+                const urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
+
+                if (urlFoto) {
                     try {
-                        const imgBase64 = await converterImgParaBase64(imovel.foto_capa);
-                        doc.addImage(imgBase64, 'JPEG', 15, posY, pageWidth - 30, 85, undefined, 'FAST');
+                        const imgJpegBase64 = await converterImgParaJpegSeguro(urlFoto);
+                        doc.addImage(imgJpegBase64, 'JPEG', 15, posY, pageWidth - 30, 85, undefined, 'FAST');
                         posY += 90;
                     } catch (e) {
-                        console.warn('Foto de capa indisponível via CORS, gerando placeholder:', e);
+                        console.warn('Foto indisponível via Canvas/CORS, aplicando box reserva:', e);
                         doc.setFillColor(240, 245, 250);
                         doc.rect(15, posY, pageWidth - 30, 60, 'F');
                         doc.setTextColor(120, 130, 140);
                         doc.setFontSize(9);
-                        doc.text('[Foto do Imóvel Disponível no Link]', pageWidth / 2, posY + 32, { align: 'center' });
+                        doc.text('[Foto do Imóvel Disponível no Catálogo Online]', pageWidth / 2, posY + 32, { align: 'center' });
                         posY += 66;
                     }
                 }
@@ -1041,7 +1106,7 @@
 
                 posY += 20;
 
-                // 6. DESCRIÇÃO INSTITUCIONAL DO IMÓVEL
+                // 6. DESCRIÇÃO INSTITUCIONAL DO IMÓVEL (COM SANITIZAÇÃO DE EMOJIS)
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
@@ -1050,7 +1115,7 @@
                 doc.setFontSize(8.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(70, 80, 95);
-                const descTexto = imovel.descricao || 'Excelente oportunidade com ótima localização, documentação rigorosamente em dia e elevado padrão construtivo.';
+                const descTexto = sanitizarTextoPdf(imovel.descricao || 'Excelente oportunidade com ótima localização, documentação em dia e elevado padrão construtivo.');
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
@@ -1066,9 +1131,9 @@
 
                 doc.setFontSize(7.5);
                 doc.setTextColor(140, 150, 165);
-                doc.text(`Material promocional gerado via SGI SaaS • ${imobNome}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+                doc.text(`Material promocional gerado via SGI SaaS • ${sanitizarTextoPdf(imobNome)}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
 
-                doc.save(`Ficha_${imovel.codigo_ref || 'Imovel'}_${imobNome.replace(/\s+/g, '_')}.pdf`);
+                doc.save(`Ficha_${imovel.codigo_ref || 'Imovel'}_${sanitizarTextoPdf(imobNome).replace(/\s+/g, '_')}.pdf`);
 
             } catch (err) {
                 console.error('Erro na compilação do PDF:', err);
@@ -1079,17 +1144,6 @@
                     btn.innerHTML = iconeOriginal;
                 }
             }
-        }
-
-        async function converterImgParaBase64(url) {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
         }
 
         // =========================================================================
