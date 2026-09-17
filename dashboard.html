@@ -653,8 +653,7 @@
             const txtContagem = document.getElementById('txt-dias-contagem');
             const btnRenovar = document.getElementById('btn-renovar-zap');
 
-
-            const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== undefined ? imob.plano_valor : 149);
+const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== undefined ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
 
             // Mensagem de WhatsApp adaptada: suporte para cortesia ou renovação para pagantes
@@ -708,6 +707,7 @@
                 iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
                 txtContagem.innerText = `Sua assinatura está ativa. Faltam ${diffDias} dias para o próximo ciclo.`;
             }
+
 
         // CARREGA TODAS AS MÉTRICAS (INCLUINDO VENDIDOS E ALUGADOS)
         async function carregarMetricas(imobId) {
