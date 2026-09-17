@@ -14,12 +14,22 @@
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
         .tab-btn-ativo { background-color: #38bdf8; color: #020617; font-weight: 800; }
+        
+        /* ANIMAÇÃO DOS TOASTS NATIVOS */
+        @keyframes toastEntrada {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .toast-ativo { animation: toastEntrada 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
+    <!-- CONTAINER FLUTUANTE DE NOTIFICAÇÕES (TOASTS NATIVOS DO SISTEMA) -->
+    <div id="container-toast-sistema" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
     <!-- FAIXA 1: MODO SUPORTE MASTER (QUANDO O ADMINISTRADOR ESTIVER ATENDENDO) -->
-    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-40">
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
@@ -43,7 +53,7 @@
     </div>
 
     <!-- FAIXA 3: COMUNICADO GLOBAL MASTER -->
-    <div id="faixa-comunicado-global" class="hidden sticky top-0 z-50 transition shadow-lg"></div>
+    <div id="faixa-comunicado-global" class="hidden sticky top-0 z-30 transition shadow-lg"></div>
 
     <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
@@ -504,7 +514,7 @@
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="imob-modal-conteudo">
                 <div class="py-8 text-center text-slate-500">
                     <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
-                    <p>Consultando dados do imóvel...</p>
+                    <p>Consultando raio-x do imóvel...</p>
                 </div>
             </div>
 
@@ -520,13 +530,13 @@
         </div>
     </div>
 
-    <!-- MODAL 2: DOSSIÊ COMPLETO DO INQUILINO (ACIONADO PELO NOME DO INQUILINO) -->
+    <!-- MODAL 2: DOSSIÊ COMPLETO DO INQUILINO COM HISTÓRICO FINANCEIRO COMPLETO -->
     <div id="modal-dash-inquilino" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-xl w-full p-6 border border-purple-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+        <div class="box-tech max-w-2xl w-full p-6 border border-purple-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-purple-300 font-black text-sm uppercase tracking-wide">
                     <i class="fa-solid fa-id-card-clip text-purple-400 text-lg"></i>
-                    <span>Dossiê Completo do Inquilino</span>
+                    <span>Dossiê Completo do Inquilino & Extrato Financeiro</span>
                 </div>
                 <button onclick="fecharModalDashInquilino()" class="text-slate-400 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -536,7 +546,7 @@
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="inquilino-modal-conteudo">
                 <div class="py-8 text-center text-slate-500">
                     <i class="fa-solid fa-spinner fa-spin text-purple-400 text-xl mb-2"></i>
-                    <p>Carregando informações do inquilino e contrato...</p>
+                    <p>Carregando informações do inquilino, contrato e histórico financeiro...</p>
                 </div>
             </div>
 
@@ -596,6 +606,47 @@
         let isMasterSuporte = false;
         let temPermissaoFinanceira = false;
 
+        // =========================================================================
+        // MOTOR DE NOTIFICAÇÃO TOAST DO SISTEMA (SUBSTITUI ALERTS DO NAVEGADOR)
+        // =========================================================================
+        function exibirToast(tipo, mensagem) {
+            const container = document.getElementById('container-toast-sistema');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = 'toast-ativo pointer-events-auto p-3.5 rounded-xl border text-xs shadow-2xl flex items-center justify-between gap-3 backdrop-blur-md transition';
+
+            let icone = 'fa-circle-check text-emerald-400';
+            let estiloBorda = 'bg-slate-950/95 border-emerald-500 text-emerald-300 shadow-emerald-950/40';
+
+            if (tipo === 'erro') {
+                icone = 'fa-circle-xmark text-rose-400';
+                estiloBorda = 'bg-slate-950/95 border-rose-500 text-rose-300 shadow-rose-950/40';
+            } else if (tipo === 'aviso') {
+                icone = 'fa-triangle-exclamation text-amber-400';
+                estiloBorda = 'bg-slate-950/95 border-amber-500 text-amber-300 shadow-amber-950/40';
+            }
+
+            toast.className += ` ${estiloBorda}`;
+            toast.innerHTML = `
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <i class="fa-solid ${icone} text-base flex-shrink-0"></i>
+                    <span class="font-bold leading-tight">${mensagem}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-white p-1 transition cursor-pointer flex-shrink-0">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
         async function inicializarDashboard() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
 
@@ -626,7 +677,7 @@
             let imobAlvo = null;
 
             if (impersonateId) {
-                const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', impersonateId).single();
+                const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId = impersonateId).single();
                 imobAlvo = data;
             } else {
                 const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
@@ -668,7 +719,6 @@
 
                 dadosUsuario = usuario;
 
-                // VERIFICAÇÃO DE PRIVILÉGIO FINANCEIRO (RBAC)
                 temPermissaoFinanceira = (usuario.cargo === 'dono' || (usuario.permissoes && usuario.permissoes.acesso_financeiro === true));
 
                 if (!temPermissaoFinanceira) {
@@ -705,7 +755,7 @@
 
             } catch (err) {
                 console.error(err);
-                alert(err.message || 'Erro ao carregar dados operacionais.');
+                exibirToast('erro', err.message || 'Erro ao carregar dados operacionais.');
             }
         }
 
@@ -916,9 +966,8 @@
                 document.getElementById('fin-kpi-comissao-vendas').innerText = somaComissaoImobVendas.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('fin-kpi-vgv-vendas-mes').innerText = `VGV fechado: ${somaVgvMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
 
-                // ATUALIZA NOVO KPI: COMISSÕES DOS CORRETORES
                 document.getElementById('fin-kpi-comissao-corretores').innerText = somaComissaoCorretores.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                document.getElementById('fin-kpi-qtd-vendas-corretores').innerText = `${vendasMes ? vendasMes.length : 0} fechamento(s) com equipe`;
+                document.getElementById('fin-kpi-qtd-vendas-corretores').innerText = `${vendasMes ? vendasMes.length : 0} repasse(s) de equipe`;
 
                 // Renderiza Tabela 2 (Histórico Geral de Vendas)
                 if (!vendasMes || vendasMes.length === 0) {
@@ -947,7 +996,7 @@
                     }).join('');
                 }
 
-                // Renderiza Tabela 3 (NOVA: Comissões dos Corretores)
+                // Renderiza Tabela 3 (Comissões dos Corretores)
                 if (!vendasMes || vendasMes.length === 0) {
                     tbodyCorretores.innerHTML = '<tr><td colspan="8" class="py-4 text-center text-slate-500 font-sans">Nenhuma comissão apurada para corretores neste mês.</td></tr>';
                 } else {
@@ -1035,7 +1084,6 @@
                             ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">Repassado</span>'
                             : `<button onclick="confirmarRepasseDono('${ct.id}')" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer">Repassar</button>`;
 
-                        // LINKS INTERATIVOS SOLICITADOS PELO ADMINISTRADOR
                         const linkImovel = imovelId 
                             ? `<button onclick="abrirModalDetalhesImovel('${imovelId}')" class="font-bold text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer text-left">Ref: ${ref}</button>`
                             : `<span class="font-bold text-cyan-400">Ref: ${ref}</span>`;
@@ -1069,33 +1117,69 @@
             }
         }
 
+        // =========================================================================
+        // BAIXA DE ALUGUEL SEGURA (RESOLVIDO O ERRO DE CONSTRAINT ON CONFLICT)
+        // =========================================================================
         async function darBaixaAluguelInquilino(contratoId, imovelId, bruto, pctTaxa, taxaImob, repasse) {
             const mesRef = document.getElementById('filtro-mes-financeiro').value;
             const imobId = dadosImobiliaria.id;
             const hoje = new Date().toISOString().split('T')[0];
 
             try {
-                const { error } = await supabaseClient
+                // 1. Verifica se já existe registro dessa competência
+                const { data: existente, error: errBusca } = await supabaseClient
                     .from('locacao_mensalidades_recebiveis')
-                    .upsert([{
-                        imobiliaria_id: imobId,
-                        contrato_id: contratoId,
-                        imovel_id: imovelId,
-                        mes_referencia: mesRef,
-                        data_vencimento: hoje,
-                        valor_aluguel: bruto,
-                        taxa_adm_pct: pctTaxa,
-                        valor_taxa_imobiliaria: taxaImob,
-                        valor_repasse_proprietario: repasse,
-                        status_inquilino: 'Pago',
-                        data_pagamento_inquilino: hoje
-                    }], { onConflict: 'imobiliaria_id, contrato_id, mes_referencia' });
+                    .select('id')
+                    .eq('imobiliaria_id', imobId)
+                    .eq('contrato_id', contratoId)
+                    .eq('mes_referencia', mesRef)
+                    .maybeSingle();
 
-                if (error) throw error;
+                if (errBusca) throw errBusca;
+
+                if (existente && existente.id) {
+                    // Atualiza por ID (100% seguro sem risco de conflito)
+                    const { error: errUp } = await supabaseClient
+                        .from('locacao_mensalidades_recebiveis')
+                        .update({
+                            status_inquilino: 'Pago',
+                            data_pagamento_inquilino: hoje,
+                            valor_aluguel: bruto,
+                            taxa_adm_pct: pctTaxa,
+                            valor_taxa_imobiliaria: taxaImob,
+                            valor_repasse_proprietario: repasse
+                        })
+                        .eq('id', existente.id);
+
+                    if (errUp) throw errUp;
+                } else {
+                    // Insere nova competência paga
+                    const { error: errIn } = await supabaseClient
+                        .from('locacao_mensalidades_recebiveis')
+                        .insert([{
+                            imobiliaria_id: imobId,
+                            contrato_id: contratoId,
+                            imovel_id: imovelId,
+                            mes_referencia: mesRef,
+                            data_vencimento: hoje,
+                            valor_aluguel: bruto,
+                            taxa_adm_pct: pctTaxa,
+                            valor_taxa_imobiliaria: taxaImob,
+                            valor_repasse_proprietario: repasse,
+                            status_inquilino: 'Pago',
+                            status_repasse: 'Aguardando',
+                            data_pagamento_inquilino: hoje
+                        }]);
+
+                    if (errIn) throw errIn;
+                }
+
+                exibirToast('sucesso', `Aluguel de ${mesRef} registrado com sucesso!`);
                 await carregarDashboardFinanceiro();
+
             } catch (err) {
                 console.error(err);
-                alert('Erro ao registrar recebimento de aluguel.');
+                exibirToast('erro', 'Falha ao registrar pagamento do aluguel.');
             }
         }
 
@@ -1105,21 +1189,35 @@
             const hoje = new Date().toISOString().split('T')[0];
 
             try {
-                const { error } = await supabaseClient
+                const { data: existente } = await supabaseClient
                     .from('locacao_mensalidades_recebiveis')
-                    .update({
-                        status_repasse: 'Repassado',
-                        data_repasse: hoje
-                    })
+                    .select('id')
                     .eq('imobiliaria_id', imobId)
                     .eq('contrato_id', contratoId)
-                    .eq('mes_referencia', mesRef);
+                    .eq('mes_referencia', mesRef)
+                    .maybeSingle();
 
-                if (error) throw error;
+                if (existente && existente.id) {
+                    const { error } = await supabaseClient
+                        .from('locacao_mensalidades_recebiveis')
+                        .update({
+                            status_repasse: 'Repassado',
+                            data_repasse: hoje
+                        })
+                        .eq('id', existente.id);
+
+                    if (error) throw error;
+                } else {
+                    exibirToast('aviso', 'Receba primeiro o aluguel do inquilino antes de repassar ao proprietário.');
+                    return;
+                }
+
+                exibirToast('sucesso', `Repasse ao proprietário confirmado para ${mesRef}!`);
                 await carregarDashboardFinanceiro();
+
             } catch (err) {
                 console.error(err);
-                alert('Erro ao confirmar repasse ao proprietário.');
+                exibirToast('erro', 'Falha ao registrar repasse ao proprietário.');
             }
         }
 
@@ -1162,7 +1260,16 @@
 
                 linkEditar.href = `imovel-form.html?id=${imovel.id}`;
 
-                const foto = imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80';
+                let foto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
+                if (!foto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
+                    const imgDoc = imovel.documentos_anexos.find(url => {
+                        const u = String(url).toLowerCase();
+                        return u.includes('.webp') || u.includes('.jpg') || u.includes('.jpeg') || u.includes('.png');
+                    });
+                    if (imgDoc) foto = imgDoc;
+                }
+                if (!foto) foto = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80';
+
                 const prop = imovel.clientes || {};
                 const zapProp = ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '');
 
@@ -1177,7 +1284,6 @@
                         </div>
                     </div>
 
-                    <!-- ESPECIFICAÇÕES FÍSICAS -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center font-mono">
                         <div><span class="text-slate-500 block text-[10px]">Quartos</span><strong class="text-white text-xs">${imovel.quartos || 0} (${imovel.suites || 0} suítes)</strong></div>
                         <div><span class="text-slate-500 block text-[10px]">Banheiros</span><strong class="text-white text-xs">${imovel.banheiros || 1}</strong></div>
@@ -1185,7 +1291,6 @@
                         <div><span class="text-slate-500 block text-[10px]">Área Útil</span><strong class="text-cyan-300 text-xs">${imovel.area_util || 0} m²</strong></div>
                     </div>
 
-                    <!-- VALORES COMERCIAIS -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center font-mono">
                         <div><span class="text-slate-500 block text-[10px]">Venda</span><strong class="text-emerald-400 text-xs">R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')}</strong></div>
                         <div><span class="text-slate-500 block text-[10px]">Locação</span><strong class="text-amber-300 text-xs">R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</strong></div>
@@ -1193,7 +1298,6 @@
                         <div><span class="text-slate-500 block text-[10px]">IPTU</span><strong class="text-white text-xs">R$ ${Number(imovel.valor_iptu || 0).toLocaleString('pt-BR')}</strong></div>
                     </div>
 
-                    <!-- PROPRIETÁRIO DO IMÓVEL -->
                     <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
                         <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
                             <i class="fa-solid fa-user-tie"></i> Proprietário Titular da Casa
@@ -1223,7 +1327,7 @@
         }
 
         // =========================================================================
-        // MODAL 2: DOSSIÊ COMPLETO DO INQUILINO (ACIONADO PELO NOME DO INQUILINO)
+        // MODAL 2: DOSSIÊ DO INQUILINO COM HISTÓRICO COMPLETO DE MENSALIDADES
         // =========================================================================
         async function abrirModalDetalhesInquilino(contratoId) {
             if (!contratoId) return;
@@ -1234,28 +1338,77 @@
             corpo.innerHTML = `
                 <div class="py-12 text-center text-slate-500">
                     <i class="fa-solid fa-spinner fa-spin text-purple-400 text-2xl mb-2"></i>
-                    <p>Consultando dossiê do inquilino...</p>
+                    <p>Consultando dossiê do inquilino e histórico financeiro...</p>
                 </div>
             `;
             modal.classList.remove('hidden');
 
             try {
-                const { data: ct, error } = await supabaseClient
+                // 1. Dados do Contrato e Imóvel
+                const { data: ct, error: errCt } = await supabaseClient
                     .from('contratos_locacao')
                     .select('*, imoveis(codigo_ref, titulo, bairro)')
                     .eq('id', contratoId)
                     .single();
 
-                if (error || !ct) throw new Error('Contrato de locação não localizado.');
+                if (errCt || !ct) throw new Error('Contrato de locação não localizado.');
+
+                // 2. Histórico de Pagamentos (Todas as mensalidades recebíveis deste contrato)
+                const { data: historicoPagamentos, error: errHist } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .select('*')
+                    .eq('contrato_id', contratoId)
+                    .order('created_at', { ascending: false });
 
                 const zapLimpo = ('' + (ct.cliente_whatsapp || '')).replace(/\D/g, '');
                 const dtInicioFmt = ct.data_inicio ? ct.data_inicio.split('-').reverse().join('/') : '--/--/----';
                 const dtFimFmt = ct.data_fim ? ct.data_fim.split('-').reverse().join('/') : '--/--/----';
                 const imovelRef = ct.imoveis ? `Ref: ${ct.imoveis.codigo_ref} - ${ct.imoveis.titulo}` : 'Imóvel vinculado';
 
-                // RENDERIZA DOCUMENTOS ANEXOS DO INQUILINO COM OLHINHO
-                let blocoDocsHtml = '<p class="text-[11px] text-slate-500 italic">Nenhum documento pessoal anexado a este contrato.</p>';
+                // Tabela de Histórico Financeiro
+                let tabelaHistoricoHtml = '';
+                if (!historicoPagamentos || historicoPagamentos.length === 0) {
+                    tabelaHistoricoHtml = '<p class="text-[11px] text-slate-500 italic py-2">Nenhum pagamento registrado no histórico até o momento.</p>';
+                } else {
+                    tabelaHistoricoHtml = `
+                        <div class="overflow-x-auto border border-slate-800 rounded-xl">
+                            <table class="w-full text-left text-[11px] text-slate-300 font-mono">
+                                <thead class="bg-slate-950 text-slate-500 uppercase text-[9px] font-bold border-b border-slate-800">
+                                    <tr>
+                                        <th class="py-2 px-3">Competência</th>
+                                        <th class="py-2 px-3">Data Pagamento</th>
+                                        <th class="py-2 px-3">Valor Quitado</th>
+                                        <th class="py-2 px-3">Status Inquilino</th>
+                                        <th class="py-2 px-3 text-right">Repasse Dono</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/60">
+                                    ${historicoPagamentos.map(m => {
+                                        const dtPgto = m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : '--/--/----';
+                                        const badgeInq = m.status_inquilino === 'Pago' 
+                                            ? '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Pago</span>' 
+                                            : '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950 text-amber-400 border border-amber-800">Pendente</span>';
+                                        const badgeRep = m.status_repasse === 'Repassado'
+                                            ? '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">Repassado</span>'
+                                            : '<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400">Aguardando</span>';
+                                        return `
+                                            <tr class="hover:bg-slate-900/40">
+                                                <td class="py-2 px-3 font-bold text-white">${m.mes_referencia}</td>
+                                                <td class="py-2 px-3 text-slate-400">${dtPgto}</td>
+                                                <td class="py-2 px-3 font-bold text-emerald-400">R$ ${Number(m.valor_aluguel || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                                                <td class="py-2 px-3">${badgeInq}</td>
+                                                <td class="py-2 px-3 text-right">${badgeRep}</td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
 
+                // Renderiza Documentos Anexos com o Olhinho
+                let blocoDocsHtml = '<p class="text-[11px] text-slate-500 italic">Nenhum documento pessoal anexado a este contrato.</p>';
                 if (ct.documentos_anexos && Array.isArray(ct.documentos_anexos) && ct.documentos_anexos.length > 0) {
                     blocoDocsHtml = `
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
@@ -1314,13 +1467,13 @@
 
                     <!-- DADOS DO CONTRATO VIGENTE -->
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-[11px]">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Dados da Locação:</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel e Condições Contratuais:</span>
                         <p class="text-white font-bold truncate">${imovelRef}</p>
                         
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 font-mono">
                             <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span><strong class="text-emerald-400">R$ ${Number(ct.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
                             <div><span class="text-slate-500 block text-[10px]">Taxa Imob:</span><strong class="text-amber-300">${ct.taxa_administracao_pct || 10}%</strong></div>
-                            <div><span class="text-slate-500 block text-[10px]">Dia Vencimento:</span><strong class="text-white">Dia ${ct.dia_vencimento_aluguel || 10}</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">Vencimento:</span><strong class="text-white">Dia ${ct.dia_vencimento_aluguel || 10}</strong></div>
                             <div><span class="text-slate-500 block text-[10px]">Status:</span><strong class="text-purple-300">${ct.status}</strong></div>
                         </div>
 
@@ -1330,8 +1483,16 @@
                         </div>
                     </div>
 
+                    <!-- HISTÓRICO FINANCEIRO / TODAS AS TRANSAÇÕES DESTE INQUILINO -->
+                    <div class="space-y-2 pt-2">
+                        <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pagamentos Registrados
+                        </span>
+                        ${tabelaHistoricoHtml}
+                    </div>
+
                     <!-- DOCUMENTOS ANEXADOS DO INQUILINO COM O OLHINHO -->
-                    <div class="space-y-2">
+                    <div class="space-y-2 pt-2">
                         <span class="text-[10px] uppercase font-bold text-purple-300 block flex items-center gap-1.5">
                             <i class="fa-solid fa-paperclip"></i> Documentos Pessoais & Contrato Anexo
                         </span>
@@ -1412,7 +1573,7 @@
 
                     const { data: contratos, error } = await supabaseClient
                         .from('contratos_locacao')
-                        .select('*, imoveis(codigo_ref, titulo, foto_capa, bairro)')
+                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro)')
                         .eq('imobiliaria_id', dadosImobiliaria.id)
                         .eq('status', 'Ativo')
                         .order('data_fim', { ascending: true });
@@ -1442,11 +1603,11 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-2.5 py-1 rounded-lg text-xs transition">
+                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
                                             Dossiê
                                         </button>
                                         ${zapLimpo ? `
-                                            <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
+                                            <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
                                                 <i class="fa-brands fa-whatsapp"></i> Zap
                                             </a>
                                         ` : ''}
@@ -1454,7 +1615,12 @@
                                 </div>
 
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
-                                    <div><span class="text-slate-500 block">Locatário:</span> <strong class="text-white">${c.cliente_nome}</strong></div>
+                                    <div>
+                                        <span class="text-slate-500 block">Locatário:</span> 
+                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left">
+                                            ${c.cliente_nome}
+                                        </button>
+                                    </div>
                                     <div><span class="text-slate-500 block">Aluguel:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
                                     <div><span class="text-slate-500 block">Taxa Imob (${c.taxa_administracao_pct}%):</span> <strong class="text-amber-300 font-mono">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong></div>
                                     <div><span class="text-slate-500 block">Repasse Dono:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong></div>
@@ -1473,7 +1639,7 @@
 
                     const { data: vendas, error } = await supabaseClient
                         .from('vendas_fechadas')
-                        .select('*, imoveis(codigo_ref, titulo, foto_capa)')
+                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa)')
                         .eq('imobiliaria_id', dadosImobiliaria.id)
                         .order('data_venda', { ascending: false });
 
@@ -1791,9 +1957,6 @@
             }
         }
 
-        // =========================================================================
-        // LEITURA E RENDERIZAÇÃO DE COMUNICADOS GLOBAIS (BROADCAST MASTER)
-        // =========================================================================
         async function carregarAvisosGestor() {
             try {
                 let container = document.getElementById('faixa-comunicado-global');
@@ -1838,7 +2001,7 @@
                     tagCor = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
                 }
 
-                container.className = `px-4 py-2.5 text-xs font-medium sticky top-0 z-50 shadow-lg ${estiloFaixa}`;
+                container.className = `px-4 py-2.5 text-xs font-medium sticky top-0 z-30 shadow-lg ${estiloFaixa}`;
                 container.innerHTML = `
                     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
                         <div class="flex items-center gap-2.5 min-w-0">
