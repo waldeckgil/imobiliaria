@@ -120,15 +120,15 @@
             </div>
         </div>
 
-        <!-- QUADRO DE BLINDAGEM DE CARTEIRA -->
+        <!-- QUADRO DE BLINDAGEM DE CARTEIRA E FINANCEIRO -->
         <div class="box-tech p-4 border border-cyan-500/30 bg-cyan-950/10 flex items-start gap-3">
             <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div class="text-xs">
-                <h4 class="font-bold text-white">Blindagem Patrimonial de Proprietários</h4>
+                <h4 class="font-bold text-white">Blindagem Patrimonial & Controle Financeiro</h4>
                 <p class="text-slate-400 mt-0.5 leading-relaxed">
-                    Corretores associados têm acesso ao atendimento de leads e geração de fichas, mas <strong>não conseguem visualizar os números de telefone dos proprietários</strong> a menos que você marque expressamente a autorização na matriz de permissões.
+                    Corretores associados têm comissões individuais configuradas e operam o catálogo com telefones de proprietários e dados de faturamento global <strong>ocultos por padrão</strong>, a menos que você conceda permissões expressas na matriz abaixo.
                 </p>
             </div>
         </div>
@@ -142,15 +142,16 @@
                             <th class="py-3 px-4">Profissional</th>
                             <th class="py-3 px-3">Cargo</th>
                             <th class="py-3 px-3">CRECI</th>
-                            <th class="py-3 px-3">WhatsApp / Contato</th>
-                            <th class="py-3 px-3">Permissões de Acesso</th>
+                            <th class="py-3 px-3">WhatsApp</th>
+                            <th class="py-3 px-3">Comissões Acordadas</th>
+                            <th class="py-3 px-3">Privilégios & Acessos</th>
                             <th class="py-3 px-3 text-center">Status</th>
                             <th class="py-3 px-4 text-right">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tabela-equipe-corpo" class="divide-y divide-slate-800/60">
                         <tr>
-                            <td colspan="7" class="py-12 text-center text-slate-500">
+                            <td colspan="8" class="py-12 text-center text-slate-500">
                                 <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
                                 <p>Carregando membros da equipe...</p>
                             </td>
@@ -162,7 +163,7 @@
             <!-- RODAPÉ DA TABELA -->
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Total de <strong id="contador-equipe" class="text-white">0</strong> profissionais registrados</span>
-                <span class="font-mono text-[11px]">SGI • Controle de Acesso Baseado em Papéis (RBAC)</span>
+                <span class="font-mono text-[11px]">SGI • Controle de Comissões e Acesso Baseado em Papéis (RBAC)</span>
             </div>
         </div>
 
@@ -170,7 +171,7 @@
 
     <!-- MODAL DE CADASTRO E EDIÇÃO DE COLABORADOR -->
     <div id="modal-colaborador" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative max-h-[92vh] flex flex-col">
             <button onclick="fecharModalColaborador()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-lg cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -179,9 +180,9 @@
                 <i class="fa-solid fa-user-gear"></i>
                 <span id="modal-titulo">Novo Colaborador</span>
             </div>
-            <p class="text-xs text-slate-400 mt-1">Cadastre o corretor e defina suas regras de acesso ao catálogo e proprietários.</p>
+            <p class="text-xs text-slate-400 mt-1">Cadastre o corretor, pactue suas taxas de comissão e defina suas regras de acesso.</p>
 
-            <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="space-y-4 mt-4 text-xs">
+            <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="space-y-4 mt-4 text-xs overflow-y-auto pr-1 flex-1">
                 <input type="hidden" id="colab-id-edicao" value="">
 
                 <div>
@@ -220,6 +221,35 @@
                     </div>
                 </div>
 
+                <!-- BLOCO DE COMISSÕES ACORDADAS COM O MEMBRO -->
+                <div class="bg-slate-950/90 border border-cyan-500/40 rounded-xl p-3.5 space-y-3">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-percent"></i> Acordo de Comissões Deste Profissional
+                    </span>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">Comissão em Vendas (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="colab-comissao-venda" required placeholder="30.0" 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                                <span class="absolute right-3 top-2 text-slate-500 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[9px] text-slate-500 mt-0.5">% da fatia sobre a comissão recebida pela imobiliária.</p>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">Comissão em Locações (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="colab-comissao-locacao" required placeholder="20.0" 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-purple-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                                <span class="absolute right-3 top-2 text-slate-500 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[9px] text-slate-500 mt-0.5">% sobre a taxa de locação repassada ao corretor.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- SENHA PROVISÓRIA (APENAS PARA NOVO CADASTRO) -->
                 <div id="bloco-senha-novo">
                     <label class="block font-bold text-slate-300 mb-1">Senha Provisória de Acesso *</label>
@@ -234,21 +264,26 @@
 
                 <!-- MATRIZ DE PERMISSÕES GRANULARES (JSONB) -->
                 <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block">Privilégios Operacionais:</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block">Privilégios Operacionais & Blindagem:</span>
                     
                     <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
                         <input type="checkbox" id="perm-proprietarios" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
-                        <span>Pode visualizar telefones e contatos de proprietários</span>
+                        <span>Pode visualizar telefones e dados de proprietários</span>
                     </label>
 
                     <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
                         <input type="checkbox" id="perm-precos" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
-                        <span>Pode editar preços e comissões de imóveis</span>
+                        <span>Pode editar preços e destinação de imóveis</span>
                     </label>
 
                     <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
                         <input type="checkbox" id="perm-financeiro" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
-                        <span>Acesso ao painel financeiro e faturamento</span>
+                        <span>Acesso ao Painel Financeiro Global (Receitas, Aluguéis e Faturamento da Imobiliária)</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-comissoes-equipe" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Pode visualizar comissões de toda a equipe (se desmarcado, vê apenas a sua)</span>
                     </label>
                 </div>
 
@@ -312,13 +347,11 @@
 
             const email = session.user.email.toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
-            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
-            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
             // 1. MODO MASTER BYPASS (SUPORTE SOBERANO)
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
-                modoLeitura = false; // Master tem poder total para adicionar e editar corretores
+                modoLeitura = false; // Master tem poder total para adicionar e editar colaboradores
 
                 let targetId = impersonateId;
                 let imobAlvo = null;
@@ -359,7 +392,7 @@
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
                 if (usuario.cargo !== 'dono') {
-                    alert('Acesso Restrito: Apenas gestores e diretores podem administrar a equipe de corretores.');
+                    alert('Acesso Restrito: Apenas gestores titulares podem administrar a equipe e suas comissões.');
                     window.location.href = 'imoveis-lista.html';
                     return;
                 }
@@ -413,7 +446,7 @@
 
             } catch (err) {
                 console.error('Erro ao consultar equipe:', err);
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar colaboradores.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-red-400">Erro ao carregar colaboradores.</td></tr>`;
             }
         }
 
@@ -431,7 +464,7 @@
             if (membros.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" class="py-12 text-center text-slate-500">
+                        <td colspan="8" class="py-12 text-center text-slate-500">
                             <i class="fa-solid fa-users text-3xl mb-2 text-slate-600"></i>
                             <p class="font-bold text-slate-400">Nenhum membro cadastrado.</p>
                             <p class="text-[11px] text-slate-600 mt-0.5">Clique em "Adicionar Colaborador" para incluir sua equipe.</p>
@@ -453,11 +486,14 @@
                     : '';
 
                 const badgeFinanceiro = perms.acesso_financeiro 
-                    ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-400 border border-purple-800 text-[10px]">Financeiro</span>' 
-                    : '';
+                    ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700 text-[10px] font-bold">Financeiro Geral</span>' 
+                    : '<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-500 text-[10px]">Financeiro Restrito</span>';
 
                 const toggleClass = m.ativo ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
+
+                const comissaoVenda = (m.comissao_venda_pct !== null && m.comissao_venda_pct !== undefined) ? m.comissao_venda_pct : 30;
+                const comissaoLocacao = (m.comissao_locacao_pct !== null && m.comissao_locacao_pct !== undefined) ? m.comissao_locacao_pct : 20;
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
@@ -483,9 +519,20 @@
 
                     <td class="py-3 px-3">
                         <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono font-bold text-[10px]" title="Comissão do corretor em vendas">
+                                Venda: ${comissaoVenda}%
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono font-bold text-[10px]" title="Comissão do corretor em locações">
+                                Loc: ${comissaoLocacao}%
+                            </span>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <div class="flex items-center gap-1 flex-wrap">
                             ${badgeProprietario}
-                            ${badgePrecos}
                             ${badgeFinanceiro}
+                            ${badgePrecos}
                         </div>
                     </td>
 
@@ -501,7 +548,7 @@
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <button onclick="abrirModalEdicaoColaborador(${m.id})" 
                                 ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
-                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" title="Editar Privilégios">
+                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" title="Editar Privilégios & Comissões">
                             <i class="fa-regular fa-pen-to-square text-xs"></i>
                         </button>
                     </td>
@@ -532,6 +579,11 @@
             document.getElementById('modal-titulo').innerText = 'Novo Colaborador';
             document.getElementById('bloco-senha-novo').classList.remove('hidden');
             document.getElementById('colab-senha').required = true;
+            
+            // Valores padrão de comissão
+            document.getElementById('colab-comissao-venda').value = 30.0;
+            document.getElementById('colab-comissao-locacao').value = 20.0;
+
             gerarSenhaAleatoria();
             document.getElementById('modal-colaborador').classList.remove('hidden');
         }
@@ -542,13 +594,16 @@
             if (!membro) return;
 
             document.getElementById('colab-id-edicao').value = membro.id;
-            document.getElementById('modal-titulo').innerText = 'Editar Privilégios: ' + membro.nome_completo;
+            document.getElementById('modal-titulo').innerText = 'Editar Colaborador: ' + membro.nome_completo;
             document.getElementById('colab-nome').value = membro.nome_completo || '';
             document.getElementById('colab-zap').value = membro.whatsapp || '';
             document.getElementById('colab-creci').value = membro.creci_individual || '';
             document.getElementById('colab-cargo').value = membro.cargo || 'corretor';
             document.getElementById('colab-email').value = membro.email || '';
             
+            document.getElementById('colab-comissao-venda').value = (membro.comissao_venda_pct !== null && membro.comissao_venda_pct !== undefined) ? membro.comissao_venda_pct : 30.0;
+            document.getElementById('colab-comissao-locacao').value = (membro.comissao_locacao_pct !== null && membro.comissao_locacao_pct !== undefined) ? membro.comissao_locacao_pct : 20.0;
+
             document.getElementById('bloco-senha-novo').classList.add('hidden');
             document.getElementById('colab-senha').required = false;
 
@@ -556,6 +611,7 @@
             document.getElementById('perm-proprietarios').checked = !!p.ver_proprietarios;
             document.getElementById('perm-precos').checked = !!p.editar_precos;
             document.getElementById('perm-financeiro').checked = !!p.acesso_financeiro;
+            document.getElementById('perm-comissoes-equipe').checked = !!p.ver_comissoes_gerais;
 
             document.getElementById('modal-colaborador').classList.remove('hidden');
         }
@@ -592,11 +648,14 @@
             const cargo = document.getElementById('colab-cargo').value;
             const email = document.getElementById('colab-email').value.trim().toLowerCase();
             const senha = document.getElementById('colab-senha').value;
+            const comissaoVenda = Number(document.getElementById('colab-comissao-venda').value) || 30.0;
+            const comissaoLocacao = Number(document.getElementById('colab-comissao-locacao').value) || 20.0;
 
             const permissoesObj = {
                 ver_proprietarios: document.getElementById('perm-proprietarios').checked,
                 editar_precos: document.getElementById('perm-precos').checked,
-                acesso_financeiro: document.getElementById('perm-financeiro').checked
+                acesso_financeiro: document.getElementById('perm-financeiro').checked,
+                ver_comissoes_gerais: document.getElementById('perm-comissoes-equipe').checked
             };
 
             try {
@@ -608,6 +667,8 @@
                             whatsapp: zap,
                             creci_individual: creci,
                             cargo: cargo,
+                            comissao_venda_pct: comissaoVenda,
+                            comissao_locacao_pct: comissaoLocacao,
                             permissoes: permissoesObj
                         })
                         .eq('id', idEdicao);
@@ -628,7 +689,7 @@
                     });
 
                     if (authError) throw authError;
-                    if (!authData.user) throw new Error('Não foi possível registrar o usuário.');
+                    if (!authData.user) throw new Error('Não foi possível registrar o usuário de autenticação.');
 
                     const { error: dbError } = await supabaseClient
                         .from('usuarios')
@@ -640,6 +701,8 @@
                             email: email,
                             cargo: cargo,
                             creci_individual: creci,
+                            comissao_venda_pct: comissaoVenda,
+                            comissao_locacao_pct: comissaoLocacao,
                             ativo: true,
                             permissoes: permissoesObj
                         }]);
@@ -650,7 +713,7 @@
                     await carregarMembrosEquipe();
 
                     const linkLogin = window.location.origin + window.location.pathname.replace('equipe.html', 'login.html');
-                    const msg = encodeURIComponent(`Olá ${nome}! Seu acesso à plataforma da nossa imobiliária foi criado com sucesso:\n\n🔗 Link de Acesso: ${linkLogin}\n📧 E-mail: ${email}\n🔑 Senha Provisória: ${senha}\n\nPor favor, faça seu login e altere sua senha no primeiro acesso.`);
+                    const msg = encodeURIComponent(`Olá ${nome}! Seu acesso à plataforma da nossa imobiliária foi configurado com sucesso:\n\n🔗 Link de Acesso: ${linkLogin}\n📧 E-mail: ${email}\n🔑 Senha Provisória: ${senha}\n\nPor favor, faça seu login e altere sua senha no primeiro acesso.`);
                     const urlWa = `https://wa.me/${zap}?text=${msg}`;
 
                     document.getElementById('btn-link-zap-enviar').href = urlWa;

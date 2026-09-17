@@ -68,52 +68,82 @@
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-8">
         
         <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="box-master p-5 border-l-4 border-l-amber-400">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Receita Mensal (MRR)</span>
-                    <i class="fa-solid fa-sack-dollar text-amber-400 text-lg"></i>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            
+            <!-- MRR -->
+            <div class="box-master p-4 border-l-4 border-l-amber-400 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                        <span>Receita Mensal (MRR)</span>
+                        <i class="fa-solid fa-sack-dollar text-amber-400 text-base"></i>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-mrr" class="text-2xl font-black text-amber-400">R$ 0,00</span>
+                    </div>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-mrr" class="text-3xl font-black text-amber-400">R$ 0,00</span>
-                </div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Faturamento recorrente ativo</span>
+                <span class="text-[10px] text-slate-500 mt-2 block">Recorrência ativa</span>
             </div>
 
-            <div class="box-tech p-5 border-l-4 border-l-emerald-400">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Imobiliárias Parceiras</span>
-                    <i class="fa-solid fa-building-circle-check text-emerald-400 text-lg"></i>
+            <!-- NOVO CARD: HISTÓRICO GLOBAL DE PAGAMENTOS -->
+            <div class="box-tech p-4 border-l-4 border-l-indigo-400 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition" onclick="abrirModalHistoricoGlobal()" title="Clique para abrir o Histórico Geral de Pagamentos">
+                <div>
+                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                        <span>Total Arrecadado</span>
+                        <i class="fa-solid fa-file-invoice-dollar text-indigo-400 text-base"></i>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-total-arrecadado" class="text-2xl font-black text-indigo-300">R$ 0,00</span>
+                    </div>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-imobiliarias-ativas" class="text-3xl font-black text-white">0</span>
-                    <span id="kpi-imobiliarias-total" class="text-xs text-slate-400">de 0 cadastradas</span>
+                <div class="mt-2 flex items-center justify-between text-[10px] text-indigo-400">
+                    <span>Ver todos os pagamentos</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                 </div>
-                <span class="text-[10px] text-emerald-400 mt-1 block">Empresas em operação</span>
             </div>
 
-            <div class="box-tech p-5 border-l-4 border-l-cyan-400">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Estoque Global de Imóveis</span>
-                    <i class="fa-solid fa-house-laptop text-cyan-400 text-lg"></i>
+            <!-- IMOBILIÁRIAS ATIVAS -->
+            <div class="box-tech p-4 border-l-4 border-l-emerald-400 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                        <span>Imobiliárias</span>
+                        <i class="fa-solid fa-building-circle-check text-emerald-400 text-base"></i>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-imobiliarias-ativas" class="text-2xl font-black text-white">0</span>
+                        <span id="kpi-imobiliarias-total" class="text-xs text-slate-400">de 0</span>
+                    </div>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-imoveis-global" class="text-3xl font-black text-white">0</span>
-                    <span class="text-xs text-cyan-400">anúncios</span>
-                </div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Cadastrados em todo o Brasil</span>
+                <span class="text-[10px] text-emerald-400 mt-2 block">Empresas em operação</span>
             </div>
 
-            <div class="box-tech p-5 border-l-4 border-l-rose-500">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span>Pendências / Bloqueios</span>
-                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+            <!-- ESTOQUE DE IMÓVEIS -->
+            <div class="box-tech p-4 border-l-4 border-l-cyan-400 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                        <span>Imóveis na Rede</span>
+                        <i class="fa-solid fa-house-laptop text-cyan-400 text-base"></i>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-imoveis-global" class="text-2xl font-black text-white">0</span>
+                        <span class="text-xs text-cyan-400">anúncios</span>
+                    </div>
                 </div>
-                <div class="mt-3 flex items-baseline gap-2">
-                    <span id="kpi-bloqueadas" class="text-3xl font-black text-rose-400">0</span>
-                    <span class="text-xs text-slate-400">imobiliárias</span>
+                <span class="text-[10px] text-slate-500 mt-2 block">Total cadastrado</span>
+            </div>
+
+            <!-- BLOQUEADAS / PENDÊNCIAS -->
+            <div class="box-tech p-4 border-l-4 border-l-rose-500 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between text-slate-400 text-[11px] font-bold uppercase tracking-wider">
+                        <span>Pendências</span>
+                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base"></i>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-bloqueadas" class="text-2xl font-black text-rose-400">0</span>
+                        <span class="text-xs text-slate-400">bloqueadas</span>
+                    </div>
                 </div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Acesso restrito a leitura</span>
+                <span class="text-[10px] text-slate-500 mt-2 block">Acesso restrito</span>
             </div>
         </div>
 
@@ -124,14 +154,21 @@
                     <h3 class="text-base font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-building-user text-amber-400"></i> Carteira de Imobiliárias Assinantes
                     </h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, registre mensalidades, defina vencimentos arbitrários e preste suporte.</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Gerencie contratos, registre mensalidades, defina gratuidades, aplique vencimentos e preste suporte operacional.</p>
                 </div>
 
-                <div class="w-full sm:w-80 relative">
-                    <input type="text" id="filtro-busca-imob" placeholder="Buscar por nome, slug, e-mail ou CRECI..." 
-                           oninput="filtrarImobiliarias()"
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white outline-none focus:border-amber-400">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button onclick="abrirModalHistoricoGlobal()" class="bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="Ver todo o histórico financeiro da rede">
+                        <i class="fa-solid fa-receipt text-xs"></i>
+                        <span>Todos os Pagamentos</span>
+                    </button>
+
+                    <div class="w-full sm:w-72 relative">
+                        <input type="text" id="filtro-busca-imob" placeholder="Buscar por nome, slug, e-mail ou CRECI..." 
+                               oninput="filtrarImobiliarias()"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white outline-none focus:border-amber-400">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                    </div>
                 </div>
             </div>
 
@@ -219,7 +256,7 @@
 
     </main>
 
-    <!-- MODAL 1: HISTÓRICO FINANCEIRO & BAIXA DE MENSALIDADE -->
+    <!-- MODAL 1: HISTÓRICO FINANCEIRO & BAIXA DE MENSALIDADE INDIVIDUAL -->
     <div id="modal-financeiro" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 shadow-2xl relative border border-emerald-500/40 max-h-[90vh] overflow-y-auto">
             <button type="button" onclick="fecharModalFinanceiro()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -314,7 +351,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: AJUSTE DO PLANO / MENSALIDADE -->
+    <!-- MODAL 2: AJUSTE DO PLANO / MENSALIDADE & GRATUIDADE -->
     <div id="modal-editar-plano" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-master max-w-sm w-full p-6 shadow-2xl relative">
             <button type="button" onclick="fecharModalEditarPlano()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -333,6 +370,7 @@
 
             <form id="form-editar-plano" onsubmit="salvarNovoValorPlano(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="modal-plano-imob-id">
+                
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Novo Valor Mensal (R$) *</label>
                     <div class="relative">
@@ -342,13 +380,23 @@
                     </div>
                 </div>
 
+                <!-- OPÇÃO DE GRATUIDADE / CORTESIA -->
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <span class="font-bold text-amber-400 block text-xs">Plano Cortesia / Gratuito</span>
+                        <span class="text-[10px] text-slate-400">Isentar cobrança (R$ 0,00)</span>
+                    </div>
+                    <input type="checkbox" id="modal-plano-gratuidade" onchange="alternarGratuidadeNoInput(this.checked)" 
+                           class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-amber-500 cursor-pointer focus:ring-0">
+                </div>
+
                 <div class="flex items-center justify-end gap-2 pt-2">
                     <button type="button" onclick="fecharModalEditarPlano()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
                         Cancelar
                     </button>
                     <button type="submit" id="btn-salvar-plano" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
                         <i class="fa-solid fa-check"></i>
-                        <span>Salvar Novo Valor</span>
+                        <span>Salvar Valor</span>
                     </button>
                 </div>
             </form>
@@ -393,6 +441,137 @@
         </div>
     </div>
 
+    <!-- MODAL 4: NOVO - HISTÓRICO GLOBAL DE PAGAMENTOS DE TODAS AS IMOBILIÁRIAS -->
+    <div id="modal-historico-global" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-4xl w-full p-6 shadow-2xl relative border border-indigo-500/40 max-h-[90vh] flex flex-col">
+            <button type="button" onclick="fecharModalHistoricoGlobal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/40">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-white">Histórico Geral de Recebimentos da Rede SaaS</h3>
+                        <p class="text-xs text-indigo-300">Auditoria consolidada de todas as mensalidades quitadas pelas imobiliárias.</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold block">Arrecadação Total Consolidada</span>
+                    <span id="global-total-arrecadado-modal" class="text-base font-black text-emerald-400 font-mono">R$ 0,00</span>
+                </div>
+            </div>
+
+            <!-- FILTRO INTERNO -->
+            <div class="mb-4">
+                <div class="relative">
+                    <input type="text" id="filtro-historico-global" placeholder="Filtrar por nome da imobiliária, mês, método..." 
+                           oninput="filtrarHistoricoGlobal()"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white outline-none focus:border-indigo-400">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-800 sticky top-0">
+                        <tr>
+                            <th class="py-2.5 px-3">Data</th>
+                            <th class="py-2.5 px-3">Imobiliária</th>
+                            <th class="py-2.5 px-3">Mês Ref.</th>
+                            <th class="py-2.5 px-3">Forma</th>
+                            <th class="py-2.5 px-3">Valor</th>
+                            <th class="py-2.5 px-3">Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-historico-global-corpo" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-xl mb-2"></i>
+                                <p>Consultando pagamentos consolidados...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
+                <span>Registros encontrados: <strong id="contador-historico-global" class="text-white">0</strong></span>
+                <button type="button" onclick="fecharModalHistoricoGlobal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                    Fechar Painel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: NOVO - EXCLUSÃO CRÍTICA DE IMOBILIÁRIA (PURGE TOTAL COM CONFIRMAÇÃO E AUDITORIA) -->
+    <div id="modal-excluir-imob" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border-2 border-rose-600">
+            <button type="button" onclick="fecharModalExcluirImob()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-500 flex items-center justify-center text-2xl border border-rose-500/40">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-black text-rose-400">Exclusão Permanente de Imobiliária</h3>
+                    <p class="text-xs text-slate-400">Ação irreversível de expurgo total de dados do assinante.</p>
+                </div>
+            </div>
+
+            <form id="form-excluir-imob" onsubmit="executarExclusaoCriticaImobiliaria(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="excluir-imob-id">
+                <input type="hidden" id="excluir-imob-nome-esperado">
+
+                <div class="bg-rose-950/40 border border-rose-800/60 p-3.5 rounded-xl space-y-2 text-rose-200">
+                    <p class="font-bold flex items-center gap-1.5 text-rose-300">
+                        <i class="fa-solid fa-skull-crossbones"></i> ATENÇÃO ADMINISTRADOR:
+                    </p>
+                    <p class="text-[11px] leading-relaxed">
+                        Esta operação apagará definitivamente a imobiliária e <strong>todos os seus imóveis, leads, contratos, inquilinos, clientes, corretores associados e histórico de cobrança</strong>.
+                    </p>
+                    <div class="pt-1 text-[11px]">
+                        Imobiliária Selecionada: <strong id="excluir-nome-display" class="text-amber-400 font-mono underline">Nome</strong>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">
+                        1. Digite o nome EXATO da imobiliária para confirmar: *
+                    </label>
+                    <input type="text" id="excluir-input-confirmacao" required 
+                           oninput="validarTextoConfirmacaoExclusao()" 
+                           placeholder="Digite o nome completo registrado..."
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-bold outline-none focus:border-rose-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">
+                        2. Motivo da Exclusão (Ficará registrado no histórico de auditoria) *
+                    </label>
+                    <textarea id="excluir-motivo-input" required rows="3" 
+                              placeholder="Ex: Cancelamento voluntário solicitado via WhatsApp / Encerramento de atividades..."
+                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-rose-500"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalExcluirImob()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-confirmar-exclusao" disabled 
+                            class="px-5 py-2.5 rounded-xl bg-rose-600 disabled:bg-rose-950 disabled:text-slate-500 text-white font-black flex items-center gap-1.5 transition shadow cursor-not-allowed">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Excluir Definitivamente</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- RODAPÉ TÉCNICO -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI SaaS • Sistema de Gestão Imobiliária • Console Soberano do Administrador
@@ -407,6 +586,7 @@
 
         let listaImobiliarias = [];
         let listaImoveisGlobal = [];
+        let listaHistoricoGlobal = [];
 
         async function inicializarMaster() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -471,12 +651,34 @@
 
                 if (!errImoveis) listaImoveisGlobal = imoveis || [];
 
+                // Carrega histórico global de mensalidades quitadas
+                await carregarTotalizadoresPagamentos();
+
                 atualizarMetricasMaster();
                 renderizarTabelaImobiliarias(listaImobiliarias);
 
             } catch (err) {
                 console.error('Erro ao carregar dados do Master:', err);
                 alert('Erro ao consultar banco de dados master.');
+            }
+        }
+
+        async function carregarTotalizadoresPagamentos() {
+            try {
+                const { data: mensalidades, error } = await supabaseClient
+                    .from('imobiliarias_mensalidades')
+                    .select('*')
+                    .order('data_pagamento', { ascending: false });
+
+                if (!error && mensalidades) {
+                    listaHistoricoGlobal = mensalidades;
+                    const totalGeral = mensalidades.reduce((acc, curr) => acc + Number(curr.valor_pago || 0), 0);
+                    const formatado = totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    document.getElementById('kpi-total-arrecadado').innerText = formatado;
+                    document.getElementById('global-total-arrecadado-modal').innerText = formatado;
+                }
+            } catch (err) {
+                console.warn('Erro ao consultar histórico de pagamentos:', err);
             }
         }
 
@@ -489,11 +691,12 @@
             let bloqueadasCount = 0;
 
             listaImobiliarias.forEach(im => {
+                const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
                 const vencido = im.data_vencimento && im.data_vencimento < hoje;
                 const estaAtiva = (im.status === 'active' && !vencido);
 
                 if (estaAtiva) {
-                    mrrTotal += Number(im.plano_valor || 149);
+                    mrrTotal += valorPlano;
                     ativasCount++;
                 } else {
                     bloqueadasCount++;
@@ -502,7 +705,7 @@
 
             document.getElementById('kpi-mrr').innerText = mrrTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('kpi-imobiliarias-ativas').innerText = ativasCount;
-            document.getElementById('kpi-imobiliarias-total').innerText = `de ${totalImobs} cadastradas`;
+            document.getElementById('kpi-imobiliarias-total').innerText = `de ${totalImobs}`;
             document.getElementById('kpi-imoveis-global').innerText = listaImoveisGlobal.length;
             document.getElementById('kpi-bloqueadas').innerText = bloqueadasCount;
             document.getElementById('contador-imob').innerText = totalImobs;
@@ -522,6 +725,8 @@
                 const qtdImoveis = listaImoveisGlobal.filter(i => i.imobiliaria_id === im.id).length;
                 const vencido = im.data_vencimento && im.data_vencimento < hoje;
                 const estaBloqueada = im.status === 'blocked' || vencido;
+                const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
+                const ehGratuito = valorPlano === 0;
 
                 let badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Ativa</span>';
                 if (im.status === 'blocked') {
@@ -538,20 +743,29 @@
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
+                    <!-- NOME & OPÇÃO DE EXCLUIR DETERMINADA IMOBILIÁRIA -->
                     <td class="py-3 px-4">
                         <div class="flex items-center gap-2.5">
                             <img src="${im.logo_url || 'https://via.placeholder.com/40?text=Imob'}" class="w-8 h-8 rounded-lg object-contain bg-white/5 border border-slate-700 p-0.5">
-                            <div>
-                                <span class="font-black text-white block leading-snug">${im.nome_fantasia}</span>
-                                <span class="text-[10px] font-mono text-cyan-400">/${im.slug}</span>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="font-black text-white truncate max-w-[150px] sm:max-w-[200px]" title="${im.nome_fantasia}">${im.nome_fantasia}</span>
+                                    <!-- BOTÃO DE EXCLUIR IMOBILIÁRIA (PURGE SEGURO) -->
+                                    <button type="button" onclick="abrirModalExcluirImob('${im.id}')" 
+                                            class="p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-rose-950/60 transition cursor-pointer" 
+                                            title="Excluir apenas esta imobiliária (Purge definitivo)">
+                                        <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                    </button>
+                                </div>
+                                <span class="text-[10px] font-mono text-cyan-400 block leading-tight">/${im.slug}</span>
                             </div>
                         </div>
                     </td>
 
                     <td class="py-3 px-3">
-                        <span class="text-slate-300 font-bold block">${im.razao_social || 'Sem Razão Social'}</span>
+                        <span class="text-slate-300 font-bold block truncate max-w-[180px]">${im.razao_social || 'Sem Razão Social'}</span>
                         <div class="flex items-center gap-2 mt-0.5">
-                            <span class="text-[11px] text-slate-500">${im.email_admin || 'Sem e-mail'}</span>
+                            <span class="text-[11px] text-slate-500 truncate max-w-[140px]">${im.email_admin || 'Sem e-mail'}</span>
                             ${zapLimpo ? `<a href="https://wa.me/${zapLimpo}" target="_blank" class="text-emerald-400 hover:text-emerald-300" title="Chamar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
                         </div>
                     </td>
@@ -560,12 +774,15 @@
                         <span class="font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded text-[11px]">${qtdImoveis}</span>
                     </td>
 
-                    <!-- VALOR DO PLANO -->
+                    <!-- VALOR DO PLANO / GRATUIDADE -->
                     <td class="py-3 px-3">
                         <button type="button" onclick="abrirModalEditarPlano('${im.id}')" 
-                                class="hover:underline flex items-center gap-1.5 cursor-pointer text-cyan-300 hover:text-amber-400 font-bold" 
-                                title="Alterar valor">
-                            <span>R$ ${Number(im.plano_valor || 149).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                class="hover:underline flex items-center gap-1.5 cursor-pointer font-bold" 
+                                title="Alterar valor ou aplicar gratuidade">
+                            ${ehGratuito 
+                                ? '<span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40">Gratuito (Cortesia)</span>'
+                                : `<span class="text-cyan-300 hover:text-amber-400">R$ ${valorPlano.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>`
+                            }
                             <i class="fa-solid fa-pen-to-square text-[10px] text-slate-500"></i>
                         </button>
                     </td>
@@ -584,54 +801,55 @@
                         ${badgeStatus}
                     </td>
 
+                    <!-- AÇÕES DE GESTÃO & SUPORTE REFINADAS COM IDENTIDADE VISUAL CLARA -->
                     <td class="py-3 px-4 text-right whitespace-nowrap">
-                        <div class="inline-flex items-center gap-1.5">
+                        <div class="inline-flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
                             
-                            <!-- HISTÓRICO FINANCEIRO & BAIXA DE MENSALIDADE -->
+                            <!-- 1. RECIBOS & HISTÓRICO INDIVIDUAL (VERDE) -->
                             <button onclick="abrirModalFinanceiro('${im.id}')" 
-                                    class="p-1.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
-                                    title="Histórico de Pagamentos & Dar Baixa">
+                                    class="w-7 h-7 rounded-lg bg-emerald-950/80 hover:bg-emerald-800 text-emerald-400 border border-emerald-700/60 flex items-center justify-center transition cursor-pointer shadow" 
+                                    title="Gestão de Recibos & Dar Baixa">
                                 <i class="fa-solid fa-receipt text-xs"></i>
                             </button>
 
-                            <!-- EDITAR DATA DE VENCIMENTO NO CALENDÁRIO -->
+                            <!-- 2. ALTERAR VENCIMENTO NO CALENDÁRIO (AZUL) -->
                             <button onclick="abrirModalEditarVencimento('${im.id}')" 
-                                    class="p-1.5 rounded-lg bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-800 transition cursor-pointer" 
+                                    class="w-7 h-7 rounded-lg bg-blue-950/80 hover:bg-blue-800 text-blue-300 border border-blue-700/60 flex items-center justify-center transition cursor-pointer shadow" 
                                     title="Alterar Data de Vencimento (Calendário)">
                                 <i class="fa-solid fa-calendar-day text-xs"></i>
                             </button>
 
-                            <!-- AJUSTAR VALOR DO PLANO ($) -->
+                            <!-- 3. VALOR DA MENSALIDADE / GRATUIDADE (ÂMBAR) -->
                             <button onclick="abrirModalEditarPlano('${im.id}')" 
-                                    class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-800 transition cursor-pointer" 
-                                    title="Ajustar Valor da Mensalidade (R$)">
-                                <i class="fa-solid fa-dollar-sign text-xs"></i>
+                                    class="w-7 h-7 rounded-lg bg-amber-950/80 hover:bg-amber-800 text-amber-300 border border-amber-700/60 flex items-center justify-center transition cursor-pointer shadow" 
+                                    title="Ajustar Preço / Conceder Gratuidade">
+                                <i class="fa-solid fa-hand-holding-dollar text-xs"></i>
                             </button>
 
-                            <!-- RENOVAR +30 DIAS RÁPIDO -->
+                            <!-- 4. RENOVAR +30 DIAS RÁPIDO (TEAL/ESMERALDA) -->
                             <button onclick="renovarMensalidade('${im.id}')" 
-                                    class="p-1.5 rounded-lg bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-800 transition cursor-pointer" 
-                                    title="Renovar Mensalidade (+30 dias rápidos)">
+                                    class="w-7 h-7 rounded-lg bg-teal-950/80 hover:bg-teal-800 text-teal-300 border border-teal-700/60 flex items-center justify-center transition cursor-pointer shadow" 
+                                    title="Renovação Expressa (+30 dias)">
                                 <i class="fa-solid fa-calendar-plus text-xs"></i>
                             </button>
 
-                            <!-- BLOQUEAR / DESBLOQUEAR -->
+                            <!-- 5. BLOQUEAR / DESBLOQUEAR ACESSO (LARANJA / CINZA) -->
                             <button onclick="alternarBloqueio('${im.id}', '${im.status}')" 
-                                    class="p-1.5 rounded-lg ${estaBloqueada ? 'bg-amber-950 text-amber-400 border-amber-800' : 'bg-slate-800 text-slate-400 border-slate-700'} border hover:opacity-80 transition cursor-pointer" 
-                                    title="${estaBloqueada ? 'Desbloquear Imobiliária' : 'Bloquear Imobiliária'}">
+                                    class="w-7 h-7 rounded-lg ${estaBloqueada ? 'bg-amber-950 text-amber-400 border-amber-700' : 'bg-slate-900 text-slate-400 border-slate-700'} hover:opacity-80 border flex items-center justify-center transition cursor-pointer shadow" 
+                                    title="${estaBloqueada ? 'Desbloquear Imobiliária' : 'Bloquear Acesso'}">
                                 <i class="fa-solid ${estaBloqueada ? 'fa-lock-open' : 'fa-lock'} text-xs"></i>
                             </button>
 
-                            <!-- MODO IMPERSONATE (SUPORTE OPERACIONAL) -> ABRE DIRETO NO CATÁLOGO EM NOVA ABA -->
+                            <!-- 6. MODO IMPERSONATE / SUPORTE OPERACIONAL (ROXO/ÍNDIGO) -->
                             <button onclick="acessarComoMaster('${im.id}', '${im.slug}')" 
-                                    class="p-1.5 rounded-lg bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-800 transition cursor-pointer" 
-                                    title="Modo Suporte: Abrir painel desta imobiliária (Nova Aba)">
+                                    class="w-7 h-7 rounded-lg bg-indigo-950/80 hover:bg-indigo-800 text-indigo-300 border border-indigo-700/60 flex items-center justify-center transition cursor-pointer shadow" 
+                                    title="Modo Suporte: Logar como Imobiliária (Nova Aba)">
                                 <i class="fa-solid fa-user-astronaut text-xs"></i>
                             </button>
 
-                            <!-- VER VITRINE PÚBLICA -->
+                            <!-- 7. VER VITRINE PÚBLICA (CIANO) -->
                             <a href="index.html?imob=${im.slug}" target="_blank" 
-                               class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition" 
+                               class="w-7 h-7 rounded-lg bg-cyan-950/80 hover:bg-cyan-800 text-cyan-300 border border-cyan-700/60 flex items-center justify-center transition shadow" 
                                title="Abrir Vitrine Pública">
                                 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
                             </a>
@@ -654,7 +872,7 @@
         }
 
         // =========================================================================
-        // GESTÃO DO HISTÓRICO FINANCEIRO & REGISTRO DE PAGAMENTOS
+        // GESTÃO DO HISTÓRICO FINANCEIRO & REGISTRO DE PAGAMENTOS INDIVIDUAIS
         // =========================================================================
         async function abrirModalFinanceiro(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
@@ -662,10 +880,9 @@
 
             document.getElementById('modal-fin-imob-id').value = imob.id;
             document.getElementById('modal-fin-imob-nome').innerText = `${imob.nome_fantasia} (/${imob.slug})`;
-            document.getElementById('fin-valor').value = Number(imob.plano_valor || 149).toFixed(2);
+            document.getElementById('fin-valor').value = Number(imob.plano_valor !== null ? imob.plano_valor : 149).toFixed(2);
             document.getElementById('fin-data').value = new Date().toISOString().split('T')[0];
 
-            // Define mês de referência atual (Ex: Outubro/2026)
             const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
             const dataAtual = new Date();
             document.getElementById('fin-mes-ref').value = `${meses[dataAtual.getMonth()]}/${dataAtual.getFullYear()}`;
@@ -736,7 +953,7 @@
             const obs = document.getElementById('fin-obs').value.trim();
             const estenderVencimento = document.getElementById('fin-renovar-30').checked;
 
-            if (isNaN(valor) || valor <= 0) {
+            if (isNaN(valor) || valor < 0) {
                 alert('Informe um valor de pagamento válido.');
                 return;
             }
@@ -746,7 +963,6 @@
             btn.disabled = true;
 
             try {
-                // 1. Grava no histórico
                 const { error: insErr } = await supabaseClient
                     .from('imobiliarias_mensalidades')
                     .insert([{
@@ -760,7 +976,6 @@
 
                 if (insErr) throw insErr;
 
-                // 2. Se optou por estender vencimento
                 if (estenderVencimento) {
                     const imob = listaImobiliarias.find(i => i.id === imobId);
                     let baseData = new Date();
@@ -796,6 +1011,7 @@
                     const { error } = await supabaseClient.from('imobiliarias_mensalidades').delete().eq('id', pagamentoId);
                     if (error) throw error;
                     await carregarHistoricoMensalidades(imobId);
+                    await carregarDadosMaster();
                 } catch (err) {
                     console.error(err);
                     alert('Erro ao excluir registro.');
@@ -861,7 +1077,7 @@
         }
 
         // =========================================================================
-        // GESTÃO DO VALOR DO PLANO
+        // GESTÃO DO VALOR DO PLANO & GRATUIDADE (CORTESIA)
         // =========================================================================
         function abrirModalEditarPlano(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
@@ -869,8 +1085,30 @@
 
             document.getElementById('modal-plano-imob-id').value = imob.id;
             document.getElementById('modal-plano-imob-nome').innerText = `${imob.nome_fantasia} (/${imob.slug})`;
-            document.getElementById('modal-plano-valor-input').value = Number(imob.plano_valor || 149).toFixed(2);
+            
+            const valorAtual = Number(imob.plano_valor !== null ? imob.plano_valor : 149);
+            document.getElementById('modal-plano-valor-input').value = valorAtual.toFixed(2);
+
+            const checkGratuidade = document.getElementById('modal-plano-gratuidade');
+            checkGratuidade.checked = (valorAtual === 0);
+            alternarGratuidadeNoInput(valorAtual === 0);
+
             document.getElementById('modal-editar-plano').classList.remove('hidden');
+        }
+
+        function alternarGratuidadeNoInput(marcado) {
+            const inputValor = document.getElementById('modal-plano-valor-input');
+            if (marcado) {
+                inputValor.value = '0.00';
+                inputValor.readOnly = true;
+                inputValor.classList.add('opacity-50');
+            } else {
+                inputValor.readOnly = false;
+                inputValor.classList.remove('opacity-50');
+                if (parseFloat(inputValor.value) === 0) {
+                    inputValor.value = '149.00';
+                }
+            }
         }
 
         function fecharModalEditarPlano() {
@@ -892,9 +1130,15 @@
             btn.disabled = true;
 
             try {
+                const payload = { plano_valor: novoValor };
+                // Se o plano for gratuidade, assegura status ativo
+                if (novoValor === 0) {
+                    payload.status = 'active';
+                }
+
                 const { error } = await supabaseClient
                     .from('imobiliarias')
-                    .update({ plano_valor: novoValor })
+                    .update(payload)
                     .eq('id', imobId);
 
                 if (error) throw error;
@@ -906,7 +1150,7 @@
                 console.error(err);
                 alert('Erro ao atualizar plano.');
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Novo Valor</span>';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Valor</span>';
                 btn.disabled = false;
             }
         }
@@ -979,6 +1223,196 @@
             renderizarTabelaImobiliarias(filtradas);
         }
 
+        // =========================================================================
+        // NOVO MODAL: HISTÓRICO GLOBAL DE PAGAMENTOS CONSOLIDADOS
+        // =========================================================================
+        async function abrirModalHistoricoGlobal() {
+            document.getElementById('modal-historico-global').classList.remove('hidden');
+            await renderizarHistoricoGlobal(listaHistoricoGlobal);
+        }
+
+        function fecharModalHistoricoGlobal() {
+            document.getElementById('modal-historico-global').classList.add('hidden');
+        }
+
+        async function renderizarHistoricoGlobal(pagamentos) {
+            const tbody = document.getElementById('tabela-historico-global-corpo');
+
+            if (!pagamentos || pagamentos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-500">Nenhum pagamento registrado na base de dados.</td></tr>';
+                document.getElementById('contador-historico-global').innerText = '0';
+                return;
+            }
+
+            document.getElementById('contador-historico-global').innerText = pagamentos.length;
+
+            tbody.innerHTML = pagamentos.map(p => {
+                const imob = listaImobiliarias.find(i => i.id === p.imobiliaria_id);
+                const nomeImob = imob ? imob.nome_fantasia : 'Imobiliária Desconhecida/Excluída';
+                const dtFormatada = p.data_pagamento ? p.data_pagamento.split('-').reverse().join('/') : '--/--/----';
+
+                return `
+                <tr class="hover:bg-slate-900/60">
+                    <td class="py-2.5 px-3 text-slate-300">${dtFormatada}</td>
+                    <td class="py-2.5 px-3 text-white font-bold">
+                        <span>${nomeImob}</span>
+                        ${imob ? `<span class="text-[9px] text-cyan-400 block font-normal">/${imob.slug}</span>` : ''}
+                    </td>
+                    <td class="py-2.5 px-3 text-indigo-300 font-bold">${p.mes_referencia}</td>
+                    <td class="py-2.5 px-3 text-cyan-400">${p.forma_pagamento || 'PIX'}</td>
+                    <td class="py-2.5 px-3 text-emerald-400 font-bold">R$ ${Number(p.valor_pago).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                    <td class="py-2.5 px-3 text-slate-400 text-[10px] truncate max-w-[200px]" title="${p.observacoes || ''}">
+                        ${p.observacoes || '-'}
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filtrarHistoricoGlobal() {
+            const busca = document.getElementById('filtro-historico-global').value.toLowerCase().trim();
+            if (!busca) {
+                renderizarHistoricoGlobal(listaHistoricoGlobal);
+                return;
+            }
+
+            const filtrados = listaHistoricoGlobal.filter(p => {
+                const imob = listaImobiliarias.find(i => i.id === p.imobiliaria_id);
+                const nome = imob ? imob.nome_fantasia.toLowerCase() : '';
+                const slug = imob ? imob.slug.toLowerCase() : '';
+                const mes = (p.mes_referencia || '').toLowerCase();
+                const forma = (p.forma_pagamento || '').toLowerCase();
+                const obs = (p.observacoes || '').toLowerCase();
+
+                return nome.includes(busca) || slug.includes(busca) || mes.includes(busca) || forma.includes(busca) || obs.includes(busca);
+            });
+
+            renderizarHistoricoGlobal(filtrados);
+        }
+
+        // =========================================================================
+        // NOVO: EXCLUSÃO CRÍTICA E PURGE SEGURO DE UMA IMOBILIÁRIA ESPECÍFICA
+        // =========================================================================
+        function abrirModalExcluirImob(imobId) {
+            const imob = listaImobiliarias.find(i => i.id === imobId);
+            if (!imob) return;
+
+            document.getElementById('excluir-imob-id').value = imob.id;
+            document.getElementById('excluir-imob-nome-esperado').value = imob.nome_fantasia.trim();
+            document.getElementById('excluir-nome-display').innerText = imob.nome_fantasia;
+            document.getElementById('excluir-input-confirmacao').value = '';
+            document.getElementById('excluir-motivo-input').value = '';
+
+            const btn = document.getElementById('btn-confirmar-exclusao');
+            btn.disabled = true;
+            btn.classList.add('cursor-not-allowed');
+
+            document.getElementById('modal-excluir-imob').classList.remove('hidden');
+        }
+
+        function fecharModalExcluirImob() {
+            document.getElementById('modal-excluir-imob').classList.add('hidden');
+        }
+
+        function validarTextoConfirmacaoExclusao() {
+            const esperado = document.getElementById('excluir-imob-nome-esperado').value.trim().toLowerCase();
+            const digitado = document.getElementById('excluir-input-confirmacao').value.trim().toLowerCase();
+            const btn = document.getElementById('btn-confirmar-exclusao');
+
+            if (esperado.length > 0 && esperado === digitado) {
+                btn.disabled = false;
+                btn.classList.remove('cursor-not-allowed');
+                btn.classList.add('cursor-pointer');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('cursor-not-allowed');
+                btn.classList.remove('cursor-pointer');
+            }
+        }
+
+        async function executarExclusaoCriticaImobiliaria(event) {
+            event.preventDefault();
+            const imobId = document.getElementById('excluir-imob-id').value;
+            const nomeEsperado = document.getElementById('excluir-imob-nome-esperado').value;
+            const motivo = document.getElementById('excluir-motivo-input').value.trim();
+
+            if (!imobId || !motivo) {
+                alert('Informe o motivo formal da exclusão.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-confirmar-exclusao');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Executando Purge Seguro...';
+            btn.disabled = true;
+
+            try {
+                // 1. REGISTRA LOG DE AUDITORIA NO SISTEMA ANTES DO EXPURGO
+                await supabaseClient.from('avisos_sistema').insert([{
+                    imobiliaria_id: null,
+                    titulo: `[AUDITORIA MASTER] Exclusão da Imobiliária: ${nomeEsperado}`,
+                    mensagem: `A imobiliária "${nomeEsperado}" (ID: ${imobId}) foi excluída permanentemente pelo Administrador Soberano. Motivo declarado: ${motivo}`,
+                    tipo: 'urgente',
+                    ativo: true
+                }]);
+
+                // 2. PURGE EM CASCATA RESPEITANDO TODAS AS CHAVES ESTRANGEIRAS
+                // locacao_mensalidades_recebiveis
+                await supabaseClient.from('locacao_mensalidades_recebiveis').delete().eq('imobiliaria_id', imobId);
+                
+                // contratos_locacao
+                await supabaseClient.from('contratos_locacao').delete().eq('imobiliaria_id', imobId);
+
+                // vendas_fechadas
+                await supabaseClient.from('vendas_fechadas').delete().eq('imobiliaria_id', imobId);
+
+                // termos_aceite_logs
+                await supabaseClient.from('termos_aceite_logs').delete().eq('imobiliaria_id', imobId);
+
+                // leads_historico
+                await supabaseClient.from('leads_historico').delete().eq('imobiliaria_id', imobId);
+
+                // leads_contatos
+                await supabaseClient.from('leads_contatos').delete().eq('imobiliaria_id', imobId);
+
+                // imoveis
+                await supabaseClient.from('imoveis').delete().eq('imobiliaria_id', imobId);
+
+                // clientes
+                await supabaseClient.from('clientes').delete().eq('imobiliaria_id', imobId);
+
+                // imobiliarias_mensalidades
+                await supabaseClient.from('imobiliarias_mensalidades').delete().eq('imobiliaria_id', imobId);
+
+                // avisos_sistema específicos desta imobiliaria
+                await supabaseClient.from('avisos_sistema').delete().eq('imobiliaria_id', imobId);
+
+                // usuarios pertencentes a esta imobiliaria
+                await supabaseClient.from('usuarios').delete().eq('imobiliaria_id', imobId);
+
+                // 3. EXCLUSÃO FINAL DO TENANT NA TABELA IMOBILIARIAS
+                const { error: errDeleteImob } = await supabaseClient
+                    .from('imobiliarias')
+                    .delete()
+                    .eq('id', imobId);
+
+                if (errDeleteImob) throw errDeleteImob;
+
+                alert(`A imobiliária "${nomeEsperado}" e todos os seus registros foram expurgados com sucesso do ecossistema.`);
+                fecharModalExcluirImob();
+                await carregarDadosMaster();
+                await carregarAvisos();
+
+            } catch (err) {
+                console.error('Falha na exclusão segura:', err);
+                alert('Erro durante o processo de exclusão: ' + (err.message || 'Verifique permissões de banco.'));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Excluir Definitivamente</span>';
+                btn.disabled = false;
+            }
+        }
+
+        // =========================================================================
+        // CANAL DE COMUNICADOS GLOBAIS
+        // =========================================================================
         async function carregarAvisos() {
             const container = document.getElementById('lista-avisos-ativos');
             try {

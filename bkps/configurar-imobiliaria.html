@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações & Publicidades  - SGI Gestão Imobiliária</title>
+    <title>Configurações & Publicidades - SGI Gestão Imobiliária</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
@@ -87,6 +87,9 @@
     <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
         <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
+            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
+            </a>
             <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
                 <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
             </a>
@@ -214,7 +217,7 @@
                             <img id="preview-logo" src="https://via.placeholder.com/80?text=Logo" class="w-16 h-16 rounded-lg object-contain bg-white/5 border border-slate-700 p-1">
                             <div class="flex-1">
                                 <input type="file" id="upload-logo" accept="image/*" onchange="previewUploadLogo(event)" class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 cursor-pointer">
-                                <p class="text-[10px] text-slate-500 mt-1">Recomendado: Formato PNG transparente (300x100px)</p>
+                                <p class="text-[10px] text-slate-500 mt-1">Recomendado: Formato PNG transparente (300x100px). Exibido na vitrine pública.</p>
                             </div>
                         </div>
                     </div>
@@ -320,6 +323,40 @@
                     <label class="block font-bold text-slate-300 mb-1">Texto Institucional ("Sobre o Corretor / A Imobiliária")</label>
                     <textarea id="conf-sobre" rows="4" placeholder="Conte a história, os valores e os diferenciais da sua empresa para encantar os clientes que visitam a vitrine pública..." 
                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400"></textarea>
+                </div>
+            </div>
+
+            <!-- SEÇÃO 4: POLÍTICAS DE COMISSÕES & TAXAS PADRÃO DA IMOBILIÁRIA -->
+            <div class="box-tech p-6 space-y-4 border border-cyan-500/30 bg-cyan-950/10">
+                <div class="border-b border-slate-800 pb-3">
+                    <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-hand-holding-dollar text-base"></i> 4. Políticas de Comissões & Honorários Padrão
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Defina as alíquotas padrão que a imobiliária retém nas operações. Esses valores servirão de base automática no cálculo de fechamento de vendas, contratos de aluguel e apuração da receita líquida da empresa.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-1.5">
+                        <label class="block font-bold text-slate-200">Comissão Padrão de Vendas da Imobiliária (%) *</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" min="0" max="100" id="conf-comissao-venda" required placeholder="Ex: 6.0" 
+                                   class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl py-2.5 pl-3 pr-10 text-cyan-300 font-mono font-black text-sm outline-none focus:border-cyan-400">
+                            <span class="absolute right-3.5 top-2.5 text-cyan-400 font-black text-xs">%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Percentual total cobrado sobre o VGV na venda do imóvel (Prática de mercado: 5.0% a 6.0%).</p>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block font-bold text-slate-200">Taxa de Administração de Locação da Imobiliária (%) *</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" min="0" max="100" id="conf-taxa-locacao" required placeholder="Ex: 10.0" 
+                                   class="w-full bg-slate-950 border border-amber-500/50 rounded-xl py-2.5 pl-3 pr-10 text-amber-300 font-mono font-black text-sm outline-none focus:border-amber-400">
+                            <span class="absolute right-3.5 top-2.5 text-amber-400 font-black text-xs">%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500">Percentual mensal retido pela imobiliária sobre o aluguel bruto pago pelo inquilino (Padrão: 8.0% a 10.0%).</p>
+                    </div>
                 </div>
             </div>
 
@@ -565,6 +602,10 @@
             document.getElementById('conf-linkedin').value = imob.linkedin || '';
             document.getElementById('conf-sobre').value = imob.sobre_corretor || '';
 
+            // Políticas de Comissões e Taxas Padrão da Empresa
+            document.getElementById('conf-comissao-venda').value = (imob.comissao_venda_padrao_pct !== null && imob.comissao_venda_padrao_pct !== undefined) ? imob.comissao_venda_padrao_pct : 6.0;
+            document.getElementById('conf-taxa-locacao').value = (imob.taxa_locacao_padrao_pct !== null && imob.taxa_locacao_padrao_pct !== undefined) ? imob.taxa_locacao_padrao_pct : 10.0;
+
             if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
             if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
 
@@ -638,6 +679,8 @@
                     youtube: document.getElementById('conf-youtube').value.trim(),
                     linkedin: document.getElementById('conf-linkedin').value.trim(),
                     sobre_corretor: document.getElementById('conf-sobre').value.trim(),
+                    comissao_venda_padrao_pct: Number(document.getElementById('conf-comissao-venda').value) || 6.0,
+                    taxa_locacao_padrao_pct: Number(document.getElementById('conf-taxa-locacao').value) || 10.0,
                     logo_url: novaLogoUrl,
                     banner_url: novaBannerUrl
                 };
@@ -645,9 +688,12 @@
                 const { error } = await supabaseClient.from('imobiliarias').update(payload).eq('id', imobiliariaId);
                 if (error) throw error;
 
+                // Atualiza cache em memória
+                dadosImobAtual = { ...dadosImobAtual, ...payload };
+
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = 'Configurações corporativas e dados visuais salvos com sucesso!';
+                alertaTexto.innerText = 'Configurações corporativas, taxas padrão e dados visuais salvos com sucesso!';
                 alerta.classList.remove('hidden');
 
             } catch (err) {
