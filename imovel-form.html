@@ -555,7 +555,8 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Módulo de Catalogação & Locações
     </footer>
 
-    <!-- JAVASCRIPT -->
+   
+ <!-- JAVASCRIPT MASTER: UPLOADS, RENOMEAÇÃO COM LÁPIS E CONTROLES -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -581,8 +582,6 @@
 
             const email = (session.user.email || '').toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
-            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
-            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
             // 1. SUPORTE MASTER SOBERANO
             if (email === 'waldeckgil@gmail.com') {
@@ -684,6 +683,9 @@
             document.getElementById('txt-calc-repasse').innerText = valorRepasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' / mês';
         }
 
+        // =========================================================================
+        // GAVETA DE DOCUMENTOS DO LOCATÁRIO (COM LÁPIS PARA RENOMEAR)
+        // =========================================================================
         function processarSelecaoDocumentosLocatario(event) {
             const files = Array.from(event.target.files);
             if (!files.length) return;
@@ -700,7 +702,26 @@
             renderizarDocumentosLocatarioPreview();
         }
 
-        // RENDERIZA DOCUMENTOS DO LOCATÁRIO COM MINIATURA REAL E ÍCONE DO OLHINHO
+        function editarNomeDocumentoLocatario(index) {
+            const doc = listaDocsLocatarioEstado[index];
+            if (!doc) return;
+
+            const extOriginal = doc.nome.includes('.') ? '.' + doc.nome.split('.').pop() : '';
+            const nomeSemExt = doc.nome.includes('.') ? doc.nome.substring(0, doc.nome.lastIndexOf('.')) : doc.nome;
+
+            const novoNome = prompt('Digite o novo nome para este documento do inquilino:', nomeSemExt);
+            if (novoNome === null) return;
+
+            const nomeLimpo = novoNome.trim();
+            if (!nomeLimpo) {
+                alert('O nome do documento não pode ficar vazio.');
+                return;
+            }
+
+            doc.nome = nomeLimpo.endsWith(extOriginal) ? nomeLimpo : `${nomeLimpo}${extOriginal}`;
+            renderizarDocumentosLocatarioPreview();
+        }
+
         function renderizarDocumentosLocatarioPreview() {
             const container = document.getElementById('container-docs-locatario-preview');
             container.innerHTML = '';
@@ -731,9 +752,15 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 flex-shrink-0">
-                        <a href="${doc.url}" target="_blank" class="p-2 rounded-lg bg-slate-900 hover:bg-purple-600 text-purple-300 hover:text-white transition flex items-center justify-center border border-slate-800" title="Visualizar documento completo">
+                        <!-- OLHINHO: VISUALIZAR -->
+                        <a href="${doc.url}" target="_blank" class="p-2 rounded-lg bg-slate-900 hover:bg-purple-600 text-purple-300 hover:text-white transition flex items-center justify-center border border-slate-800" title="Visualizar documento">
                             <i class="fa-solid fa-eye text-xs"></i>
                         </a>
+                        <!-- LÁPIS: RENOMEAR -->
+                        <button type="button" onclick="editarNomeDocumentoLocatario(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Renomear documento">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
+                        <!-- LIXEIRA: REMOVER -->
                         <button type="button" onclick="removerDocumentoLocatario(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-red-900/80 text-red-400 hover:text-red-200 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Remover">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
@@ -825,6 +852,9 @@
             }
         }
 
+        // =========================================================================
+        // GAVETA DE DOCUMENTOS CARTORÁRIOS (COM LÁPIS PARA RENOMEAR)
+        // =========================================================================
         function processarSelecaoDocumentos(event) {
             const files = Array.from(event.target.files);
             if (!files.length) return;
@@ -841,7 +871,27 @@
             renderizarDocumentosPreview();
         }
 
-        // RENDERIZA DOCUMENTOS CARTORÁRIOS COM MINIATURA REAL E ÍCONE DO OLHINHO
+        function editarNomeDocumento(index) {
+            const doc = listaDocumentosEstado[index];
+            if (!doc) return;
+
+            const extOriginal = doc.nome.includes('.') ? '.' + doc.nome.split('.').pop() : '';
+            const nomeSemExt = doc.nome.includes('.') ? doc.nome.substring(0, doc.nome.lastIndexOf('.')) : doc.nome;
+
+            const novoNome = prompt('Digite o novo nome para esta certidão/documento (Ex: RGI Imovel, Escritura, IPTU 2026):', nomeSemExt);
+            if (novoNome === null) return;
+
+            const nomeLimpo = novoNome.trim();
+            if (!nomeLimpo) {
+                alert('O nome do documento não pode ficar vazio.');
+                return;
+            }
+
+            // Preserva a extensão original automaticamente
+            doc.nome = nomeLimpo.endsWith(extOriginal) ? nomeLimpo : `${nomeLimpo}${extOriginal}`;
+            renderizarDocumentosPreview();
+        }
+
         function renderizarDocumentosPreview() {
             const container = document.getElementById('container-docs-preview');
             container.innerHTML = '';
@@ -872,9 +922,15 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 flex-shrink-0">
-                        <a href="${doc.url}" target="_blank" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800" title="Visualizar certidão completa">
+                        <!-- OLHINHO: VISUALIZAR -->
+                        <a href="${doc.url}" target="_blank" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800" title="Visualizar documento">
                             <i class="fa-solid fa-eye text-xs"></i>
                         </a>
+                        <!-- LÁPIS: RENOMEAR -->
+                        <button type="button" onclick="editarNomeDocumento(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Renomear documento (ex: RGI, IPTU)">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
+                        <!-- LIXEIRA: REMOVER -->
                         <button type="button" onclick="removerDocumento(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-red-900/80 text-red-400 hover:text-red-200 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Remover">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
@@ -956,10 +1012,17 @@
                 }
                 renderizarFotosPreview();
 
+                // CARREGA DOCUMENTOS COM RESGATE DO NOME PERSONALIZADO E LIMPEZA DE TIMESTAMPS
                 listaDocumentosEstado = [];
                 if (imovel.documentos_anexos && Array.isArray(imovel.documentos_anexos)) {
                     imovel.documentos_anexos.forEach(docUrl => {
-                        const nomeArquivo = decodeURIComponent(docUrl.split('/').pop().split('?')[0]);
+                        let nomeArquivo = '';
+                        if (docUrl.includes('#nome=')) {
+                            nomeArquivo = decodeURIComponent(docUrl.split('#nome=')[1]);
+                        } else {
+                            nomeArquivo = decodeURIComponent(docUrl.split('/').pop().split('?')[0].split('#')[0]);
+                            nomeArquivo = nomeArquivo.replace(/^\d{10,}_/, ''); // Limpa prefixos automáticos como 178959..._
+                        }
                         listaDocumentosEstado.push({
                             nome: nomeArquivo,
                             url: docUrl,
@@ -997,7 +1060,13 @@
                         listaDocsLocatarioEstado = [];
                         if (contrato.documentos_anexos && Array.isArray(contrato.documentos_anexos)) {
                             contrato.documentos_anexos.forEach(docUrl => {
-                                const nomeDoc = decodeURIComponent(docUrl.split('/').pop().split('?')[0]);
+                                let nomeDoc = '';
+                                if (docUrl.includes('#nome=')) {
+                                    nomeDoc = decodeURIComponent(docUrl.split('#nome=')[1]);
+                                } else {
+                                    nomeDoc = decodeURIComponent(docUrl.split('/').pop().split('?')[0].split('#')[0]);
+                                    nomeDoc = nomeDoc.replace(/^\d{10,}_/, '');
+                                }
                                 listaDocsLocatarioEstado.push({
                                     nome: nomeDoc,
                                     url: docUrl,
@@ -1131,6 +1200,7 @@
             try {
                 const idImovel = imovelIdAtual || crypto.randomUUID();
 
+                // 1. UPLOAD DE FOTOS
                 let urlsFinais = [];
                 let urlCapaFinal = null;
 
@@ -1160,12 +1230,13 @@
 
                 if (!urlCapaFinal && urlsFinais.length > 0) urlCapaFinal = urlsFinais[0];
 
+                // 2. UPLOAD DE DOCUMENTOS DA CASA COM PRESERVAÇÃO DO NOME EDITADO
                 let urlsDocumentosFinais = [];
 
                 for (let itemDoc of listaDocumentosEstado) {
                     if (itemDoc.isFile && itemDoc.fileObj) {
                         const file = itemDoc.fileObj;
-                        const nomeLimpo = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                        const nomeLimpo = itemDoc.nome.replace(/[^a-zA-Z0-9._-]/g, '_');
                         const caminhoStorage = `${imobiliariaId}/${idImovel}/docs_casa/${Date.now()}_${nomeLimpo}`;
 
                         const { error: upDocErr } = await supabaseClient.storage
@@ -1178,18 +1249,23 @@
                             .from('imoveis-midias')
                             .getPublicUrl(caminhoStorage);
 
-                        urlsDocumentosFinais.push(publicUrl);
+                        const urlFinalComNome = `${publicUrl}#nome=${encodeURIComponent(itemDoc.nome)}`;
+                        urlsDocumentosFinais.push(urlFinalComNome);
                     } else {
-                        urlsDocumentosFinais.push(itemDoc.url);
+                        // Preserva ou atualiza o nome editado na URL
+                        const baseUrl = itemDoc.url.split('#')[0];
+                        const urlFinalComNome = `${baseUrl}#nome=${encodeURIComponent(itemDoc.nome)}`;
+                        urlsDocumentosFinais.push(urlFinalComNome);
                     }
                 }
 
+                // 3. UPLOAD DE DOCUMENTOS DO LOCATÁRIO COM NOME EDITADO
                 let urlsDocsLocatarioFinais = [];
 
                 for (let itemDocLoc of listaDocsLocatarioEstado) {
                     if (itemDocLoc.isFile && itemDocLoc.fileObj) {
                         const file = itemDocLoc.fileObj;
-                        const nomeLimpo = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                        const nomeLimpo = itemDocLoc.nome.replace(/[^a-zA-Z0-9._-]/g, '_');
                         const caminhoStorage = `${imobiliariaId}/${idImovel}/docs_locatario/${Date.now()}_${nomeLimpo}`;
 
                         const { error: upDocLocErr } = await supabaseClient.storage
@@ -1202,9 +1278,12 @@
                             .from('imoveis-midias')
                             .getPublicUrl(caminhoStorage);
 
-                        urlsDocsLocatarioFinais.push(publicUrl);
+                        const urlFinalComNome = `${publicUrl}#nome=${encodeURIComponent(itemDocLoc.nome)}`;
+                        urlsDocsLocatarioFinais.push(urlFinalComNome);
                     } else {
-                        urlsDocsLocatarioFinais.push(itemDocLoc.url);
+                        const baseUrl = itemDocLoc.url.split('#')[0];
+                        const urlFinalComNome = `${baseUrl}#nome=${encodeURIComponent(itemDocLoc.nome)}`;
+                        urlsDocsLocatarioFinais.push(urlFinalComNome);
                     }
                 }
 
@@ -1331,7 +1410,7 @@
 
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = modoEdicao ? 'Imóvel e locação atualizados com sucesso!' : 'Imóvel cadastrado com sucesso!';
+                alertaTexto.innerText = modoEdicao ? 'Imóvel e documentos atualizados com sucesso!' : 'Imóvel cadastrado com sucesso!';
                 alerta.classList.remove('hidden');
 
                 setTimeout(() => {
