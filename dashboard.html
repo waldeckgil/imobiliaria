@@ -1420,15 +1420,23 @@ const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== unde
 // =========================================================================
         // LEITURA E RENDERIZAÇÃO DE COMUNICADOS GLOBAIS (BROADCAST MASTER)
         // =========================================================================
-async function carregarAvisosGestor(imobId) {
-            const container = document.getElementById('faixa-comunicado-global');
-            if (!container) {
-                console.warn('[AVISOS] Elemento #faixa-comunicado-global não encontrado no HTML.');
-                return;
-            }
 
+async function carregarAvisosGestor() {
             try {
-                // Consulta limpa: a política RLS do banco já entrega automaticamente os comunicados autorizados
+                // 1. AUTO-CRIAÇÃO: Garante o elemento no topo da página mesmo se não estiver no HTML
+                let container = document.getElementById('faixa-comunicado-global');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'faixa-comunicado-global';
+                    const header = document.querySelector('header');
+                    if (header) {
+                        header.parentNode.insertBefore(container, header);
+                    } else {
+                        document.body.prepend(container);
+                    }
+                }
+
+                // 2. Consulta direta na tabela de avisos ativos
                 const { data: avisos, error } = await supabaseClient
                     .from('avisos_sistema')
                     .select('*')
@@ -1438,12 +1446,12 @@ async function carregarAvisosGestor(imobId) {
                 console.log('[AVISOS SISTEMA] Resposta do Banco:', { avisos, error });
 
                 if (error) {
-                    console.error('[AVISOS SISTEMA] Erro ao consultar:', error);
+                    console.error('[AVISOS SISTEMA] Erro ao consultar banco:', error);
                     return;
                 }
 
                 if (!avisos || avisos.length === 0) {
-                    console.log('[AVISOS SISTEMA] Nenhum comunicado ativo retornado para este gestor.');
+                    console.log('[AVISOS SISTEMA] Nenhum comunicado ativo retornado.');
                     container.classList.add('hidden');
                     return;
                 }
@@ -1476,7 +1484,7 @@ async function carregarAvisosGestor(imobId) {
                             <strong class="text-white shrink-0">${aviso.titulo}:</strong>
                             <span class="truncate text-slate-300">${aviso.mensagem}</span>
                         </div>
-                        <button onclick="document.getElementById('faixa-comunicado-global').classList.add('hidden')" 
+                        <button onclick="document.getElementById('faixa-comunicado-global').remove()" 
                                 class="text-slate-400 hover:text-white p-1 shrink-0 transition cursor-pointer" title="Fechar comunicado">
                             <i class="fa-solid fa-xmark text-sm"></i>
                         </button>
@@ -1488,6 +1496,10 @@ async function carregarAvisosGestor(imobId) {
                 console.error('[AVISOS SISTEMA] Exceção:', err);
             }
         }
+
+        // DISPARO AUTOMÁTICO INFALÍVEL: Executa sozinho assim que o dashboard carrega
+        setTimeout(carregarAvisosGestor, 800);
+
 
         async function executarLogout() {
             if (isMasterSuporte) {
