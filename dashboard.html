@@ -1412,6 +1412,72 @@ const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== unde
             }
         }
 
+// =========================================================================
+        // LEITURA E RENDERIZAÇÃO DE COMUNICADOS GLOBAIS (BROADCAST MASTER)
+        // =========================================================================
+        async function carregarAvisosGestor(imobId) {
+            const container = document.getElementById('faixa-comunicado-global');
+            if (!container) return;
+
+            try {
+                // Consulta comunicados ativos: globais (imobiliaria_id IS NULL) ou específicos desta imobiliária
+                const { data: avisos, error } = await supabaseClient
+                    .from('avisos_sistema')
+                    .select('*')
+                    .eq('ativo', true)
+                    .or(`imobiliaria_id.is.null,imobiliaria_id.eq.${imobId}`)
+                    .order('criado_em', { ascending: false })
+                    .limit(1);
+
+                if (error || !avisos || avisos.length === 0) {
+                    container.classList.add('hidden');
+                    container.innerHTML = '';
+                    return;
+                }
+
+                const aviso = avisos[0];
+
+                // Identidade visual conforme o tipo cadastrado no Master
+                let estiloFaixa = 'bg-cyan-950/95 text-cyan-200 border-b border-cyan-800';
+                let icone = 'fa-circle-info text-cyan-400';
+                let tagTexto = 'INFORMATIVO';
+                let tagCor = 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40';
+
+                if (aviso.tipo === 'aviso') {
+                    estiloFaixa = 'bg-amber-950/95 text-amber-200 border-b border-amber-800';
+                    icone = 'fa-triangle-exclamation text-amber-400';
+                    tagTexto = 'AVISO IMPORTANTE';
+                    tagCor = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+                } else if (aviso.tipo === 'urgente') {
+                    estiloFaixa = 'bg-rose-950/95 text-rose-200 border-b border-rose-800';
+                    icone = 'fa-circle-exclamation text-rose-400 animate-pulse';
+                    tagTexto = 'ALERTA URGENTE';
+                    tagCor = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
+                }
+
+                container.className = `px-4 py-2 text-xs sticky top-0 z-40 shadow-lg ${estiloFaixa}`;
+                container.innerHTML = `
+                    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <i class="fa-solid ${icone} text-base shrink-0"></i>
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded border ${tagCor} shrink-0">${tagTexto}</span>
+                            <span class="font-bold text-white shrink-0">${aviso.titulo}:</span>
+                            <span class="truncate text-slate-300">${aviso.mensagem}</span>
+                        </div>
+                        <button onclick="document.getElementById('faixa-comunicado-global').classList.add('hidden')" 
+                                class="text-slate-400 hover:text-white p-1 shrink-0 transition cursor-pointer" title="Fechar comunicado">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+                `;
+                container.classList.remove('hidden');
+
+            } catch (err) {
+                console.warn('Erro ao ler comunicados:', err);
+                container.classList.add('hidden');
+            }
+        }
+
         async function executarLogout() {
             if (isMasterSuporte) {
                 window.close();
@@ -1423,7 +1489,6 @@ const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== unde
                 window.location.href = 'login.html';
             }
         }
-
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
 </body>
