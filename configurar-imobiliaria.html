@@ -534,15 +534,27 @@
                 txtCiclo.innerText = `Faltam ${diffDias} dias`;
                 txtCiclo.className = 'text-xs font-bold text-amber-400';
             } 
-            // 3. ESTADO: EM DIA (VERDE)
+   // 3. ESTADO: EM DIA (VERDE OU CORTESIA DOURADA)
             else {
                 modoLeitura = false;
-                badgeStatus.innerText = 'Ativo • Em Dia';
-                badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800';
-                txtDesc.innerText = 'Sua assinatura está regular e operando em conformidade.';
-                txtCiclo.innerText = `Em dia (Faltam ${diffDias} dias)`;
-                txtCiclo.className = 'text-xs font-bold text-emerald-400';
+                const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== undefined ? imob.plano_valor : 149);
+                const ehGratuito = (valorPlano === 0);
+
+                if (ehGratuito) {
+                    badgeStatus.innerText = 'Cortesia • Em Dia';
+                    badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800';
+                    txtDesc.innerText = 'Sua imobiliária possui isenção concedida pelo Administrador Master.';
+                    txtCiclo.innerText = 'Plano Isento / Gratuito';
+                    txtCiclo.className = 'text-xs font-bold text-amber-400';
+                } else {
+                    badgeStatus.innerText = 'Ativo • Em Dia';
+                    badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800';
+                    txtDesc.innerText = 'Sua assinatura está regular e operando em conformidade.';
+                    txtCiclo.innerText = `Em dia (Faltam ${diffDias} dias)`;
+                    txtCiclo.className = 'text-xs font-bold text-emerald-400';
+                }
             }
+
         }
 
         // CARREGA RECIBOS HISTÓRICOS APROVADOS PELO ADMINISTRADOR
@@ -606,13 +618,25 @@
             document.getElementById('conf-comissao-venda').value = (imob.comissao_venda_padrao_pct !== null && imob.comissao_venda_padrao_pct !== undefined) ? imob.comissao_venda_padrao_pct : 6.0;
             document.getElementById('conf-taxa-locacao').value = (imob.taxa_locacao_padrao_pct !== null && imob.taxa_locacao_padrao_pct !== undefined) ? imob.taxa_locacao_padrao_pct : 10.0;
 
-            if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
+if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
             if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
 
-            document.getElementById('txt-plano-valor').innerText = Number(imob.plano_valor || 149).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            // TRATAMENTO DA GRATUIDADE / CORTESIA
+            const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== undefined ? imob.plano_valor : 149);
+            const ehGratuito = (valorPlano === 0);
+
+            if (ehGratuito) {
+                document.getElementById('txt-plano-valor').innerHTML = '<span class="text-amber-300 font-bold">R$ 0,00</span> <span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded font-sans font-bold uppercase ml-1">Cortesia</span>';
+                const descAssinatura = document.getElementById('txt-status-desc');
+                if (descAssinatura) descAssinatura.innerText = 'Sua imobiliária possui Plano Cortesia / Isento concedido pelo Administrador Master.';
+            } else {
+                document.getElementById('txt-plano-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         }
 
-        function previewUploadLogo(e) {
+
+
+       function previewUploadLogo(e) {
             if (e.target.files && e.target.files[0]) {
                 arquivoLogo = e.target.files[0];
                 document.getElementById('preview-logo').src = URL.createObjectURL(arquivoLogo);

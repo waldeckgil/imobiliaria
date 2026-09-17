@@ -653,8 +653,19 @@
             const txtContagem = document.getElementById('txt-dias-contagem');
             const btnRenovar = document.getElementById('btn-renovar-zap');
 
-            const msgWhatsApp = encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia} (Vencimento: ${dia}/${mes}/${ano}).`);
+
+            const valorPlano = Number(imob.plano_valor !== null && imob.plano_valor !== undefined ? imob.plano_valor : 149);
+            const ehGratuito = (valorPlano === 0);
+
+            // Mensagem de WhatsApp adaptada: suporte para cortesia ou renovação para pagantes
+            const msgWhatsApp = ehGratuito 
+                ? encodeURIComponent(`Olá Administrador! Sou da imobiliária ${imob.nome_fantasia} (Plano Cortesia) e gostaria de tirar uma dúvida.`)
+                : encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia} (Vencimento: ${dia}/${mes}/${ano}).`);
+            
             btnRenovar.href = `https://wa.me/5521964120231?text=${msgWhatsApp}`;
+            btnRenovar.innerHTML = ehGratuito 
+                ? '<i class="fa-brands fa-whatsapp text-sm"></i><span>Falar com Administrador</span>'
+                : '<i class="fa-brands fa-whatsapp text-sm"></i><span>Solicitar Renovação</span>';
 
             const vencido = (diffDias < 0);
             const bloqueado = (imob.status === 'blocked' || vencido);
@@ -674,6 +685,14 @@
                 iconeStatus.className = 'w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl flex-shrink-0 border border-rose-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
                 txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Assinatura expirada há ${Math.abs(diffDias)} dia(s).</span> Acesso em modo somente leitura.`;
+            } else if (ehGratuito) {
+                // ESTADO EXCLUSIVO: CONTA CORTESIA / ISENTA ATIVA
+                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-amber-400 bg-amber-950/15';
+                badgeStatus.innerText = 'CORTESIA • ATIVA';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                iconeStatus.className = 'w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/30';
+                iconeStatus.innerHTML = '<i class="fa-solid fa-gift"></i>';
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia / Isenção concedido pelo Administrador Master.</span>`;
             } else if (diffDias <= 5) {
                 cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-amber-400 bg-amber-950/20';
                 badgeStatus.innerText = 'ATENÇÃO: VENCE EM BREVE';
@@ -689,7 +708,6 @@
                 iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
                 txtContagem.innerText = `Sua assinatura está ativa. Faltam ${diffDias} dias para o próximo ciclo.`;
             }
-        }
 
         // CARREGA TODAS AS MÉTRICAS (INCLUINDO VENDIDOS E ALUGADOS)
         async function carregarMetricas(imobId) {
