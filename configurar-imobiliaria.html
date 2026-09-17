@@ -756,13 +756,13 @@
             }
         }
 
-        async function carregarCatalogoParaPDF() {
+ async function carregarCatalogoParaPDF() {
             try {
+                // Carrega TODOS os imóveis da imobiliária (sem filtrar apenas os ativos)
                 const { data: imoveis, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
                     .eq('imobiliaria_id', imobiliariaId)
-                    .eq('ativa', true)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
@@ -771,20 +771,22 @@
                 const seletor = document.getElementById('seletor-imovel-pdf');
 
                 if (listaImoveisParaPdf.length === 0) {
-                    seletor.innerHTML = '<option value="">Nenhum imóvel disponível</option>';
+                    seletor.innerHTML = '<option value="">Nenhum imóvel cadastrado</option>';
                     return;
                 }
 
                 seletor.innerHTML = '<option value="">Selecione um imóvel...</option>' + 
-                    listaImoveisParaPdf.map(im => `
-                        <option value="${im.id}">Ref: ${im.codigo_ref || '---'} - ${(im.titulo || 'Sem título').substring(0, 35)}...</option>
-                    `).join('');
+                    listaImoveisParaPdf.map(im => {
+                        const statusTag = im.ativa ? '' : ' [Pausado]';
+                        const ref = im.codigo_ref ? `Ref: ${im.codigo_ref}` : 'S/Ref';
+                        const tit = (im.titulo || 'Imóvel sem título').substring(0, 40);
+                        return `<option value="${im.id}">${ref} - ${tit}${statusTag}</option>`;
+                    }).join('');
 
             } catch (err) {
                 console.warn('Erro ao carregar catálogo para PDF:', err);
             }
         }
-
       
 // =========================================================================
         // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
@@ -910,10 +912,18 @@
                 const localStr = sanitizarTextoPdf(`${imovel.bairro || 'Localização'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${sanitizarTextoPdf(imovel.tipo || 'Padrão')} • ${localStr}`, 15, 45);
 
-                // 3. FOTO DE CAPA REAL (COM CONVERSÃO DE WEBP E FALLBACK PARA FOTOS[0])
+         // 3. FOTO DE CAPA INTELIGENTE (Busca Capa -> Galeria -> ou imagem em Documentos)
                 let posY = 51;
-                const urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
+                let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
 
+                // Fallback de resgate: se a foto foi colocada em documentos por engano
+                if (!urlFoto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
+                    const imgDoc = imovel.documentos_anexos.find(url => {
+                        const u = url.toLowerCase();
+                        return u.includes('.webp') || u.includes('.jpg') || u.includes('.jpeg') || u.includes('.png');
+                    });
+                    if (imgDoc) urlFoto = imgDoc;
+                }
                 if (urlFoto) {
                     try {
                         const imgJpegBase64 = await converterImgParaJpegSeguro(urlFoto);
