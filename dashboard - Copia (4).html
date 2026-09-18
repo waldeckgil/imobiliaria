@@ -189,7 +189,7 @@
             </div>
         </div>
 
-        <!-- COCKPIT GERENCIAL: GRADE DE CARDS (INCLUINDO CARTEIRA 360° CLIENTES & LEADS) -->
+        <!-- COCKPIT GERENCIAL: GRADE REFINADA (AGORA COM O CARD CADASTRO DE CLIENTES) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
             
             <!-- CARD 1: DISPONÍVEIS -->
@@ -222,24 +222,24 @@
                 </div>
             </div>
 
-            <!-- CARD 3: CARTEIRA 360° (PROPRIETÁRIOS, INQUILINOS & LEADS) -->
+            <!-- CARD NOVO: CADASTROS (PROPRIETÁRIOS & INQUILINOS) -->
             <div onclick="abrirDrilldownClientes()" class="box-tech p-4 border-l-4 border-l-indigo-500 cursor-pointer hover:scale-[1.02] hover:border-indigo-400 hover:shadow-xl transition group bg-gradient-to-r from-indigo-950/25 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="text-indigo-300 group-hover:text-indigo-200 transition text-[11px] flex items-center gap-1.5">
-                        <i class="fa-solid fa-users-viewfinder"></i> Carteira 360° • Clientes & Leads
+                        <i class="fa-solid fa-address-book"></i> Cadastros & Clientes
                     </span>
-                    <i class="fa-solid fa-address-book text-indigo-400 text-base group-hover:scale-110 transition"></i>
+                    <i class="fa-solid fa-users text-indigo-400 text-base group-hover:scale-110 transition"></i>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between">
                     <div>
                         <span id="kpi-total-clientes" class="text-2xl font-black text-white">0</span>
-                        <span class="text-[10px] text-indigo-300 font-bold block" id="kpi-clientes-subcontadores">0 Donos • 0 Inquilinos • 0 Leads</span>
+                        <span class="text-[10px] text-indigo-400 font-bold block" id="kpi-clientes-subcontadores">0 Proprietários • 0 Inquilinos</span>
                     </div>
                     <span class="text-[9px] text-indigo-300 font-bold opacity-0 group-hover:opacity-100 transition">Gerenciar &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 4: ALUGADOS -->
+            <!-- CARD 3: ALUGADOS -->
             <div onclick="abrirDrilldown('imoveis-alugados')" class="box-tech p-4 border-l-4 border-l-purple-500 cursor-pointer hover:scale-[1.02] hover:border-purple-400 hover:shadow-xl transition group bg-gradient-to-r from-purple-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-purple-300 transition text-[11px]">Alugados</span>
@@ -254,7 +254,7 @@
                 </div>
             </div>
 
-            <!-- CARD 5: VENDIDOS -->
+            <!-- CARD 4: VENDIDOS -->
             <div onclick="abrirDrilldown('imoveis-vendidos')" class="box-tech p-4 border-l-4 border-l-amber-500 cursor-pointer hover:scale-[1.02] hover:border-amber-400 hover:shadow-xl transition group bg-gradient-to-r from-amber-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-amber-300 transition text-[11px]">Vendidos</span>
@@ -269,7 +269,7 @@
                 </div>
             </div>
 
-            <!-- CARD 6: LEADS HOJE -->
+            <!-- CARD 5: LEADS HOJE -->
             <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-4 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-emerald-300 transition text-[11px]">Leads Hoje</span>
@@ -284,7 +284,7 @@
                 </div>
             </div>
 
-            <!-- CARD 7: AGENDAMENTOS & VISITAS -->
+            <!-- CARD 6: AGENDAMENTOS & VISITAS -->
             <div onclick="abrirModalAgendaVisitas()" class="box-tech p-4 border-l-4 border-l-cyan-500 cursor-pointer hover:scale-[1.02] hover:border-cyan-400 hover:shadow-xl transition group bg-gradient-to-r from-cyan-950/20 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-cyan-300 transition text-[11px] flex items-center gap-1.5">
@@ -301,7 +301,7 @@
                 </div>
             </div>
 
-            <!-- CARD 8: PROPOSTAS -->
+            <!-- CARD 7: PROPOSTAS -->
             <div onclick="abrirDrilldown('propostas')" class="box-tech p-4 border-l-4 border-l-rose-400 cursor-pointer hover:scale-[1.02] hover:border-rose-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-rose-300 transition text-[11px]">Propostas</span>
@@ -316,7 +316,7 @@
                 </div>
             </div>
 
-            <!-- CARD 9: FINANCEIRO EXECUTIVO -->
+            <!-- CARD 8: FINANCEIRO EXECUTIVO -->
             <div id="card-kpi-financeiro" onclick="atalhoAbaFinanceira()" class="box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl transition group bg-gradient-to-r from-amber-950/20 via-slate-900 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="text-amber-400 font-black transition text-[11px] flex items-center gap-1.5">
@@ -564,56 +564,52 @@
 
     </main>
 
-    <!-- MODAL PANORÂMICO 360°: PROPRIETÁRIOS, INQUILINOS & LEADS COM LUPAS INDEPENDENTES -->
-    <div id="modal-drilldown-clientes" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="box-tech max-w-7xl w-full p-5 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col transition-all">
+    <!-- NOVO MODAL DRILL-DOWN: GESTÃO DE CADASTROS (PROPRIETÁRIOS & INQUILINOS) COM BUSCA -->
+    <div id="modal-drilldown-clientes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-5xl w-full p-5 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col transition-all">
             
             <!-- TOPO DO MODAL -->
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-base border border-indigo-500/30">
-                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <i class="fa-solid fa-address-book"></i>
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-black text-white uppercase tracking-wide">Carteira 360° • Gestão de Pessoas & Contatos</h3>
-                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">
-                                3 BANDAS INTEGRADAS
-                            </span>
-                        </div>
-                        <p class="text-[11px] text-slate-400">Proprietários titulares, inquilinos com contrato e novos contatos/leads captados.</p>
+                        <h3 class="text-sm font-black text-white uppercase tracking-wide">Base de Clientes da Imobiliária</h3>
+                        <p class="text-[11px] text-slate-400">Cruzamento de proprietários, inquilinos, contratos e repasses.</p>
                     </div>
                 </div>
 
-                <button onclick="fecharDrilldownClientes()" class="text-slate-400 hover:text-white transition cursor-pointer p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+                <!-- CAMPO DE BUSCA REATIVO COM LUPA -->
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                    <div class="relative w-full sm:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                        <input type="text" id="input-busca-clientes" oninput="filtrarClientesDrilldown(this.value)"
+                               placeholder="Buscar por Nome, CPF ou WhatsApp..."
+                               class="bg-slate-950 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-400 w-full transition">
+                    </div>
+
+                    <button onclick="fecharDrilldownClientes()" class="text-slate-400 hover:text-white transition cursor-pointer p-1 ml-1">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- CORPO DRILL-DOWN EM 3 COLUNAS PANORÂMICAS -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 overflow-y-auto pr-1" id="corpo-drilldown-clientes">
+            <!-- CORPO DRILL-DOWN EM 2 COLUNAS IDÊNTICO AO PADRÃO DE ESTOQUE -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-y-auto pr-1" id="corpo-drilldown-clientes">
                 
                 <!-- COLUNA 1: PROPRIETÁRIOS -->
                 <div class="bg-slate-950 p-3.5 rounded-xl border border-indigo-500/40 space-y-3 flex flex-col">
                     <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
                         <div class="flex items-center gap-2 text-indigo-400 font-black text-xs uppercase tracking-wide">
                             <i class="fa-solid fa-user-tie"></i>
-                            <span>1. Proprietários</span>
+                            <span>Proprietários</span>
                         </div>
                         <span id="badge-total-proprietarios" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800">
                             0 listados
                         </span>
                     </div>
-
-                    <!-- LUPA INDEPENDENTE: PROPRIETÁRIOS -->
-                    <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-indigo-400/60 text-xs"></i>
-                        <input type="text" id="input-busca-proprietarios" oninput="filtrarProprietarios(this.value)"
-                               placeholder="Filtrar proprietário por nome, CPF..."
-                               class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-400 w-full transition">
-                    </div>
-
-                    <div id="lista-drilldown-proprietarios" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1 flex-1">
+                    <div id="lista-drilldown-proprietarios" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1">
                         <div class="py-8 text-center text-slate-500 text-xs">
                             <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
                             <p>Carregando proprietários...</p>
@@ -626,53 +622,16 @@
                     <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
                         <div class="flex items-center gap-2 text-purple-300 font-black text-xs uppercase tracking-wide">
                             <i class="fa-solid fa-key"></i>
-                            <span>2. Inquilinos</span>
+                            <span>Inquilinos</span>
                         </div>
                         <span id="badge-total-inquilinos" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-950 text-purple-300 border border-purple-800">
                             0 listados
                         </span>
                     </div>
-
-                    <!-- LUPA INDEPENDENTE: INQUILINOS -->
-                    <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-purple-400/60 text-xs"></i>
-                        <input type="text" id="input-busca-inquilinos" oninput="filtrarInquilinos(this.value)"
-                               placeholder="Filtrar inquilino por nome, CPF..."
-                               class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-purple-400 w-full transition">
-                    </div>
-
-                    <div id="lista-drilldown-inquilinos" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1 flex-1">
+                    <div id="lista-drilldown-inquilinos" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1">
                         <div class="py-8 text-center text-slate-500 text-xs">
                             <i class="fa-solid fa-spinner fa-spin text-purple-400 text-lg mb-2"></i>
                             <p>Carregando inquilinos...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- COLUNA 3: LEADS & CONTATOS ATIVOS -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-3 flex flex-col">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                        <div class="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-wide">
-                            <i class="fa-solid fa-comment-dots"></i>
-                            <span>3. Leads & Contatos</span>
-                        </div>
-                        <span id="badge-total-leads" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
-                            0 listados
-                        </span>
-                    </div>
-
-                    <!-- LUPA INDEPENDENTE: LEADS -->
-                    <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-emerald-400/60 text-xs"></i>
-                        <input type="text" id="input-busca-leads" oninput="filtrarLeads(this.value)"
-                               placeholder="Filtrar lead por nome, etapa, zap..."
-                               class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-400 w-full transition">
-                    </div>
-
-                    <div id="lista-drilldown-leads" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1 flex-1">
-                        <div class="py-8 text-center text-slate-500 text-xs">
-                            <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-lg mb-2"></i>
-                            <p>Carregando leads...</p>
                         </div>
                     </div>
                 </div>
@@ -880,6 +839,34 @@
         </div>
     </div>
 
+    <!-- MODAL 2: DOSSIÊ DO INQUILINO ANTIGO (RESERVADO) -->
+    <div id="modal-dash-inquilino" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-2xl w-full p-6 border border-purple-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-purple-300 font-black text-sm uppercase tracking-wide">
+                    <i class="fa-solid fa-id-card-clip text-purple-400 text-lg"></i>
+                    <span>Dossiê Completo do Inquilino & Extrato Financeiro</span>
+                </div>
+                <button onclick="fecharModalDashInquilino()" class="text-slate-400 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="inquilino-modal-conteudo">
+                <div class="py-8 text-center text-slate-500">
+                    <i class="fa-solid fa-spinner fa-spin text-purple-400 text-xl mb-2"></i>
+                    <p>Carregando informações do inquilino, contrato e histórico financeiro...</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 text-right">
+                <button onclick="fecharModalDashInquilino()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer text-xs">
+                    Fechar Dossiê
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DE DETALHAMENTO RÁPIDO / DRILL-DOWN (ESTOQUE, ATIVOS, VENDIDOS, ETC.) -->
     <div id="modal-kpi-detalhes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-3xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[85vh] flex flex-col transition-all duration-300">
@@ -928,10 +915,9 @@
         let isMasterSuporte = false;
         let temPermissaoFinanceira = false;
 
-        // CACHES PARA FILTRAGEM INDEPENDENTE EM TEMPO REAL
+        // CACHE PARA FILTRAGEM INSTANTÂNEA DA BASE DE CLIENTES
         let cacheProprietariosCompletos = [];
         let cacheInquilinosCompletos = [];
-        let cacheLeadsCompletos = [];
 
         // ESTADO GLOBAL DA AGENDA
         const hojeRef = new Date();
@@ -1223,15 +1209,10 @@
 
                 document.getElementById('kpi-imoveis-ativos').innerText = imoveisCount || 0;
 
-                // 3. CARTEIRA 360°: CLIENTES + LEADS
-                const { data: clientesData } = await supabaseClient
+                // 3. BASE DE CLIENTES (PROPRIETÁRIOS & INQUILINOS)
+                const { data: clientesData, count: totalClientesCount } = await supabaseClient
                     .from('clientes')
                     .select('id, tipo', { count: 'exact' })
-                    .eq('imobiliaria_id', imobId);
-
-                const { count: leadsTotalCount } = await supabaseClient
-                    .from('leads_contatos')
-                    .select('*', { count: 'exact', head: true })
                     .eq('imobiliaria_id', imobId);
 
                 let totalProprietarios = 0;
@@ -1244,16 +1225,15 @@
                     } else if (t.includes('inquil') || t.includes('locat')) {
                         totalInquilinos++;
                     } else {
+                        // Se não estiver explícito, computa no perfil geral
                         totalProprietarios++;
                     }
                 });
 
-                const totalGeralPessoas = (clientesData || []).length + (leadsTotalCount || 0);
-
                 const elTotalClientes = document.getElementById('kpi-total-clientes');
                 const elSubClientes = document.getElementById('kpi-clientes-subcontadores');
-                if (elTotalClientes) elTotalClientes.innerText = totalGeralPessoas;
-                if (elSubClientes) elSubClientes.innerText = `${totalProprietarios} Donos • ${totalInquilinos} Inquilinos • ${leadsTotalCount || 0} Leads`;
+                if (elTotalClientes) elTotalClientes.innerText = totalClientesCount || 0;
+                if (elSubClientes) elSubClientes.innerText = `${totalProprietarios} Proprietários • ${totalInquilinos} Inquilinos`;
 
                 // 4. CONTRATOS ATIVOS DE LOCAÇÃO
                 const { data: contratosLoc, count: alugadosCount } = await supabaseClient
@@ -1341,7 +1321,7 @@
         }
 
         // =========================================================================
-        // MOTOR DA CARTEIRA 360° (PROPRIETÁRIOS X INQUILINOS X LEADS)
+        // MOTOR DA BASE DE CLIENTES & CADASTROS (PROPRIETÁRIOS X INQUILINOS)
         // =========================================================================
         async function abrirDrilldownClientes() {
             if (!dadosImobiliaria) return;
@@ -1349,39 +1329,27 @@
             const modal = document.getElementById('modal-drilldown-clientes');
             const listaProp = document.getElementById('lista-drilldown-proprietarios');
             const listaInq = document.getElementById('lista-drilldown-inquilinos');
-            const listaLeads = document.getElementById('lista-drilldown-leads');
+            const inputBusca = document.getElementById('input-busca-clientes');
 
-            // Limpa as 3 lupas individuais
-            const bProp = document.getElementById('input-busca-proprietarios');
-            const bInq = document.getElementById('input-busca-inquilinos');
-            const bLeads = document.getElementById('input-busca-leads');
-            if (bProp) bProp.value = '';
-            if (bInq) bInq.value = '';
-            if (bLeads) bLeads.value = '';
+            if (inputBusca) inputBusca.value = '';
 
             listaProp.innerHTML = `
                 <div class="py-8 text-center text-slate-500 text-xs">
                     <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
-                    <p>Carregando proprietários...</p>
+                    <p>Carregando proprietários e vínculos...</p>
                 </div>
             `;
             listaInq.innerHTML = `
                 <div class="py-8 text-center text-slate-500 text-xs">
                     <i class="fa-solid fa-spinner fa-spin text-purple-400 text-lg mb-2"></i>
-                    <p>Carregando inquilinos...</p>
-                </div>
-            `;
-            listaLeads.innerHTML = `
-                <div class="py-8 text-center text-slate-500 text-xs">
-                    <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-lg mb-2"></i>
-                    <p>Carregando leads ativos...</p>
+                    <p>Carregando inquilinos e contratos...</p>
                 </div>
             `;
 
             modal.classList.remove('hidden');
 
             try {
-                // 1. Busca clientes
+                // 1. Busca todos os clientes
                 const { data: clientes, error: errCli } = await supabaseClient
                     .from('clientes')
                     .select('*')
@@ -1390,29 +1358,20 @@
 
                 if (errCli) throw errCli;
 
-                // 2. Busca imóveis
+                // 2. Busca todos os imóveis para cruzar com proprietários
                 const { data: imoveisData } = await supabaseClient
                     .from('imoveis')
                     .select('id, codigo_ref, titulo, status, proprietario_id, finalidade, valor_venda, valor_locacao')
                     .eq('imobiliaria_id', dadosImobiliaria.id);
 
-                // 3. Busca contratos de locação
+                // 3. Busca contratos de locação ativos para cruzar inquilinos e proprietários
                 const { data: contratosData } = await supabaseClient
                     .from('contratos_locacao')
                     .select('*')
                     .eq('imobiliaria_id', dadosImobiliaria.id);
 
-                // 4. Busca leads & contatos
-                const { data: leadsData } = await supabaseClient
-                    .from('leads_contatos')
-                    .select('*')
-                    .eq('imobiliaria_id', dadosImobiliaria.id)
-                    .order('criado_em', { ascending: false });
-
-                const mapaImoveis = {};
                 const mapaImoveisPorProprietario = {};
                 (imoveisData || []).forEach(im => {
-                    mapaImoveis[im.id] = im;
                     if (im.proprietario_id) {
                         if (!mapaImoveisPorProprietario[im.proprietario_id]) {
                             mapaImoveisPorProprietario[im.proprietario_id] = [];
@@ -1429,7 +1388,7 @@
                     if (c.cliente_cpf_cnpj) mapaContratosPorCliente[c.cliente_cpf_cnpj] = c;
                 });
 
-                // Classifica e enriquece Proprietários e Inquilinos
+                // Classifica e enriquece a lista em memória
                 cacheProprietariosCompletos = [];
                 cacheInquilinosCompletos = [];
 
@@ -1438,6 +1397,7 @@
                     const meusImoveis = mapaImoveisPorProprietario[cli.id] || [];
                     const meuContratoLocacao = mapaContratosPorCliente[cli.id] || (cli.cpf_cnpj ? mapaContratosPorCliente[cli.cpf_cnpj] : null);
 
+                    // Anexa imóveis com inquilino vinculado se alugado
                     const imoveisEnriquecidos = meusImoveis.map(im => {
                         const contratoAtivo = mapaContratosPorImovel[im.id];
                         return {
@@ -1451,294 +1411,178 @@
                     cli.imoveis_proprietario = imoveisEnriquecidos;
                     cli.contrato_inquilino = meuContratoLocacao;
 
+                    // Decisão se é proprietário ou inquilino
                     if (tipo.includes('propriet') || tipo.includes('dono') || meusImoveis.length > 0) {
                         cacheProprietariosCompletos.push(cli);
                     } else if (tipo.includes('inquil') || tipo.includes('locat') || meuContratoLocacao) {
                         cacheInquilinosCompletos.push(cli);
                     } else {
+                        // Fallback padrão: listado como proprietário
                         cacheProprietariosCompletos.push(cli);
                     }
                 });
 
-                // Enriquece os Leads com dados do imóvel de interesse
-                cacheLeadsCompletos = (leadsData || []).map(lead => {
-                    return {
-                        ...lead,
-                        imovel_obj: lead.imovel_id ? (mapaImoveis[lead.imovel_id] || null) : null
-                    };
-                });
-
-                renderizarProprietarios(cacheProprietariosCompletos);
-                renderizarInquilinos(cacheInquilinosCompletos);
-                renderizarLeads(cacheLeadsCompletos);
-
-                atualizarResumoGeral();
+                renderizarListasDrilldown(cacheProprietariosCompletos, cacheInquilinosCompletos);
 
             } catch (err) {
-                console.error('[CARTEIRA 360] Erro:', err);
-                exibirToast('erro', 'Erro ao carregar carteira 360°.');
+                console.error('[CADASTRO CLIENTES] Erro:', err);
+                exibirToast('erro', 'Erro ao carregar carteira de clientes.');
             }
         }
 
-        function atualizarResumoGeral() {
+        function renderizarListasDrilldown(proprietarios, inquilinos) {
+            const listaProp = document.getElementById('lista-drilldown-proprietarios');
+            const listaInq = document.getElementById('lista-drilldown-inquilinos');
+            const badgeProp = document.getElementById('badge-total-proprietarios');
+            const badgeInq = document.getElementById('badge-total-inquilinos');
             const resumo = document.getElementById('drilldown-clientes-resumo');
-            if (resumo) {
-                const total = cacheProprietariosCompletos.length + cacheInquilinosCompletos.length + cacheLeadsCompletos.length;
-                resumo.innerText = `${total} pessoas registradas no ecossistema da imobiliária`;
+
+            if (badgeProp) badgeProp.innerText = `${proprietarios.length} listados`;
+            if (badgeInq) badgeInq.innerText = `${inquilinos.length} listados`;
+            if (resumo) resumo.innerText = `${proprietarios.length + inquilinos.length} clientes encontrados no total`;
+
+            // RENDERIZA PROPRIETÁRIOS
+            if (proprietarios.length === 0) {
+                listaProp.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum proprietário localizado.</p>';
+            } else {
+                listaProp.innerHTML = proprietarios.map(p => {
+                    const zapLimpo = ('' + (p.whatsapp || p.telefone || '')).replace(/\D/g, '');
+                    const qtdImoveis = (p.imoveis_proprietario || []).length;
+                    const imovelAlugado = (p.imoveis_proprietario || []).find(i => i.inquilino_nome);
+
+                    return `
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-indigo-500/60 transition space-y-2 group shadow-sm">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block truncate group-hover:text-indigo-300 transition">${p.nome}</span>
+                                    <span class="text-[10px] text-slate-400 font-mono block">CPF/CNPJ: ${p.cpf_cnpj || 'Não informado'}</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 flex-shrink-0">
+                                    ${qtdImoveis} ${qtdImoveis === 1 ? 'imóvel' : 'imóveis'}
+                                </span>
+                            </div>
+
+                            ${imovelAlugado ? `
+                                <div class="bg-purple-950/25 p-2 rounded-lg border border-purple-800/40 text-[10px] space-y-0.5">
+                                    <div class="flex items-center justify-between text-purple-300 font-bold">
+                                        <span><i class="fa-solid fa-key mr-1"></i>Imóvel Alugado (Ref: ${imovelAlugado.codigo_ref})</span>
+                                        <span class="font-mono text-emerald-400">R$ ${Number(imovelAlugado.repasse_dono || 0).toLocaleString('pt-BR')} repasse</span>
+                                    </div>
+                                    <div class="text-slate-300 truncate">
+                                        Locatário: <strong class="text-white">${imovelAlugado.inquilino_nome}</strong>
+                                    </div>
+                                </div>
+                            ` : (qtdImoveis > 0 ? `
+                                <div class="text-[10px] text-slate-400 italic">
+                                    Imóveis disponíveis para locação/venda na vitrine.
+                                </div>
+                            ` : `
+                                <div class="text-[10px] text-slate-600 italic">
+                                    Nenhum imóvel vinculado a este proprietário.
+                                </div>
+                            `)}
+
+                            <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
+                                <span class="text-slate-500 font-mono">${p.whatsapp || p.telefone || 'Sem contato'}</span>
+                                <div class="flex items-center gap-2">
+                                    ${zapLimpo ? `
+                                        <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
+                                            <i class="fa-brands fa-whatsapp"></i> Zap
+                                        </a>
+                                    ` : ''}
+                                    <button onclick="abrirDossie360Cliente('${p.id}', 'proprietario')" class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700 font-bold px-2.5 py-0.5 rounded text-[9px] transition cursor-pointer">
+                                        Dossiê 360° &rarr;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // RENDERIZA INQUILINOS
+            if (inquilinos.length === 0) {
+                listaInq.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum inquilino localizado.</p>';
+            } else {
+                listaInq.innerHTML = inquilinos.map(i => {
+                    const zapLimpo = ('' + (i.whatsapp || i.telefone || '')).replace(/\D/g, '');
+                    const contrato = i.contrato_inquilino;
+
+                    return `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-purple-500/60 transition space-y-2 group shadow-sm">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block truncate group-hover:text-purple-300 transition">${i.nome}</span>
+                                    <span class="text-[10px] text-slate-400 font-mono block">CPF: ${i.cpf_cnpj || 'Não informado'}</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold ${contrato ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-800 text-slate-400'} flex-shrink-0">
+                                    ${contrato ? 'Contrato Ativo' : 'Cadastro Avulso'}
+                                </span>
+                            </div>
+
+                            ${contrato ? `
+                                <div class="bg-slate-900/90 p-2 rounded-lg border border-purple-900/40 text-[10px] space-y-0.5">
+                                    <div class="flex items-center justify-between text-slate-300">
+                                        <span>Aluguel Bruto:</span>
+                                        <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>
+                                    </div>
+                                    <div class="text-slate-400 flex items-center justify-between">
+                                        <span>Dia Vencimento:</span>
+                                        <strong class="text-amber-300 font-mono">Dia ${contrato.dia_vencimento_aluguel || '10'}</strong>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="text-[10px] text-slate-600 italic">
+                                    Nenhum contrato ativo vinculado no momento.
+                                </div>
+                            `}
+
+                            <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
+                                <span class="text-slate-500 font-mono">${i.whatsapp || i.telefone || 'Sem contato'}</span>
+                                <div class="flex items-center gap-2">
+                                    ${zapLimpo ? `
+                                        <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
+                                            <i class="fa-brands fa-whatsapp"></i> Zap
+                                        </a>
+                                    ` : ''}
+                                    <button onclick="abrirDossie360Cliente('${i.id}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-2.5 py-0.5 rounded text-[9px] transition cursor-pointer">
+                                        Dossiê 360° &rarr;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
         }
 
-        // =========================================================================
-        // RENDERIZAÇÃO INDIVIDUAL DAS 3 COLUNAS
-        // =========================================================================
-        function renderizarProprietarios(lista) {
-            const container = document.getElementById('lista-drilldown-proprietarios');
-            const badge = document.getElementById('badge-total-proprietarios');
-            if (badge) badge.innerText = `${lista.length} listados`;
-
-            if (lista.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum proprietário localizado.</p>';
-                return;
-            }
-
-            container.innerHTML = lista.map(p => {
-                const zapLimpo = ('' + (p.whatsapp || p.telefone || '')).replace(/\D/g, '');
-                const qtdImoveis = (p.imoveis_proprietario || []).length;
-                const imovelAlugado = (p.imoveis_proprietario || []).find(i => i.inquilino_nome);
-
-                return `
-                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-indigo-500/60 transition space-y-2 group shadow-sm">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="min-w-0">
-                                <span class="font-bold text-white text-xs block truncate group-hover:text-indigo-300 transition">${p.nome}</span>
-                                <span class="text-[10px] text-slate-400 font-mono block">CPF: ${p.cpf_cnpj || 'Não informado'}</span>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 flex-shrink-0">
-                                ${qtdImoveis} ${qtdImoveis === 1 ? 'imóvel' : 'imóveis'}
-                            </span>
-                        </div>
-
-                        ${imovelAlugado ? `
-                            <div class="bg-purple-950/25 p-2 rounded-lg border border-purple-800/40 text-[10px] space-y-0.5">
-                                <div class="flex items-center justify-between text-purple-300 font-bold">
-                                    <span><i class="fa-solid fa-key mr-1"></i>Alugado (Ref: ${imovelAlugado.codigo_ref})</span>
-                                    <span class="font-mono text-emerald-400">R$ ${Number(imovelAlugado.repasse_dono || 0).toLocaleString('pt-BR')}</span>
-                                </div>
-                                <div class="text-slate-300 truncate">
-                                    Inquilino: <strong class="text-white">${imovelAlugado.inquilino_nome}</strong>
-                                </div>
-                            </div>
-                        ` : (qtdImoveis > 0 ? `
-                            <div class="text-[10px] text-slate-400 italic">
-                                Imóveis disponíveis para locação/venda.
-                            </div>
-                        ` : `
-                            <div class="text-[10px] text-slate-600 italic">
-                                Nenhum imóvel vinculado no momento.
-                            </div>
-                        `)}
-
-                        <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
-                            <span class="text-slate-500 font-mono">${p.whatsapp || p.telefone || 'Sem contato'}</span>
-                            <div class="flex items-center gap-2">
-                                ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
-                                        <i class="fa-brands fa-whatsapp"></i> Zap
-                                    </a>
-                                ` : ''}
-                                <button onclick="abrirDossie360Cliente('${p.id}', 'proprietario')" class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700 font-bold px-2 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                    Dossiê 360° &rarr;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderizarInquilinos(lista) {
-            const container = document.getElementById('lista-drilldown-inquilinos');
-            const badge = document.getElementById('badge-total-inquilinos');
-            if (badge) badge.innerText = `${lista.length} listados`;
-
-            if (lista.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum inquilino localizado.</p>';
-                return;
-            }
-
-            container.innerHTML = lista.map(i => {
-                const zapLimpo = ('' + (i.whatsapp || i.telefone || '')).replace(/\D/g, '');
-                const contrato = i.contrato_inquilino;
-
-                return `
-                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-purple-500/60 transition space-y-2 group shadow-sm">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="min-w-0">
-                                <span class="font-bold text-white text-xs block truncate group-hover:text-purple-300 transition">${i.nome}</span>
-                                <span class="text-[10px] text-slate-400 font-mono block">CPF: ${i.cpf_cnpj || 'Não informado'}</span>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold ${contrato ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-800 text-slate-400'} flex-shrink-0">
-                                ${contrato ? 'Contrato Ativo' : 'Cadastro Avulso'}
-                            </span>
-                        </div>
-
-                        ${contrato ? `
-                            <div class="bg-slate-950 p-2 rounded-lg border border-purple-900/40 text-[10px] space-y-0.5">
-                                <div class="flex items-center justify-between text-slate-300">
-                                    <span>Aluguel Bruto:</span>
-                                    <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>
-                                </div>
-                                <div class="text-slate-400 flex items-center justify-between">
-                                    <span>Vencimento:</span>
-                                    <strong class="text-amber-300 font-mono">Dia ${contrato.dia_vencimento_aluguel || '10'}</strong>
-                                </div>
-                            </div>
-                        ` : `
-                            <div class="text-[10px] text-slate-600 italic">
-                                Nenhum contrato ativo vinculado no momento.
-                            </div>
-                        `}
-
-                        <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
-                            <span class="text-slate-500 font-mono">${i.whatsapp || i.telefone || 'Sem contato'}</span>
-                            <div class="flex items-center gap-2">
-                                ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
-                                        <i class="fa-brands fa-whatsapp"></i> Zap
-                                    </a>
-                                ` : ''}
-                                <button onclick="abrirDossie360Cliente('${i.id}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-2 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                    Dossiê 360° &rarr;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderizarLeads(lista) {
-            const container = document.getElementById('lista-drilldown-leads');
-            const badge = document.getElementById('badge-total-leads');
-            if (badge) badge.innerText = `${lista.length} listados`;
-
-            if (lista.length === 0) {
-                container.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum lead ou contato localizado.</p>';
-                return;
-            }
-
-            container.innerHTML = lista.map(l => {
-                const zapLimpo = ('' + (l.whatsapp || '')).replace(/\D/g, '');
-                const imovel = l.imovel_obj;
-                const status = l.status || 'Novo';
-
-                let corBadge = 'bg-cyan-950 text-cyan-300 border-cyan-800';
-                if (status === 'Proposta') corBadge = 'bg-rose-950 text-rose-300 border-rose-800';
-                else if (status.includes('Agend') || status.includes('Visita')) corBadge = 'bg-amber-950 text-amber-300 border-amber-800';
-                else if (status === 'Novo') corBadge = 'bg-emerald-950 text-emerald-300 border-emerald-800';
-
-                return `
-                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-emerald-500/60 transition space-y-2 group shadow-sm">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="min-w-0">
-                                <span class="font-bold text-white text-xs block truncate group-hover:text-emerald-300 transition">${l.nome}</span>
-                                <span class="text-[10px] text-slate-400 font-mono block">Captado em: ${new Date(l.criado_em).toLocaleDateString('pt-BR')}</span>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase ${corBadge} border flex-shrink-0">
-                                ${status}
-                            </span>
-                        </div>
-
-                        ${imovel ? `
-                            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[10px] space-y-0.5">
-                                <div class="flex items-center gap-1.5 text-cyan-300">
-                                    <i class="fa-solid fa-house-chimney text-cyan-400 text-xs flex-shrink-0"></i>
-                                    <span class="font-mono font-bold">Ref: ${imovel.codigo_ref}</span>
-                                    <span class="truncate text-slate-300">• ${imovel.titulo}</span>
-                                </div>
-                            </div>
-                        ` : (l.mensagem ? `
-                            <p class="text-[10px] text-slate-400 line-clamp-1 italic bg-slate-950 p-1.5 rounded border border-slate-800/80">
-                                "${l.mensagem}"
-                            </p>
-                        ` : '')}
-
-                        ${l.valor_proposta ? `
-                            <div class="flex items-center justify-between text-[10px] bg-rose-950/20 px-2 py-0.5 rounded border border-rose-900/40">
-                                <span class="text-slate-400">Proposta:</span>
-                                <strong class="text-rose-300 font-mono">R$ ${Number(l.valor_proposta).toLocaleString('pt-BR')}</strong>
-                            </div>
-                        ` : ''}
-
-                        <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
-                            <span class="text-slate-500 font-mono">${l.whatsapp || 'Sem WhatsApp'}</span>
-                            <div class="flex items-center gap-2">
-                                ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
-                                        <i class="fa-brands fa-whatsapp"></i> Zap
-                                    </a>
-                                ` : ''}
-                                <button onclick="fecharDrilldownClientes(); abrirDossieAgendamento('${l.id}')" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 font-bold px-2 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                    Ficha &rarr;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // =========================================================================
-        // FILTROS REATIVOS DAS 3 LUPAS INDEPENDENTES
-        // =========================================================================
-        function filtrarProprietarios(termo) {
+        function filtrarClientesDrilldown(termo) {
             const t = (termo || '').toLowerCase().trim();
-            if (!t) {
-                renderizarProprietarios(cacheProprietariosCompletos);
-                return;
-            }
-            const filtrados = cacheProprietariosCompletos.filter(item => {
-                const nome = (item.nome || '').toLowerCase();
-                const doc = (item.cpf_cnpj || '').replace(/\D/g, '');
-                const tel = ('' + (item.whatsapp || item.telefone || '')).replace(/\D/g, '');
-                const termoNum = t.replace(/\D/g, '');
-                return nome.includes(t) || (termoNum && (doc.includes(termoNum) || tel.includes(termoNum)));
-            });
-            renderizarProprietarios(filtrados);
-        }
 
-        function filtrarInquilinos(termo) {
-            const t = (termo || '').toLowerCase().trim();
             if (!t) {
-                renderizarInquilinos(cacheInquilinosCompletos);
+                renderizarListasDrilldown(cacheProprietariosCompletos, cacheInquilinosCompletos);
                 return;
             }
-            const filtrados = cacheInquilinosCompletos.filter(item => {
-                const nome = (item.nome || '').toLowerCase();
-                const doc = (item.cpf_cnpj || '').replace(/\D/g, '');
-                const tel = ('' + (item.whatsapp || item.telefone || '')).replace(/\D/g, '');
-                const termoNum = t.replace(/\D/g, '');
-                return nome.includes(t) || (termoNum && (doc.includes(termoNum) || tel.includes(termoNum)));
-            });
-            renderizarInquilinos(filtrados);
-        }
 
-        function filtrarLeads(termo) {
-            const t = (termo || '').toLowerCase().trim();
-            if (!t) {
-                renderizarLeads(cacheLeadsCompletos);
-                return;
-            }
-            const filtrados = cacheLeadsCompletos.filter(item => {
-                const nome = (item.nome || '').toLowerCase();
-                const status = (item.status || '').toLowerCase();
-                const msg = (item.mensagem || '').toLowerCase();
-                const ref = item.imovel_obj && item.imovel_obj.codigo_ref ? item.imovel_obj.codigo_ref.toLowerCase() : '';
-                const tel = ('' + (item.whatsapp || '')).replace(/\D/g, '');
-                const termoNum = t.replace(/\D/g, '');
-                return nome.includes(t) || status.includes(t) || msg.includes(t) || ref.includes(t) || (termoNum && tel.includes(termoNum));
-            });
-            renderizarLeads(filtrados);
+            const filtrar = (lista) => {
+                return lista.filter(item => {
+                    const nome = (item.nome || '').toLowerCase();
+                    const doc = (item.cpf_cnpj || '').replace(/\D/g, '');
+                    const tel = ('' + (item.whatsapp || item.telefone || '')).replace(/\D/g, '');
+                    const termoNum = t.replace(/\D/g, '');
+
+                    const matchNome = nome.includes(t);
+                    const matchDoc = termoNum && doc.includes(termoNum);
+                    const matchTel = termoNum && tel.includes(termoNum);
+
+                    return matchNome || matchDoc || matchTel;
+                });
+            };
+
+            const propsFiltrados = filtrar(cacheProprietariosCompletos);
+            const inqsFiltrados = filtrar(cacheInquilinosCompletos);
+
+            renderizarListasDrilldown(propsFiltrados, inqsFiltrados);
         }
 
         function fecharDrilldownClientes() {
@@ -1765,6 +1609,7 @@
             modal.classList.remove('hidden');
 
             try {
+                // 1. Busca dados cadastrais do cliente
                 const { data: cliente, error: errCli } = await supabaseClient
                     .from('clientes')
                     .select('*')
@@ -1780,7 +1625,7 @@
 
                 let blocoNegociosHtml = '';
 
-                // SE FOR PROPRIETÁRIO
+                // SE FOR PROPRIETÁRIO: Carrega imóveis e histórico de repasses
                 if (tipoAcesso === 'proprietario' || (cliente.tipo && cliente.tipo.toLowerCase().includes('propriet'))) {
                     const { data: imoveis } = await supabaseClient
                         .from('imoveis')
@@ -1880,7 +1725,7 @@
                     `;
 
                 } else {
-                    // SE FOR INQUILINO
+                    // SE FOR INQUILINO: Carrega o contrato e histórico de mensalidades
                     const { data: contratos } = await supabaseClient
                         .from('contratos_locacao')
                         .select('*, imoveis(id, codigo_ref, titulo, logradouro, numero, bairro, proprietario_id)')
@@ -1973,7 +1818,9 @@
                     `;
                 }
 
+                // Renderiza o corpo do modal
                 corpo.innerHTML = `
+                    <!-- FICHA CADASTRAL BÁSICA -->
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
                         <div class="flex items-center justify-between flex-wrap gap-2">
                             <div>
@@ -1998,6 +1845,7 @@
                         ` : ''}
                     </div>
 
+                    <!-- NEGÓCIOS & CRUZAMENTO RELACIONAL -->
                     ${blocoNegociosHtml}
                 `;
 
@@ -2328,7 +2176,7 @@
             corpo.innerHTML = `
                 <div class="py-12 text-center text-slate-500">
                     <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                    <p>Carregando dados do agendamento...</p>
+                    <p>Carregando dados do futuro comprador...</p>
                 </div>
             `;
             modal.classList.remove('hidden');
