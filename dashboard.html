@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard 360 - SGI Gestão Imobiliária</title>
     <!-- Tailwind CSS CDN -->
@@ -189,7 +189,7 @@
             </div>
         </div>
 
-        <!-- COCKPIT GERENCIAL: GRADE DE CARDS (INCLUINDO CARTEIRA 360° CLIENTES & LEADS) -->
+        <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
             
             <!-- CARD 1: DISPONÍVEIS -->
@@ -223,19 +223,19 @@
             </div>
 
             <!-- CARD 3: CARTEIRA 360° (PROPRIETÁRIOS, INQUILINOS & LEADS) -->
-            <div onclick="abrirDrilldownClientes()" class="box-tech p-4 border-l-4 border-l-indigo-500 cursor-pointer hover:scale-[1.02] hover:border-indigo-400 hover:shadow-xl transition group bg-gradient-to-r from-indigo-950/25 to-transparent">
+            <div onclick="abrirDrilldownClientes()" class="box-tech p-4 border-l-4 border-l-sky-500 cursor-pointer hover:scale-[1.02] hover:border-sky-400 hover:shadow-xl transition group bg-gradient-to-r from-sky-950/25 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="text-indigo-300 group-hover:text-indigo-200 transition text-[11px] flex items-center gap-1.5">
+                    <span class="text-sky-300 group-hover:text-sky-200 transition text-[11px] flex items-center gap-1.5">
                         <i class="fa-solid fa-users-viewfinder"></i> Carteira 360° • Clientes & Leads
                     </span>
-                    <i class="fa-solid fa-address-book text-indigo-400 text-base group-hover:scale-110 transition"></i>
+                    <i class="fa-solid fa-address-book text-sky-400 text-base group-hover:scale-110 transition"></i>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between">
                     <div>
                         <span id="kpi-total-clientes" class="text-2xl font-black text-white">0</span>
-                        <span class="text-[10px] text-indigo-300 font-bold block" id="kpi-clientes-subcontadores">0 Donos • 0 Inquilinos • 0 Leads</span>
+                        <span class="text-[10px] text-sky-300 font-bold block" id="kpi-clientes-subcontadores">0 Donos • 0 Inquilinos • 0 Leads</span>
                     </div>
-                    <span class="text-[9px] text-indigo-300 font-bold opacity-0 group-hover:opacity-100 transition">Gerenciar &rarr;</span>
+                    <span class="text-[9px] text-sky-300 font-bold opacity-0 group-hover:opacity-100 transition">Gerenciar &rarr;</span>
                 </div>
             </div>
 
@@ -564,24 +564,24 @@
 
     </main>
 
-    <!-- MODAL PANORÂMICO 360°: PROPRIETÁRIOS, INQUILINOS & LEADS COM LUPAS INDEPENDENTES -->
-    <div id="modal-drilldown-clientes" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="box-tech max-w-7xl w-full p-5 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col transition-all">
+    <!-- MODAL PANORÂMICO 360° COM LARGURA AMPLIADA E IDENTIDADE CROMÁTICA TRIPLA -->
+    <div id="modal-drilldown-clientes" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 hidden">
+        <div class="box-tech w-full max-w-[96vw] 2xl:max-w-[1700px] p-5 border border-sky-500/40 shadow-2xl space-y-4 max-h-[94vh] flex flex-col transition-all">
             
             <!-- TOPO DO MODAL -->
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-base border border-indigo-500/30">
+                    <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-base border border-sky-500/30">
                         <i class="fa-solid fa-users-viewfinder"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
                             <h3 class="text-sm font-black text-white uppercase tracking-wide">Carteira 360° • Gestão de Pessoas & Contatos</h3>
-                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800">
-                                3 BANDAS INTEGRADAS
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">
+                                3 BANDAS INTEGRADAS COM LUPAS INDEPENDENTES
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400">Proprietários titulares, inquilinos com contrato e novos contatos/leads captados.</p>
+                        <p class="text-[11px] text-slate-400">Proprietários com portfólio, inquilinos com contrato e novos contatos/leads captados.</p>
                     </div>
                 </div>
 
@@ -590,42 +590,42 @@
                 </button>
             </div>
 
-            <!-- CORPO DRILL-DOWN EM 3 COLUNAS PANORÂMICAS -->
+            <!-- CORPO DRILL-DOWN EM 3 COLUNAS PANORÂMICAS COM CORES INDEPENDENTES -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 overflow-y-auto pr-1" id="corpo-drilldown-clientes">
                 
-                <!-- COLUNA 1: PROPRIETÁRIOS -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-indigo-500/40 space-y-3 flex flex-col">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                        <div class="flex items-center gap-2 text-indigo-400 font-black text-xs uppercase tracking-wide">
-                            <i class="fa-solid fa-user-tie"></i>
+                <!-- BANDA 1: PROPRIETÁRIOS (AZUL SAFIRA / CIANO) -->
+                <div class="bg-slate-950 p-4 rounded-xl border-2 border-sky-500/40 space-y-3 flex flex-col shadow-lg shadow-sky-950/20">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                        <div class="flex items-center gap-2 text-sky-400 font-black text-xs uppercase tracking-wide">
+                            <i class="fa-solid fa-user-tie text-base"></i>
                             <span>1. Proprietários</span>
                         </div>
-                        <span id="badge-total-proprietarios" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800">
+                        <span id="badge-total-proprietarios" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-950 text-sky-300 border border-sky-800">
                             0 listados
                         </span>
                     </div>
 
-                    <!-- LUPA INDEPENDENTE: PROPRIETÁRIOS -->
+                    <!-- LUPA: PROPRIETÁRIOS -->
                     <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-indigo-400/60 text-xs"></i>
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-sky-400/70 text-xs"></i>
                         <input type="text" id="input-busca-proprietarios" oninput="filtrarProprietarios(this.value)"
                                placeholder="Filtrar proprietário por nome, CPF..."
-                               class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-400 w-full transition">
+                               class="bg-slate-900 border border-sky-900/40 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-sky-400 w-full transition">
                     </div>
 
-                    <div id="lista-drilldown-proprietarios" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1 flex-1">
+                    <div id="lista-drilldown-proprietarios" class="space-y-3 overflow-y-auto max-h-[58vh] pr-1 flex-1">
                         <div class="py-8 text-center text-slate-500 text-xs">
-                            <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
+                            <i class="fa-solid fa-spinner fa-spin text-sky-400 text-lg mb-2"></i>
                             <p>Carregando proprietários...</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- COLUNA 2: INQUILINOS -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-purple-500/40 space-y-3 flex flex-col">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                        <div class="flex items-center gap-2 text-purple-300 font-black text-xs uppercase tracking-wide">
-                            <i class="fa-solid fa-key"></i>
+                <!-- BANDA 2: INQUILINOS (ROXO REAL / VIOLETA) -->
+                <div class="bg-slate-950 p-4 rounded-xl border-2 border-purple-500/40 space-y-3 flex flex-col shadow-lg shadow-purple-950/20">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                        <div class="flex items-center gap-2 text-purple-400 font-black text-xs uppercase tracking-wide">
+                            <i class="fa-solid fa-key text-base"></i>
                             <span>2. Inquilinos</span>
                         </div>
                         <span id="badge-total-inquilinos" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-950 text-purple-300 border border-purple-800">
@@ -633,15 +633,15 @@
                         </span>
                     </div>
 
-                    <!-- LUPA INDEPENDENTE: INQUILINOS -->
+                    <!-- LUPA: INQUILINOS -->
                     <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-purple-400/60 text-xs"></i>
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-purple-400/70 text-xs"></i>
                         <input type="text" id="input-busca-inquilinos" oninput="filtrarInquilinos(this.value)"
                                placeholder="Filtrar inquilino por nome, CPF..."
-                               class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-purple-400 w-full transition">
+                               class="bg-slate-900 border border-purple-900/40 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-purple-400 w-full transition">
                     </div>
 
-                    <div id="lista-drilldown-inquilinos" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1 flex-1">
+                    <div id="lista-drilldown-inquilinos" class="space-y-3 overflow-y-auto max-h-[58vh] pr-1 flex-1">
                         <div class="py-8 text-center text-slate-500 text-xs">
                             <i class="fa-solid fa-spinner fa-spin text-purple-400 text-lg mb-2"></i>
                             <p>Carregando inquilinos...</p>
@@ -649,11 +649,11 @@
                     </div>
                 </div>
 
-                <!-- COLUNA 3: LEADS & CONTATOS ATIVOS -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-3 flex flex-col">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <!-- BANDA 3: LEADS & CONTATOS (VERDE ESMERALDA / MINT) -->
+                <div class="bg-slate-950 p-4 rounded-xl border-2 border-emerald-500/40 space-y-3 flex flex-col shadow-lg shadow-emerald-950/20">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
                         <div class="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-wide">
-                            <i class="fa-solid fa-comment-dots"></i>
+                            <i class="fa-solid fa-comment-dots text-base"></i>
                             <span>3. Leads & Contatos</span>
                         </div>
                         <span id="badge-total-leads" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
@@ -661,15 +661,15 @@
                         </span>
                     </div>
 
-                    <!-- LUPA INDEPENDENTE: LEADS -->
+                    <!-- LUPA: LEADS -->
                     <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-emerald-400/60 text-xs"></i>
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-emerald-400/70 text-xs"></i>
                         <input type="text" id="input-busca-leads" oninput="filtrarLeads(this.value)"
                                placeholder="Filtrar lead por nome, etapa, zap..."
-                               class="bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-400 w-full transition">
+                               class="bg-slate-900 border border-emerald-900/40 rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-emerald-400 w-full transition">
                     </div>
 
-                    <div id="lista-drilldown-leads" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1 flex-1">
+                    <div id="lista-drilldown-leads" class="space-y-3 overflow-y-auto max-h-[58vh] pr-1 flex-1">
                         <div class="py-8 text-center text-slate-500 text-xs">
                             <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-lg mb-2"></i>
                             <p>Carregando leads...</p>
@@ -689,12 +689,12 @@
         </div>
     </div>
 
-    <!-- NOVO MODAL: DOSSIÊ 360° DO CLIENTE (CRUZAMENTO TOTAL PROPRIETÁRIO / INQUILINO) -->
+    <!-- MODAL DOSSIÊ 360° DO CLIENTE: COM VISUALIZADOR DE DOCUMENTOS (OLHINHO 👁️) -->
     <div id="modal-dossie-cliente" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-3xl w-full p-6 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+        <div class="box-tech max-w-4xl w-full p-6 border border-sky-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-indigo-300 font-black text-sm uppercase tracking-wide">
-                    <i class="fa-solid fa-circle-user text-indigo-400 text-lg"></i>
+                <div class="flex items-center gap-2 text-sky-300 font-black text-sm uppercase tracking-wide">
+                    <i class="fa-solid fa-circle-user text-sky-400 text-lg"></i>
                     <span id="dossie-cliente-titulo-topo">Dossiê 360° do Cliente</span>
                 </div>
                 <button onclick="fecharModalDossieCliente()" class="text-slate-400 hover:text-white transition cursor-pointer">
@@ -704,7 +704,7 @@
 
             <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="dossie-cliente-conteudo">
                 <div class="py-12 text-center text-slate-500">
-                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-2xl mb-2"></i>
+                    <i class="fa-solid fa-spinner fa-spin text-sky-400 text-2xl mb-2"></i>
                     <p>Consultando histórico completo e vínculos contratuais...</p>
                 </div>
             </div>
@@ -847,7 +847,7 @@
         </div>
     </div>
 
-    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL -->
+    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL (COM DOCUMENTOS ANEXOS) -->
     <div id="modal-dash-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -1341,6 +1341,57 @@
         }
 
         // =========================================================================
+        // HELPER VISUAL: RENDERIZADOR DE BOTÕES COM "OLHINHO" 👁️ PARA DOCUMENTOS
+        // =========================================================================
+        function renderizarBotoesDocumentos(documentosAnexos, rotuloSecao = 'Documentos Anexos') {
+            if (!Array.isArray(documentosAnexos) || documentosAnexos.length === 0) {
+                return '<p class="text-[11px] text-slate-500 italic py-1">Nenhum documento anexado.</p>';
+            }
+
+            const botoesHtml = documentosAnexos.map((url, idx) => {
+                if (!url || typeof url !== 'string') return '';
+                const urlLower = url.toLowerCase();
+                const ehPdf = urlLower.includes('.pdf');
+                const ehImagem = urlLower.includes('.jpg') || urlLower.includes('.jpeg') || urlLower.includes('.png') || urlLower.includes('.webp');
+
+                let badgeFormato = 'DOC';
+                let corBadge = 'bg-slate-800 text-slate-300 border-slate-700';
+
+                if (ehPdf) {
+                    badgeFormato = 'PDF';
+                    corBadge = 'bg-rose-950 text-rose-300 border-rose-800';
+                } else if (ehImagem) {
+                    badgeFormato = 'IMG';
+                    corBadge = 'bg-cyan-950 text-cyan-300 border-cyan-800';
+                }
+
+                const nomeAmigavel = `Documento ${idx + 1}`;
+
+                return `
+                    <a href="${url}" target="_blank" rel="noopener noreferrer" 
+                       class="bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-cyan-400 px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-2 transition group shadow-sm">
+                        <i class="fa-solid fa-eye text-cyan-400 group-hover:scale-110 transition"></i>
+                        <span>${nomeAmigavel}</span>
+                        <span class="text-[9px] font-mono font-black uppercase px-1.5 py-0.2 rounded border ${corBadge}">
+                            ${badgeFormato}
+                        </span>
+                    </a>
+                `;
+            }).join('');
+
+            return `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <span class="text-[10px] uppercase font-black tracking-wider text-cyan-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-open"></i> ${rotuloSecao}
+                    </span>
+                    <div class="flex items-center flex-wrap gap-2">
+                        ${botoesHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // =========================================================================
         // MOTOR DA CARTEIRA 360° (PROPRIETÁRIOS X INQUILINOS X LEADS)
         // =========================================================================
         async function abrirDrilldownClientes() {
@@ -1361,7 +1412,7 @@
 
             listaProp.innerHTML = `
                 <div class="py-8 text-center text-slate-500 text-xs">
-                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
+                    <i class="fa-solid fa-spinner fa-spin text-sky-400 text-lg mb-2"></i>
                     <p>Carregando proprietários...</p>
                 </div>
             `;
@@ -1390,13 +1441,13 @@
 
                 if (errCli) throw errCli;
 
-                // 2. Busca imóveis
+                // 2. Busca imóveis com documentos anexos
                 const { data: imoveisData } = await supabaseClient
                     .from('imoveis')
-                    .select('id, codigo_ref, titulo, status, proprietario_id, finalidade, valor_venda, valor_locacao')
+                    .select('id, codigo_ref, titulo, status, proprietario_id, finalidade, valor_venda, valor_locacao, documentos_anexos, foto_capa')
                     .eq('imobiliaria_id', dadosImobiliaria.id);
 
-                // 3. Busca contratos de locação
+                // 3. Busca contratos de locação com documentos anexos
                 const { data: contratosData } = await supabaseClient
                     .from('contratos_locacao')
                     .select('*')
@@ -1489,7 +1540,7 @@
         }
 
         // =========================================================================
-        // RENDERIZAÇÃO INDIVIDUAL DAS 3 COLUNAS
+        // RENDERIZAÇÃO 1: PROPRIETÁRIOS COM INTELIGÊNCIA ANALÍTICA DIRETA
         // =========================================================================
         function renderizarProprietarios(lista) {
             const container = document.getElementById('lista-drilldown-proprietarios');
@@ -1503,51 +1554,95 @@
 
             container.innerHTML = lista.map(p => {
                 const zapLimpo = ('' + (p.whatsapp || p.telefone || '')).replace(/\D/g, '');
-                const qtdImoveis = (p.imoveis_proprietario || []).length;
-                const imovelAlugado = (p.imoveis_proprietario || []).find(i => i.inquilino_nome);
+                const imoveis = p.imoveis_proprietario || [];
+                const qtdTotal = imoveis.length;
+
+                // Contadores analíticos instantâneos
+                let qtdAlugados = 0;
+                let qtdVendidos = 0;
+                let qtdDisponiveisVenda = 0;
+                let qtdDisponiveisLocacao = 0;
+
+                imoveis.forEach(im => {
+                    const st = (im.status || '').toLowerCase();
+                    const fin = (im.finalidade || '').toLowerCase();
+
+                    if (st === 'alugado') qtdAlugados++;
+                    else if (st === 'vendido') qtdVendidos++;
+                    else if (st === 'disponível' || st === 'disponivel') {
+                        if (fin.includes('venda')) qtdDisponiveisVenda++;
+                        else qtdDisponiveisLocacao++;
+                    }
+                });
+
+                // Monta texto resumo do portfólio
+                const partesResumo = [];
+                if (qtdAlugados > 0) partesResumo.push(`<strong class="text-purple-300 font-mono">${qtdAlugados} Alugado(s)</strong>`);
+                if (qtdDisponiveisVenda > 0) partesResumo.push(`<strong class="text-emerald-400 font-mono">${qtdDisponiveisVenda} Venda</strong>`);
+                if (qtdDisponiveisLocacao > 0) partesResumo.push(`<strong class="text-sky-300 font-mono">${qtdDisponiveisLocacao} Locação</strong>`);
+                if (qtdVendidos > 0) partesResumo.push(`<strong class="text-amber-400 font-mono">${qtdVendidos} Vendido(s)</strong>`);
+
+                const resumoPortfolioHtml = partesResumo.length > 0 ? partesResumo.join(' • ') : 'Nenhum imóvel ativo';
+
+                // Chips compactos dos imóveis diretamente no card
+                const chipsImoveisHtml = imoveis.slice(0, 3).map(im => {
+                    const ehAlugado = (im.status || '').toLowerCase() === 'alugado';
+                    const ehVendido = (im.status || '').toLowerCase() === 'vendido';
+
+                    let corChip = 'bg-sky-950/60 border-sky-800/60 text-sky-300';
+                    let detalheChip = im.finalidade || 'Disponível';
+
+                    if (ehAlugado) {
+                        corChip = 'bg-purple-950/80 border-purple-800 text-purple-300';
+                        detalheChip = im.inquilino_nome ? `Alugado p/ ${im.inquilino_nome}` : 'Alugado';
+                    } else if (ehVendido) {
+                        corChip = 'bg-amber-950/80 border-amber-800 text-amber-300';
+                        detalheChip = 'Vendido';
+                    }
+
+                    return `
+                        <div class="flex items-center justify-between px-2.5 py-1 rounded-lg border text-[10px] ${corChip}">
+                            <div class="flex items-center gap-1.5 truncate">
+                                <span class="font-mono font-bold">Ref: ${im.codigo_ref}</span>
+                                <span class="truncate">• ${detalheChip}</span>
+                            </div>
+                            ${im.repasse_dono ? `<strong class="font-mono text-emerald-400 ml-2">R$ ${Number(im.repasse_dono).toLocaleString('pt-BR')} repasse</strong>` : ''}
+                        </div>
+                    `;
+                }).join('');
 
                 return `
-                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-indigo-500/60 transition space-y-2 group shadow-sm">
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-sky-900/60 hover:border-sky-400 transition space-y-2.5 group shadow-sm">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0">
-                                <span class="font-bold text-white text-xs block truncate group-hover:text-indigo-300 transition">${p.nome}</span>
+                                <span class="font-bold text-white text-xs block truncate group-hover:text-sky-300 transition">${p.nome}</span>
                                 <span class="text-[10px] text-slate-400 font-mono block">CPF: ${p.cpf_cnpj || 'Não informado'}</span>
                             </div>
-                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 flex-shrink-0">
-                                ${qtdImoveis} ${qtdImoveis === 1 ? 'imóvel' : 'imóveis'}
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-black uppercase bg-sky-950 text-sky-300 border border-sky-800 flex-shrink-0">
+                                ${qtdTotal} ${qtdTotal === 1 ? 'imóvel' : 'imóveis'}
                             </span>
                         </div>
 
-                        ${imovelAlugado ? `
-                            <div class="bg-purple-950/25 p-2 rounded-lg border border-purple-800/40 text-[10px] space-y-0.5">
-                                <div class="flex items-center justify-between text-purple-300 font-bold">
-                                    <span><i class="fa-solid fa-key mr-1"></i>Alugado (Ref: ${imovelAlugado.codigo_ref})</span>
-                                    <span class="font-mono text-emerald-400">R$ ${Number(imovelAlugado.repasse_dono || 0).toLocaleString('pt-BR')}</span>
-                                </div>
-                                <div class="text-slate-300 truncate">
-                                    Inquilino: <strong class="text-white">${imovelAlugado.inquilino_nome}</strong>
-                                </div>
-                            </div>
-                        ` : (qtdImoveis > 0 ? `
-                            <div class="text-[10px] text-slate-400 italic">
-                                Imóveis disponíveis para locação/venda.
-                            </div>
-                        ` : `
-                            <div class="text-[10px] text-slate-600 italic">
-                                Nenhum imóvel vinculado no momento.
-                            </div>
-                        `)}
+                        <!-- RESUMO ANALÍTICO DO PORTFÓLIO -->
+                        <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[10px] flex items-center justify-between">
+                            <span class="text-slate-400">Situação:</span>
+                            <span>${resumoPortfolioHtml}</span>
+                        </div>
+
+                        <!-- CHIPS DOS IMÓVEIS -->
+                        ${qtdTotal > 0 ? `<div class="space-y-1">${chipsImoveisHtml}</div>` : ''}
 
                         <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
                             <span class="text-slate-500 font-mono">${p.whatsapp || p.telefone || 'Sem contato'}</span>
                             <div class="flex items-center gap-2">
                                 ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
+                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition shadow">
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="abrirDossie360Cliente('${p.id}', 'proprietario')" class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700 font-bold px-2 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                    Dossiê 360° &rarr;
+                                <button onclick="abrirDossie360Cliente('${p.id}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                    <span>Dossiê 360°</span>
                                 </button>
                             </div>
                         </div>
@@ -1556,6 +1651,9 @@
             }).join('');
         }
 
+        // =========================================================================
+        // RENDERIZAÇÃO 2: INQUILINOS COM DESTAQUE VIBRANTE PARA CONTRATOS ATIVOS
+        // =========================================================================
         function renderizarInquilinos(lista) {
             const container = document.getElementById('lista-drilldown-inquilinos');
             const badge = document.getElementById('badge-total-inquilinos');
@@ -1569,32 +1667,49 @@
             container.innerHTML = lista.map(i => {
                 const zapLimpo = ('' + (i.whatsapp || i.telefone || '')).replace(/\D/g, '');
                 const contrato = i.contrato_inquilino;
+                const temContratoAtivo = contrato && contrato.status === 'Ativo';
+
+                // Borda e iluminação contrastante
+                let cardEstilo = 'bg-slate-900/60 border-slate-800 hover:border-purple-500/60';
+                let badgeStatusHtml = `
+                    <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-800 text-slate-400 border border-slate-700 flex-shrink-0">
+                        Cadastro Avulso
+                    </span>
+                `;
+
+                if (temContratoAtivo) {
+                    cardEstilo = 'bg-slate-900/90 border-2 border-emerald-500/80 shadow-md shadow-emerald-950/40 hover:border-emerald-400';
+                    badgeStatusHtml = `
+                        <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500 text-slate-950 border border-emerald-400 shadow-sm shadow-emerald-950 flex-shrink-0 flex items-center gap-1 animate-pulse">
+                            <i class="fa-solid fa-circle-check text-[8px]"></i>
+                            <span>CONTRATO ATIVO</span>
+                        </span>
+                    `;
+                }
 
                 return `
-                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-purple-500/60 transition space-y-2 group shadow-sm">
+                    <div class="p-3.5 rounded-xl border transition space-y-2.5 group shadow-sm ${cardEstilo}">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0">
                                 <span class="font-bold text-white text-xs block truncate group-hover:text-purple-300 transition">${i.nome}</span>
                                 <span class="text-[10px] text-slate-400 font-mono block">CPF: ${i.cpf_cnpj || 'Não informado'}</span>
                             </div>
-                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold ${contrato ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-800 text-slate-400'} flex-shrink-0">
-                                ${contrato ? 'Contrato Ativo' : 'Cadastro Avulso'}
-                            </span>
+                            ${badgeStatusHtml}
                         </div>
 
                         ${contrato ? `
-                            <div class="bg-slate-950 p-2 rounded-lg border border-purple-900/40 text-[10px] space-y-0.5">
+                            <div class="bg-slate-950 p-2.5 rounded-lg border ${temContratoAtivo ? 'border-emerald-900/60' : 'border-purple-900/40'} text-[10px] space-y-1">
                                 <div class="flex items-center justify-between text-slate-300">
                                     <span>Aluguel Bruto:</span>
-                                    <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>
+                                    <strong class="text-emerald-400 font-mono text-xs">R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>
                                 </div>
                                 <div class="text-slate-400 flex items-center justify-between">
-                                    <span>Vencimento:</span>
-                                    <strong class="text-amber-300 font-mono">Dia ${contrato.dia_vencimento_aluguel || '10'}</strong>
+                                    <span>Dia Vencimento:</span>
+                                    <strong class="text-amber-300 font-mono">Todo dia ${contrato.dia_vencimento_aluguel || '10'}</strong>
                                 </div>
                             </div>
                         ` : `
-                            <div class="text-[10px] text-slate-600 italic">
+                            <div class="text-[10px] text-slate-600 italic py-1">
                                 Nenhum contrato ativo vinculado no momento.
                             </div>
                         `}
@@ -1603,12 +1718,13 @@
                             <span class="text-slate-500 font-mono">${i.whatsapp || i.telefone || 'Sem contato'}</span>
                             <div class="flex items-center gap-2">
                                 ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
+                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition shadow">
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="abrirDossie360Cliente('${i.id}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-2 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                    Dossiê 360° &rarr;
+                                <button onclick="abrirDossie360Cliente('${i.id}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+                                    <i class="fa-solid fa-eye text-xs"></i>
+                                    <span>Dossiê 360°</span>
                                 </button>
                             </div>
                         </div>
@@ -1617,6 +1733,9 @@
             }).join('');
         }
 
+        // =========================================================================
+        // RENDERIZAÇÃO 3: LEADS & CONTATOS (VERDE ESMERALDA)
+        // =========================================================================
         function renderizarLeads(lista) {
             const container = document.getElementById('lista-drilldown-leads');
             const badge = document.getElementById('badge-total-leads');
@@ -1638,7 +1757,7 @@
                 else if (status === 'Novo') corBadge = 'bg-emerald-950 text-emerald-300 border-emerald-800';
 
                 return `
-                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-emerald-500/60 transition space-y-2 group shadow-sm">
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-emerald-900/50 hover:border-emerald-400 transition space-y-2.5 group shadow-sm">
                         <div class="flex items-start justify-between gap-2">
                             <div class="min-w-0">
                                 <span class="font-bold text-white text-xs block truncate group-hover:text-emerald-300 transition">${l.nome}</span>
@@ -1674,12 +1793,13 @@
                             <span class="text-slate-500 font-mono">${l.whatsapp || 'Sem WhatsApp'}</span>
                             <div class="flex items-center gap-2">
                                 ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
+                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition shadow">
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="fecharDrilldownClientes(); abrirDossieAgendamento('${l.id}')" class="bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 font-bold px-2 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                    Ficha &rarr;
+                                <button onclick="fecharDrilldownClientes(); abrirDossieAgendamento('${l.id}')" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+                                    <i class="fa-solid fa-file-lines text-xs"></i>
+                                    <span>Ficha</span>
                                 </button>
                             </div>
                         </div>
@@ -1746,7 +1866,7 @@
         }
 
         // =========================================================================
-        // MOTOR DO DOSSIÊ 360° DETALHADO DO CLIENTE
+        // MOTOR DO DOSSIÊ 360° DO CLIENTE: COM DOCUMENTAÇÃO E OLHINHO 👁️
         // =========================================================================
         async function abrirDossie360Cliente(clienteId, tipoAcesso) {
             if (!clienteId) return;
@@ -1758,8 +1878,8 @@
 
             corpo.innerHTML = `
                 <div class="py-12 text-center text-slate-500">
-                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-2xl mb-2"></i>
-                    <p>Consultando todo o histórico de negócios do cliente...</p>
+                    <i class="fa-solid fa-spinner fa-spin text-sky-400 text-2xl mb-2"></i>
+                    <p>Consultando histórico completo, documentos e contratos...</p>
                 </div>
             `;
             modal.classList.remove('hidden');
@@ -1810,17 +1930,19 @@
                     }
 
                     blocoNegociosHtml = `
-                        <div class="space-y-3 pt-2">
-                            <h4 class="text-xs font-black uppercase text-indigo-300 flex items-center gap-1.5">
+                        <div class="space-y-4 pt-2">
+                            <h4 class="text-xs font-black uppercase text-sky-300 flex items-center gap-1.5">
                                 <i class="fa-solid fa-house-user"></i> 1. Imóveis de Propriedade (${(imoveis || []).length})
                             </h4>
 
-                            <div class="space-y-2">
+                            <div class="space-y-3">
                                 ${(imoveis || []).length === 0 ? '<p class="text-slate-500 italic py-2">Nenhum imóvel registrado sob este proprietário.</p>' : 
                                 imoveis.map(im => {
                                     const contrato = contratos.find(c => c.imovel_id === im.id);
+                                    const docsHtml = renderizarBotoesDocumentos(im.documentos_anexos, 'Documentos do Imóvel & Escrituras');
+
                                     return `
-                                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                                             <div class="flex items-center justify-between">
                                                 <div>
                                                     <span class="font-bold text-white text-xs">${im.titulo}</span>
@@ -1838,12 +1960,15 @@
                                                     <div><span class="text-slate-500 block text-[10px]">Seu Repasse Líquido:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(contrato.valor_repasse_proprietario).toLocaleString('pt-BR')}</strong></div>
                                                 </div>
                                             ` : ''}
+
+                                            <!-- DOCUMENTOS COM OLHINHO 👁️ -->
+                                            ${docsHtml}
                                         </div>
                                     `;
                                 }).join('')}
                             </div>
 
-                            <h4 class="text-xs font-black uppercase text-amber-300 flex items-center gap-1.5 pt-3">
+                            <h4 class="text-xs font-black uppercase text-amber-300 flex items-center gap-1.5 pt-2">
                                 <i class="fa-solid fa-coins"></i> 2. Extrato Recente de Repasses
                             </h4>
 
@@ -1891,8 +2016,11 @@
 
                     let mensalidades = [];
                     let donoImovel = null;
+                    let docsContratoHtml = '';
 
                     if (contratoAtivo) {
+                        docsContratoHtml = renderizarBotoesDocumentos(contratoAtivo.documentos_anexos, 'Contrato Assinado & Documentos Pessoais do Inquilino');
+
                         const { data: mData } = await supabaseClient
                             .from('locacao_mensalidades_recebiveis')
                             .select('*')
@@ -1911,7 +2039,7 @@
                     }
 
                     blocoNegociosHtml = `
-                        <div class="space-y-3 pt-2">
+                        <div class="space-y-4 pt-2">
                             <h4 class="text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
                                 <i class="fa-solid fa-file-contract"></i> 1. Contrato de Locação em Vigor
                             </h4>
@@ -1933,10 +2061,13 @@
                                         <div><span class="text-slate-500 block text-[10px]">Dia Vencimento:</span> <strong class="text-amber-300 font-mono">Todo dia ${contratoAtivo.dia_vencimento_aluguel || '10'}</strong></div>
                                         <div><span class="text-slate-500 block text-[10px]">Proprietário Titular:</span> <strong class="text-white">${donoImovel ? donoImovel.nome : 'Não vinculado'}</strong></div>
                                     </div>
+
+                                    <!-- DOCUMENTOS DO INQUILINO COM OLHINHO 👁️ -->
+                                    ${docsContratoHtml}
                                 </div>
                             `}
 
-                            <h4 class="text-xs font-black uppercase text-cyan-300 flex items-center gap-1.5 pt-3">
+                            <h4 class="text-xs font-black uppercase text-cyan-300 flex items-center gap-1.5 pt-2">
                                 <i class="fa-solid fa-receipt"></i> 2. Histórico de Pagamentos de Mensalidades
                             </h4>
 
@@ -1977,10 +2108,10 @@
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
                         <div class="flex items-center justify-between flex-wrap gap-2">
                             <div>
-                                <span class="text-[10px] uppercase font-bold text-indigo-400 block">Ficha Cadastral</span>
+                                <span class="text-[10px] uppercase font-bold text-sky-400 block">Ficha Cadastral</span>
                                 <h4 class="text-base font-black text-white">${cliente.nome}</h4>
                             </div>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-800 font-mono">
                                 ID: ${cliente.id.substring(0, 8)}...
                             </span>
                         </div>
@@ -2464,7 +2595,7 @@
         }
 
         // =========================================================================
-        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL
+        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL (COM DOCUMENTOS ANEXOS)
         // =========================================================================
         async function abrirModalDetalhesImovel(imovelId) {
             if (!imovelId) return;
@@ -2519,6 +2650,9 @@
                 const prop = imovel.clientes || {};
                 const zapProp = ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '');
 
+                // Documentos anexados do imóvel com o Olhinho 👁️
+                const docsHtml = renderizarBotoesDocumentos(imovel.documentos_anexos, 'Documentos Técnicos, Fotos Extras & Anexos');
+
                 if (corpo) {
                     corpo.innerHTML = `
                         <div class="flex flex-col sm:flex-row gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800">
@@ -2561,6 +2695,9 @@
                                 ` : ''}
                             </div>
                         </div>
+
+                        <!-- SEÇÃO DE DOCUMENTOS ANEXADOS -->
+                        ${docsHtml}
                     `;
                 }
 
