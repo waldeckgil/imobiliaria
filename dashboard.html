@@ -10,17 +10,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-    <!-- FAIXA 1: MODO SUPORTE MASTER (QUANDO O ADMINISTRADOR ESTIVER ATENDENDO) -->
-    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+        .tab-btn-ativo { background-color: #38bdf8; color: #020617; font-weight: 800; }
+        
+        /* ANIMAÇÃO DOS TOASTS NATIVOS */
+        @keyframes toastEntrada {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .toast-ativo { animation: toastEntrada 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
 <body class="min-h-screen flex flex-col justify-between">
 
     <!-- CONTAINER FLUTUANTE DE NOTIFICAÇÕES (TOASTS NATIVOS DO SISTEMA) -->
     <div id="container-toast-sistema" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
-    <!-- FAIXA 1: MODO SUPORTE MASTER (QUANDO O ADMINISTRADOR ESTIVER ATENDENDO) -->
-    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-40">
+ <!-- FAIXA 1: MODO SUPORTE MASTER (QUANDO O ADMINISTRADOR ESTIVER ATENDENDO) -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
+
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
