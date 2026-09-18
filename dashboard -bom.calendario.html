@@ -2241,17 +2241,9 @@
             modal.classList.remove('hidden');
 
             try {
-       // NOVO DRILLDOWN: DISPONÍVEIS DIVIDIDO EM 2 BLOCOS (VENDA E LOCAÇÃO LADO A LADO)
                 if (tipo === 'disponiveis') {
                     titulo.innerText = 'Imóveis Disponíveis no Estoque';
                     icone.className = 'fa-solid fa-boxes-stacked text-blue-400';
-
-                    // Expande a largura do modal para visualização confortável em duas colunas
-                    const boxModal = modal.querySelector('.box-tech');
-                    if (boxModal) {
-                        boxModal.classList.remove('max-w-3xl');
-                        boxModal.classList.add('max-w-5xl');
-                    }
 
                     const { data: imoveis, error } = await supabaseClient
                         .from('imoveis')
@@ -2261,99 +2253,330 @@
                         .order('created_at', { ascending: false });
 
                     if (error) throw error;
-                    const todosImoveis = imoveis || [];
+                    cacheImoveisDisponiveis = imoveis || [];
 
-                    // Separação em dois estoques distintos
-                    const imoveisVenda = todosImoveis.filter(im => {
+                    const totalVenda = cacheImoveisDisponiveis.filter(im => {
                         const f = (im.finalidade || '').toLowerCase();
                         return f.includes('venda') || f.includes('ambos') || Number(im.valor_venda) > 0;
-                    });
+                    }).length;
 
-                    const imoveisLocacao = todosImoveis.filter(im => {
+                    const totalLocacao = cacheImoveisDisponiveis.filter(im => {
                         const f = (im.finalidade || '').toLowerCase();
                         return f.includes('loca') || f.includes('aluguel') || f.includes('ambos') || Number(im.valor_locacao) > 0;
-                    });
-
-                    contador.innerText = `${todosImoveis.length} disponíveis (${imoveisVenda.length} Venda • ${imoveisLocacao.length} Locação)`;
-
-                    // Helper interno de renderização de card
-                    const renderCardItem = (im, ehVenda) => {
-                        const foto = im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
-                        const valorTxt = ehVenda 
-                            ? `R$ ${Number(im.valor_venda || 0).toLocaleString('pt-BR')}`
-                            : `R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR')}/mês`;
-                        const valorCor = ehVenda ? 'text-emerald-400' : 'text-purple-300';
-
-                        return `
-                            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-slate-700 transition">
-                                <div class="flex items-center gap-2.5 min-w-0">
-                                    <img src="${foto}" class="w-12 h-12 rounded-lg object-cover border border-slate-700 flex-shrink-0">
-                                    <div class="truncate">
-                                        <span class="font-bold text-white text-xs block truncate" title="${im.titulo}">${im.titulo}</span>
-                                        <span class="text-[10px] text-slate-400 font-mono block">Ref: <strong class="text-cyan-400">${im.codigo_ref}</strong> • ${im.tipo} • ${im.bairro || 'Localização'}</span>
-                                        <span class="text-[11px] font-mono font-black ${valorCor} block mt-0.5">${valorTxt}</span>
-                                    </div>
-                                </div>
-                                <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-2.5 py-1.5 rounded-lg text-[11px] transition whitespace-nowrap cursor-pointer flex-shrink-0">
-                                    Ver Raio-X
-                                </button>
-                            </div>
-                        `;
-                    };
+                    }).length;
 
                     corpo.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- BLOCO 1: IMÓVEIS PARA VENDA -->
-                            <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-3 flex flex-col">
-                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                                    <div class="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-wide">
-                                        <i class="fa-solid fa-tag"></i>
-                                        <span>Imóveis para Venda</span>
-                                    </div>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
-                                        ${imoveisVenda.length} disponíveis
-                                    </span>
-                                </div>
-                                <div class="space-y-2 overflow-y-auto max-h-[50vh] pr-1">
-                                    ${imoveisVenda.length === 0 
-                                        ? '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel disponível para venda.</p>'
-                                        : imoveisVenda.map(im => renderCardItem(im, true)).join('')}
-                                </div>
-                            </div>
-
-                            <!-- BLOCO 2: IMÓVEIS PARA LOCAÇÃO -->
-                            <div class="bg-slate-950 p-3.5 rounded-xl border border-purple-500/40 space-y-3 flex flex-col">
-                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                                    <div class="flex items-center gap-2 text-purple-300 font-black text-xs uppercase tracking-wide">
-                                        <i class="fa-solid fa-key"></i>
-                                        <span>Imóveis para Locação</span>
-                                    </div>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-950 text-purple-300 border border-purple-800">
-                                        ${imoveisLocacao.length} disponíveis
-                                    </span>
-                                </div>
-                                <div class="space-y-2 overflow-y-auto max-h-[50vh] pr-1">
-                                    ${imoveisLocacao.length === 0 
-                                        ? '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel disponível para locação.</p>'
-                                        : imoveisLocacao.map(im => renderCardItem(im, false)).join('')}
-                                </div>
-                            </div>
+                        <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs mb-3">
+                            <button onclick="filtrarDrilldownDisponiveis('todos')" id="btn-filtro-disp-todos" class="px-3 py-1 rounded-lg bg-blue-500 text-slate-950 font-bold transition">
+                                Todos (${cacheImoveisDisponiveis.length})
+                            </button>
+                            <button onclick="filtrarDrilldownDisponiveis('venda')" id="btn-filtro-disp-venda" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition">
+                                Venda (${totalVenda})
+                            </button>
+                            <button onclick="filtrarDrilldownDisponiveis('locacao')" id="btn-filtro-disp-locacao" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition">
+                                Locação (${totalLocacao})
+                            </button>
                         </div>
+                        <div id="container-lista-disponiveis" class="space-y-2.5"></div>
                     `;
 
-                } else if (tipo === 'imoveis-ativos') {
+                    renderizarListaDisponiveis(cacheImoveisDisponiveis);
+                    contador.innerText = `${cacheImoveisDisponiveis.length} imóveis disponíveis`;
 
-(E substitua a função fecharDrilldown() para que ela resete a largura do modal
-ao fechar):
+                } else if (tipo === 'imoveis-ativos') {
+                    titulo.innerText = 'Imóveis Ativos na Vitrine (Disponíveis)';
+                    icone.className = 'fa-solid fa-house-circle-check text-cyan-400';
+
+                    const { data: imoveis, error } = await supabaseClient
+                        .from('imoveis')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('ativa', true)
+                        .eq('status', 'Disponível')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    contador.innerText = `${imoveis.length} imóveis ativos`;
+
+                    if (imoveis.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel ativo na vitrine no momento.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = imoveis.map(im => `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-cyan-500/40 transition">
+                            <div class="flex items-center gap-3">
+                                <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                <div>
+                                    <span class="font-bold text-white text-xs block leading-snug truncate max-w-[280px]">${im.titulo}</span>
+                                    <span class="text-[10px] text-slate-400 font-mono">Ref: <strong class="text-cyan-400">${im.codigo_ref}</strong> • ${im.tipo} • ${im.bairro || 'Localização'}</span>
+                                    <span class="text-[11px] font-black text-cyan-300 block mt-0.5">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</span>
+                                </div>
+                            </div>
+                            <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
+                                Ver Raio-X
+                            </button>
+                        </div>
+                    `).join('');
+
+                } else if (tipo === 'imoveis-alugados') {
+                    titulo.innerText = 'Imóveis Alugados & Contratos Ativos de Locação';
+                    icone.className = 'fa-solid fa-key text-purple-400';
+
+                    const { data: contratos, error } = await supabaseClient
+                        .from('contratos_locacao')
+                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro)')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('status', 'Ativo')
+                        .order('data_fim', { ascending: true });
+
+                    if (error) throw error;
+                    contador.innerText = `${contratos ? contratos.length : 0} contratos ativos`;
+
+                    if (!contratos || contratos.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum contrato de locação ativo.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = contratos.map(c => {
+                        const imovel = c.imoveis || {};
+                        const dataInicioFmt = c.data_inicio ? c.data_inicio.split('-').reverse().join('/') : '--/--/----';
+                        const dataFimFmt = c.data_fim ? c.data_fim.split('-').reverse().join('/') : '--/--/----';
+                        const zapLimpo = ('' + (c.cliente_whatsapp || '')).replace(/\D/g, '');
+
+                        return `
+                            <div class="bg-slate-950 p-4 rounded-xl border border-purple-800/40 space-y-2 hover:border-purple-500/60 transition">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                        <div>
+                                            <span class="font-bold text-white text-xs block leading-snug">${imovel.titulo || 'Imóvel Alugado'}</span>
+                                            <span class="text-[10px] text-purple-300 font-mono">Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
+                                            Dossiê
+                                        </button>
+                                        ${zapLimpo ? `
+                                            <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
+                                                <i class="fa-brands fa-whatsapp"></i> Zap
+                                            </a>
+                                        ` : ''}
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
+                                    <div>
+                                        <span class="text-slate-500 block">Locatário:</span> 
+                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left">
+                                            ${c.cliente_nome}
+                                        </button>
+                                    </div>
+                                    <div><span class="text-slate-500 block">Aluguel:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Taxa Imob (${c.taxa_administracao_pct}%):</span> <strong class="text-amber-300 font-mono">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong></div>
+                                    <div><span class="text-slate-500 block">Repasse Dono:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong></div>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-1 text-[10px] text-slate-400 border-t border-slate-900">
+                                    <span>Vigência: <strong>${dataInicioFmt}</strong> até <strong>${dataFimFmt}</strong></span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                } else if (tipo === 'imoveis-vendidos') {
+                    titulo.innerText = 'Histórico Geral de Imóveis Vendidos';
+                    icone.className = 'fa-solid fa-handshake text-amber-400';
+
+                    const { data: vendas, error } = await supabaseClient
+                        .from('vendas_fechadas')
+                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa)')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .order('data_venda', { ascending: false });
+
+                    if (error) throw error;
+                    contador.innerText = `${vendas ? vendas.length : 0} imóveis vendidos`;
+
+                    if (!vendas || vendas.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma venda registrada até o momento.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = vendas.map(v => {
+                        const imovel = v.imoveis || {};
+                        const dtFormatada = v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----';
+                        return `
+                            <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30 space-y-2 hover:border-amber-400 transition">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                        <div>
+                                            <span class="font-bold text-white text-xs block">${imovel.titulo || 'Imóvel Vendido'}</span>
+                                            <span class="text-[10px] text-amber-300 font-mono">Ref: ${imovel.codigo_ref || '---'} • Vendido em: ${dtFormatada}</span>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Fechado</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                                    <div><span class="text-slate-500 block">Comprador:</span> <strong class="text-white">${v.cliente_comprador_nome}</strong></div>
+                                    <div><span class="text-slate-500 block">Valor Venda:</span> <strong class="text-white font-mono">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Comissão Imob:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Corretor (${v.corretor_nome || 'Casa'}):</span> <strong class="text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')}</strong></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                } else if (tipo === 'leads-hoje') {
+                    titulo.innerText = 'Novos Contatos / Leads (Últimas 24 Horas)';
+                    icone.className = 'fa-solid fa-comment-dots text-emerald-400';
+
+                    const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+                    const { data: leads, error } = await supabaseClient
+                        .from('leads_contatos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .gte('criado_em', ontem)
+                        .order('criado_em', { ascending: false });
+
+                    if (error) throw error;
+                    contador.innerText = `${leads.length} contatos nas últimas 24h`;
+
+                    if (leads.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum lead novo recebido nas últimas 24h.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = leads.map(l => {
+                        const hora = new Date(l.criado_em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
+                        return `
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-emerald-500/40 transition">
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-white text-xs">${l.nome}</span>
+                                        <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded">${hora}</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1 max-w-sm">${l.mensagem || 'Interesse direto na vitrine'}</p>
+                                </div>
+                                <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 whitespace-nowrap shadow">
+                                    <i class="fa-brands fa-whatsapp"></i> Chamar
+                                </a>
+                            </div>
+                        `;
+                    }).join('');
+
+                } else if (tipo === 'propostas') {
+                    titulo.innerText = 'Propostas Comerciais em Análise';
+                    icone.className = 'fa-solid fa-file-signature text-rose-400';
+
+                    const { data: leads, error } = await supabaseClient
+                        .from('leads_contatos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('status', 'Proposta')
+                        .order('criado_em', { ascending: false });
+
+                    if (error) throw error;
+                    contador.innerText = `${leads.length} propostas em análise`;
+
+                    if (leads.length === 0) {
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma proposta comercial pendente.</p>';
+                        return;
+                    }
+
+                    corpo.innerHTML = leads.map(l => `
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3">
+                            <div>
+                                <span class="font-bold text-white text-xs">${l.nome}</span>
+                                <span class="text-xs font-mono font-black text-rose-300 block mt-0.5">
+                                    ${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Valor não informado'}
+                                </span>
+                            </div>
+                            <a href="leads.html" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (err) {
+                console.error(err);
+                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar detalhes.</p>';
+            }
+        }
+
+        function renderizarListaDisponiveis(lista) {
+            const container = document.getElementById('container-lista-disponiveis');
+            if (!container) return;
+
+            if (!lista || lista.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel disponível para este filtro.</p>';
+                return;
+            }
+
+            container.innerHTML = lista.map(im => {
+                const fin = (im.finalidade || 'Venda').toUpperCase();
+                const valorExibicao = (im.valor_venda && Number(im.valor_venda) > 0)
+                    ? `Venda: R$ ${Number(im.valor_venda).toLocaleString('pt-BR')}`
+                    : `Locação: R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR')}/mês`;
+
+                return `
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-blue-500/40 transition">
+                        <div class="flex items-center gap-3">
+                            <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800">${fin}</span>
+                                    <span class="font-bold text-white text-xs truncate max-w-[220px]">${im.titulo}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono block mt-0.5">Ref: <strong class="text-cyan-400">${im.codigo_ref}</strong> • ${im.tipo} • ${im.bairro || 'Bairro'}</span>
+                                <span class="text-[11px] font-bold text-emerald-400 block mt-0.5">${valorExibicao}</span>
+                            </div>
+                        </div>
+                        <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
+                            Ver Raio-X
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filtrarDrilldownDisponiveis(filtro) {
+            const btnTodos = document.getElementById('btn-filtro-disp-todos');
+            const btnVenda = document.getElementById('btn-filtro-disp-venda');
+            const btnLoc = document.getElementById('btn-filtro-disp-locacao');
+
+            [btnTodos, btnVenda, btnLoc].forEach(b => {
+                if (b) b.className = 'px-3 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition';
+            });
+
+            let listaFiltrada = cacheImoveisDisponiveis;
+
+            if (filtro === 'venda') {
+                if (btnVenda) btnVenda.className = 'px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold transition';
+                listaFiltrada = cacheImoveisDisponiveis.filter(im => {
+                    const f = (im.finalidade || '').toLowerCase();
+                    return f.includes('venda') || f.includes('ambos') || Number(im.valor_venda) > 0;
+                });
+            } else if (filtro === 'locacao') {
+                if (btnLoc) btnLoc.className = 'px-3 py-1 rounded-lg bg-purple-500 text-white font-bold transition';
+                listaFiltrada = cacheImoveisDisponiveis.filter(im => {
+                    const f = (im.finalidade || '').toLowerCase();
+                    return f.includes('loca') || f.includes('aluguel') || f.includes('ambos') || Number(im.valor_locacao) > 0;
+                });
+            } else {
+                if (btnTodos) btnTodos.className = 'px-3 py-1 rounded-lg bg-blue-500 text-slate-950 font-bold transition';
+            }
+
+            renderizarListaDisponiveis(listaFiltrada);
+            document.getElementById('drilldown-contador').innerText = `${listaFiltrada.length} imóveis exibidos`;
+        }
 
         function fecharDrilldown() {
-            const modal = document.getElementById('modal-kpi-detalhes');
-            modal.classList.add('hidden');
-            const boxModal = modal.querySelector('.box-tech');
-            if (boxModal) {
-                boxModal.classList.remove('max-w-5xl');
-                boxModal.classList.add('max-w-3xl');
-            }
+            document.getElementById('modal-kpi-detalhes').classList.add('hidden');
         }
 
         async function carregarCatalogo(imobId) {
