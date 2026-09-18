@@ -129,36 +129,39 @@
     </header>
 
     <!-- MENU DE MÓDULOS -->
-    <nav class="bg-slate-950/80 border-b border-slate-800/80 px-4 sm:px-8 py-2.5 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto text-xs sm:text-sm py-1">
-            
-            <a href="dashboard.html" class="px-4 py-2 rounded-xl font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
-                <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
-                <span>Dashboard 360</span>
-            </a>
+   <!-- MENU DE MÓDULOS (PADRÃO HIGH-TECH REFINADO) -->
+<nav class="bg-slate-950/80 border-b border-slate-800/80 px-4 sm:px-8 py-2.5 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto text-xs sm:text-sm py-1">
+        
+        <!-- MÓDULO ATIVO: PILL CIANO TRANSLÚCIDO COM BORDA REFINADA -->
+        <a href="dashboard.html" class="px-4 py-2 rounded-xl font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
+            <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
+            <span>Dashboard 360</span>
+        </a>
 
-            <a href="imoveis-lista.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
-                <i class="fa-solid fa-house-chimney text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
-                <span>Catálogo de Imóveis</span>
-            </a>
+        <!-- DEMAIS MÓDULOS: DESIGN SLATE SOBRIO COM HOVER ILUMINADO -->
+        <a href="imoveis-lista.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
+            <i class="fa-solid fa-house-chimney text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
+            <span>Catálogo de Imóveis</span>
+        </a>
 
-            <a href="leads.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
-                <i class="fa-solid fa-comments text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
-                <span>Central de Atendimentos</span>
-            </a>
+        <a href="leads.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
+            <i class="fa-solid fa-comments text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
+            <span>Central de Atendimentos</span>
+        </a>
 
-            <a href="equipe.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
-                <i class="fa-solid fa-users text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
-                <span>Equipe & Permissões</span>
-            </a>
+        <a href="equipe.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
+            <i class="fa-solid fa-users text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
+            <span>Equipe & Permissões</span>
+        </a>
 
-            <a href="configurar-imobiliaria.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
-                <i class="fa-solid fa-gear text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
-                <span>Configurações & Publicidade</span>
-            </a>
+        <a href="configurar-imobiliaria.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
+            <i class="fa-solid fa-gear text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
+            <span>Configurações & Publicidade</span>
+        </a>
 
-        </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
@@ -189,8 +192,8 @@
             </div>
         </div>
 
-        <!-- COCKPIT GERENCIAL: GRADE REFINADA (AGORA COM O CARD CADASTRO DE CLIENTES) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
+        <!-- COCKPIT GERENCIAL: GRADE DE 8 CARDS COMPACTOS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             
             <!-- CARD 1: DISPONÍVEIS -->
             <div onclick="abrirDrilldown('disponiveis')" class="box-tech p-4 border-l-4 border-l-blue-500 cursor-pointer hover:scale-[1.02] hover:border-blue-400 hover:shadow-xl transition group bg-gradient-to-r from-blue-950/15 to-transparent">
@@ -219,23 +222,6 @@
                         <span class="text-[10px] text-slate-400 block">publicados no portal</span>
                     </div>
                     <span class="text-[9px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
-                </div>
-            </div>
-
-            <!-- CARD NOVO: CADASTROS (PROPRIETÁRIOS & INQUILINOS) -->
-            <div onclick="abrirDrilldownClientes()" class="box-tech p-4 border-l-4 border-l-indigo-500 cursor-pointer hover:scale-[1.02] hover:border-indigo-400 hover:shadow-xl transition group bg-gradient-to-r from-indigo-950/25 to-transparent">
-                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="text-indigo-300 group-hover:text-indigo-200 transition text-[11px] flex items-center gap-1.5">
-                        <i class="fa-solid fa-address-book"></i> Cadastros & Clientes
-                    </span>
-                    <i class="fa-solid fa-users text-indigo-400 text-base group-hover:scale-110 transition"></i>
-                </div>
-                <div class="mt-2 flex items-baseline justify-between">
-                    <div>
-                        <span id="kpi-total-clientes" class="text-2xl font-black text-white">0</span>
-                        <span class="text-[10px] text-indigo-400 font-bold block" id="kpi-clientes-subcontadores">0 Proprietários • 0 Inquilinos</span>
-                    </div>
-                    <span class="text-[9px] text-indigo-300 font-bold opacity-0 group-hover:opacity-100 transition">Gerenciar &rarr;</span>
                 </div>
             </div>
 
@@ -564,122 +550,6 @@
 
     </main>
 
-    <!-- NOVO MODAL DRILL-DOWN: GESTÃO DE CADASTROS (PROPRIETÁRIOS & INQUILINOS) COM BUSCA -->
-    <div id="modal-drilldown-clientes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="box-tech max-w-5xl w-full p-5 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col transition-all">
-            
-            <!-- TOPO DO MODAL -->
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-base border border-indigo-500/30">
-                        <i class="fa-solid fa-address-book"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-black text-white uppercase tracking-wide">Base de Clientes da Imobiliária</h3>
-                        <p class="text-[11px] text-slate-400">Cruzamento de proprietários, inquilinos, contratos e repasses.</p>
-                    </div>
-                </div>
-
-                <!-- CAMPO DE BUSCA REATIVO COM LUPA -->
-                <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                    <div class="relative w-full sm:w-72">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
-                        <input type="text" id="input-busca-clientes" oninput="filtrarClientesDrilldown(this.value)"
-                               placeholder="Buscar por Nome, CPF ou WhatsApp..."
-                               class="bg-slate-950 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-400 w-full transition">
-                    </div>
-
-                    <button onclick="fecharDrilldownClientes()" class="text-slate-400 hover:text-white transition cursor-pointer p-1 ml-1">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- CORPO DRILL-DOWN EM 2 COLUNAS IDÊNTICO AO PADRÃO DE ESTOQUE -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-y-auto pr-1" id="corpo-drilldown-clientes">
-                
-                <!-- COLUNA 1: PROPRIETÁRIOS -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-indigo-500/40 space-y-3 flex flex-col">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                        <div class="flex items-center gap-2 text-indigo-400 font-black text-xs uppercase tracking-wide">
-                            <i class="fa-solid fa-user-tie"></i>
-                            <span>Proprietários</span>
-                        </div>
-                        <span id="badge-total-proprietarios" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800">
-                            0 listados
-                        </span>
-                    </div>
-                    <div id="lista-drilldown-proprietarios" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1">
-                        <div class="py-8 text-center text-slate-500 text-xs">
-                            <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
-                            <p>Carregando proprietários...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- COLUNA 2: INQUILINOS -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-purple-500/40 space-y-3 flex flex-col">
-                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
-                        <div class="flex items-center gap-2 text-purple-300 font-black text-xs uppercase tracking-wide">
-                            <i class="fa-solid fa-key"></i>
-                            <span>Inquilinos</span>
-                        </div>
-                        <span id="badge-total-inquilinos" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-950 text-purple-300 border border-purple-800">
-                            0 listados
-                        </span>
-                    </div>
-                    <div id="lista-drilldown-inquilinos" class="space-y-2.5 overflow-y-auto max-h-[55vh] pr-1">
-                        <div class="py-8 text-center text-slate-500 text-xs">
-                            <i class="fa-solid fa-spinner fa-spin text-purple-400 text-lg mb-2"></i>
-                            <p>Carregando inquilinos...</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- RODAPÉ DO DRILL-DOWN -->
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <span id="drilldown-clientes-resumo" class="text-slate-400 font-mono font-bold">Consolidação de cadastros</span>
-                <button onclick="fecharDrilldownClientes()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
-                    Fechar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- NOVO MODAL: DOSSIÊ 360° DO CLIENTE (CRUZAMENTO TOTAL PROPRIETÁRIO / INQUILINO) -->
-    <div id="modal-dossie-cliente" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-3xl w-full p-6 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-indigo-300 font-black text-sm uppercase tracking-wide">
-                    <i class="fa-solid fa-circle-user text-indigo-400 text-lg"></i>
-                    <span id="dossie-cliente-titulo-topo">Dossiê 360° do Cliente</span>
-                </div>
-                <button onclick="fecharModalDossieCliente()" class="text-slate-400 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="dossie-cliente-conteudo">
-                <div class="py-12 text-center text-slate-500">
-                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-2xl mb-2"></i>
-                    <p>Consultando histórico completo e vínculos contratuais...</p>
-                </div>
-            </div>
-
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <a id="dossie-cliente-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Conversar no WhatsApp</span>
-                </a>
-                <button onclick="fecharModalDossieCliente()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
-                    Fechar Dossiê
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL PRINCIPAL: CALENDÁRIO & GERENCIADOR DE AGENDAMENTOS -->
     <div id="modal-cockpit-agenda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="box-tech max-w-4xl w-full p-5 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
@@ -839,7 +709,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: DOSSIÊ DO INQUILINO ANTIGO (RESERVADO) -->
+    <!-- MODAL 2: DOSSIÊ DO INQUILINO -->
     <div id="modal-dash-inquilino" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 border border-purple-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -867,7 +737,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE DETALHAMENTO RÁPIDO / DRILL-DOWN (ESTOQUE, ATIVOS, VENDIDOS, ETC.) -->
+    <!-- MODAL DE DETALHAMENTO RÁPIDO / DRILL-DOWN (DISPONÍVEIS, ATIVOS, VENDIDOS, ETC.) -->
     <div id="modal-kpi-detalhes" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-3xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[85vh] flex flex-col transition-all duration-300">
             
@@ -914,10 +784,6 @@
         let dadosImobiliaria = null;
         let isMasterSuporte = false;
         let temPermissaoFinanceira = false;
-
-        // CACHE PARA FILTRAGEM INSTANTÂNEA DA BASE DE CLIENTES
-        let cacheProprietariosCompletos = [];
-        let cacheInquilinosCompletos = [];
 
         // ESTADO GLOBAL DA AGENDA
         const hojeRef = new Date();
@@ -1177,7 +1043,6 @@
 
         async function carregarMetricas(imobId) {
             try {
-                // 1. ESTOQUE DISPONÍVEL
                 const { data: dispImoveis, count: dispCount } = await supabaseClient
                     .from('imoveis')
                     .select('id, finalidade, valor_venda, valor_locacao', { count: 'exact' })
@@ -1199,7 +1064,6 @@
                 document.getElementById('kpi-imoveis-disponiveis').innerText = dispCount || 0;
                 document.getElementById('kpi-disp-subcontadores').innerText = `${totalVenda} Venda • ${totalLocacao} Locação`;
 
-                // 2. ATIVOS NA VITRINE
                 const { count: imoveisCount } = await supabaseClient
                     .from('imoveis')
                     .select('*', { count: 'exact', head: true })
@@ -1209,33 +1073,6 @@
 
                 document.getElementById('kpi-imoveis-ativos').innerText = imoveisCount || 0;
 
-                // 3. BASE DE CLIENTES (PROPRIETÁRIOS & INQUILINOS)
-                const { data: clientesData, count: totalClientesCount } = await supabaseClient
-                    .from('clientes')
-                    .select('id, tipo', { count: 'exact' })
-                    .eq('imobiliaria_id', imobId);
-
-                let totalProprietarios = 0;
-                let totalInquilinos = 0;
-
-                (clientesData || []).forEach(c => {
-                    const t = (c.tipo || '').toLowerCase();
-                    if (t.includes('propriet') || t.includes('dono')) {
-                        totalProprietarios++;
-                    } else if (t.includes('inquil') || t.includes('locat')) {
-                        totalInquilinos++;
-                    } else {
-                        // Se não estiver explícito, computa no perfil geral
-                        totalProprietarios++;
-                    }
-                });
-
-                const elTotalClientes = document.getElementById('kpi-total-clientes');
-                const elSubClientes = document.getElementById('kpi-clientes-subcontadores');
-                if (elTotalClientes) elTotalClientes.innerText = totalClientesCount || 0;
-                if (elSubClientes) elSubClientes.innerText = `${totalProprietarios} Proprietários • ${totalInquilinos} Inquilinos`;
-
-                // 4. CONTRATOS ATIVOS DE LOCAÇÃO
                 const { data: contratosLoc, count: alugadosCount } = await supabaseClient
                     .from('contratos_locacao')
                     .select('valor_comissao_imobiliaria, valor_aluguel_bruto', { count: 'exact' })
@@ -1250,7 +1087,6 @@
                 document.getElementById('kpi-imoveis-alugados').innerText = alugadosCount || 0;
                 document.getElementById('kpi-receita-locacao').innerText = totalComissaoMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
 
-                // 5. VENDAS FECHADAS
                 const { data: vendas, count: vendasCount } = await supabaseClient
                     .from('vendas_fechadas')
                     .select('valor_venda_real', { count: 'exact' })
@@ -1264,7 +1100,6 @@
                 document.getElementById('kpi-imoveis-vendidos').innerText = vendasCount || 0;
                 document.getElementById('kpi-total-vgv-vendido').innerText = totalVgvVendido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' VGV';
 
-                // 6. LEADS ÚLTIMAS 24H
                 const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                 const { count: leadsHojeCount } = await supabaseClient
                     .from('leads_contatos')
@@ -1274,7 +1109,6 @@
 
                 document.getElementById('kpi-leads-hoje').innerText = leadsHojeCount || 0;
 
-                // 7. PROPOSTAS
                 const { count: propostasCount } = await supabaseClient
                     .from('leads_contatos')
                     .select('*', { count: 'exact', head: true })
@@ -1283,7 +1117,6 @@
 
                 document.getElementById('kpi-propostas-analise').innerText = propostasCount || 0;
 
-                // 8. FINANCEIRO MÊS
                 if (temPermissaoFinanceira) {
                     const hoje = new Date();
                     const mesNum = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -1318,545 +1151,6 @@
             } catch (err) {
                 console.error('Erro ao consultar KPIs:', err);
             }
-        }
-
-        // =========================================================================
-        // MOTOR DA BASE DE CLIENTES & CADASTROS (PROPRIETÁRIOS X INQUILINOS)
-        // =========================================================================
-        async function abrirDrilldownClientes() {
-            if (!dadosImobiliaria) return;
-
-            const modal = document.getElementById('modal-drilldown-clientes');
-            const listaProp = document.getElementById('lista-drilldown-proprietarios');
-            const listaInq = document.getElementById('lista-drilldown-inquilinos');
-            const inputBusca = document.getElementById('input-busca-clientes');
-
-            if (inputBusca) inputBusca.value = '';
-
-            listaProp.innerHTML = `
-                <div class="py-8 text-center text-slate-500 text-xs">
-                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
-                    <p>Carregando proprietários e vínculos...</p>
-                </div>
-            `;
-            listaInq.innerHTML = `
-                <div class="py-8 text-center text-slate-500 text-xs">
-                    <i class="fa-solid fa-spinner fa-spin text-purple-400 text-lg mb-2"></i>
-                    <p>Carregando inquilinos e contratos...</p>
-                </div>
-            `;
-
-            modal.classList.remove('hidden');
-
-            try {
-                // 1. Busca todos os clientes
-                const { data: clientes, error: errCli } = await supabaseClient
-                    .from('clientes')
-                    .select('*')
-                    .eq('imobiliaria_id', dadosImobiliaria.id)
-                    .order('nome', { ascending: true });
-
-                if (errCli) throw errCli;
-
-                // 2. Busca todos os imóveis para cruzar com proprietários
-                const { data: imoveisData } = await supabaseClient
-                    .from('imoveis')
-                    .select('id, codigo_ref, titulo, status, proprietario_id, finalidade, valor_venda, valor_locacao')
-                    .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                // 3. Busca contratos de locação ativos para cruzar inquilinos e proprietários
-                const { data: contratosData } = await supabaseClient
-                    .from('contratos_locacao')
-                    .select('*')
-                    .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                const mapaImoveisPorProprietario = {};
-                (imoveisData || []).forEach(im => {
-                    if (im.proprietario_id) {
-                        if (!mapaImoveisPorProprietario[im.proprietario_id]) {
-                            mapaImoveisPorProprietario[im.proprietario_id] = [];
-                        }
-                        mapaImoveisPorProprietario[im.proprietario_id].push(im);
-                    }
-                });
-
-                const mapaContratosPorImovel = {};
-                const mapaContratosPorCliente = {};
-                (contratosData || []).forEach(c => {
-                    if (c.imovel_id) mapaContratosPorImovel[c.imovel_id] = c;
-                    if (c.cliente_id) mapaContratosPorCliente[c.cliente_id] = c;
-                    if (c.cliente_cpf_cnpj) mapaContratosPorCliente[c.cliente_cpf_cnpj] = c;
-                });
-
-                // Classifica e enriquece a lista em memória
-                cacheProprietariosCompletos = [];
-                cacheInquilinosCompletos = [];
-
-                (clientes || []).forEach(cli => {
-                    const tipo = (cli.tipo || '').toLowerCase();
-                    const meusImoveis = mapaImoveisPorProprietario[cli.id] || [];
-                    const meuContratoLocacao = mapaContratosPorCliente[cli.id] || (cli.cpf_cnpj ? mapaContratosPorCliente[cli.cpf_cnpj] : null);
-
-                    // Anexa imóveis com inquilino vinculado se alugado
-                    const imoveisEnriquecidos = meusImoveis.map(im => {
-                        const contratoAtivo = mapaContratosPorImovel[im.id];
-                        return {
-                            ...im,
-                            inquilino_nome: contratoAtivo ? contratoAtivo.cliente_nome : null,
-                            aluguel_bruto: contratoAtivo ? contratoAtivo.valor_aluguel_bruto : null,
-                            repasse_dono: contratoAtivo ? contratoAtivo.valor_repasse_proprietario : null
-                        };
-                    });
-
-                    cli.imoveis_proprietario = imoveisEnriquecidos;
-                    cli.contrato_inquilino = meuContratoLocacao;
-
-                    // Decisão se é proprietário ou inquilino
-                    if (tipo.includes('propriet') || tipo.includes('dono') || meusImoveis.length > 0) {
-                        cacheProprietariosCompletos.push(cli);
-                    } else if (tipo.includes('inquil') || tipo.includes('locat') || meuContratoLocacao) {
-                        cacheInquilinosCompletos.push(cli);
-                    } else {
-                        // Fallback padrão: listado como proprietário
-                        cacheProprietariosCompletos.push(cli);
-                    }
-                });
-
-                renderizarListasDrilldown(cacheProprietariosCompletos, cacheInquilinosCompletos);
-
-            } catch (err) {
-                console.error('[CADASTRO CLIENTES] Erro:', err);
-                exibirToast('erro', 'Erro ao carregar carteira de clientes.');
-            }
-        }
-
-        function renderizarListasDrilldown(proprietarios, inquilinos) {
-            const listaProp = document.getElementById('lista-drilldown-proprietarios');
-            const listaInq = document.getElementById('lista-drilldown-inquilinos');
-            const badgeProp = document.getElementById('badge-total-proprietarios');
-            const badgeInq = document.getElementById('badge-total-inquilinos');
-            const resumo = document.getElementById('drilldown-clientes-resumo');
-
-            if (badgeProp) badgeProp.innerText = `${proprietarios.length} listados`;
-            if (badgeInq) badgeInq.innerText = `${inquilinos.length} listados`;
-            if (resumo) resumo.innerText = `${proprietarios.length + inquilinos.length} clientes encontrados no total`;
-
-            // RENDERIZA PROPRIETÁRIOS
-            if (proprietarios.length === 0) {
-                listaProp.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum proprietário localizado.</p>';
-            } else {
-                listaProp.innerHTML = proprietarios.map(p => {
-                    const zapLimpo = ('' + (p.whatsapp || p.telefone || '')).replace(/\D/g, '');
-                    const qtdImoveis = (p.imoveis_proprietario || []).length;
-                    const imovelAlugado = (p.imoveis_proprietario || []).find(i => i.inquilino_nome);
-
-                    return `
-                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 hover:border-indigo-500/60 transition space-y-2 group shadow-sm">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="min-w-0">
-                                    <span class="font-bold text-white text-xs block truncate group-hover:text-indigo-300 transition">${p.nome}</span>
-                                    <span class="text-[10px] text-slate-400 font-mono block">CPF/CNPJ: ${p.cpf_cnpj || 'Não informado'}</span>
-                                </div>
-                                <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 flex-shrink-0">
-                                    ${qtdImoveis} ${qtdImoveis === 1 ? 'imóvel' : 'imóveis'}
-                                </span>
-                            </div>
-
-                            ${imovelAlugado ? `
-                                <div class="bg-purple-950/25 p-2 rounded-lg border border-purple-800/40 text-[10px] space-y-0.5">
-                                    <div class="flex items-center justify-between text-purple-300 font-bold">
-                                        <span><i class="fa-solid fa-key mr-1"></i>Imóvel Alugado (Ref: ${imovelAlugado.codigo_ref})</span>
-                                        <span class="font-mono text-emerald-400">R$ ${Number(imovelAlugado.repasse_dono || 0).toLocaleString('pt-BR')} repasse</span>
-                                    </div>
-                                    <div class="text-slate-300 truncate">
-                                        Locatário: <strong class="text-white">${imovelAlugado.inquilino_nome}</strong>
-                                    </div>
-                                </div>
-                            ` : (qtdImoveis > 0 ? `
-                                <div class="text-[10px] text-slate-400 italic">
-                                    Imóveis disponíveis para locação/venda na vitrine.
-                                </div>
-                            ` : `
-                                <div class="text-[10px] text-slate-600 italic">
-                                    Nenhum imóvel vinculado a este proprietário.
-                                </div>
-                            `)}
-
-                            <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
-                                <span class="text-slate-500 font-mono">${p.whatsapp || p.telefone || 'Sem contato'}</span>
-                                <div class="flex items-center gap-2">
-                                    ${zapLimpo ? `
-                                        <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
-                                            <i class="fa-brands fa-whatsapp"></i> Zap
-                                        </a>
-                                    ` : ''}
-                                    <button onclick="abrirDossie360Cliente('${p.id}', 'proprietario')" class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700 font-bold px-2.5 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                        Dossiê 360° &rarr;
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            // RENDERIZA INQUILINOS
-            if (inquilinos.length === 0) {
-                listaInq.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum inquilino localizado.</p>';
-            } else {
-                listaInq.innerHTML = inquilinos.map(i => {
-                    const zapLimpo = ('' + (i.whatsapp || i.telefone || '')).replace(/\D/g, '');
-                    const contrato = i.contrato_inquilino;
-
-                    return `
-                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-purple-500/60 transition space-y-2 group shadow-sm">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="min-w-0">
-                                    <span class="font-bold text-white text-xs block truncate group-hover:text-purple-300 transition">${i.nome}</span>
-                                    <span class="text-[10px] text-slate-400 font-mono block">CPF: ${i.cpf_cnpj || 'Não informado'}</span>
-                                </div>
-                                <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold ${contrato ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-800 text-slate-400'} flex-shrink-0">
-                                    ${contrato ? 'Contrato Ativo' : 'Cadastro Avulso'}
-                                </span>
-                            </div>
-
-                            ${contrato ? `
-                                <div class="bg-slate-900/90 p-2 rounded-lg border border-purple-900/40 text-[10px] space-y-0.5">
-                                    <div class="flex items-center justify-between text-slate-300">
-                                        <span>Aluguel Bruto:</span>
-                                        <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>
-                                    </div>
-                                    <div class="text-slate-400 flex items-center justify-between">
-                                        <span>Dia Vencimento:</span>
-                                        <strong class="text-amber-300 font-mono">Dia ${contrato.dia_vencimento_aluguel || '10'}</strong>
-                                    </div>
-                                </div>
-                            ` : `
-                                <div class="text-[10px] text-slate-600 italic">
-                                    Nenhum contrato ativo vinculado no momento.
-                                </div>
-                            `}
-
-                            <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
-                                <span class="text-slate-500 font-mono">${i.whatsapp || i.telefone || 'Sem contato'}</span>
-                                <div class="flex items-center gap-2">
-                                    ${zapLimpo ? `
-                                        <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
-                                            <i class="fa-brands fa-whatsapp"></i> Zap
-                                        </a>
-                                    ` : ''}
-                                    <button onclick="abrirDossie360Cliente('${i.id}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-2.5 py-0.5 rounded text-[9px] transition cursor-pointer">
-                                        Dossiê 360° &rarr;
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        function filtrarClientesDrilldown(termo) {
-            const t = (termo || '').toLowerCase().trim();
-
-            if (!t) {
-                renderizarListasDrilldown(cacheProprietariosCompletos, cacheInquilinosCompletos);
-                return;
-            }
-
-            const filtrar = (lista) => {
-                return lista.filter(item => {
-                    const nome = (item.nome || '').toLowerCase();
-                    const doc = (item.cpf_cnpj || '').replace(/\D/g, '');
-                    const tel = ('' + (item.whatsapp || item.telefone || '')).replace(/\D/g, '');
-                    const termoNum = t.replace(/\D/g, '');
-
-                    const matchNome = nome.includes(t);
-                    const matchDoc = termoNum && doc.includes(termoNum);
-                    const matchTel = termoNum && tel.includes(termoNum);
-
-                    return matchNome || matchDoc || matchTel;
-                });
-            };
-
-            const propsFiltrados = filtrar(cacheProprietariosCompletos);
-            const inqsFiltrados = filtrar(cacheInquilinosCompletos);
-
-            renderizarListasDrilldown(propsFiltrados, inqsFiltrados);
-        }
-
-        function fecharDrilldownClientes() {
-            document.getElementById('modal-drilldown-clientes').classList.add('hidden');
-        }
-
-        // =========================================================================
-        // MOTOR DO DOSSIÊ 360° DETALHADO DO CLIENTE
-        // =========================================================================
-        async function abrirDossie360Cliente(clienteId, tipoAcesso) {
-            if (!clienteId) return;
-
-            const modal = document.getElementById('modal-dossie-cliente');
-            const corpo = document.getElementById('dossie-cliente-conteudo');
-            const btnZap = document.getElementById('dossie-cliente-btn-zap');
-            const tituloTopo = document.getElementById('dossie-cliente-titulo-topo');
-
-            corpo.innerHTML = `
-                <div class="py-12 text-center text-slate-500">
-                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-2xl mb-2"></i>
-                    <p>Consultando todo o histórico de negócios do cliente...</p>
-                </div>
-            `;
-            modal.classList.remove('hidden');
-
-            try {
-                // 1. Busca dados cadastrais do cliente
-                const { data: cliente, error: errCli } = await supabaseClient
-                    .from('clientes')
-                    .select('*')
-                    .eq('id', clienteId)
-                    .single();
-
-                if (errCli || !cliente) throw new Error('Cliente não localizado.');
-
-                tituloTopo.innerText = `Dossiê 360° • ${cliente.nome} (${(cliente.tipo || tipoAcesso || 'Cliente').toUpperCase()})`;
-
-                const zapLimpo = ('' + (cliente.whatsapp || cliente.telefone || '')).replace(/\D/g, '');
-                btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${cliente.nome}! Sou da imobiliária e estou à sua disposição.`)}` : '#';
-
-                let blocoNegociosHtml = '';
-
-                // SE FOR PROPRIETÁRIO: Carrega imóveis e histórico de repasses
-                if (tipoAcesso === 'proprietario' || (cliente.tipo && cliente.tipo.toLowerCase().includes('propriet'))) {
-                    const { data: imoveis } = await supabaseClient
-                        .from('imoveis')
-                        .select('*')
-                        .eq('proprietario_id', cliente.id)
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                    const imovelIds = (imoveis || []).map(im => im.id);
-
-                    let contratos = [];
-                    let repasses = [];
-
-                    if (imovelIds.length > 0) {
-                        const { data: cData } = await supabaseClient
-                            .from('contratos_locacao')
-                            .select('*')
-                            .in('imovel_id', imovelIds);
-                        contratos = cData || [];
-
-                        const { data: rData } = await supabaseClient
-                            .from('locacao_mensalidades_recebiveis')
-                            .select('*')
-                            .in('imovel_id', imovelIds)
-                            .order('data_vencimento', { ascending: false })
-                            .limit(6);
-                        repasses = rData || [];
-                    }
-
-                    blocoNegociosHtml = `
-                        <div class="space-y-3 pt-2">
-                            <h4 class="text-xs font-black uppercase text-indigo-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-house-user"></i> 1. Imóveis de Propriedade (${(imoveis || []).length})
-                            </h4>
-
-                            <div class="space-y-2">
-                                ${(imoveis || []).length === 0 ? '<p class="text-slate-500 italic py-2">Nenhum imóvel registrado sob este proprietário.</p>' : 
-                                imoveis.map(im => {
-                                    const contrato = contratos.find(c => c.imovel_id === im.id);
-                                    return `
-                                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                                            <div class="flex items-center justify-between">
-                                                <div>
-                                                    <span class="font-bold text-white text-xs">${im.titulo}</span>
-                                                    <span class="text-[10px] text-cyan-400 font-mono block">Ref: ${im.codigo_ref} • ${im.bairro || 'Localização'}</span>
-                                                </div>
-                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-emerald-950 text-emerald-400 border border-emerald-800'}">
-                                                    ${im.status}
-                                                </span>
-                                            </div>
-
-                                            ${contrato ? `
-                                                <div class="bg-purple-950/20 p-2.5 rounded-lg border border-purple-800/30 text-[11px] grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                                    <div><span class="text-slate-500 block text-[10px]">Inquilino Atual:</span> <strong class="text-white">${contrato.cliente_nome}</strong></div>
-                                                    <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto).toLocaleString('pt-BR')}</strong></div>
-                                                    <div><span class="text-slate-500 block text-[10px]">Seu Repasse Líquido:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(contrato.valor_repasse_proprietario).toLocaleString('pt-BR')}</strong></div>
-                                                </div>
-                                            ` : ''}
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-
-                            <h4 class="text-xs font-black uppercase text-amber-300 flex items-center gap-1.5 pt-3">
-                                <i class="fa-solid fa-coins"></i> 2. Extrato Recente de Repasses
-                            </h4>
-
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs font-mono text-slate-300">
-                                    <thead class="bg-slate-950 text-slate-500 uppercase text-[9px] border-b border-slate-800">
-                                        <tr>
-                                            <th class="py-2 px-2">Referência</th>
-                                            <th class="py-2 px-2">Aluguel Pago</th>
-                                            <th class="py-2 px-2">Valor Repasse</th>
-                                            <th class="py-2 px-2">Inquilino</th>
-                                            <th class="py-2 px-2 text-right">Status Repasse</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-800/60 text-[10px]">
-                                        ${repasses.length === 0 ? '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Nenhum repasse registrado até o momento.</td></tr>' : 
-                                        repasses.map(r => `
-                                            <tr>
-                                                <td class="py-2 px-2 font-bold text-white">${r.mes_referencia}</td>
-                                                <td class="py-2 px-2 text-emerald-400">R$ ${Number(r.valor_aluguel).toLocaleString('pt-BR')}</td>
-                                                <td class="py-2 px-2 text-cyan-300 font-bold">R$ ${Number(r.valor_repasse_proprietario).toLocaleString('pt-BR')}</td>
-                                                <td class="py-2 px-2 text-slate-300">${r.status_inquilino || 'Pendente'}</td>
-                                                <td class="py-2 px-2 text-right">
-                                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold ${r.status_repasse === 'Repassado' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">
-                                                        ${r.status_repasse || 'Aguardando'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-
-                } else {
-                    // SE FOR INQUILINO: Carrega o contrato e histórico de mensalidades
-                    const { data: contratos } = await supabaseClient
-                        .from('contratos_locacao')
-                        .select('*, imoveis(id, codigo_ref, titulo, logradouro, numero, bairro, proprietario_id)')
-                        .or(`cliente_id.eq.${cliente.id},cliente_cpf_cnpj.eq.${cliente.cpf_cnpj}`)
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                    const contratoAtivo = (contratos || [])[0];
-
-                    let mensalidades = [];
-                    let donoImovel = null;
-
-                    if (contratoAtivo) {
-                        const { data: mData } = await supabaseClient
-                            .from('locacao_mensalidades_recebiveis')
-                            .select('*')
-                            .eq('contrato_id', contratoAtivo.id)
-                            .order('data_vencimento', { ascending: false });
-                        mensalidades = mData || [];
-
-                        if (contratoAtivo.imoveis && contratoAtivo.imoveis.proprietario_id) {
-                            const { data: pData } = await supabaseClient
-                                .from('clientes')
-                                .select('nome, whatsapp, telefone')
-                                .eq('id', contratoAtivo.imoveis.proprietario_id)
-                                .maybeSingle();
-                            donoImovel = pData;
-                        }
-                    }
-
-                    blocoNegociosHtml = `
-                        <div class="space-y-3 pt-2">
-                            <h4 class="text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-contract"></i> 1. Contrato de Locação em Vigor
-                            </h4>
-
-                            ${!contratoAtivo ? '<p class="text-slate-500 italic py-2">Nenhum contrato ativo vinculado a este inquilino.</p>' : `
-                                <div class="bg-slate-950 p-4 rounded-xl border border-purple-500/40 space-y-3">
-                                    <div class="flex items-start justify-between">
-                                        <div>
-                                            <span class="text-[10px] text-cyan-400 font-mono font-bold block">Ref Imóvel: ${contratoAtivo.imoveis ? contratoAtivo.imoveis.codigo_ref : '---'}</span>
-                                            <h5 class="text-sm font-bold text-white">${contratoAtivo.imoveis ? contratoAtivo.imoveis.titulo : 'Imóvel Locado'}</h5>
-                                        </div>
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800">
-                                            Vigência: ${contratoAtivo.data_inicio ? contratoAtivo.data_inicio.split('-').reverse().join('/') : ''} até ${contratoAtivo.data_fim ? contratoAtivo.data_fim.split('-').reverse().join('/') : ''}
-                                        </span>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-2 border-t border-slate-800">
-                                        <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono text-xs">R$ ${Number(contratoAtivo.valor_aluguel_bruto).toLocaleString('pt-BR')}/mês</strong></div>
-                                        <div><span class="text-slate-500 block text-[10px]">Dia Vencimento:</span> <strong class="text-amber-300 font-mono">Todo dia ${contratoAtivo.dia_vencimento_aluguel || '10'}</strong></div>
-                                        <div><span class="text-slate-500 block text-[10px]">Proprietário Titular:</span> <strong class="text-white">${donoImovel ? donoImovel.nome : 'Não vinculado'}</strong></div>
-                                    </div>
-                                </div>
-                            `}
-
-                            <h4 class="text-xs font-black uppercase text-cyan-300 flex items-center gap-1.5 pt-3">
-                                <i class="fa-solid fa-receipt"></i> 2. Histórico de Pagamentos de Mensalidades
-                            </h4>
-
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs font-mono text-slate-300">
-                                    <thead class="bg-slate-950 text-slate-500 uppercase text-[9px] border-b border-slate-800">
-                                        <tr>
-                                            <th class="py-2 px-2">Referência</th>
-                                            <th class="py-2 px-2">Vencimento</th>
-                                            <th class="py-2 px-2">Valor</th>
-                                            <th class="py-2 px-2">Data Pagto</th>
-                                            <th class="py-2 px-2 text-right">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-800/60 text-[10px]">
-                                        ${mensalidades.length === 0 ? '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Nenhuma mensalidade emitida ainda.</td></tr>' : 
-                                        mensalidades.map(m => `
-                                            <tr>
-                                                <td class="py-2 px-2 font-bold text-white">${m.mes_referencia}</td>
-                                                <td class="py-2 px-2 text-slate-400">${m.data_vencimento ? m.data_vencimento.split('-').reverse().join('/') : '--/--/----'}</td>
-                                                <td class="py-2 px-2 text-emerald-400 font-bold">R$ ${Number(m.valor_aluguel).toLocaleString('pt-BR')}</td>
-                                                <td class="py-2 px-2 text-slate-300">${m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : 'Em aberto'}</td>
-                                                <td class="py-2 px-2 text-right">
-                                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-400 border border-rose-800'}">
-                                                        ${m.status_inquilino || 'Pendente'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                // Renderiza o corpo do modal
-                corpo.innerHTML = `
-                    <!-- FICHA CADASTRAL BÁSICA -->
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between flex-wrap gap-2">
-                            <div>
-                                <span class="text-[10px] uppercase font-bold text-indigo-400 block">Ficha Cadastral</span>
-                                <h4 class="text-base font-black text-white">${cliente.nome}</h4>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
-                                ID: ${cliente.id.substring(0, 8)}...
-                            </span>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
-                            <div><span class="text-slate-500 block">CPF / CNPJ:</span> <strong class="text-white font-mono">${cliente.cpf_cnpj || '---'}</strong></div>
-                            <div><span class="text-slate-500 block">WhatsApp / Fone:</span> <strong class="text-cyan-300 font-mono">${cliente.whatsapp || cliente.telefone || '---'}</strong></div>
-                            <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${cliente.email || '---'}</strong></div>
-                        </div>
-
-                        ${cliente.endereco_completo ? `
-                            <p class="text-[11px] text-slate-400 pt-1 border-t border-slate-900">
-                                <i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Endereço: <strong>${cliente.endereco_completo}</strong>
-                            </p>
-                        ` : ''}
-                    </div>
-
-                    <!-- NEGÓCIOS & CRUZAMENTO RELACIONAL -->
-                    ${blocoNegociosHtml}
-                `;
-
-            } catch (err) {
-                console.error(err);
-                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar dossiê do cliente.</p>';
-            }
-        }
-
-        function fecharModalDossieCliente() {
-            document.getElementById('modal-dossie-cliente').classList.add('hidden');
         }
 
         // =========================================================================
@@ -2306,13 +1600,14 @@
                 corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8 font-mono">Erro ao carregar dados do agendamento.</p>';
             }
         }
+ 
 
-        function fecharModalAgendamento() {
+         function fecharModalAgendamento() {
             document.getElementById('modal-dash-agendamento').classList.add('hidden');
         }
 
         // =========================================================================
-        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL
+        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL (CORRIGIDO E EXPOSTO GLOBALMENTE)
         // =========================================================================
         async function abrirModalDetalhesImovel(imovelId) {
             if (!imovelId) return;
@@ -2395,7 +1690,7 @@
 
                         <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
                             <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-tie"></i> Proprietário Titular do Imóvel
+                                <i class="fa-solid fa-user-tie"></i> Proprietário Titular da Casa
                             </span>
                             <div class="flex items-center justify-between flex-wrap gap-2">
                                 <div>
@@ -2423,8 +1718,11 @@
             if (modal) modal.classList.add('hidden');
         }
 
+        // Garante a visibilidade global para os botões do modal
         window.abrirModalDetalhesImovel = abrirModalDetalhesImovel;
         window.fecharModalDashImovel = fecharModalDashImovel;
+
+
 
         // =========================================================================
         // MOTOR DE DETALHAMENTO DOS CARDS (DRILL-DOWN)
@@ -2447,10 +1745,12 @@
             modal.classList.remove('hidden');
 
             try {
+                // NOVO DRILLDOWN: DISPONÍVEIS DIVIDIDO EM 2 BLOCOS LADO A LADO
                 if (tipo === 'disponiveis') {
                     titulo.innerText = 'Imóveis Disponíveis no Estoque';
                     icone.className = 'fa-solid fa-boxes-stacked text-blue-400';
 
+                    // Expande o modal para o formato 2 colunas
                     const boxModal = modal.querySelector('.box-tech');
                     if (boxModal) {
                         boxModal.classList.remove('max-w-3xl');
@@ -2505,6 +1805,7 @@
 
                     corpo.innerHTML = `
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- BLOCO 1: IMÓVEIS PARA VENDA -->
                             <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-3 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
                                     <div class="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-wide">
@@ -2522,6 +1823,7 @@
                                 </div>
                             </div>
 
+                            <!-- BLOCO 2: IMÓVEIS PARA LOCAÇÃO -->
                             <div class="bg-slate-950 p-3.5 rounded-xl border border-purple-500/40 space-y-3 flex flex-col">
                                 <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
                                     <div class="flex items-center gap-2 text-purple-300 font-black text-xs uppercase tracking-wide">
@@ -2613,8 +1915,8 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <button onclick="fecharDrilldown(); abrirDossie360Cliente('${c.cliente_id || ''}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
-                                            Dossiê 360°
+                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
+                                            Dossiê
                                         </button>
                                         ${zapLimpo ? `
                                             <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
@@ -2627,7 +1929,7 @@
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
                                     <div>
                                         <span class="text-slate-500 block">Locatário:</span> 
-                                        <button onclick="fecharDrilldown(); abrirDossie360Cliente('${c.cliente_id || ''}', 'inquilino')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left">
+                                        <button onclick="fecharDrilldown(); abrirModalDetalhesInquilino('${c.id}')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left">
                                             ${c.cliente_nome}
                                         </button>
                                     </div>
