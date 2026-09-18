@@ -1453,16 +1453,37 @@
                     window.location.href = 'imoveis-lista.html';
                 }, 1500);
 
+    
             } catch (err) {
                 console.error(err);
-                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/80 border border-red-800 text-red-300';
-                alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg';
-                alertaTexto.innerText = err.message || 'Erro ao salvar imóvel.';
+
+                let mensagemAmigavel = err.message || 'Erro ao salvar imóvel. Tente novamente.';
+                const errStr = (String(err.message || '') + ' ' + String(err.details || '')).toLowerCase();
+
+                // TRADUÇÃO HUMANIZADA: CÓDIGO DE REFERÊNCIA DUPLICADO
+                if (errStr.includes('unq_imovel_ref_por_imob') || errStr.includes('codigo_ref') || err.code === '23505') {
+                    const codDigitado = document.getElementById('campo-codigo-ref').value.trim();
+                    mensagemAmigavel = `O Código de Referência "${codDigitado}" já está em uso em outro imóvel da sua imobiliária. Por favor, utilize um código diferente.`;
+                    
+                    // Foca e destaca o campo com erro
+                    const inputCod = document.getElementById('campo-codigo-ref');
+                    if (inputCod) {
+                        inputCod.classList.add('border-rose-500', 'bg-rose-950/30');
+                        inputCod.focus();
+                        inputCod.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+
+                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/90 border border-red-800 text-red-300 shadow-xl';
+                alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg flex-shrink-0 text-rose-400';
+                alertaTexto.innerText = mensagemAmigavel;
                 alerta.classList.remove('hidden');
 
                 btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Salvar Imóvel</span>';
                 btn.disabled = false;
             }
+
+
         }
 
         async function executarLogout() {
