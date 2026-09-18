@@ -156,10 +156,25 @@
             </div>
         </div>
 
-        <!-- GRADE DE 6 CARDS COM MÉTRICAS IMEDIATAS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+        <!-- COCKPIT GERENCIAL: GRADE DE 8 CARDS DE ALTA PERFORMANCE (2 LINHAS DE 4 CARDS) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             
-            <!-- CARD 1: IMÓVEIS ATIVOS -->
+            <!-- CARD 1 (NOVO): DISPONÍVEIS (TOTAL + SUB-DIVISÃO VENDA E LOCAÇÃO) -->
+            <div onclick="abrirDrilldown('disponiveis')" class="box-tech p-4 border-l-4 border-l-blue-500 cursor-pointer hover:scale-[1.02] hover:border-blue-400 hover:shadow-xl transition group bg-gradient-to-r from-blue-950/15 to-transparent">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span class="group-hover:text-blue-300 transition text-[11px]">Disponíveis</span>
+                    <i class="fa-solid fa-boxes-stacked text-blue-400 text-base group-hover:scale-110 transition"></i>
+                </div>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-imoveis-disponiveis" class="text-2xl font-black text-white">0</span>
+                        <span class="text-[10px] text-blue-400 font-bold block" id="kpi-disp-subcontadores">0 Venda • 0 Locação</span>
+                    </div>
+                    <span class="text-[9px] text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
+                </div>
+            </div>
+
+            <!-- CARD 2: ATIVOS VITRINE (SITE PÚBLICO) -->
             <div onclick="abrirDrilldown('imoveis-ativos')" class="box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer hover:scale-[1.02] hover:border-cyan-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-cyan-300 transition text-[11px]">Ativos Vitrine</span>
@@ -168,13 +183,13 @@
                 <div class="mt-2 flex items-baseline justify-between">
                     <div>
                         <span id="kpi-imoveis-ativos" class="text-2xl font-black text-white">0</span>
-                        <span class="text-[10px] text-slate-400 block">disponíveis</span>
+                        <span class="text-[10px] text-slate-400 block">publicados no portal</span>
                     </div>
                     <span class="text-[9px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition">Ver &rarr;</span>
                 </div>
             </div>
 
-            <!-- CARD 2: IMÓVEIS ALUGADOS -->
+            <!-- CARD 3: ALUGADOS -->
             <div onclick="abrirDrilldown('imoveis-alugados')" class="box-tech p-4 border-l-4 border-l-purple-500 cursor-pointer hover:scale-[1.02] hover:border-purple-400 hover:shadow-xl transition group bg-gradient-to-r from-purple-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-purple-300 transition text-[11px]">Alugados</span>
@@ -189,7 +204,7 @@
                 </div>
             </div>
 
-            <!-- CARD 3: IMÓVEIS VENDIDOS -->
+            <!-- CARD 4: VENDIDOS -->
             <div onclick="abrirDrilldown('imoveis-vendidos')" class="box-tech p-4 border-l-4 border-l-amber-500 cursor-pointer hover:scale-[1.02] hover:border-amber-400 hover:shadow-xl transition group bg-gradient-to-r from-amber-950/10 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-amber-300 transition text-[11px]">Vendidos</span>
@@ -204,7 +219,7 @@
                 </div>
             </div>
 
-            <!-- CARD 4: LEADS HOJE -->
+            <!-- CARD 5: LEADS HOJE -->
             <div onclick="abrirDrilldown('leads-hoje')" class="box-tech p-4 border-l-4 border-l-emerald-400 cursor-pointer hover:scale-[1.02] hover:border-emerald-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-emerald-300 transition text-[11px]">Leads Hoje</span>
@@ -219,7 +234,7 @@
                 </div>
             </div>
 
-            <!-- CARD 5: EM ATENDIMENTO -->
+            <!-- CARD 6: EM ATENDIMENTO -->
             <div onclick="abrirDrilldown('visitas')" class="box-tech p-4 border-l-4 border-l-cyan-500 cursor-pointer hover:scale-[1.02] hover:border-cyan-400 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-cyan-300 transition text-[11px]">Em Atendimento</span>
@@ -234,7 +249,7 @@
                 </div>
             </div>
 
-            <!-- CARD 6: PROPOSTAS -->
+            <!-- CARD 7: PROPOSTAS -->
             <div onclick="abrirDrilldown('propostas')" class="box-tech p-4 border-l-4 border-l-rose-400 cursor-pointer hover:scale-[1.02] hover:border-rose-300 hover:shadow-xl transition group">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="group-hover:text-rose-300 transition text-[11px]">Propostas</span>
@@ -249,11 +264,29 @@
                 </div>
             </div>
 
+            <!-- CARD 8 (NOVO): FINANCEIRO EXECUTIVO (ATALHO DIRETO PARA O EXTRATO) -->
+            <div id="card-kpi-financeiro" onclick="atalhoAbaFinanceira()" class="box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl transition group bg-gradient-to-r from-amber-950/20 via-slate-900 to-transparent">
+                <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
+                    <span class="text-amber-400 font-black transition text-[11px] flex items-center gap-1.5">
+                        <i class="fa-solid fa-coins"></i> Financeiro Mês
+                    </span>
+                    <i class="fa-solid fa-arrow-down-long text-amber-400 text-sm group-hover:translate-y-0.5 transition"></i>
+                </div>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-receita-financeira-mes" class="text-2xl font-black text-amber-300 font-mono">R$ 0,00</span>
+                        <span class="text-[10px] text-slate-400 block" id="kpi-rotulo-financeiro-mes">Receita Imobiliária</span>
+                    </div>
+                    <span class="text-[9px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition">Abrir &darr;</span>
+                </div>
+            </div>
+
         </div>
 
         <!-- ABAS OPERACIONAIS E DASHBOARD FINANCEIRO -->
         <div class="box-tech p-5 space-y-4">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <!-- BARRA DE ABAS ENXUTA (O ACESSO FINANCEIRO É CONTROLADO PELO CARD EXECUTIVO DO TOPO) -->
                 <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs flex-wrap">
                     <button onclick="mudarAba('catalogo')" id="tab-btn-catalogo" class="px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer">
                         <i class="fa-solid fa-list mr-1"></i> Catálogo Resumido
@@ -263,11 +296,6 @@
                     </button>
                     <button onclick="mudarAba('graficos')" id="tab-btn-graficos" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
                         <i class="fa-solid fa-chart-column mr-1"></i> Imóveis por Bairro
-                    </button>
-                    
-                    <!-- ABA EXCLUSIVA DO DASHBOARD FINANCEIRO -->
-                    <button onclick="mudarAba('financeiro')" id="tab-btn-financeiro" class="px-3.5 py-1.5 rounded-lg text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer border border-amber-500/30">
-                        <i class="fa-solid fa-coins mr-1"></i> Dashboard Financeiro & Repasses
                     </button>
                 </div>
 
@@ -337,7 +365,7 @@
                 </div>
             </div>
 
-            <!-- ABA 4: DASHBOARD FINANCEIRO, REPASSES & COMISSÕES DE CORRETORES -->
+            <!-- ABA 4: DASHBOARD FINANCEIRO, REPASSES & COMISSÕES DE CORRETORES (ACIONADO PELO CARD DO TOPO) -->
             <div id="aba-conteudo-financeiro" class="hidden space-y-6 pt-2">
                 
                 <!-- BARRA DE CONTROLE & SELETOR DE MÊS -->
@@ -358,7 +386,7 @@
                     </div>
                 </div>
 
-                <!-- 5 CARDS DO DASHBOARD FINANCEIRO (INCLUINDO COMISSÕES DOS CORRETORES) -->
+                <!-- 5 CARDS DO DASHBOARD FINANCEIRO -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     
                     <!-- CARD FIN 1: ALUGUÉIS COBRADOS (BRUTO) -->
@@ -392,7 +420,7 @@
                         <span id="fin-kpi-vgv-vendas-mes" class="text-[10px] text-slate-400 block mt-0.5">VGV fechado: R$ 0,00</span>
                     </div>
 
-                    <!-- CARD FIN 5: NOVO CARD - COMISSÕES DOS CORRETORES / EQUIPE -->
+                    <!-- CARD FIN 5: COMISSÕES DOS CORRETORES / EQUIPE -->
                     <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-blue-400 border border-slate-800">
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Comissões dos Corretores</span>
                         <span id="fin-kpi-comissao-corretores" class="text-2xl font-black text-blue-300 font-mono mt-1 block">R$ 0,00</span>
@@ -401,7 +429,7 @@
 
                 </div>
 
-                <!-- TABELA 1: EXTRATO MÊS A MÊS DE LOCAÇÕES (COM CLIQUE NO IMÓVEL E NO INQUILINO) -->
+                <!-- TABELA 1: EXTRATO MÊS A MÊS DE LOCAÇÕES -->
                 <div class="space-y-3 pt-2">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <h4 class="text-xs font-black uppercase text-purple-400 flex items-center gap-1.5">
@@ -461,7 +489,7 @@
                     </div>
                 </div>
 
-                <!-- TABELA 3: NOVA SEÇÃO - EXTRATO DE COMISSÕES POR CORRETOR NO MÊS -->
+                <!-- TABELA 3: EXTRATO DE COMISSÕES POR CORRETOR NO MÊS -->
                 <div class="space-y-3 pt-4 border-t border-slate-800">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <h4 class="text-xs font-black uppercase text-blue-400 flex items-center gap-1.5">
@@ -497,7 +525,7 @@
 
     </main>
 
-    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL (ACIONADO PELO REF: 002) -->
+    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL -->
     <div id="modal-dash-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -530,7 +558,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: DOSSIÊ COMPLETO DO INQUILINO COM HISTÓRICO FINANCEIRO COMPLETO -->
+    <!-- MODAL 2: DOSSIÊ COMPLETO DO INQUILINO COM HISTÓRICO FINANCEIRO -->
     <div id="modal-dash-inquilino" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 border border-purple-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -606,8 +634,11 @@
         let isMasterSuporte = false;
         let temPermissaoFinanceira = false;
 
+        // Cache de imóveis disponíveis para filtro instantâneo no modal
+        let cacheImoveisDisponiveis = [];
+
         // =========================================================================
-        // MOTOR DE NOTIFICAÇÃO TOAST DO SISTEMA (SUBSTITUI ALERTS DO NAVEGADOR)
+        // MOTOR DE NOTIFICAÇÃO TOAST DO SISTEMA
         // =========================================================================
         function exibirToast(tipo, mensagem) {
             const container = document.getElementById('container-toast-sistema');
@@ -677,7 +708,7 @@
             let imobAlvo = null;
 
             if (impersonateId) {
-                const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId = impersonateId).single();
+                const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', impersonateId).single();
                 imobAlvo = data;
             } else {
                 const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
@@ -703,7 +734,6 @@
                 carregarCatalogo(imobAlvo.id);
                 carregarLeads(imobAlvo.id);
                 carregarGraficoBairros(imobAlvo.id);
-                carregarDashboardFinanceiro();
             }
         }
 
@@ -718,12 +748,13 @@
                 if (errUser || !usuario) throw new Error('Perfil não encontrado.');
 
                 dadosUsuario = usuario;
-
                 temPermissaoFinanceira = (usuario.cargo === 'dono' || (usuario.permissoes && usuario.permissoes.acesso_financeiro === true));
 
-                if (!temPermissaoFinanceira) {
-                    const btnFin = document.getElementById('tab-btn-financeiro');
-                    if (btnFin) btnFin.classList.add('hidden');
+                // Se não possuir permissão financeira, esconde o Card Financeiro
+                const cardFin = document.getElementById('card-kpi-financeiro');
+                if (!temPermissaoFinanceira && cardFin) {
+                    cardFin.classList.add('opacity-40', 'pointer-events-none');
+                    document.getElementById('kpi-rotulo-financeiro-mes').innerText = 'Acesso Restrito à Diretoria';
                 }
 
                 const { data: imob, error: errImob } = await supabaseClient
@@ -748,10 +779,6 @@
                 carregarCatalogo(imob.id);
                 carregarLeads(imob.id);
                 carregarGraficoBairros(imob.id);
-
-                if (temPermissaoFinanceira) {
-                    carregarDashboardFinanceiro();
-                }
 
             } catch (err) {
                 console.error(err);
@@ -858,6 +885,29 @@
 
         async function carregarMetricas(imobId) {
             try {
+                // 1. DISPONÍVEIS GERAL & SUB-MÉTRICAS (VENDA E LOCAÇÃO)
+                const { data: dispImoveis, count: dispCount } = await supabaseClient
+                    .from('imoveis')
+                    .select('id, finalidade, valor_venda, valor_locacao', { count: 'exact' })
+                    .eq('imobiliaria_id', imobId)
+                    .eq('status', 'Disponível');
+
+                let totalVenda = 0;
+                let totalLocacao = 0;
+
+                (dispImoveis || []).forEach(im => {
+                    const fin = (im.finalidade || '').toLowerCase();
+                    const ehVenda = fin.includes('venda') || fin.includes('ambos') || Number(im.valor_venda) > 0;
+                    const ehLocacao = fin.includes('loca') || fin.includes('aluguel') || fin.includes('ambos') || Number(im.valor_locacao) > 0;
+
+                    if (ehVenda) totalVenda++;
+                    if (ehLocacao) totalLocacao++;
+                });
+
+                document.getElementById('kpi-imoveis-disponiveis').innerText = dispCount || 0;
+                document.getElementById('kpi-disp-subcontadores').innerText = `${totalVenda} Venda • ${totalLocacao} Locação`;
+
+                // 2. ATIVOS NA VITRINE (SITE PÚBLICO)
                 const { count: imoveisCount } = await supabaseClient
                     .from('imoveis')
                     .select('*', { count: 'exact', head: true })
@@ -867,6 +917,7 @@
 
                 document.getElementById('kpi-imoveis-ativos').innerText = imoveisCount || 0;
 
+                // 3. ALUGADOS
                 const { data: contratosLoc, count: alugadosCount } = await supabaseClient
                     .from('contratos_locacao')
                     .select('valor_comissao_imobiliaria, valor_aluguel_bruto', { count: 'exact' })
@@ -881,6 +932,7 @@
                 document.getElementById('kpi-imoveis-alugados').innerText = alugadosCount || 0;
                 document.getElementById('kpi-receita-locacao').innerText = totalComissaoMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
 
+                // 4. VENDIDOS
                 const { data: vendas, count: vendasCount } = await supabaseClient
                     .from('vendas_fechadas')
                     .select('valor_venda_real', { count: 'exact' })
@@ -894,6 +946,7 @@
                 document.getElementById('kpi-imoveis-vendidos').innerText = vendasCount || 0;
                 document.getElementById('kpi-total-vgv-vendido').innerText = totalVgvVendido.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' VGV';
 
+                // 5. CRM (LEADS HOJE, VISITAS E PROPOSTAS)
                 const ontem = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
                 const { count: leadsHojeCount } = await supabaseClient
                     .from('leads_contatos')
@@ -919,9 +972,62 @@
 
                 document.getElementById('kpi-propostas-analise').innerText = propostasCount || 0;
 
+                // 6. CARD EXECUTIVO: RECEITA FINANCEIRA DA IMOBILIÁRIA NO MÊS VIGENTE
+                if (temPermissaoFinanceira) {
+                    const hoje = new Date();
+                    const mesNum = String(hoje.getMonth() + 1).padStart(2, '0');
+                    const anoNum = hoje.getFullYear();
+                    const mesAtualRef = `${mesNum}/${anoNum}`;
+                    const inicioMes = `${anoNum}-${mesNum}-01`;
+                    const fimMes = new Date(anoNum, hoje.getMonth() + 1, 0).toISOString().split('T')[0];
+
+                    // Vendas fechadas no mês corrente
+                    const { data: vendasMes } = await supabaseClient
+                        .from('vendas_fechadas')
+                        .select('valor_comissao_imobiliaria')
+                        .eq('imobiliaria_id', imobId)
+                        .gte('data_venda', inicioMes)
+                        .lte('data_venda', fimMes);
+
+                    const comissaoVendasMes = (vendasMes || []).reduce((acc, v) => acc + Number(v.valor_comissao_imobiliaria || 0), 0);
+
+                    // Taxas de locação pagas no mês corrente
+                    const { data: locacoesMes } = await supabaseClient
+                        .from('locacao_mensalidades_recebiveis')
+                        .select('valor_taxa_imobiliaria')
+                        .eq('imobiliaria_id', imobId)
+                        .eq('mes_referencia', mesAtualRef)
+                        .eq('status_inquilino', 'Pago');
+
+                    const taxasLocacaoMes = (locacoesMes || []).reduce((acc, l) => acc + Number(l.valor_taxa_imobiliaria || 0), 0);
+                    const receitaTotalImob = comissaoVendasMes + taxasLocacaoMes;
+
+                    document.getElementById('kpi-receita-financeira-mes').innerText = receitaTotalImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    document.getElementById('kpi-rotulo-financeiro-mes').innerText = `Ref: ${mesAtualRef} • Clique para extratos`;
+                }
+
             } catch (err) {
                 console.error('Erro ao consultar KPIs:', err);
             }
+        }
+
+        // =========================================================================
+        // ATALHO EXECUTIVO: CARD FINANCEIRO -> VISÃO FINANCEIRA COMPLETA
+        // =========================================================================
+        function atalhoAbaFinanceira() {
+            if (!temPermissaoFinanceira) {
+                exibirToast('aviso', 'Acesso financeiro restrito à diretoria da imobiliária.');
+                return;
+            }
+
+            mudarAba('financeiro');
+
+            setTimeout(() => {
+                const secaoFin = document.getElementById('aba-conteudo-financeiro');
+                if (secaoFin) {
+                    secaoFin.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
         }
 
         // =========================================================================
@@ -1117,16 +1223,12 @@
             }
         }
 
-        // =========================================================================
-        // BAIXA DE ALUGUEL SEGURA (RESOLVIDO O ERRO DE CONSTRAINT ON CONFLICT)
-        // =========================================================================
         async function darBaixaAluguelInquilino(contratoId, imovelId, bruto, pctTaxa, taxaImob, repasse) {
             const mesRef = document.getElementById('filtro-mes-financeiro').value;
             const imobId = dadosImobiliaria.id;
             const hoje = new Date().toISOString().split('T')[0];
 
             try {
-                // 1. Verifica se já existe registro dessa competência
                 const { data: existente, error: errBusca } = await supabaseClient
                     .from('locacao_mensalidades_recebiveis')
                     .select('id')
@@ -1138,7 +1240,6 @@
                 if (errBusca) throw errBusca;
 
                 if (existente && existente.id) {
-                    // Atualiza por ID (100% seguro sem risco de conflito)
                     const { error: errUp } = await supabaseClient
                         .from('locacao_mensalidades_recebiveis')
                         .update({
@@ -1153,7 +1254,6 @@
 
                     if (errUp) throw errUp;
                 } else {
-                    // Insere nova competência paga
                     const { error: errIn } = await supabaseClient
                         .from('locacao_mensalidades_recebiveis')
                         .insert([{
@@ -1176,6 +1276,7 @@
 
                 exibirToast('sucesso', `Aluguel de ${mesRef} registrado com sucesso!`);
                 await carregarDashboardFinanceiro();
+                await carregarMetricas(imobId);
 
             } catch (err) {
                 console.error(err);
@@ -1222,7 +1323,7 @@
         }
 
         // =========================================================================
-        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL (ACIONADO PELO REF: 002)
+        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL
         // =========================================================================
         async function abrirModalDetalhesImovel(imovelId) {
             if (!imovelId) return;
@@ -1327,7 +1428,7 @@
         }
 
         // =========================================================================
-        // MODAL 2: DOSSIÊ DO INQUILINO COM HISTÓRICO COMPLETO DE MENSALIDADES
+        // MODAL 2: DOSSIÊ DO INQUILINO COM HISTÓRICO COMPLETO
         // =========================================================================
         async function abrirModalDetalhesInquilino(contratoId) {
             if (!contratoId) return;
@@ -1344,7 +1445,6 @@
             modal.classList.remove('hidden');
 
             try {
-                // 1. Dados do Contrato e Imóvel
                 const { data: ct, error: errCt } = await supabaseClient
                     .from('contratos_locacao')
                     .select('*, imoveis(codigo_ref, titulo, bairro)')
@@ -1353,8 +1453,7 @@
 
                 if (errCt || !ct) throw new Error('Contrato de locação não localizado.');
 
-                // 2. Histórico de Pagamentos (Todas as mensalidades recebíveis deste contrato)
-                const { data: historicoPagamentos, error: errHist } = await supabaseClient
+                const { data: historicoPagamentos } = await supabaseClient
                     .from('locacao_mensalidades_recebiveis')
                     .select('*')
                     .eq('contrato_id', contratoId)
@@ -1365,7 +1464,6 @@
                 const dtFimFmt = ct.data_fim ? ct.data_fim.split('-').reverse().join('/') : '--/--/----';
                 const imovelRef = ct.imoveis ? `Ref: ${ct.imoveis.codigo_ref} - ${ct.imoveis.titulo}` : 'Imóvel vinculado';
 
-                // Tabela de Histórico Financeiro
                 let tabelaHistoricoHtml = '';
                 if (!historicoPagamentos || historicoPagamentos.length === 0) {
                     tabelaHistoricoHtml = '<p class="text-[11px] text-slate-500 italic py-2">Nenhum pagamento registrado no histórico até o momento.</p>';
@@ -1407,7 +1505,6 @@
                     `;
                 }
 
-                // Renderiza Documentos Anexos com o Olhinho
                 let blocoDocsHtml = '<p class="text-[11px] text-slate-500 italic">Nenhum documento pessoal anexado a este contrato.</p>';
                 if (ct.documentos_anexos && Array.isArray(ct.documentos_anexos) && ct.documentos_anexos.length > 0) {
                     blocoDocsHtml = `
@@ -1442,7 +1539,6 @@
                 }
 
                 corpo.innerHTML = `
-                    <!-- CABEÇALHO DO INQUILINO COM AÇÃO DIRETA ZAP -->
                     <div class="bg-slate-950 p-4 rounded-xl border border-purple-800/50 space-y-3">
                         <div class="flex items-center justify-between flex-wrap gap-2">
                             <div>
@@ -1465,7 +1561,6 @@
                         </div>
                     </div>
 
-                    <!-- DADOS DO CONTRATO VIGENTE -->
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-[11px]">
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Imóvel e Condições Contratuais:</span>
                         <p class="text-white font-bold truncate">${imovelRef}</p>
@@ -1483,7 +1578,6 @@
                         </div>
                     </div>
 
-                    <!-- HISTÓRICO FINANCEIRO / TODAS AS TRANSAÇÕES DESTE INQUILINO -->
                     <div class="space-y-2 pt-2">
                         <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
                             <i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pagamentos Registrados
@@ -1491,7 +1585,6 @@
                         ${tabelaHistoricoHtml}
                     </div>
 
-                    <!-- DOCUMENTOS ANEXADOS DO INQUILINO COM O OLHINHO -->
                     <div class="space-y-2 pt-2">
                         <span class="text-[10px] uppercase font-bold text-purple-300 block flex items-center gap-1.5">
                             <i class="fa-solid fa-paperclip"></i> Documentos Pessoais & Contrato Anexo
@@ -1531,7 +1624,51 @@
             modal.classList.remove('hidden');
 
             try {
-                if (tipo === 'imoveis-ativos') {
+                // NOVO DRILLDOWN: DISPONÍVEIS (COM ABAS DE FILTRO RÁPIDO VENDA / LOCAÇÃO)
+                if (tipo === 'disponiveis') {
+                    titulo.innerText = 'Imóveis Disponíveis no Estoque';
+                    icone.className = 'fa-solid fa-boxes-stacked text-blue-400';
+
+                    const { data: imoveis, error } = await supabaseClient
+                        .from('imoveis')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('status', 'Disponível')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    cacheImoveisDisponiveis = imoveis || [];
+
+                    const totalVenda = cacheImoveisDisponiveis.filter(im => {
+                        const f = (im.finalidade || '').toLowerCase();
+                        return f.includes('venda') || f.includes('ambos') || Number(im.valor_venda) > 0;
+                    }).length;
+
+                    const totalLocacao = cacheImoveisDisponiveis.filter(im => {
+                        const f = (im.finalidade || '').toLowerCase();
+                        return f.includes('loca') || f.includes('aluguel') || f.includes('ambos') || Number(im.valor_locacao) > 0;
+                    }).length;
+
+                    corpo.innerHTML = `
+                        <!-- BARRA DE FILTROS RÁPIDOS DENTRO DO MODAL -->
+                        <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs mb-3">
+                            <button onclick="filtrarDrilldownDisponiveis('todos')" id="btn-filtro-disp-todos" class="px-3 py-1 rounded-lg bg-blue-500 text-slate-950 font-bold transition">
+                                Todos (${cacheImoveisDisponiveis.length})
+                            </button>
+                            <button onclick="filtrarDrilldownDisponiveis('venda')" id="btn-filtro-disp-venda" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition">
+                                Venda (${totalVenda})
+                            </button>
+                            <button onclick="filtrarDrilldownDisponiveis('locacao')" id="btn-filtro-disp-locacao" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition">
+                                Locação (${totalLocacao})
+                            </button>
+                        </div>
+                        <div id="container-lista-disponiveis" class="space-y-2.5"></div>
+                    `;
+
+                    renderizarListaDisponiveis(cacheImoveisDisponiveis);
+                    contador.innerText = `${cacheImoveisDisponiveis.length} imóveis disponíveis`;
+
+                } else if (tipo === 'imoveis-ativos') {
                     titulo.innerText = 'Imóveis Ativos na Vitrine (Disponíveis)';
                     icone.className = 'fa-solid fa-house-circle-check text-cyan-400';
 
@@ -1787,6 +1924,74 @@
             }
         }
 
+        // FUNÇÃO DE RENDERIZAÇÃO E FILTRO PARA O CARD "DISPONÍVEIS"
+        function renderizarListaDisponiveis(lista) {
+            const container = document.getElementById('container-lista-disponiveis');
+            if (!container) return;
+
+            if (!lista || lista.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel disponível para este filtro.</p>';
+                return;
+            }
+
+            container.innerHTML = lista.map(im => {
+                const fin = (im.finalidade || 'Venda').toUpperCase();
+                const valorExibicao = (im.valor_venda && Number(im.valor_venda) > 0)
+                    ? `Venda: R$ ${Number(im.valor_venda).toLocaleString('pt-BR')}`
+                    : `Locação: R$ ${Number(im.valor_locacao || 0).toLocaleString('pt-BR')}/mês`;
+
+                return `
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-blue-500/40 transition">
+                        <div class="flex items-center gap-3">
+                            <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-blue-950 text-blue-300 border border-blue-800">${fin}</span>
+                                    <span class="font-bold text-white text-xs truncate max-w-[220px]">${im.titulo}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono block mt-0.5">Ref: <strong class="text-cyan-400">${im.codigo_ref}</strong> • ${im.tipo} • ${im.bairro || 'Bairro'}</span>
+                                <span class="text-[11px] font-bold text-emerald-400 block mt-0.5">${valorExibicao}</span>
+                            </div>
+                        </div>
+                        <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
+                            Ver Raio-X
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filtrarDrilldownDisponiveis(filtro) {
+            const btnTodos = document.getElementById('btn-filtro-disp-todos');
+            const btnVenda = document.getElementById('btn-filtro-disp-venda');
+            const btnLoc = document.getElementById('btn-filtro-disp-locacao');
+
+            [btnTodos, btnVenda, btnLoc].forEach(b => {
+                if (b) b.className = 'px-3 py-1 rounded-lg text-slate-400 hover:text-white font-bold transition';
+            });
+
+            let listaFiltrada = cacheImoveisDisponiveis;
+
+            if (filtro === 'venda') {
+                if (btnVenda) btnVenda.className = 'px-3 py-1 rounded-lg bg-emerald-500 text-slate-950 font-bold transition';
+                listaFiltrada = cacheImoveisDisponiveis.filter(im => {
+                    const f = (im.finalidade || '').toLowerCase();
+                    return f.includes('venda') || f.includes('ambos') || Number(im.valor_venda) > 0;
+                });
+            } else if (filtro === 'locacao') {
+                if (btnLoc) btnLoc.className = 'px-3 py-1 rounded-lg bg-purple-500 text-white font-bold transition';
+                listaFiltrada = cacheImoveisDisponiveis.filter(im => {
+                    const f = (im.finalidade || '').toLowerCase();
+                    return f.includes('loca') || f.includes('aluguel') || f.includes('ambos') || Number(im.valor_locacao) > 0;
+                });
+            } else {
+                if (btnTodos) btnTodos.className = 'px-3 py-1 rounded-lg bg-blue-500 text-slate-950 font-bold transition';
+            }
+
+            renderizarListaDisponiveis(listaFiltrada);
+            document.getElementById('drilldown-contador').innerText = `${listaFiltrada.length} imóveis exibidos`;
+        }
+
         function fecharDrilldown() {
             document.getElementById('modal-kpi-detalhes').classList.add('hidden');
         }
@@ -1934,25 +2139,38 @@
             }
         }
 
+        // =========================================================================
+        // CONTROLE DE NAVEGAÇÃO DE ABAS OPERACIONAIS E FINANCEIRO
+        // =========================================================================
         function mudarAba(aba) {
             const abas = ['catalogo', 'leads', 'graficos', 'financeiro'];
             abas.forEach(a => {
                 const container = document.getElementById(`aba-conteudo-${a}`);
                 const btn = document.getElementById(`tab-btn-${a}`);
-                if (container && btn) {
+                
+                if (container) {
                     if (a === aba) {
                         container.classList.remove('hidden');
-                        btn.className = 'px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer';
                     } else {
                         container.classList.add('hidden');
-                        btn.className = (a === 'financeiro')
-                            ? 'px-3.5 py-1.5 rounded-lg text-amber-400 hover:text-amber-300 font-bold transition cursor-pointer border border-amber-500/30'
-                            : 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
+                    }
+                }
+
+                if (btn) {
+                    if (a === aba) {
+                        btn.className = 'px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer';
+                    } else {
+                        btn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
                     }
                 }
             });
 
+            // Se for ativado o modo financeiro, desmarca os botões da barra para indicar foco no extrato
             if (aba === 'financeiro') {
+                ['catalogo', 'leads', 'graficos'].forEach(btnKey => {
+                    const b = document.getElementById(`tab-btn-${btnKey}`);
+                    if (b) b.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
+                });
                 carregarDashboardFinanceiro();
             }
         }

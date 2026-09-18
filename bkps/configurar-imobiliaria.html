@@ -139,7 +139,7 @@
             </div>
         </div>
 
-        <!-- HISTÓRICO DE MENSALIDADES QUITADAS PELO CLIENTE -->
+        <!-- HISTÓRICO DE MENSALIDADES QUITADAS -->
         <div class="box-tech p-6 space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2">
@@ -214,7 +214,7 @@
                     <div class="space-y-2">
                         <label class="block font-bold text-slate-300">Logotipo da Imobiliária</label>
                         <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-700">
-                            <img id="preview-logo" src="https://via.placeholder.com/80?text=Logo" class="w-16 h-16 rounded-lg object-contain bg-white/5 border border-slate-700 p-1">
+                            <img id="preview-logo" src="https://via.placeholder.com/80?text=Logo" alt="Logotipo" class="w-16 h-16 rounded-lg object-contain bg-white/5 border border-slate-700 p-1">
                             <div class="flex-1">
                                 <input type="file" id="upload-logo" accept="image/*" onchange="previewUploadLogo(event)" class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 cursor-pointer">
                                 <p class="text-[10px] text-slate-500 mt-1">Recomendado: Formato PNG transparente (300x100px). Exibido na vitrine pública.</p>
@@ -225,7 +225,7 @@
                     <div class="space-y-2">
                         <label class="block font-bold text-slate-300">Banner Institucional / Fachada</label>
                         <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-700">
-                            <img id="preview-banner" src="https://via.placeholder.com/120x60?text=Banner" class="w-24 h-16 rounded-lg object-cover bg-white/5 border border-slate-700">
+                            <img id="preview-banner" src="https://via.placeholder.com/120x60?text=Banner" alt="Banner" class="w-24 h-16 rounded-lg object-cover bg-white/5 border border-slate-700">
                             <div class="flex-1">
                                 <input type="file" id="upload-banner" accept="image/*" onchange="previewUploadBanner(event)" class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 cursor-pointer">
                                 <p class="text-[10px] text-slate-500 mt-1">Recomendado: Formato JPG/WebP (1920x600px)</p>
@@ -360,9 +360,9 @@
                 </div>
             </div>
 
-            <!-- BOTÃO SALVAR -->
+            <!-- BOTÃO SALVAR COM BLOQUEIO RIGOROSO -->
             <div class="flex items-center justify-end gap-3 pt-2">
-                <button type="submit" id="btn-salvar-config" class="px-8 py-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black flex items-center gap-2 text-sm shadow-xl transition cursor-pointer">
+                <button type="submit" id="btn-salvar-config" class="px-8 py-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black flex items-center gap-2 text-sm shadow-xl transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
                     <i class="fa-solid fa-floppy-disk"></i>
                     <span>Salvar Todas as Configurações</span>
                 </button>
@@ -377,7 +377,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Configurações Corporativas
     </footer>
 
-    <!-- JAVASCRIPT DE CONFIGURAÇÃO & COMPILAÇÃO JSPDF -->
+    <!-- JAVASCRIPT MASTER DE CONFIGURAÇÕES & COMPILAÇÃO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -404,15 +404,13 @@
             // Lê dias de aviso configurados pelo Administrador Master
             try {
                 const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
-                if (cfg && cfg.dias_aviso_vencimento) diasAvisoGlobal = cfg.dias_aviso_vencimento;
+                if (cfg && cfg.dias_aviso_vencimento) diasAvisoGlobal = Number(cfg.dias_aviso_vencimento);
             } catch (e) {
-                console.warn(e);
+                console.warn('Configuração de dias de aviso não localizada:', e);
             }
 
-            const email = session.user.email.toLowerCase();
+            const email = (session.user.email || '').toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
-            const impersonateNome = sessionStorage.getItem('sgi_impersonate_nome');
-            const impersonateSlug = sessionStorage.getItem('sgi_impersonate_slug');
 
             // 1. SUPORTE MASTER SOBERANO
             if (email === 'waldeckgil@gmail.com') {
@@ -436,13 +434,13 @@
 
                     // Exibe a barra de suporte
                     document.getElementById('faixa-modo-suporte').classList.remove('hidden');
-                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia || 'Imobiliária'} (/${imobAlvo.slug || ''})`;
 
-                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-imob-nome').innerText = `${(imobAlvo.nome_fantasia || 'IMOBILIÁRIA').toUpperCase()} (MODO SUPORTE)`;
                     document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Administrador Master';
                     document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                     document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
-                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug}`;
+                    document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug || ''}`;
 
                     avaliarVencimento(imobAlvo);
                     preencherFormulario(imobAlvo);
@@ -467,9 +465,9 @@
                 imobiliariaId = imob.id;
                 dadosImobAtual = imob;
 
-                document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
-                document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email}`;
-                document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
+                document.getElementById('topbar-imob-nome').innerText = (imob.nome_fantasia || 'IMOBILIÁRIA').toUpperCase();
+                document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email || ''}`;
+                document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug || ''}`;
 
                 avaliarVencimento(imob);
                 preencherFormulario(imob);
@@ -483,21 +481,34 @@
             }
         }
 
-        // AVALIAÇÃO DA RÉGUA DE COBRANÇA (3 ESTADOS DINÂMICOS)
+        // AVALIAÇÃO DA RÉGUA DE COBRANÇA (3 ESTADOS DINÂMICOS COM BLINDAGEM DE DATAS)
         function avaliarVencimento(imob) {
             const hoje = new Date();
             hoje.setHours(0,0,0,0);
 
-            if (!imob.data_vencimento) {
+            if (!imob || !imob.data_vencimento) {
                 document.getElementById('txt-plano-vencimento').innerText = 'Indefinido';
                 return;
             }
 
-            const [ano, mes, dia] = imob.data_vencimento.split('-');
+            // Parsing blindado contra datas parciais ou ISO completa
+            const dataPura = String(imob.data_vencimento).split('T')[0];
+            const partes = dataPura.split('-');
+            if (partes.length < 3) {
+                document.getElementById('txt-plano-vencimento').innerText = 'Indefinido';
+                return;
+            }
+
+            const ano = parseInt(partes[0], 10);
+            const mes = parseInt(partes[1], 10);
+            const dia = parseInt(partes[2], 10);
+
             const dataVenc = new Date(ano, mes - 1, dia);
             dataVenc.setHours(0,0,0,0);
 
-            document.getElementById('txt-plano-vencimento').innerText = `${dia}/${mes}/${ano}`;
+            const diaFormatado = String(dia).padStart(2, '0');
+            const mesFormatado = String(mes).padStart(2, '0');
+            document.getElementById('txt-plano-vencimento').innerText = `${diaFormatado}/${mesFormatado}/${ano}`;
 
             const diffTempo = dataVenc.getTime() - hoje.getTime();
             const diffDias = Math.ceil(diffTempo / (1000 * 60 * 60 * 24));
@@ -512,7 +523,7 @@
                     modoLeitura = true;
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
                     const btn = document.getElementById('btn-salvar-config');
-                    btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                    if (btn) btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
 
                 document.getElementById('faixa-alerta-vencimento').classList.add('hidden');
@@ -522,11 +533,11 @@
                 txtCiclo.innerText = `Vencido há ${Math.abs(diffDias)} dias`;
                 txtCiclo.className = 'text-xs font-bold text-rose-400';
             } 
-            // 2. ESTADO: AVISO PRÉVIO (AMARELO - DENTRO DOS DIAS CONFIGURADOS)
+            // 2. ESTADO: AVISO PRÉVIO (DENTRO DOS DIAS CONFIGURADOS)
             else if (diffDias <= diasAvisoGlobal) {
                 modoLeitura = false;
                 document.getElementById('faixa-alerta-vencimento').classList.remove('hidden');
-                document.getElementById('txt-faixa-alerta-msg').innerText = `ATENÇÃO: Sua mensalidade vence em ${diffDias === 0 ? 'HOJE' : diffDias + ' dia(s)'} (${dia}/${mes}/${ano}). Envie o comprovante PIX para evitar interrupções.`;
+                document.getElementById('txt-faixa-alerta-msg').innerText = `ATENÇÃO: Sua mensalidade vence em ${diffDias === 0 ? 'HOJE' : diffDias + ' dia(s)'} (${diaFormatado}/${mesFormatado}/${ano}). Envie o comprovante PIX para evitar interrupções.`;
 
                 badgeStatus.innerText = 'Atenção • Vencimento Próximo';
                 badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800';
@@ -534,14 +545,25 @@
                 txtCiclo.innerText = `Faltam ${diffDias} dias`;
                 txtCiclo.className = 'text-xs font-bold text-amber-400';
             } 
-            // 3. ESTADO: EM DIA (VERDE)
+            // 3. ESTADO: EM DIA (REGULAR OU CORTESIA DOURADA)
             else {
                 modoLeitura = false;
-                badgeStatus.innerText = 'Ativo • Em Dia';
-                badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800';
-                txtDesc.innerText = 'Sua assinatura está regular e operando em conformidade.';
-                txtCiclo.innerText = `Em dia (Faltam ${diffDias} dias)`;
-                txtCiclo.className = 'text-xs font-bold text-emerald-400';
+                const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
+                const ehGratuito = (valorPlano === 0);
+
+                if (ehGratuito) {
+                    badgeStatus.innerText = 'Cortesia • Em Dia';
+                    badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800';
+                    txtDesc.innerText = 'Sua imobiliária possui isenção concedida pelo Administrador Master.';
+                    txtCiclo.innerText = 'Plano Isento / Gratuito';
+                    txtCiclo.className = 'text-xs font-bold text-amber-400';
+                } else {
+                    badgeStatus.innerText = 'Ativo • Em Dia';
+                    badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800';
+                    txtDesc.innerText = 'Sua assinatura está regular e operando em conformidade.';
+                    txtCiclo.innerText = `Em dia (Faltam ${diffDias} dias)`;
+                    txtCiclo.className = 'text-xs font-bold text-emerald-400';
+                }
             }
         }
 
@@ -563,13 +585,20 @@
                 }
 
                 tbody.innerHTML = mensalidades.map(m => {
-                    const dtFormatada = m.data_pagamento ? m.data_pagamento.split('-').reverse().join('/') : '--/--/----';
+                    let dtFormatada = '--/--/----';
+                    if (m.data_pagamento) {
+                        const partesDt = String(m.data_pagamento).split('T')[0].split('-');
+                        if (partesDt.length === 3) {
+                            dtFormatada = `${partesDt[2]}/${partesDt[1]}/${partesDt[0]}`;
+                        }
+                    }
+                    const valorPago = Number(m.valor_pago || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                     return `
                     <tr class="hover:bg-slate-900/40">
                         <td class="py-2.5 px-3 text-slate-300">${dtFormatada}</td>
-                        <td class="py-2.5 px-3 text-white font-bold">${m.mes_referencia}</td>
+                        <td class="py-2.5 px-3 text-white font-bold">${m.mes_referencia || 'Mensalidade'}</td>
                         <td class="py-2.5 px-3 text-cyan-400">${m.forma_pagamento || 'PIX'}</td>
-                        <td class="py-2.5 px-3 text-emerald-400 font-bold">R$ ${Number(m.valor_pago).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td class="py-2.5 px-3 text-emerald-400 font-bold">R$ ${valorPago}</td>
                         <td class="py-2.5 px-3 text-right">
                             <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">Quitado</span>
                         </td>
@@ -582,8 +611,9 @@
             }
         }
 
-        // Preenche formulário com os dados cadastrados
+        // PREENCHE FORMULÁRIO COM PROTEÇÃO DEFENSIVA
         function preencherFormulario(imob) {
+            if (!imob) return;
             document.getElementById('conf-nome-fantasia').value = imob.nome_fantasia || '';
             document.getElementById('conf-razao-social').value = imob.razao_social || '';
             document.getElementById('conf-cnpj').value = imob.cnpj_cpf || '';
@@ -609,7 +639,17 @@
             if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
             if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
 
-            document.getElementById('txt-plano-valor').innerText = Number(imob.plano_valor || 149).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            // TRATAMENTO DA GRATUIDADE / CORTESIA
+            const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
+            const ehGratuito = (valorPlano === 0);
+
+            if (ehGratuito) {
+                document.getElementById('txt-plano-valor').innerHTML = '<span class="text-amber-300 font-bold">R$ 0,00</span> <span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded font-sans font-bold uppercase ml-1">Cortesia</span>';
+                const descAssinatura = document.getElementById('txt-status-desc');
+                if (descAssinatura) descAssinatura.innerText = 'Sua imobiliária possui Plano Cortesia / Isento concedido pelo Administrador Master.';
+            } else {
+                document.getElementById('txt-plano-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
         }
 
         function previewUploadLogo(e) {
@@ -626,7 +666,7 @@
             }
         }
 
-        // Salvar Configurações e Mídias
+        // SALVAR CONFIGURAÇÕES COM TRAVA RIGOROSA CONTRA DUPLO CLIQUE
         async function salvarConfiguracoes(event) {
             event.preventDefault();
             if (modoLeitura && !isMasterSuporte) return;
@@ -637,12 +677,12 @@
             const alertaIcone = document.getElementById('alerta-config-icone');
 
             alerta.classList.add('hidden');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gravando configurações...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gravando configurações e mídias...';
             btn.disabled = true;
 
             try {
-                let novaLogoUrl = dadosImobAtual.logo_url;
-                let novaBannerUrl = dadosImobAtual.banner_url;
+                let novaLogoUrl = dadosImobAtual ? dadosImobAtual.logo_url : null;
+                let novaBannerUrl = dadosImobAtual ? dadosImobAtual.banner_url : null;
 
                 if (arquivoLogo) {
                     const ext = arquivoLogo.name.split('.').pop();
@@ -650,6 +690,8 @@
                     const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, arquivoLogo, { upsert: true });
                     if (!upErr) {
                         novaLogoUrl = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
+                    } else {
+                        console.warn('Falha no upload do logotipo:', upErr);
                     }
                 }
 
@@ -659,6 +701,8 @@
                     const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, arquivoBanner, { upsert: true });
                     if (!upErr) {
                         novaBannerUrl = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
+                    } else {
+                        console.warn('Falha no upload do banner:', upErr);
                     }
                 }
 
@@ -696,25 +740,29 @@
                 alertaTexto.innerText = 'Configurações corporativas, taxas padrão e dados visuais salvos com sucesso!';
                 alerta.classList.remove('hidden');
 
+                // Rolagem suave até o feedback visual
+                alerta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
             } catch (err) {
                 console.error(err);
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/80 border border-red-800 text-red-300';
                 alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg';
                 alertaTexto.innerText = err.message || 'Erro ao salvar alterações.';
                 alerta.classList.remove('hidden');
+                alerta.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Todas as Configurações</span>';
                 btn.disabled = false;
             }
         }
 
-        async function carregarCatalogoParaPDF() {
+ async function carregarCatalogoParaPDF() {
             try {
+                // Carrega TODOS os imóveis da imobiliária (sem filtrar apenas os ativos)
                 const { data: imoveis, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
                     .eq('imobiliaria_id', imobiliariaId)
-                    .eq('ativa', true)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
@@ -723,21 +771,88 @@
                 const seletor = document.getElementById('seletor-imovel-pdf');
 
                 if (listaImoveisParaPdf.length === 0) {
-                    seletor.innerHTML = '<option value="">Nenhum imóvel disponível</option>';
+                    seletor.innerHTML = '<option value="">Nenhum imóvel cadastrado</option>';
                     return;
                 }
 
                 seletor.innerHTML = '<option value="">Selecione um imóvel...</option>' + 
-                    listaImoveisParaPdf.map(im => `
-                        <option value="${im.id}">Ref: ${im.codigo_ref} - ${im.titulo.substring(0, 35)}...</option>
-                    `).join('');
+                    listaImoveisParaPdf.map(im => {
+                        const statusTag = im.ativa ? '' : ' [Pausado]';
+                        const ref = im.codigo_ref ? `Ref: ${im.codigo_ref}` : 'S/Ref';
+                        const tit = (im.titulo || 'Imóvel sem título').substring(0, 40);
+                        return `<option value="${im.id}">${ref} - ${tit}${statusTag}</option>`;
+                    }).join('');
 
             } catch (err) {
-                console.warn(err);
+                console.warn('Erro ao carregar catálogo para PDF:', err);
             }
         }
+      
+// =========================================================================
+        // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
+        // =========================================================================
+        function sanitizarTextoPdf(texto) {
+            if (!texto) return '';
+            return texto
+                .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu, '')
+                .replace(/[^\x00-\xFF]/g, ' ')
+                .trim();
+        }
 
-        // MOTOR JSPDF: GERAÇÃO DA FICHA COMERCIAL EM FORMATO A4
+        // Converte qualquer formato (WebP, PNG, JPG) para JPEG puro compatível com jsPDF via Canvas
+        async function converterImgParaJpegSeguro(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+
+                img.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth || img.width || 800;
+                        canvas.height = img.naturalHeight || img.height || 600;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Fundo branco sólido (evita transparência preta de WebP/PNG)
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // Exporta garantidamente como JPEG real
+                        resolve(canvas.toDataURL('image/jpeg', 0.85));
+                    } catch (err) {
+                        reject(err);
+                    }
+                };
+
+                img.onerror = () => {
+                    // Fallback se crossOrigin for bloqueado: tenta via blob
+                    fetch(url)
+                        .then(r => r.blob())
+                        .then(blob => {
+                            const blobUrl = URL.createObjectURL(blob);
+                            const fallbackImg = new Image();
+                            fallbackImg.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = fallbackImg.naturalWidth || 800;
+                                canvas.height = fallbackImg.naturalHeight || 600;
+                                const ctx = canvas.getContext('2d');
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.drawImage(fallbackImg, 0, 0);
+                                URL.revokeObjectURL(blobUrl);
+                                resolve(canvas.toDataURL('image/jpeg', 0.85));
+                            };
+                            fallbackImg.onerror = reject;
+                            fallbackImg.src = blobUrl;
+                        })
+                        .catch(reject);
+                };
+
+                img.src = url;
+            });
+        }
+
+        // MOTOR JSPDF: GERAÇÃO DA FICHA COMERCIAL COM CANVAS JPEG & SANITIZAÇÃO
         async function gerarFichaPDF() {
             const imovelId = document.getElementById('seletor-imovel-pdf').value;
             if (!imovelId) {
@@ -757,112 +872,130 @@
 
                 const pageWidth = doc.internal.pageSize.getWidth();
                 const pageHeight = doc.internal.pageSize.getHeight();
+                const nomeFantasia = dadosImobAtual ? (dadosImobAtual.nome_fantasia || 'SGI IMOBILIÁRIA') : 'SGI IMOBILIÁRIA';
 
                 // 1. CABEÇALHO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
                 doc.setTextColor(255, 255, 255);
-                doc.setFontSize(16);
+                doc.setFontSize(15);
                 doc.setFont('helvetica', 'bold');
-                doc.text(dadosImobAtual.nome_fantasia.toUpperCase(), 15, 14);
+                doc.text(sanitizarTextoPdf(nomeFantasia).toUpperCase(), 15, 14);
 
-                doc.setFontSize(9);
+                doc.setFontSize(8.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(150, 160, 180);
-                doc.text(`${dadosImobAtual.creci_juridico || 'CRECI'} • WhatsApp: ${dadosImobAtual.whatsapp_contato || ''}`, 15, 21);
+                const creci = dadosImobAtual ? (dadosImobAtual.creci_juridico || 'CRECI') : 'CRECI';
+                const fone = dadosImobAtual ? (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato || '') : '';
+                doc.text(`${sanitizarTextoPdf(creci)} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
 
                 // Tarja Ref
                 doc.setFillColor(28, 107, 160);
-                doc.roundedRect(pageWidth - 45, 8, 30, 11, 2, 2, 'F');
+                doc.roundedRect(pageWidth - 48, 8, 33, 11, 2, 2, 'F');
                 doc.setTextColor(255, 255, 255);
-                doc.setFontSize(10);
+                doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
-                doc.text(`Ref: ${imovel.codigo_ref}`, pageWidth - 30, 15, { align: 'center' });
+                doc.text(`Ref: ${imovel.codigo_ref || 'SGI'}`, pageWidth - 31.5, 15, { align: 'center' });
 
                 // 2. TÍTULO & LOCALIZAÇÃO
                 doc.setTextColor(20, 25, 40);
-                doc.setFontSize(14);
+                doc.setFontSize(13);
                 doc.setFont('helvetica', 'bold');
-                const splitTitulo = doc.splitTextToSize(imovel.titulo, pageWidth - 30);
-                doc.text(splitTitulo, 15, 38);
+                const tituloLimpo = sanitizarTextoPdf(imovel.titulo || 'Imóvel para Negociação');
+                const splitTitulo = doc.splitTextToSize(tituloLimpo, pageWidth - 30);
+                doc.text(splitTitulo, 15, 37);
 
-                doc.setFontSize(10);
+                doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(100, 110, 125);
-                doc.text(`${imovel.tipo} • ${imovel.bairro || 'Bairro'} - ${imovel.cidade || ''}/${imovel.uf || ''}`, 15, 46);
+                const localStr = sanitizarTextoPdf(`${imovel.bairro || 'Localização'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
+                doc.text(`${sanitizarTextoPdf(imovel.tipo || 'Padrão')} • ${localStr}`, 15, 45);
 
-                // 3. FOTO DE CAPA
-                let posY = 52;
-                if (imovel.foto_capa) {
+         // 3. FOTO DE CAPA INTELIGENTE (Busca Capa -> Galeria -> ou imagem em Documentos)
+                let posY = 51;
+                let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
+
+                // Fallback de resgate: se a foto foi colocada em documentos por engano
+                if (!urlFoto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
+                    const imgDoc = imovel.documentos_anexos.find(url => {
+                        const u = url.toLowerCase();
+                        return u.includes('.webp') || u.includes('.jpg') || u.includes('.jpeg') || u.includes('.png');
+                    });
+                    if (imgDoc) urlFoto = imgDoc;
+                }
+                if (urlFoto) {
                     try {
-                        const imgBase64 = await converterImgParaBase64(imovel.foto_capa);
-                        doc.addImage(imgBase64, 'JPEG', 15, posY, pageWidth - 30, 85, undefined, 'FAST');
+                        const imgJpegBase64 = await converterImgParaJpegSeguro(urlFoto);
+                        doc.addImage(imgJpegBase64, 'JPEG', 15, posY, pageWidth - 30, 85, undefined, 'FAST');
                         posY += 90;
                     } catch (e) {
-                        console.warn('Foto de capa não pôde ser renderizada no PDF:', e);
+                        console.warn('Foto de capa indisponível via Canvas/CORS, aplicando box reserva:', e);
                         doc.setFillColor(240, 245, 250);
                         doc.rect(15, posY, pageWidth - 30, 60, 'F');
                         doc.setTextColor(120, 130, 140);
-                        doc.text('[Foto do Imóvel]', pageWidth / 2, posY + 32, { align: 'center' });
+                        doc.setFontSize(9);
+                        doc.text('[Foto do Imóvel Disponível no Catálogo Online]', pageWidth / 2, posY + 32, { align: 'center' });
                         posY += 66;
                     }
                 }
 
                 // 4. QUADRO DE ESPECIFICAÇÕES
                 doc.setFillColor(245, 247, 250);
-                doc.roundedRect(15, posY, pageWidth - 30, 24, 2, 2, 'F');
+                doc.roundedRect(15, posY, pageWidth - 30, 22, 2, 2, 'F');
 
                 doc.setTextColor(28, 107, 160);
-                doc.setFontSize(11);
+                doc.setFontSize(10.5);
                 doc.setFont('helvetica', 'bold');
 
                 const colWidth = (pageWidth - 30) / 4;
-                doc.text(`${imovel.quartos || 0} Quartos`, 15 + (colWidth * 0.5), posY + 10, { align: 'center' });
-                doc.text(`${imovel.banheiros || 1} Banheiros`, 15 + (colWidth * 1.5), posY + 10, { align: 'center' });
-                doc.text(`${imovel.vagas || 0} Vagas`, 15 + (colWidth * 2.5), posY + 10, { align: 'center' });
-                doc.text(`${imovel.area_util || 0} m² Útil`, 15 + (colWidth * 3.5), posY + 10, { align: 'center' });
+                doc.text(`${imovel.quartos || 0} Quartos`, 15 + (colWidth * 0.5), posY + 9, { align: 'center' });
+                doc.text(`${imovel.banheiros || 1} Banheiros`, 15 + (colWidth * 1.5), posY + 9, { align: 'center' });
+                doc.text(`${imovel.vagas || 0} Vagas`, 15 + (colWidth * 2.5), posY + 9, { align: 'center' });
+                doc.text(`${imovel.area_util || 0} m² Útil`, 15 + (colWidth * 3.5), posY + 9, { align: 'center' });
 
-                doc.setFontSize(8);
+                doc.setFontSize(7.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(100, 110, 120);
-                doc.text('Dormitórios', 15 + (colWidth * 0.5), posY + 17, { align: 'center' });
-                doc.text('Sanitários', 15 + (colWidth * 1.5), posY + 17, { align: 'center' });
-                doc.text('Garagem', 15 + (colWidth * 2.5), posY + 17, { align: 'center' });
-                doc.text('Área Privativa', 15 + (colWidth * 3.5), posY + 17, { align: 'center' });
+                doc.text('Dormitórios', 15 + (colWidth * 0.5), posY + 15, { align: 'center' });
+                doc.text('Sanitários', 15 + (colWidth * 1.5), posY + 15, { align: 'center' });
+                doc.text('Garagem', 15 + (colWidth * 2.5), posY + 15, { align: 'center' });
+                doc.text('Área Privativa', 15 + (colWidth * 3.5), posY + 15, { align: 'center' });
 
-                posY += 30;
+                posY += 28;
 
                 // 5. VALORES
                 doc.setTextColor(20, 25, 40);
-                doc.setFontSize(10);
+                doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.text(`VALOR DE ${imovel.finalidade ? imovel.finalidade.toUpperCase() : 'VENDA'}:`, 15, posY);
 
                 const precoFormatado = Number(imovel.valor_venda || imovel.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                doc.setFontSize(16);
+                doc.setFontSize(15);
                 doc.setTextColor(28, 107, 160);
-                doc.text(precoFormatado, 15, posY + 8);
+                doc.text(precoFormatado, 15, posY + 7.5);
 
-                if (imovel.valor_condominio > 0 || imovel.valor_iptu > 0) {
-                    doc.setFontSize(9);
+                if ((imovel.valor_condominio && imovel.valor_condominio > 0) || (imovel.valor_iptu && imovel.valor_iptu > 0)) {
+                    doc.setFontSize(8.5);
                     doc.setFont('helvetica', 'normal');
                     doc.setTextColor(100, 110, 120);
-                    doc.text(`Condomínio: R$ ${Number(imovel.valor_condominio).toLocaleString('pt-BR')}  |  IPTU: R$ ${Number(imovel.valor_iptu).toLocaleString('pt-BR')}`, 15, posY + 14);
+                    const cond = imovel.valor_condominio ? `Condomínio: R$ ${Number(imovel.valor_condominio).toLocaleString('pt-BR')}` : '';
+                    const iptu = imovel.valor_iptu ? `IPTU: R$ ${Number(imovel.valor_iptu).toLocaleString('pt-BR')}` : '';
+                    doc.text(`${cond}   ${cond && iptu ? '|   ' : ''}${iptu}`, 15, posY + 14);
                 }
 
                 posY += 20;
 
-                // 6. DESCRIÇÃO
-                doc.setFontSize(10);
+                // 6. DESCRIÇÃO (COM SANITIZAÇÃO DE EMOJIS)
+                doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
                 doc.text('SOBRE ESTE IMÓVEL:', 15, posY);
 
-                doc.setFontSize(9);
+                doc.setFontSize(8.5);
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(70, 80, 95);
-                const descTexto = imovel.descricao || 'Imóvel com alto padrão de acabamento, excelente localização e documentação regularizada.';
+                const descTexto = sanitizarTextoPdf(imovel.descricao || 'Imóvel com alto padrão de acabamento, excelente localização e documentação regularizada.');
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
@@ -871,38 +1004,29 @@
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
                 doc.setTextColor(255, 255, 255);
-                doc.setFontSize(10);
+                doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
-                doc.text(`Fale com nosso corretor responsável: ${dadosImobAtual.telefone_contato || dadosImobAtual.whatsapp_contato || ''}`, pageWidth / 2, pageHeight - 11, { align: 'center' });
+                const foneRodape = dadosImobAtual ? (dadosImobAtual.telefone_contato || dadosImobAtual.whatsapp_contato || '') : '';
+                doc.text(`Fale com nosso corretor responsável: ${foneRodape}`, pageWidth / 2, pageHeight - 11, { align: 'center' });
 
-                doc.setFontSize(8);
+                doc.setFontSize(7.5);
                 doc.setTextColor(140, 150, 165);
-                doc.text(`Material promocional gerado via SGI SaaS • ${dadosImobAtual.nome_fantasia}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+                doc.text(`Material promocional gerado via SGI SaaS • ${sanitizarTextoPdf(nomeFantasia)}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
 
-                doc.save(`Ficha_${imovel.codigo_ref}_${dadosImobAtual.nome_fantasia.replace(/\s+/g, '_')}.pdf`);
+                doc.save(`Ficha_${imovel.codigo_ref || 'Imovel'}_${sanitizarTextoPdf(nomeFantasia).replace(/\s+/g, '_')}.pdf`);
 
             } catch (err) {
                 console.error('Erro na compilação do PDF:', err);
-                alert('Erro ao compilar ficha comercial em PDF.');
+                alert('Erro ao compilar ficha comercial em PDF: ' + err.message);
             } finally {
                 boxStatus.classList.add('hidden');
             }
         }
 
-        async function converterImgParaBase64(url) {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        }
 
         function sanitizarZap(num) {
             let limpo = ('' + num).replace(/\D/g, '');
-            if (!limpo.startsWith('55')) limpo = '55' + limpo;
+            if (limpo && !limpo.startsWith('55')) limpo = '55' + limpo;
             return limpo;
         }
 
