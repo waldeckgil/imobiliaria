@@ -133,59 +133,60 @@
         </div>
     </header>
 
-    <!-- MENU DE MÓDULOS -->
-    <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
-        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
-            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
-                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
+
+    
+    <!-- MENU DE MÓDULOS (CENTRALIZADO COM LETRAS MAIORES E MAIS DESTAQUE) -->
+    <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto text-sm sm:text-base py-1">
+            <a href="dashboard.html" class="px-4 py-2 rounded-xl font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap shadow-sm">
+                <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard 360
             </a>
-            <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
+            <a href="imoveis-lista.html" class="px-4 py-2 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-house-chimney mr-1.5"></i> Catálogo de Imóveis
             </a>
-            <a href="leads.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-comments mr-1"></i> Central de Atendimentos
+            <a href="leads.html" class="px-4 py-2 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-comments mr-1.5"></i> Central de Atendimentos
             </a>
-            <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-users mr-1"></i> Equipe & Permissões
+            <a href="equipe.html" class="px-4 py-2 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-users mr-1.5"></i> Equipe & Permissões
             </a>
-            <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-gear mr-1"></i> Configurações & Publicidade
+            <a href="configurar-imobiliaria.html" class="px-4 py-2 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-gear mr-1.5"></i> Configurações & Publicidade
             </a>
         </div>
     </nav>
 
+
+
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
         
-        <!-- CARD DE ASSINATURA SAAS -->
-        <div id="card-monitor-assinatura" class="box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-emerald-500">
-            <div class="flex items-center gap-3.5">
-                <div id="icone-status-plano" class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30">
+     <!-- CARD DE ASSINATURA SAAS (SLIM / DISCRETO / COMPACTO) -->
+        <div id="card-monitor-assinatura" class="box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-emerald-500 text-xs">
+            <div class="flex items-center gap-3">
+                <div id="icone-status-plano" class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Situação da Assinatura</span>
-                        <span id="badge-status-plano" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">
-                            EM DIA
-                        </span>
-                    </div>
-                    <h2 class="text-sm sm:text-base font-black text-white mt-0.5 flex items-center gap-2">
-                        <span>Próximo Vencimento:</span>
-                        <span id="txt-vencimento-data" class="font-mono text-cyan-300">--/--/----</span>
-                    </h2>
-                    <p id="txt-dias-contagem" class="text-xs text-slate-400 mt-0.5">Calculando ciclo contratual...</p>
+                <div class="flex flex-wrap items-center gap-2">
+                    <span id="badge-status-plano" class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">
+                        EM DIA
+                    </span>
+                    <span class="text-slate-400">Vencimento:</span>
+                    <strong id="txt-vencimento-data" class="font-mono text-cyan-300 text-xs">--/--/----</strong>
+                    <span class="text-slate-600 hidden sm:inline">•</span>
+                    <span id="txt-dias-contagem" class="text-slate-400 text-[11px]">Calculando ciclo...</span>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <a id="btn-renovar-zap" href="https://wa.me/5521964120231" target="_blank" 
-                   class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition cursor-pointer">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Solicitar Renovação</span>
+                   class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow transition cursor-pointer whitespace-nowrap">
+                    <i class="fa-brands fa-whatsapp text-xs"></i>
+                    <span>Renovar</span>
                 </a>
             </div>
         </div>
+
 
         <!-- COCKPIT GERENCIAL: GRADE DE 8 CARDS DE ALTA PERFORMANCE (2 LINHAS DE 4 CARDS) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -883,35 +884,39 @@
                 }
             }
 
+  const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
+
             if (vencido) {
-                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-rose-500 bg-rose-950/20';
+                cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/20`;
                 badgeStatus.innerText = 'VENCIDA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
-                iconeStatus.className = 'w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl flex-shrink-0 border border-rose-500/30';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
+                iconeStatus.className = 'w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm flex-shrink-0 border border-rose-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Assinatura expirada há ${Math.abs(diffDias)} dia(s).</span> Acesso em modo somente leitura.`;
+                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Expirada há ${Math.abs(diffDias)} d.</span> Modo somente leitura.`;
             } else if (ehGratuito) {
-                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-amber-400 bg-amber-950/15';
-                badgeStatus.innerText = 'CORTESIA • ATIVA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
-                iconeStatus.className = 'w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/30';
+                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/15`;
+                badgeStatus.innerText = 'CORTESIA';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-gift"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia / Isenção concedido pelo Administrador Master.</span>`;
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia concedido pelo Administrador.</span>`;
             } else if (diffDias <= 5) {
-                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-amber-400 bg-amber-950/20';
-                badgeStatus.innerText = 'ATENÇÃO: VENCE EM BREVE';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
-                iconeStatus.className = 'w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/30';
+                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
+                badgeStatus.innerText = 'VENCE EM BREVE';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam apenas ${diffDias === 0 ? 'algumas horas' : diffDias + ' dia(s)'} para o vencimento.</span>`;
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam ${diffDias === 0 ? 'poucas horas' : diffDias + ' dia(s)'}.</span>`;
             } else {
-                cardAssinatura.className = 'box-tech p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-emerald-500';
+                cardAssinatura.className = `${baseClassSlim} border-l-emerald-500`;
                 badgeStatus.innerText = 'EM DIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
-                iconeStatus.className = 'w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
+                iconeStatus.className = 'w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30';
                 iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
-                txtContagem.innerText = `Sua assinatura está ativa. Faltam ${diffDias} dias para o próximo ciclo.`;
+                txtContagem.innerText = `Faltam ${diffDias} dias para o próximo ciclo.`;
             }
+
+
         }
 
         async function carregarMetricas(imobId) {
