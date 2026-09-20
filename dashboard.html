@@ -335,11 +335,8 @@
 
         </div>
 
-        
-
-<!-- DASHBOARD FINANCEIRO CONSOLIDADO (ATIVADO VIA CARD EXECUTIVO) -->
+        <!-- DASHBOARD FINANCEIRO CONSOLIDADO (ATIVADO VIA CARD EXECUTIVO) -->
         <div id="box-dashboard-financeiro" class="box-tech p-5 space-y-4 hidden">
-            <!-- ABA 4: DASHBOARD FINANCEIRO -->
             <div id="aba-conteudo-financeiro" class="space-y-6">
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
@@ -398,7 +395,7 @@
                         <h4 class="text-xs font-black uppercase text-purple-400 flex items-center gap-1.5">
                             <i class="fa-solid fa-receipt"></i> 1. Extrato de Aluguéis, Retenções & Repasses
                         </h4>
-                        <span class="text-[10px] text-slate-400">Dica: Clique no <strong>Código Ref</strong> ou no <strong>Inquilino</strong> para abrir o dossiê completo.</span>
+                        <span class="text-[10px] text-slate-400">Extrato analítico mensal de locações</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -406,7 +403,7 @@
                             <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
                                 <tr>
                                     <th class="py-2.5 px-3">Imóvel (Ref)</th>
-                                    <th class="py-2.5 px-3">Inquilino</th>
+                                    <th class="py-2.5 px-3">Competência</th>
                                     <th class="py-2.5 px-3">Aluguel Bruto</th>
                                     <th class="py-2.5 px-3">Taxa Imob (%)</th>
                                     <th class="py-2.5 px-3">Retenção Imob</th>
@@ -482,7 +479,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
     </main>
@@ -612,10 +608,9 @@
         </div>
     </div>
 
-<!-- MODAL DOSSIÊ 360° DO CLIENTE: COM VISUALIZADOR DE DOCUMENTOS (OLHINHO 👁️) -->
+    <!-- MODAL DOSSIÊ 360° DO CLIENTE: COM VISUALIZADOR DE DOCUMENTOS (OLHINHO 👁️) -->
     <div id="modal-dossie-cliente" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
-
-    <div class="box-tech max-w-4xl w-full p-6 border border-sky-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+        <div class="box-tech max-w-4xl w-full p-6 border border-sky-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2 text-sky-300 font-black text-sm uppercase tracking-wide">
                     <i class="fa-solid fa-circle-user text-sky-400 text-lg"></i>
@@ -839,7 +834,6 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Sessão Criptografada via JWT
     </footer>
 
-
     <!-- JAVASCRIPT MASTER -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
@@ -955,7 +949,7 @@
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug || ''}`;
-atualizarPainelAssinatura(imobAlvo);
+                atualizarPainelAssinatura(imobAlvo);
                 popularSeletorMeses();
           
                 carregarMetricas(imobAlvo.id);
@@ -1000,7 +994,7 @@ atualizarPainelAssinatura(imobAlvo);
                 atualizarPainelAssinatura(imob);
                 popularSeletorMeses();
 
-        carregarMetricas(imob.id);
+                carregarMetricas(imob.id);
                 carregarAgendaMes();
 
             } catch (err) {
@@ -1559,7 +1553,7 @@ atualizarPainelAssinatura(imobAlvo);
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="abrirDossie360Cliente('${p.id}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+                                <button onclick="window.abrirDossieUniversal('${p.id}', '${(p.nome || '').replace(/'/g, "\\'")}', '${p.cpf_cnpj || ''}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
                                     <i class="fa-solid fa-eye text-xs"></i>
                                     <span>Dossiê 360°</span>
                                 </button>
@@ -1641,7 +1635,7 @@ atualizarPainelAssinatura(imobAlvo);
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="abrirDossie360Cliente('${i.id}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+                                <button onclick="window.abrirDossieUniversal('${i.id}', '${(i.nome || '').replace(/'/g, "\\'")}', '${i.cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
                                     <i class="fa-solid fa-eye text-xs"></i>
                                     <span>Dossiê 360°</span>
                                 </button>
@@ -1784,8 +1778,6 @@ atualizarPainelAssinatura(imobAlvo);
             document.getElementById('modal-drilldown-clientes').classList.add('hidden');
         }
 
-       
-
         // =========================================================================
         // MOTOR DO DOSSIÊ 360° DO CLIENTE: COM DOCUMENTAÇÃO E OLHINHO 👁️
         // =========================================================================
@@ -1814,7 +1806,7 @@ atualizarPainelAssinatura(imobAlvo);
                 let cliente = null;
 
                 // 1. Tenta buscar por ID se fornecido e válido
-                if (clienteId && clienteId !== 'null' && clienteId !== 'undefined') {
+                if (clienteId && clienteId !== 'null' && clienteId !== 'undefined' && clienteId !== '') {
                     const { data, error } = await supabaseClient
                         .from('clientes')
                         .select('*')
@@ -1826,15 +1818,17 @@ atualizarPainelAssinatura(imobAlvo);
                 // 2. Se não achou por ID, tenta buscar por CPF
                 if (!cliente && cpfFallback && cpfFallback.trim() !== '') {
                     const docLimpo = cpfFallback.replace(/\D/g, '');
-                    const { data } = await supabaseClient
-                        .from('clientes')
-                        .select('*')
-                        .ilike('cpf_cnpj', `%${docLimpo}%`)
-                        .limit(1);
-                    if (data && data.length > 0) cliente = data[0];
+                    if (docLimpo.length >= 6) {
+                        const { data } = await supabaseClient
+                            .from('clientes')
+                            .select('*')
+                            .ilike('cpf_cnpj', `%${docLimpo}%`)
+                            .limit(1);
+                        if (data && data.length > 0) cliente = data[0];
+                    }
                 }
 
-                // 3. Se não achou, tenta por Nome exato
+                // 3. Se não achou, tenta por Nome
                 if (!cliente && nomeFallback && nomeFallback.trim() !== '' && nomeFallback !== 'Proprietário' && nomeFallback !== 'Não informado') {
                     const { data } = await supabaseClient
                         .from('clientes')
@@ -2127,710 +2121,12 @@ atualizarPainelAssinatura(imobAlvo);
         window.abrirDossieUniversal = abrirDossieUniversal;
         window.abrirDossie360Cliente = abrirDossie360Cliente;
 
-                tituloTopo.innerText = `Dossiê 360° • ${cliente.nome} (${(cliente.tipo || tipoAcesso || 'Cliente').toUpperCase()})`;
-
-                const zapLimpo = ('' + (cliente.whatsapp || cliente.telefone || '')).replace(/\D/g, '');
-                btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${cliente.nome}! Sou da imobiliária e estou à sua disposição.`)}` : '#';
-
-                let blocoNegociosHtml = '';
-
-                // SE FOR PROPRIETÁRIO
-                if (tipoAcesso === 'proprietario' || (cliente.tipo && cliente.tipo.toLowerCase().includes('propriet'))) {
-                    const { data: imoveis } = await supabaseClient
-                        .from('imoveis')
-                        .select('*')
-                        .eq('proprietario_id', cliente.id)
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                    const imovelIds = (imoveis || []).map(im => im.id);
-
-                    let contratos = [];
-                    let repasses = [];
-
-                    if (imovelIds.length > 0) {
-                        const { data: cData } = await supabaseClient
-                            .from('contratos_locacao')
-                            .select('*')
-                            .in('imovel_id', imovelIds);
-                        contratos = cData || [];
-
-                        const { data: rData } = await supabaseClient
-                            .from('locacao_mensalidades_recebiveis')
-                            .select('*')
-                            .in('imovel_id', imovelIds)
-                            .order('data_vencimento', { ascending: false })
-                            .limit(6);
-                        repasses = rData || [];
-                    }
-
-                    blocoNegociosHtml = `
-                        <div class="space-y-4 pt-2">
-                            <h4 class="text-xs font-black uppercase text-sky-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-house-user"></i> 1. Imóveis de Propriedade (${(imoveis || []).length})
-                            </h4>
-
-                            <div class="space-y-3">
-                                ${(imoveis || []).length === 0 ? '<p class="text-slate-500 italic py-2">Nenhum imóvel registrado sob este proprietário.</p>' : 
-                                imoveis.map(im => {
-                                    const contrato = contratos.find(c => c.imovel_id === im.id);
-                                    const docsHtml = renderizarBotoesDocumentos(im.documentos_anexos, 'Documentos do Imóvel & Escrituras');
-
-                                    return `
-                                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                                            <div class="flex items-center justify-between">
-                                                <div>
-                                                    <span class="font-bold text-white text-xs">${im.titulo}</span>
-                                                    <span class="text-[10px] text-cyan-400 font-mono block">Ref: ${im.codigo_ref} • ${im.bairro || 'Localização'}</span>
-                                                </div>
-                                                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-emerald-950 text-emerald-400 border border-emerald-800'}">
-                                                    ${im.status}
-                                                </span>
-                                            </div>
-
-                                            ${contrato ? `
-                                                <div class="bg-purple-950/20 p-2.5 rounded-lg border border-purple-800/30 text-[11px] grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                                    <div><span class="text-slate-500 block text-[10px]">Inquilino Atual:</span> <strong class="text-white">${contrato.cliente_nome}</strong></div>
-                                                    <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto).toLocaleString('pt-BR')}</strong></div>
-                                                    <div><span class="text-slate-500 block text-[10px]">Seu Repasse Líquido:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(contrato.valor_repasse_proprietario).toLocaleString('pt-BR')}</strong></div>
-                                                </div>
-                                            ` : ''}
-
-                                            <!-- DOCUMENTOS COM OLHINHO 👁️ -->
-                                            ${docsHtml}
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-
-                            <h4 class="text-xs font-black uppercase text-amber-300 flex items-center gap-1.5 pt-2">
-                                <i class="fa-solid fa-coins"></i> 2. Extrato Recente de Repasses
-                            </h4>
-
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs font-mono text-slate-300">
-                                    <thead class="bg-slate-950 text-slate-500 uppercase text-[9px] border-b border-slate-800">
-                                        <tr>
-                                            <th class="py-2 px-2">Referência</th>
-                                            <th class="py-2 px-2">Aluguel Pago</th>
-                                            <th class="py-2 px-2">Valor Repasse</th>
-                                            <th class="py-2 px-2">Inquilino</th>
-                                            <th class="py-2 px-2 text-right">Status Repasse</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-800/60 text-[10px]">
-                                        ${repasses.length === 0 ? '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Nenhum repasse registrado até o momento.</td></tr>' : 
-                                        repasses.map(r => `
-                                            <tr>
-                                                <td class="py-2 px-2 font-bold text-white">${r.mes_referencia}</td>
-                                                <td class="py-2 px-2 text-emerald-400">R$ ${Number(r.valor_aluguel).toLocaleString('pt-BR')}</td>
-                                                <td class="py-2 px-2 text-cyan-300 font-bold">R$ ${Number(r.valor_repasse_proprietario).toLocaleString('pt-BR')}</td>
-                                                <td class="py-2 px-2 text-slate-300">${r.status_inquilino || 'Pendente'}</td>
-                                                <td class="py-2 px-2 text-right">
-                                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold ${r.status_repasse === 'Repassado' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">
-                                                        ${r.status_repasse || 'Aguardando'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-
-                } else {
-                    // SE FOR INQUILINO
-                    const { data: contratos } = await supabaseClient
-                        .from('contratos_locacao')
-                        .select('*, imoveis(id, codigo_ref, titulo, logradouro, numero, bairro, proprietario_id)')
-                        .or(`cliente_id.eq.${cliente.id},cliente_cpf_cnpj.eq.${cliente.cpf_cnpj}`)
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                    const contratoAtivo = (contratos || [])[0];
-
-                    let mensalidades = [];
-                    let donoImovel = null;
-                    let docsContratoHtml = '';
-
-                    if (contratoAtivo) {
-                        docsContratoHtml = renderizarBotoesDocumentos(contratoAtivo.documentos_anexos, 'Contrato Assinado & Documentos Pessoais do Inquilino');
-
-                        const { data: mData } = await supabaseClient
-                            .from('locacao_mensalidades_recebiveis')
-                            .select('*')
-                            .eq('contrato_id', contratoAtivo.id)
-                            .order('data_vencimento', { ascending: false });
-                        mensalidades = mData || [];
-
-                        if (contratoAtivo.imoveis && contratoAtivo.imoveis.proprietario_id) {
-                            const { data: pData } = await supabaseClient
-                                .from('clientes')
-                                .select('nome, whatsapp, telefone')
-                                .eq('id', contratoAtivo.imoveis.proprietario_id)
-                                .maybeSingle();
-                            donoImovel = pData;
-                        }
-                    }
-
-                    blocoNegociosHtml = `
-                        <div class="space-y-4 pt-2">
-                            <h4 class="text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-contract"></i> 1. Contrato de Locação em Vigor
-                            </h4>
-
-                            ${!contratoAtivo ? '<p class="text-slate-500 italic py-2">Nenhum contrato ativo vinculado a este inquilino.</p>' : `
-                                <div class="bg-slate-950 p-4 rounded-xl border border-purple-500/40 space-y-3">
-                                    <div class="flex items-start justify-between">
-                                        <div>
-                                            <span class="text-[10px] text-cyan-400 font-mono font-bold block">Ref Imóvel: ${contratoAtivo.imoveis ? contratoAtivo.imoveis.codigo_ref : '---'}</span>
-                                            <h5 class="text-sm font-bold text-white">${contratoAtivo.imoveis ? contratoAtivo.imoveis.titulo : 'Imóvel Locado'}</h5>
-                                        </div>
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800">
-                                            Vigência: ${contratoAtivo.data_inicio ? contratoAtivo.data_inicio.split('-').reverse().join('/') : ''} até ${contratoAtivo.data_fim ? contratoAtivo.data_fim.split('-').reverse().join('/') : ''}
-                                        </span>
-                                    </div>
-
-                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-2 border-t border-slate-800">
-                                        <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono text-xs">R$ ${Number(contratoAtivo.valor_aluguel_bruto).toLocaleString('pt-BR')}/mês</strong></div>
-                                        <div><span class="text-slate-500 block text-[10px]">Dia Vencimento:</span> <strong class="text-amber-300 font-mono">Todo dia ${contratoAtivo.dia_vencimento_aluguel || '10'}</strong></div>
-                                        <div><span class="text-slate-500 block text-[10px]">Proprietário Titular:</span> <strong class="text-white">${donoImovel ? donoImovel.nome : 'Não vinculado'}</strong></div>
-                                    </div>
-
-                                    <!-- DOCUMENTOS DO INQUILINO COM OLHINHO 👁️ -->
-                                    ${docsContratoHtml}
-                                </div>
-                            `}
-
-                            <h4 class="text-xs font-black uppercase text-cyan-300 flex items-center gap-1.5 pt-2">
-                                <i class="fa-solid fa-receipt"></i> 2. Histórico de Pagamentos de Mensalidades
-                            </h4>
-
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs font-mono text-slate-300">
-                                    <thead class="bg-slate-950 text-slate-500 uppercase text-[9px] border-b border-slate-800">
-                                        <tr>
-                                            <th class="py-2 px-2">Referência</th>
-                                            <th class="py-2 px-2">Vencimento</th>
-                                            <th class="py-2 px-2">Valor</th>
-                                            <th class="py-2 px-2">Data Pagto</th>
-                                            <th class="py-2 px-2 text-right">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-800/60 text-[10px]">
-                                        ${mensalidades.length === 0 ? '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Nenhuma mensalidade emitida ainda.</td></tr>' : 
-                                        mensalidades.map(m => `
-                                            <tr>
-                                                <td class="py-2 px-2 font-bold text-white">${m.mes_referencia}</td>
-                                                <td class="py-2 px-2 text-slate-400">${m.data_vencimento ? m.data_vencimento.split('-').reverse().join('/') : '--/--/----'}</td>
-                                                <td class="py-2 px-2 text-emerald-400 font-bold">R$ ${Number(m.valor_aluguel).toLocaleString('pt-BR')}</td>
-                                                <td class="py-2 px-2 text-slate-300">${m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : 'Em aberto'}</td>
-                                                <td class="py-2 px-2 text-right">
-                                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-400 border border-rose-800'}">
-                                                        ${m.status_inquilino || 'Pendente'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                corpo.innerHTML = `
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between flex-wrap gap-2">
-                            <div>
-                                <span class="text-[10px] uppercase font-bold text-sky-400 block">Ficha Cadastral</span>
-                                <h4 class="text-base font-black text-white">${cliente.nome}</h4>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-800 font-mono">
-                                ID: ${cliente.id.substring(0, 8)}...
-                            </span>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
-                            <div><span class="text-slate-500 block">CPF / CNPJ:</span> <strong class="text-white font-mono">${cliente.cpf_cnpj || '---'}</strong></div>
-                            <div><span class="text-slate-500 block">WhatsApp / Fone:</span> <strong class="text-cyan-300 font-mono">${cliente.whatsapp || cliente.telefone || '---'}</strong></div>
-                            <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${cliente.email || '---'}</strong></div>
-                        </div>
-
-                        ${cliente.endereco_completo ? `
-                            <p class="text-[11px] text-slate-400 pt-1 border-t border-slate-900">
-                                <i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Endereço: <strong>${cliente.endereco_completo}</strong>
-                            </p>
-                        ` : ''}
-                    </div>
-
-                    ${blocoNegociosHtml}
-                `;
-
-            } catch (err) {
-                console.error(err);
-                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar dossiê do cliente.</p>';
-            }
-        }
-
         function fecharModalDossieCliente() {
-            document.getElementById('modal-dossie-cliente').classList.add('hidden');
+            const modal = document.getElementById('modal-dossie-cliente');
+            if (modal) modal.classList.add('hidden');
         }
+        window.fecharModalDossieCliente = fecharModalDossieCliente;
 
-        // =========================================================================
-        // MOTOR DA AGENDA & CALENDÁRIO GERENCIAL
-        // =========================================================================
-        function abrirModalAgendaVisitas() {
-            document.getElementById('modal-cockpit-agenda').classList.remove('hidden');
-            carregarAgendaMes();
-        }
-
-        function fecharModalAgendaVisitas() {
-            document.getElementById('modal-cockpit-agenda').classList.add('hidden');
-        }
-
-        function navegarMesAgenda(delta) {
-            mesAtualAgenda += delta;
-            if (mesAtualAgenda < 0) {
-                mesAtualAgenda = 11;
-                anoAtualAgenda--;
-            } else if (mesAtualAgenda > 11) {
-                mesAtualAgenda = 0;
-                anoAtualAgenda++;
-            }
-            carregarAgendaMes();
-        }
-
-        function irParaHojeAgenda() {
-            const agora = new Date();
-            mesAtualAgenda = agora.getMonth();
-            anoAtualAgenda = agora.getFullYear();
-            const diaNum = String(agora.getDate()).padStart(2, '0');
-            const mesNum = String(agora.getMonth() + 1).padStart(2, '0');
-            dataIsoSelecionadaAgenda = `${agora.getFullYear()}-${mesNum}-${diaNum}`;
-            carregarAgendaMes();
-        }
-
-        async function carregarAgendaMes() {
-            if (!dadosImobiliaria) return;
-
-            const grid = document.getElementById('grid-calendario-dias');
-            const labelMesAno = document.getElementById('label-mes-ano-agenda');
-            const badgeTotal = document.getElementById('badge-total-agenda-mes');
-
-            if (labelMesAno) {
-                labelMesAno.innerText = `${nomesMesesAgenda[mesAtualAgenda]} ${anoAtualAgenda}`;
-            }
-
-            if (grid) {
-                grid.innerHTML = `
-                    <div class="py-8 text-center text-slate-500 col-span-7">
-                        <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-lg mb-2"></i>
-                        <p>Consultando compromissos...</p>
-                    </div>
-                `;
-            }
-
-            try {
-                const ultimoDia = new Date(anoAtualAgenda, mesAtualAgenda + 1, 0);
-                const mesNumStr = String(mesAtualAgenda + 1).padStart(2, '0');
-                const dataInicioIso = `${anoAtualAgenda}-${mesNumStr}-01T00:00:00`;
-                const dataFimIso = `${anoAtualAgenda}-${mesNumStr}-${String(ultimoDia.getDate()).padStart(2, '0')}T23:59:59`;
-
-                const { data: agendamentos, error: errLeads } = await supabaseClient
-                    .from('leads_contatos')
-                    .select('*')
-                    .eq('imobiliaria_id', dadosImobiliaria.id)
-                    .not('data_agendamento', 'is', null)
-                    .gte('data_agendamento', dataInicioIso)
-                    .lte('data_agendamento', dataFimIso)
-                    .order('data_agendamento', { ascending: true });
-
-                if (errLeads) throw errLeads;
-
-                const imovelIds = [...new Set((agendamentos || []).map(a => a.imovel_id).filter(Boolean))];
-                const mapaImoveis = {};
-
-                if (imovelIds.length > 0) {
-                    const { data: imoveisData } = await supabaseClient
-                        .from('imoveis')
-                        .select('id, codigo_ref, titulo, foto_capa, logradouro, numero, bairro, cidade, valor_venda, valor_locacao')
-                        .in('id', imovelIds);
-
-                    (imoveisData || []).forEach(im => {
-                        mapaImoveis[im.id] = im;
-                    });
-                }
-
-                mapaAgendamentosMes = {};
-                let totalMes = 0;
-
-                (agendamentos || []).forEach(lead => {
-                    lead.imoveis = mapaImoveis[lead.imovel_id] || null;
-
-                    const dt = new Date(lead.data_agendamento);
-                    const y = dt.getFullYear();
-                    const m = String(dt.getMonth() + 1).padStart(2, '0');
-                    const d = String(dt.getDate()).padStart(2, '0');
-                    const chave = `${y}-${m}-${d}`;
-
-                    if (!mapaAgendamentosMes[chave]) {
-                        mapaAgendamentosMes[chave] = [];
-                    }
-                    mapaAgendamentosMes[chave].push(lead);
-                    totalMes++;
-                });
-
-                if (badgeTotal) badgeTotal.innerText = `${totalMes} no mês`;
-
-                const hoje = new Date();
-                if (mesAtualAgenda === hoje.getMonth() && anoAtualAgenda === hoje.getFullYear()) {
-                    const kpiVisitas = document.getElementById('kpi-visitas-hoje');
-                    if (kpiVisitas) kpiVisitas.innerText = totalMes;
-                }
-
-                renderizarGradeCalendario();
-
-                if (!dataIsoSelecionadaAgenda || !dataIsoSelecionadaAgenda.startsWith(`${anoAtualAgenda}-${mesNumStr}`)) {
-                    const hojeIso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
-                    if (hojeIso.startsWith(`${anoAtualAgenda}-${mesNumStr}`)) {
-                        dataIsoSelecionadaAgenda = hojeIso;
-                    } else {
-                        const diasComVisita = Object.keys(mapaAgendamentosMes).sort();
-                        dataIsoSelecionadaAgenda = diasComVisita.length > 0 ? diasComVisita[0] : `${anoAtualAgenda}-${mesNumStr}-01`;
-                    }
-                }
-
-                selecionarDiaAgenda(dataIsoSelecionadaAgenda);
-
-            } catch (err) {
-                console.error('[AGENDA VISITAS] Exceção tratada:', err);
-                if (grid) grid.innerHTML = '<p class="col-span-7 text-center text-red-400 py-6 text-xs font-mono">Erro ao carregar calendário.</p>';
-            }
-        }
-
-        function renderizarGradeCalendario() {
-            const grid = document.getElementById('grid-calendario-dias');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            const primeiroDiaSemana = new Date(anoAtualAgenda, mesAtualAgenda, 1).getDay();
-            const totalDiasMes = new Date(anoAtualAgenda, mesAtualAgenda + 1, 0).getDate();
-
-            const hoje = new Date();
-            const hojeIso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
-
-            for (let i = 0; i < primeiroDiaSemana; i++) {
-                const celulaVazia = document.createElement('div');
-                celulaVazia.className = 'h-12 sm:h-14 rounded-xl bg-slate-950/20 border border-slate-900/40 opacity-20 pointer-events-none';
-                grid.appendChild(celulaVazia);
-            }
-
-            for (let d = 1; d <= totalDiasMes; d++) {
-                const diaStr = String(d).padStart(2, '0');
-                const mesStr = String(mesAtualAgenda + 1).padStart(2, '0');
-                const dataIso = `${anoAtualAgenda}-${mesStr}-${diaStr}`;
-
-                const agendamentosDia = mapaAgendamentosMes[dataIso] || [];
-                const qtd = agendamentosDia.length;
-                const temAgendamento = qtd > 0;
-                const ehHoje = (dataIso === hojeIso);
-                const ehSelecionado = (dataIso === dataIsoSelecionadaAgenda);
-
-                const celula = document.createElement('div');
-                celula.id = `celula-dia-${dataIso}`;
-                celula.onclick = () => selecionarDiaAgenda(dataIso);
-
-                let estiloBase = 'h-12 sm:h-14 p-1 rounded-xl border flex flex-col justify-between transition cursor-pointer relative select-none ';
-
-                if (ehSelecionado) {
-                    estiloBase += 'bg-blue-600/30 border-cyan-400 shadow-lg shadow-cyan-950/80 ring-2 ring-cyan-400/50 ';
-                } else if (temAgendamento) {
-                    estiloBase += 'bg-cyan-950/50 border-cyan-500 hover:border-cyan-300 hover:bg-cyan-900/40 shadow-sm shadow-cyan-900/50 ';
-                } else {
-                    estiloBase += 'bg-slate-950 border-slate-800/80 hover:border-slate-600 hover:bg-slate-900/60 ';
-                }
-
-                celula.className = estiloBase;
-
-                const badgeHojeHtml = ehHoje 
-                    ? `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow shadow-amber-400/80" title="Hoje"></span>` 
-                    : '';
-
-                let badgeQtdHtml = '';
-                if (temAgendamento) {
-                    badgeQtdHtml = `
-                        <div class="flex items-center gap-1 bg-cyan-500 text-slate-950 text-[8px] font-black px-1.5 py-0.2 rounded-md self-end shadow">
-                            <i class="fa-solid fa-clock text-[7px]"></i>
-                            <span>${qtd}</span>
-                        </div>
-                    `;
-                }
-
-                celula.innerHTML = `
-                    <div class="flex items-center justify-between w-full">
-                        <span class="font-mono text-[11px] font-black ${temAgendamento ? 'text-cyan-300' : (ehHoje ? 'text-amber-300' : 'text-slate-400')}">${d}</span>
-                        ${badgeHojeHtml}
-                    </div>
-                    <div class="w-full flex justify-end">
-                        ${badgeQtdHtml}
-                    </div>
-                `;
-
-                grid.appendChild(celula);
-            }
-        }
-
-        function selecionarDiaAgenda(dataIso) {
-            dataIsoSelecionadaAgenda = dataIso;
-
-            document.querySelectorAll('[id^="celula-dia-"]').forEach(el => {
-                const elDataIso = el.id.replace('celula-dia-', '');
-                const ag = mapaAgendamentosMes[elDataIso] || [];
-                const tem = ag.length > 0;
-
-                if (elDataIso === dataIso) {
-                    el.className = 'h-12 sm:h-14 p-1 rounded-xl border flex flex-col justify-between transition cursor-pointer relative select-none bg-blue-600/30 border-cyan-400 shadow-lg shadow-cyan-950/80 ring-2 ring-cyan-400/50';
-                } else if (tem) {
-                    el.className = 'h-12 sm:h-14 p-1 rounded-xl border flex flex-col justify-between transition cursor-pointer relative select-none bg-cyan-950/50 border-cyan-500 hover:border-cyan-300 hover:bg-cyan-900/40 shadow-sm shadow-cyan-900/50';
-                } else {
-                    el.className = 'h-12 sm:h-14 p-1 rounded-xl border flex flex-col justify-between transition cursor-pointer relative select-none bg-slate-950 border-slate-800/80 hover:border-slate-600 hover:bg-slate-900/60';
-                }
-            });
-
-            const [ano, mes, dia] = dataIso.split('-');
-            const dataObj = new Date(Number(ano), Number(mes) - 1, Number(dia));
-            const diasSemanaNomes = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-
-            const labelDia = document.getElementById('label-dia-selecionado');
-            if (labelDia) {
-                labelDia.innerText = `${diasSemanaNomes[dataObj.getDay()]}, ${dia} de ${nomesMesesAgenda[Number(mes) - 1]}`;
-            }
-
-            const agendamentos = mapaAgendamentosMes[dataIso] || [];
-            const contadorDia = document.getElementById('contador-compromissos-dia');
-            if (contadorDia) {
-                contadorDia.innerText = `${agendamentos.length} ${agendamentos.length === 1 ? 'visita' : 'visitas'}`;
-            }
-
-            const containerLista = document.getElementById('lista-compromissos-dia');
-            if (!containerLista) return;
-
-            if (agendamentos.length === 0) {
-                containerLista.innerHTML = `
-                    <div class="py-10 text-center text-slate-500 space-y-1">
-                        <i class="fa-regular fa-calendar-xmark text-slate-600 text-2xl mb-1 block"></i>
-                        <p class="text-xs font-bold text-slate-400">Nenhum compromisso para este dia.</p>
-                        <p class="text-[10px] text-slate-600">Selecione uma data iluminada para ver agendamentos.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            containerLista.innerHTML = agendamentos.map(lead => {
-                const dt = new Date(lead.data_agendamento);
-                const horaFmt = dt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                const imovel = lead.imoveis || {};
-                const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '');
-                const imovelRef = imovel.codigo_ref ? `Ref: ${imovel.codigo_ref}` : 'Sob consulta';
-
-                return `
-                    <div onclick="abrirDossieAgendamento('${lead.id}')" class="bg-slate-900/90 hover:bg-slate-900 p-2.5 rounded-xl border border-slate-800 hover:border-cyan-400/60 transition cursor-pointer group shadow-sm space-y-1.5">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono font-black text-[11px] flex items-center gap-1">
-                                    <i class="fa-solid fa-clock text-[9px]"></i>
-                                    <span>${horaFmt}</span>
-                                </span>
-                                <span class="font-bold text-white text-xs group-hover:text-cyan-300 transition truncate max-w-[150px] sm:max-w-[190px]">
-                                    ${lead.nome}
-                                </span>
-                            </div>
-                            
-                            <span class="px-1.5 py-0.2 rounded text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-800 flex-shrink-0">
-                                ${lead.status || 'Agendado'}
-                            </span>
-                        </div>
-
-                        <div class="text-[10px] text-slate-400 flex items-center gap-1.5 truncate">
-                            <i class="fa-solid fa-house-chimney text-cyan-400 text-xs flex-shrink-0"></i>
-                            <span class="text-cyan-400 font-mono font-bold">${imovelRef}</span>
-                            <span class="truncate text-slate-300">• ${imovel.titulo || 'Visita agendada'}</span>
-                        </div>
-
-                        ${lead.notas_agendamento ? `
-                            <p class="text-[10px] text-amber-300/90 bg-amber-950/20 px-2 py-0.5 rounded border border-amber-900/40 line-clamp-1 italic">
-                                "${lead.notas_agendamento}"
-                            </p>
-                        ` : ''}
-
-                        <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[10px]">
-                            <span class="text-slate-500 font-mono">${lead.whatsapp}</span>
-                            <div class="flex items-center gap-2" onclick="event.stopPropagation()">
-                                ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${lead.nome}! Confirmando nosso compromisso agendado para hoje às ${horaFmt} (${imovelRef}). Qualquer dúvida estou à disposição!`)}" 
-                                       target="_blank" 
-                                       class="bg-emerald-600/80 hover:bg-emerald-500 text-white font-bold px-2 py-0.5 rounded text-[9px] flex items-center gap-1 transition">
-                                        <i class="fa-brands fa-whatsapp"></i> Confirmar
-                                    </a>
-                                ` : ''}
-                                <button onclick="abrirDossieAgendamento('${lead.id}')" class="text-cyan-400 hover:text-white font-bold transition text-[10px]">
-                                    Ver Ficha &rarr;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function abrirDossieAgendamento(leadId) {
-            if (!leadId) return;
-
-            const modal = document.getElementById('modal-dash-agendamento');
-            const corpo = document.getElementById('agendamento-modal-conteudo');
-            const btnZap = document.getElementById('agendamento-modal-btn-zap');
-
-            corpo.innerHTML = `
-                <div class="py-12 text-center text-slate-500">
-                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                    <p>Carregando dados do agendamento...</p>
-                </div>
-            `;
-            modal.classList.remove('hidden');
-
-            try {
-                const { data: lead, error } = await supabaseClient
-                    .from('leads_contatos')
-                    .select('*')
-                    .eq('id', leadId)
-                    .single();
-
-                if (error || !lead) throw new Error('Agendamento não localizado.');
-
-                let imovel = null;
-                if (lead.imovel_id) {
-                    const { data: imData } = await supabaseClient
-                        .from('imoveis')
-                        .select('*')
-                        .eq('id', lead.imovel_id)
-                        .maybeSingle();
-                    imovel = imData;
-                }
-
-                const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '');
-                const dtAgend = lead.data_agendamento ? new Date(lead.data_agendamento) : null;
-                const dataFmt = dtAgend ? dtAgend.toLocaleDateString('pt-BR') : '--/--/----';
-                const horaFmt = dtAgend ? dtAgend.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
-
-                const textoZap = encodeURIComponent(`Olá ${lead.nome}! Passando para confirmar nossa visita agendada para ${dataFmt} às ${horaFmt}${imovel ? ` no imóvel Ref: ${imovel.codigo_ref}` : ''}.`);
-                btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${textoZap}` : '#';
-
-                let blocoImovelHtml = '<p class="text-slate-500 text-xs italic">Nenhum imóvel vinculado a este agendamento.</p>';
-
-                if (imovel) {
-                    const foto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80');
-                    const endereco = `${imovel.logradouro || 'Endereço não informado'}, ${imovel.numero || 'S/N'} - ${imovel.bairro || ''} (${imovel.cidade || ''}/${imovel.uf || ''})`;
-                    const valorExibicao = (imovel.valor_venda && Number(imovel.valor_venda) > 0)
-                        ? `Venda: R$ ${Number(imovel.valor_venda).toLocaleString('pt-BR')}`
-                        : `Locação: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês`;
-
-                    blocoImovelHtml = `
-                        <div class="bg-slate-950 p-3 rounded-xl border border-cyan-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <img src="${foto}" alt="Capa" class="w-14 h-14 rounded-lg object-cover border border-slate-700 flex-shrink-0">
-                                <div>
-                                    <div class="flex items-center gap-1.5">
-                                        <span class="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">Ref: ${imovel.codigo_ref}</span>
-                                        <span class="font-bold text-white text-xs">${imovel.titulo}</span>
-                                    </div>
-                                    <p class="text-[10px] text-slate-400 mt-0.5"><i class="fa-solid fa-location-dot text-rose-400 mr-1"></i>${endereco}</p>
-                                    <span class="text-xs font-black text-emerald-400 font-mono block mt-1">${valorExibicao}</span>
-                                </div>
-                            </div>
-                            <button onclick="fecharModalAgendamento(); abrirModalDetalhesImovel('${imovel.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
-                                Raio-X
-                            </button>
-                        </div>
-                    `;
-                }
-
-                corpo.innerHTML = `
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                        <div class="flex items-center justify-between flex-wrap gap-2">
-                            <div>
-                                <span class="text-[10px] uppercase font-bold text-cyan-400 block">Futuro Comprador</span>
-                                <h4 class="text-base font-black text-white">${lead.nome}</h4>
-                            </div>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800">
-                                Status: ${lead.status || 'Visita Agendada'}
-                            </span>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
-                            <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-cyan-300 font-mono">${lead.whatsapp || 'Não informado'}</strong></div>
-                            <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${lead.email || 'Não informado'}</strong></div>
-                            <div><span class="text-slate-500 block">Captado em:</span> <strong class="text-slate-200">${new Date(lead.criado_em).toLocaleDateString('pt-BR')}</strong></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-cyan-950/20 p-4 rounded-xl border border-cyan-500/30 space-y-2">
-                        <span class="text-[10px] uppercase font-black tracking-wider text-cyan-400 block flex items-center gap-1.5">
-                            <i class="fa-solid fa-clock"></i> Compromisso Marcado
-                        </span>
-                        
-                        <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-                                <span class="text-slate-500 block text-[10px]">Data:</span>
-                                <strong class="text-white text-sm">${dataFmt}</strong>
-                            </div>
-                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-                                <span class="text-slate-500 block text-[10px]">Horário:</span>
-                                <strong class="text-cyan-300 text-sm">${horaFmt}</strong>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-1">
-                            <span class="text-[10px] uppercase font-bold text-amber-400 block">Notas da Reunião / Agendamento:</span>
-                            <p class="text-slate-300 text-xs leading-relaxed italic">
-                                ${lead.notas_agendamento || 'Nenhuma observação cadastrada.'}
-                            </p>
-                        </div>
-                    </div>
-
-                    ${(lead.valor_proposta || lead.condicoes_proposta) ? `
-                        <div class="bg-amber-950/20 p-3 rounded-xl border border-amber-500/30 space-y-1.5">
-                            <span class="text-[10px] uppercase font-black text-amber-400 block flex items-center gap-1.5">
-                                <i class="fa-solid fa-file-invoice-dollar"></i> Proposta Vinculada
-                            </span>
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs text-slate-300">Valor da Proposta:</span>
-                                <strong class="text-amber-300 font-mono text-sm">R$ ${Number(lead.valor_proposta || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong>
-                            </div>
-                            ${lead.condicoes_proposta ? `<p class="text-[11px] text-slate-400 italic mt-1">${lead.condicoes_proposta}</p>` : ''}
-                        </div>
-                    ` : ''}
-
-                    <div class="space-y-2 pt-1">
-                        <span class="text-[10px] uppercase font-black tracking-wider text-slate-400 block flex items-center gap-1.5">
-                            <i class="fa-solid fa-house-chimney"></i> Imóvel Destino da Visita
-                        </span>
-                        ${blocoImovelHtml}
-                    </div>
-                `;
-
-            } catch (err) {
-                console.error(err);
-                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8 font-mono">Erro ao carregar dados do agendamento.</p>';
-            }
-        }
-
-        function fecharModalAgendamento() {
-            document.getElementById('modal-dash-agendamento').classList.add('hidden');
-        }
-
-        // =========================================================================
-        // MODAL 1: RAIO-X COMPLETO DO IMÓVEL (COM DOCUMENTOS ANEXOS)
-        // =========================================================================
         async function abrirModalDetalhesImovel(imovelId) {
             if (!imovelId) return;
 
@@ -2884,7 +2180,6 @@ atualizarPainelAssinatura(imobAlvo);
                 const prop = imovel.clientes || {};
                 const zapProp = ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '');
 
-                // Documentos anexados do imóvel com o Olhinho 👁️
                 const docsHtml = renderizarBotoesDocumentos(imovel.documentos_anexos, 'Documentos Técnicos, Fotos Extras & Anexos');
 
                 if (corpo) {
@@ -2913,7 +2208,7 @@ atualizarPainelAssinatura(imobAlvo);
                             <div><span class="text-slate-500 block text-[10px]">IPTU</span><strong class="text-white text-xs">R$ ${Number(imovel.valor_iptu || 0).toLocaleString('pt-BR')}</strong></div>
                         </div>
 
- <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
+                        <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
                                     <i class="fa-solid fa-user-tie"></i> Proprietário Titular do Imóvel
@@ -2946,8 +2241,6 @@ atualizarPainelAssinatura(imobAlvo);
                             </div>
                         </div>
 
-
-
                         <!-- SEÇÃO DE DOCUMENTOS ANEXADOS -->
                         ${docsHtml}
                     `;
@@ -2957,11 +2250,6 @@ atualizarPainelAssinatura(imobAlvo);
                 console.error(err);
                 if (corpo) corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar detalhes do imóvel.</p>';
             }
-        }
-
-        function fecharModalDashImovel() {
-            const modal = document.getElementById('modal-dash-imovel');
-            if (modal) modal.classList.add('hidden');
         }
 
         window.abrirModalDetalhesImovel = abrirModalDetalhesImovel;
@@ -3154,7 +2442,7 @@ atualizarPainelAssinatura(imobAlvo);
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2">
-                                        <button onclick="fecharDrilldown(); abrirDossie360Cliente('${c.cliente_id || ''}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
+                                        <button onclick="fecharDrilldown(); window.abrirDossieUniversal('${c.cliente_id || ''}', '${(c.cliente_nome || '').replace(/'/g, "\\'")}', '${c.cliente_cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
                                             Dossiê 360°
                                         </button>
                                         ${zapLimpo ? `
@@ -3168,7 +2456,7 @@ atualizarPainelAssinatura(imobAlvo);
                                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
                                     <div>
                                         <span class="text-slate-500 block">Locatário:</span> 
-                                        <button onclick="fecharDrilldown(); abrirDossie360Cliente('${c.cliente_id || ''}', 'inquilino')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left">
+                                        <button onclick="fecharDrilldown(); window.abrirDossieUniversal('${c.cliente_id || ''}', '${(c.cliente_nome || '').replace(/'/g, "\\'")}', '${c.cliente_cpf_cnpj || ''}', 'inquilino')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left">
                                             ${c.cliente_nome}
                                         </button>
                                     </div>
@@ -3217,27 +2505,20 @@ atualizarPainelAssinatura(imobAlvo);
                                     </div>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Fechado</span>
                                 </div>
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
                                     <div>
                                         <span class="text-slate-500 block">Comprador:</span> 
-                                        ${v.cliente_comprador_id ? `
-                                            <button type="button" onclick="abrirDossie360Cliente('${v.cliente_comprador_id}', 'comprador')" 
-                                                    class="text-white hover:text-amber-300 font-bold underline cursor-pointer text-left inline-flex items-center gap-1">
-                                                <span>${v.cliente_comprador_nome}</span>
-                                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-amber-400"></i>
-                                            </button>
-                                        ` : `
-                                            <strong class="text-white">${v.cliente_comprador_nome}</strong>
-                                        `}
+                                        <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${v.cliente_comprador_id || ''}', '${(v.cliente_comprador_nome || '').replace(/'/g, "\\'")}', '', 'comprador')" 
+                                                class="text-white hover:text-amber-300 font-bold underline cursor-pointer text-left inline-flex items-center gap-1">
+                                            <span>${v.cliente_comprador_nome}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-amber-400"></i>
+                                        </button>
                                     </div>
                                     <div><span class="text-slate-500 block">Valor Venda:</span> <strong class="text-white font-mono">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR')}</strong></div>
                                     <div><span class="text-slate-500 block">Comissão Imob:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR')}</strong></div>
                                     <div><span class="text-slate-500 block">Corretor (${v.corretor_nome || 'Casa'}):</span> <strong class="text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')}</strong></div>
                                 </div>
-
-
-
-
                             </div>
                         `;
                     }).join('');
@@ -3296,7 +2577,7 @@ atualizarPainelAssinatura(imobAlvo);
                     contador.innerText = `${leads.length} propostas em análise`;
 
                     if (leads.length === 0) {
-                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhuma proposta comercial pendente.</p>';
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum proposta comercial pendente.</p>';
                         return;
                     }
 
@@ -3331,7 +2612,7 @@ atualizarPainelAssinatura(imobAlvo);
             }
         }
 
-      function atalhoAbaFinanceira() {
+        function atalhoAbaFinanceira() {
             if (!temPermissaoFinanceira) return;
             const boxFin = document.getElementById('box-dashboard-financeiro');
             if (boxFin) {
@@ -3344,7 +2625,7 @@ atualizarPainelAssinatura(imobAlvo);
                     boxFin.classList.add('hidden');
                 }
             }
-       }
+        }
 
         async function carregarDashboardFinanceiro() {
             if (!dadosImobiliaria) return;
