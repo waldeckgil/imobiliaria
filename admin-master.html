@@ -1937,15 +1937,18 @@
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
 
+            // Limpa qualquer espaço duplo ou caractere oculto
+            const nomeLimpo = (imob.nome_fantasia || '').replace(/\s+/g, ' ').trim();
+
             document.getElementById('excluir-imob-id').value = imob.id;
-            document.getElementById('excluir-imob-nome-esperado').value = imob.nome_fantasia.trim();
-            document.getElementById('excluir-nome-display').innerText = imob.nome_fantasia;
+            document.getElementById('excluir-imob-nome-esperado').value = nomeLimpo;
+            document.getElementById('excluir-nome-display').innerText = nomeLimpo;
             document.getElementById('excluir-input-confirmacao').value = '';
             document.getElementById('excluir-motivo-input').value = '';
 
             const btn = document.getElementById('btn-confirmar-exclusao');
             btn.disabled = true;
-            btn.classList.add('cursor-not-allowed');
+            btn.className = 'px-5 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-black flex items-center gap-1.5 transition shadow cursor-not-allowed opacity-50';
 
             document.getElementById('modal-excluir-imob').classList.remove('hidden');
         }
@@ -1955,18 +1958,17 @@
         }
 
         function validarTextoConfirmacaoExclusao() {
-            const esperado = document.getElementById('excluir-imob-nome-esperado').value.trim().toLowerCase();
-            const digitado = document.getElementById('excluir-input-confirmacao').value.trim().toLowerCase();
+            // Normaliza espaços duplos e trim em ambos os lados
+            const esperado = (document.getElementById('excluir-imob-nome-esperado').value || '').replace(/\s+/g, ' ').trim().toLowerCase();
+            const digitado = (document.getElementById('excluir-input-confirmacao').value || '').replace(/\s+/g, ' ').trim().toLowerCase();
             const btn = document.getElementById('btn-confirmar-exclusao');
 
             if (esperado.length > 0 && esperado === digitado) {
                 btn.disabled = false;
-                btn.classList.remove('cursor-not-allowed');
-                btn.classList.add('cursor-pointer');
+                btn.className = 'px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black flex items-center gap-1.5 transition shadow-lg cursor-pointer opacity-100 ring-2 ring-rose-500/50';
             } else {
                 btn.disabled = true;
-                btn.classList.add('cursor-not-allowed');
-                btn.classList.remove('cursor-pointer');
+                btn.className = 'px-5 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-black flex items-center gap-1.5 transition shadow cursor-not-allowed opacity-50';
             }
         }
 
