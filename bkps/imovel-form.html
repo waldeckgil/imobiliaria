@@ -10,19 +10,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+
     <style>
+        /* PADRÃO IDÊNTICO AO SUPABASE: BARRA FÍSICA PERMANENTE */
+        html {
+            overflow-y: scroll !important;
+        }
+
+        /* APLICAÇÃO GLOBAL NO MESMO ESTILO DO DASHBOARD SUPABASE */
+        *::-webkit-scrollbar,
+        ::-webkit-scrollbar {
+            width: 10px !important;
+            height: 10px !important;
+            display: block !important;
+        }
+        *::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-track {
+            background: #060913 !important;
+        }
+        *::-webkit-scrollbar-thumb,
+        ::-webkit-scrollbar-thumb {
+            background: #64748b !important;
+            border-radius: 9999px !important;
+            border: 2px solid #060913 !important;
+        }
+        *::-webkit-scrollbar-thumb:hover,
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+        }
+
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
         .foto-preview-card { position: relative; border-radius: 0.75rem; overflow: hidden; border: 2px solid transparent; }
         .foto-capa-ativa { border-color: #38bdf8 !important; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     </style>
+
+
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
+
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
-    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
-        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
+ 
+
+
+    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -1417,16 +1453,37 @@
                     window.location.href = 'imoveis-lista.html';
                 }, 1500);
 
+    
             } catch (err) {
                 console.error(err);
-                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/80 border border-red-800 text-red-300';
-                alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg';
-                alertaTexto.innerText = err.message || 'Erro ao salvar imóvel.';
+
+                let mensagemAmigavel = err.message || 'Erro ao salvar imóvel. Tente novamente.';
+                const errStr = (String(err.message || '') + ' ' + String(err.details || '')).toLowerCase();
+
+                // TRADUÇÃO HUMANIZADA: CÓDIGO DE REFERÊNCIA DUPLICADO
+                if (errStr.includes('unq_imovel_ref_por_imob') || errStr.includes('codigo_ref') || err.code === '23505') {
+                    const codDigitado = document.getElementById('campo-codigo-ref').value.trim();
+                    mensagemAmigavel = `O Código de Referência "${codDigitado}" já está em uso em outro imóvel da sua imobiliária. Por favor, utilize um código diferente.`;
+                    
+                    // Foca e destaca o campo com erro
+                    const inputCod = document.getElementById('campo-codigo-ref');
+                    if (inputCod) {
+                        inputCod.classList.add('border-rose-500', 'bg-rose-950/30');
+                        inputCod.focus();
+                        inputCod.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+
+                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/90 border border-red-800 text-red-300 shadow-xl';
+                alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg flex-shrink-0 text-rose-400';
+                alertaTexto.innerText = mensagemAmigavel;
                 alerta.classList.remove('hidden');
 
                 btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Salvar Imóvel</span>';
                 btn.disabled = false;
             }
+
+
         }
 
         async function executarLogout() {

@@ -10,7 +10,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
     <style>
+        /* PADRÃO IDÊNTICO AO SUPABASE: BARRA FÍSICA PERMANENTE */
+        html {
+            overflow-y: scroll !important;
+        }
+
+        /* APLICAÇÃO GLOBAL NO MESMO ESTILO DO DASHBOARD SUPABASE */
+        *::-webkit-scrollbar,
+        ::-webkit-scrollbar {
+            width: 10px !important;
+            height: 10px !important;
+            display: block !important;
+        }
+        *::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-track {
+            background: #060913 !important;
+        }
+        *::-webkit-scrollbar-thumb,
+        ::-webkit-scrollbar-thumb {
+            background: #64748b !important;
+            border-radius: 9999px !important;
+            border: 2px solid #060913 !important;
+        }
+        *::-webkit-scrollbar-thumb:hover,
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8 !important;
+        }
+
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
         input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -18,12 +47,18 @@
             cursor: pointer;
         }
     </style>
+
+
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
-    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
-        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+  
+     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
+
+  
+  
+    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -84,26 +119,44 @@
         </div>
     </header>
 
-    <!-- NAVEGAÇÃO DOS MÓDULOS -->
-    <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
-        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
-            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
+  
+
+
+    
+    <!-- NAVEGAÇÃO DOS MÓDULOS (ESTILO COCKPIT COM BORDAS DEFINIDAS E CENTRALIZADO) -->
+    <nav class="bg-slate-950/60 border-b border-slate-800/80 px-4 sm:px-8 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3.5 overflow-x-auto text-sm sm:text-base py-1">
+            
+            <a href="dashboard.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
+                <i class="fa-solid fa-chart-pie text-slate-400"></i>
+                <span>Dashboard 360</span>
             </a>
-            <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
+
+            <a href="imoveis-lista.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
+                <i class="fa-solid fa-house-chimney text-slate-400"></i>
+                <span>Catálogo de Imóveis</span>
             </a>
-            <a href="leads.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
-                <i class="fa-solid fa-comments mr-1"></i> Central de Atendimentos
+
+            <!-- ATIVO NESTA TELA: CENTRAL DE ATENDIMENTOS COM BORDA CIANO NEON -->
+            <a href="leads.html" class="px-4 py-2 rounded-xl font-black bg-slate-800 text-cyan-300 border border-cyan-400/60 shadow-lg shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
+                <i class="fa-solid fa-comments text-cyan-400"></i>
+                <span>Central de Atendimentos</span>
             </a>
-            <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-users mr-1"></i> Equipe & Permissões
+
+            <a href="equipe.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
+                <i class="fa-solid fa-users text-slate-400"></i>
+                <span>Equipe & Permissões</span>
             </a>
-            <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
-                <i class="fa-solid fa-gear mr-1"></i> Configurações & Publicidade
+
+            <a href="configurar-imobiliaria.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
+                <i class="fa-solid fa-gear text-slate-400"></i>
+                <span>Configurações & Publicidade</span>
             </a>
+
         </div>
     </nav>
+
+
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">

@@ -335,89 +335,12 @@
 
         </div>
 
-        <!-- ABAS OPERACIONAIS E DASHBOARD FINANCEIRO -->
-        <div class="box-tech p-5 space-y-4">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs flex-wrap">
-                    <button onclick="mudarAba('catalogo')" id="tab-btn-catalogo" class="px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer">
-                        <i class="fa-solid fa-list mr-1"></i> Catálogo Resumido
-                    </button>
-                    <button onclick="mudarAba('leads')" id="tab-btn-leads" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
-                        <i class="fa-solid fa-inbox mr-1"></i> Leads Recentes
-                    </button>
-                    <button onclick="mudarAba('graficos')" id="tab-btn-graficos" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
-                        <i class="fa-solid fa-chart-column mr-1"></i> Imóveis por Bairro
-                    </button>
-                </div>
+        
 
-                <span class="text-[11px] text-slate-500 font-mono">
-                    Conexão Ativa com PostgreSQL
-                </span>
-            </div>
-
-            <!-- ABA 1: CATÁLOGO RESUMIDO -->
-            <div id="aba-conteudo-catalogo" class="space-y-3">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-slate-300">
-                        <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
-                            <tr>
-                                <th class="py-3 px-3">Imóvel</th>
-                                <th class="py-3 px-3">Código</th>
-                                <th class="py-3 px-3">Tipo / Bairro</th>
-                                <th class="py-3 px-3">Valor</th>
-                                <th class="py-3 px-3">Status</th>
-                                <th class="py-3 px-3 text-right">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-catalogo-corpo" class="divide-y divide-slate-800/60">
-                            <tr>
-                                <td colspan="6" class="py-8 text-center text-slate-500">
-                                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-lg mb-2"></i>
-                                    <p>Buscando estoque no Supabase...</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ABA 2: LEADS RECENTES -->
-            <div id="aba-conteudo-leads" class="hidden space-y-3">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-slate-300">
-                        <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
-                            <tr>
-                                <th class="py-3 px-3">Data/Hora</th>
-                                <th class="py-3 px-3">Cliente</th>
-                                <th class="py-3 px-3">WhatsApp</th>
-                                <th class="py-3 px-3">Contexto / Imóvel</th>
-                                <th class="py-3 px-3">Etapa</th>
-                                <th class="py-3 px-3 text-right">Chamar no Zap</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-leads-corpo" class="divide-y divide-slate-800/60">
-                            <tr>
-                                <td colspan="6" class="py-8 text-center text-slate-500">
-                                    Nenhum lead recebido nas últimas horas.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ABA 3: GRÁFICO DINÂMICO DE BAIRROS -->
-            <div id="aba-conteudo-graficos" class="hidden space-y-4 pt-2">
-                <div class="max-w-xl space-y-3" id="container-grafico-bairros">
-                    <p class="text-xs text-slate-400 mb-2">Concentração do estoque por localização:</p>
-                    <div id="lista-barras-bairros" class="space-y-3">
-                        <div class="text-slate-500 text-xs italic py-4">Carregando métricas de localização...</div>
-                    </div>
-                </div>
-            </div>
-
+<!-- DASHBOARD FINANCEIRO CONSOLIDADO (ATIVADO VIA CARD EXECUTIVO) -->
+        <div id="box-dashboard-financeiro" class="box-tech p-5 space-y-4 hidden">
             <!-- ABA 4: DASHBOARD FINANCEIRO -->
-            <div id="aba-conteudo-financeiro" class="hidden space-y-6 pt-2">
+            <div id="aba-conteudo-financeiro" class="space-y-6">
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
@@ -1033,12 +956,10 @@
 
                 atualizarPainelAssinatura(imobAlvo);
                 popularSeletorMeses();
+          
                 carregarMetricas(imobAlvo.id);
-                carregarCatalogo(imobAlvo.id);
-                carregarLeads(imobAlvo.id);
-                carregarGraficoBairros(imobAlvo.id);
                 carregarAgendaMes();
-            }
+                
         }
 
         async function carregarPerfilOperacional(userId) {
@@ -1078,10 +999,7 @@
                 atualizarPainelAssinatura(imob);
                 popularSeletorMeses();
 
-                carregarMetricas(imob.id);
-                carregarCatalogo(imob.id);
-                carregarLeads(imob.id);
-                carregarGraficoBairros(imob.id);
+        carregarMetricas(imob.id);
                 carregarAgendaMes();
 
             } catch (err) {
@@ -3065,181 +2983,20 @@
             }
         }
 
-        async function carregarCatalogo(imobId) {
-            const tbody = document.getElementById('tabela-catalogo-corpo');
-            try {
-                const { data: imoveis, error } = await supabaseClient
-                    .from('imoveis')
-                    .select('*')
-                    .eq('imobiliaria_id', imobId)
-                    .order('created_at', { ascending: false })
-                    .limit(5);
-
-                if (error) throw error;
-
-                if (!imoveis || imoveis.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-500">Nenhum imóvel cadastrado no catálogo.</td></tr>';
-                    return;
+       function atalhoAbaFinanceira() {
+            if (!temPermissaoFinanceira) return;
+            const boxFin = document.getElementById('box-dashboard-financeiro');
+            if (boxFin) {
+                const estaOculto = boxFin.classList.contains('hidden');
+                if (estaOculto) {
+                    boxFin.classList.remove('hidden');
+                    carregarDashboardFinanceiro();
+                    boxFin.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    boxFin.classList.add('hidden');
                 }
-
-                tbody.innerHTML = imoveis.map(im => `
-                    <tr class="hover:bg-slate-900/50 transition">
-                        <td class="py-3 px-3 flex items-center gap-2">
-                            <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-9 h-9 rounded object-cover">
-                            <span class="font-bold text-white truncate max-w-xs">${im.titulo}</span>
-                        </td>
-                        <td class="py-3 px-3 font-mono text-cyan-400 font-bold">${im.codigo_ref}</td>
-                        <td class="py-3 px-3">${im.tipo} • ${im.bairro || 'Localização'}</td>
-                        <td class="py-3 px-3 font-bold text-slate-200">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</td>
-                        <td class="py-3 px-3">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : (im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : (im.status === 'Vendido' ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-slate-800 text-slate-300'))}">
-                                ${im.status}
-                            </span>
-                        </td>
-                        <td class="py-3 px-3 text-right">
-                            <a href="imovel-form.html?id=${im.id}" class="text-cyan-400 hover:text-cyan-300 font-bold text-xs"><i class="fa-regular fa-pen-to-square"></i></a>
-                        </td>
-                    </tr>
-                `).join('');
-
-            } catch (err) {
-                console.error(err);
-                tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-red-400">Erro ao carregar catálogo.</td></tr>';
             }
         }
-
-        async function carregarLeads(imobId) {
-            const tbody = document.getElementById('tabela-leads-corpo');
-            try {
-                const { data: leads, error } = await supabaseClient
-                    .from('leads_contatos')
-                    .select('*')
-                    .eq('imobiliaria_id', imobId)
-                    .order('criado_em', { ascending: false })
-                    .limit(5);
-
-                if (error) throw error;
-
-                if (!leads || leads.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-500">Nenhum lead registrado no sistema.</td></tr>';
-                    return;
-                }
-
-                tbody.innerHTML = leads.map(l => {
-                    const dataFormatada = new Date(l.criado_em).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                    const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
-
-                    return `
-                        <tr class="hover:bg-slate-900/50 transition">
-                            <td class="py-3 px-3 text-slate-400 text-[11px]">${dataFormatada}</td>
-                            <td class="py-3 px-3 font-bold text-white">${l.nome}</td>
-                            <td class="py-3 px-3 font-mono text-cyan-300">${l.whatsapp}</td>
-                            <td class="py-3 px-3 text-slate-300 truncate max-w-[180px]">
-                                ${l.mensagem || 'Interesse pelo site'}
-                            </td>
-                            <td class="py-3 px-3">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-400 border border-blue-800">
-                                    ${l.status || 'Novo'}
-                                </span>
-                            </td>
-                            <td class="py-3 px-3 text-right">
-                                <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-[11px] font-bold inline-flex items-center gap-1 shadow">
-                                    <i class="fa-brands fa-whatsapp"></i> Conversar
-                                </a>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-            } catch (err) {
-                console.error(err);
-                tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-red-400">Erro ao carregar leads.</td></tr>';
-            }
-        }
-
-        async function carregarGraficoBairros(imobId) {
-            const container = document.getElementById('lista-barras-bairros');
-            try {
-                const { data: imoveis, error } = await supabaseClient
-                    .from('imoveis')
-                    .select('bairro')
-                    .eq('imobiliaria_id', imobId);
-
-                if (error) throw error;
-
-                if (!imoveis || imoveis.length === 0) {
-                    container.innerHTML = '<p class="text-xs text-slate-500 italic py-2">Nenhum imóvel cadastrado para gerar estatísticas de bairros.</p>';
-                    return;
-                }
-
-                const contagem = {};
-                imoveis.forEach(im => {
-                    const b = (im.bairro && im.bairro.trim()) ? im.bairro.trim() : 'Outros / Não Informado';
-                    contagem[b] = (contagem[b] || 0) + 1;
-                });
-
-                const total = imoveis.length;
-                const cores = ['bg-cyan-400', 'bg-emerald-400', 'bg-purple-400', 'bg-amber-400', 'bg-blue-400'];
-                let corIdx = 0;
-
-                const bairrosOrdenados = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
-
-                container.innerHTML = bairrosOrdenados.map(([bairro, qtd]) => {
-                    const perc = Math.round((qtd / total) * 100);
-                    const cor = cores[corIdx % cores.length];
-                    corIdx++;
-
-                    return `
-                        <div>
-                            <div class="flex justify-between text-xs font-bold mb-1">
-                                <span class="text-slate-300">${bairro}</span>
-                                <span class="text-cyan-400">${qtd} ${qtd === 1 ? 'imóvel' : 'imóveis'} (${perc}%)</span>
-                            </div>
-                            <div class="w-full bg-slate-950 rounded-full h-3.5 border border-slate-800 overflow-hidden">
-                                <div class="${cor} h-full rounded-full transition-all duration-500" style="width: ${perc}%"></div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-            } catch (err) {
-                console.error('Erro ao calcular gráfico de bairros:', err);
-                container.innerHTML = '<p class="text-xs text-red-400 py-2">Erro ao carregar métricas de bairros.</p>';
-            }
-        }
-
-        function mudarAba(aba) {
-            const abas = ['catalogo', 'leads', 'graficos', 'financeiro'];
-            abas.forEach(a => {
-                const container = document.getElementById(`aba-conteudo-${a}`);
-                const btn = document.getElementById(`tab-btn-${a}`);
-                
-                if (container) {
-                    if (a === aba) {
-                        container.classList.remove('hidden');
-                    } else {
-                        container.classList.add('hidden');
-                    }
-                }
-
-                if (btn) {
-                    if (a === aba) {
-                        btn.className = 'px-3.5 py-1.5 rounded-lg tab-btn-ativo transition cursor-pointer';
-                    } else {
-                        btn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
-                    }
-                }
-            });
-
-            if (aba === 'financeiro') {
-                ['catalogo', 'leads', 'graficos'].forEach(btnKey => {
-                    const b = document.getElementById(`tab-btn-${btnKey}`);
-                    if (b) b.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
-                });
-                carregarDashboardFinanceiro();
-            }
-        }
-
         async function carregarAvisosGestor() {
             try {
                 let container = document.getElementById('faixa-comunicado-global');
