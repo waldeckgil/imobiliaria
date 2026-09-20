@@ -50,8 +50,6 @@
    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
 
-
-
     <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
@@ -231,7 +229,7 @@
 
     </main>
 
-    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE -->
+    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE (COM MÁSCARA ATM) -->
     <div id="modal-proprietario-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/40 space-y-4 max-h-[90vh] flex flex-col">
             <button type="button" onclick="fecharModalProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -258,7 +256,7 @@
                 <div class="flex items-center gap-3">
                     <div class="relative flex-1">
                         <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">R$</span>
-                        <input type="number" step="0.01" id="prop-valor-pretendido-input" placeholder="0,00" 
+                        <input type="text" inputmode="numeric" id="prop-valor-pretendido-input" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-900 border border-amber-500/40 rounded-xl py-1.5 pl-9 pr-3 text-amber-300 font-mono font-black text-sm outline-none focus:border-amber-400">
                     </div>
                     <button type="button" onclick="salvarValorPretendidoDono()" id="btn-salvar-pretensao" 
@@ -281,7 +279,7 @@
         </div>
     </div>
 
-    <!-- MODAL 1: REGISTRO DE VENDA (STATUS VENDIDO & COMISSÕES) -->
+    <!-- MODAL 1: REGISTRO DE VENDA (COM MÁSCARA ATM) -->
     <div id="modal-registrar-venda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalVenda()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -312,7 +310,7 @@
                         <label class="block font-bold text-slate-300 mb-1">Valor Real de Fechamento (R$) *</label>
                         <div class="relative">
                             <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
-                            <input type="number" step="0.01" id="venda-valor-fechado" required oninput="calcularRateioComissoes()" 
+                            <input type="text" inputmode="numeric" id="venda-valor-fechado" required oninput="mascaraMoedaEvento(this); calcularRateioComissoes()" placeholder="0,00" 
                                    class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400">
                         </div>
                     </div>
@@ -389,7 +387,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (STATUS ALUGADO & REPASSES MENSAIS COM ANEXOS) -->
+    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (COM MÁSCARA ATM) -->
     <div id="modal-registrar-locacao" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-purple-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalLocacao()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -446,7 +444,7 @@
                         <label class="block font-bold text-slate-300 mb-1">Aluguel Bruto (R$) *</label>
                         <div class="relative">
                             <span class="absolute left-2.5 top-2 text-xs font-bold text-slate-500">R$</span>
-                            <input type="number" step="0.01" id="loc-valor-aluguel" required oninput="calcularRateioLocacao()" 
+                            <input type="text" inputmode="numeric" id="loc-valor-aluguel" required oninput="mascaraMoedaEvento(this); calcularRateioLocacao()" placeholder="0,00" 
                                    class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-8 pr-2 text-purple-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
                         </div>
                     </div>
@@ -561,6 +559,36 @@
         // CONTROLES DE PAGINAÇÃO EM MEMÓRIA
         let paginaAtual = 1;
         const ITENS_POR_PAGINA = 12;
+
+        // =========================================================================
+        // MOTOES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
+        // =========================================================================
+        function formatarValorBRL(valor) {
+            if (valor === null || valor === undefined || valor === '') return '';
+            const num = Number(valor);
+            if (isNaN(num)) return '';
+            return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function converterMoedaParaFloat(texto) {
+            if (!texto) return 0;
+            const limpo = String(texto).replace(/\./g, '').replace(',', '.').replace(/[^0-9.]/g, '');
+            const num = parseFloat(limpo);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function mascaraMoedaEvento(input) {
+            let valor = input.value.replace(/\D/g, '');
+            if (!valor) {
+                input.value = '';
+                return;
+            }
+            const floatVal = (parseInt(valor, 10) / 100).toFixed(2);
+            input.value = Number(floatVal).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
 
         async function inicializarCatalogo() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -729,7 +757,6 @@
             if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
             if (paginaAtual < 1) paginaAtual = 1;
 
-            // Atualiza Controles de Paginação
             const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;
             const fim = Math.min(inicio + ITENS_POR_PAGINA, totalItens);
             const itensPagina = listaImoveisFiltrados.slice(inicio, fim);
@@ -772,7 +799,6 @@
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 inline-flex items-center gap-1"><i class="fa-solid fa-tag text-[9px]"></i> Venda</span>';
                 }
 
-                // Blindagem de Proprietário e Inquilino
                 const propObj = (im.proprietario_id && mapaClientes[im.proprietario_id]) ? mapaClientes[im.proprietario_id] : null;
                 const nomeProprietario = propObj ? (propObj.nome || 'Proprietário Cadastrado') : '<span class="text-slate-500 italic">Sem proprietário</span>';
                 
@@ -781,7 +807,6 @@
                     ? `<div class="flex items-center gap-1.5 mt-1 text-[11px] text-purple-300 font-bold"><i class="fa-solid fa-key text-purple-400 text-xs"></i> <span>Inquilino: ${nomeInquilino || 'Contrato Ativo'}</span></div>`
                     : '';
 
-                // Valores Comerciais
                 let blocoValores = '';
                 if (ehAmbos) {
                     blocoValores = `
@@ -815,7 +840,6 @@
                 const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
 
-                // BOTÕES INTELIGENTES: VENDA VS LOCAÇÃO
                 let botoesFechamento = '';
                 if (im.status === 'Disponível' || im.status === 'Em Proposta') {
                     if (ehLocacao) {
@@ -932,7 +956,6 @@
             }).join('');
         }
 
-        // FUNÇÃO DE NAVEGAÇÃO DE PÁGINAS
         function mudarPagina(delta) {
             const totalPaginas = Math.ceil(listaImoveisFiltrados.length / ITENS_POR_PAGINA) || 1;
             const novaPagina = paginaAtual + delta;
@@ -942,19 +965,17 @@
             }
         }
 
-// =========================================================================
+        // =========================================================================
         // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
         // =========================================================================
         function sanitizarTextoPdf(texto) {
             if (!texto) return '';
-            // Remove emojis e caracteres fora do Latin-1 que quebram a fonte do jsPDF
             return texto
                 .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu, '')
                 .replace(/[^\x00-\xFF]/g, ' ')
                 .trim();
         }
 
-        // Converte qualquer formato (WebP, PNG, JPG) para JPEG puro compatível com jsPDF via Canvas
         async function converterImgParaJpegSeguro(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -967,12 +988,10 @@
                         canvas.height = img.naturalHeight || img.height || 600;
                         const ctx = canvas.getContext('2d');
                         
-                        // Fundo branco sólido (evita transparência preta de WebP/PNG)
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
-                        // Exporta garantidamente como JPEG real
                         resolve(canvas.toDataURL('image/jpeg', 0.85));
                     } catch (err) {
                         reject(err);
@@ -980,7 +999,6 @@
                 };
 
                 img.onerror = () => {
-                    // Fallback se crossOrigin for bloqueado: tenta via blob
                     fetch(url)
                         .then(r => r.blob())
                         .then(blob => {
@@ -1046,7 +1064,6 @@
                 const fone = (dadosImobAtual && (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato)) ? (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato) : '';
                 doc.text(`${sanitizarTextoPdf(creci)} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
 
-                // Tarja Código de Referência
                 doc.setFillColor(28, 107, 160);
                 doc.roundedRect(pageWidth - 48, 8, 33, 11, 2, 2, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -1069,11 +1086,10 @@
                 const localTexto = sanitizarTextoPdf(`${imovel.bairro || 'Localização Privilegiada'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${tipoTexto} • ${localTexto}`, 15, 45);
 
-         // 3. FOTO DE CAPA INTELIGENTE (Busca Capa -> Galeria -> ou imagem em Documentos)
+                // 3. FOTO DE CAPA INTELIGENTE
                 let posY = 51;
                 let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
 
-                // Resgate: se a foto foi anexada em documentos por engano
                 if (!urlFoto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
                     const imgDoc = imovel.documentos_anexos.find(url => {
                         const u = String(url).toLowerCase();
@@ -1082,7 +1098,6 @@
                     if (imgDoc) urlFoto = imgDoc;
                 }
 
-                // Se ainda assim não houver foto, utiliza a foto padrão de capa para não ficar em branco
                 if (!urlFoto) {
                     urlFoto = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80';
                 }
@@ -1151,7 +1166,7 @@
 
                 posY += 20;
 
-                // 6. DESCRIÇÃO INSTITUCIONAL DO IMÓVEL (COM SANITIZAÇÃO DE EMOJIS)
+                // 6. DESCRIÇÃO INSTITUCIONAL DO IMÓVEL
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
@@ -1192,7 +1207,7 @@
         }
 
         // =========================================================================
-        // FICHA DO PROPRIETÁRIO & PRETENSÃO LÍQUIDA
+        // FICHA DO PROPRIETÁRIO & PRETENSÃO LÍQUIDA (MÁSCARA ATM)
         // =========================================================================
         async function abrirModalProprietario(imovelId) {
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
@@ -1202,7 +1217,7 @@
             document.getElementById('prop-modal-imovel-titulo').innerText = imovel.titulo || 'Sem título';
             document.getElementById('prop-modal-imovel-ref').innerText = `Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'}`;
 
-            document.getElementById('prop-valor-pretendido-input').value = imovel.valor_pretendido_proprietario || '';
+            document.getElementById('prop-valor-pretendido-input').value = formatarValorBRL(imovel.valor_pretendido_proprietario);
 
             const container = document.getElementById('prop-modal-conteudo');
             container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados...</p></div>';
@@ -1271,7 +1286,7 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
             try {
-                const valorNumerico = inputVal ? Number(inputVal) : null;
+                const valorNumerico = inputVal ? converterMoedaParaFloat(inputVal) : null;
                 const { error } = await supabaseClient
                     .from('imoveis')
                     .update({ valor_pretendido_proprietario: valorNumerico })
@@ -1298,7 +1313,7 @@
         }
 
         // =========================================================================
-        // FLUXO 1: FECHAMENTO DE VENDA
+        // FLUXO 1: FECHAMENTO DE VENDA (MÁSCARA ATM)
         // =========================================================================
         function abrirModalVenda(imovelId) {
             if (modoLeitura) return;
@@ -1311,7 +1326,7 @@
             document.getElementById('venda-valor-anuncio').innerText = Number(imovel.valor_venda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('venda-comprador-nome').value = '';
-            document.getElementById('venda-valor-fechado').value = imovel.valor_venda || '';
+            document.getElementById('venda-valor-fechado').value = formatarValorBRL(imovel.valor_venda);
             document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
 
             const comissaoPadraoImob = (dadosImobAtual && dadosImobAtual.comissao_venda_padrao_pct) ? dadosImobAtual.comissao_venda_padrao_pct : 6.0;
@@ -1340,14 +1355,14 @@
         }
 
         function calcularRateioComissoes() {
-            const valorVenda = Number(document.getElementById('venda-valor-fechado').value) || 0;
+            const valorVenda = converterMoedaParaFloat(document.getElementById('venda-valor-fechado').value);
             const comissaoTotalPct = Number(document.getElementById('venda-comissao-total-pct').value) || 0;
             const comissaoCorretorPct = Number(document.getElementById('venda-comissao-corretor-pct').value) || 0;
 
             const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+            const valorRepasseProprietario = Math.max(0, valorVenda - valorComissaoTotal);
 
             document.getElementById('sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('sim-comissao-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -1365,7 +1380,7 @@
 
             const imovelId = document.getElementById('venda-imovel-id').value;
             const compradorNome = document.getElementById('venda-comprador-nome').value.trim();
-            const valorVenda = Number(document.getElementById('venda-valor-fechado').value);
+            const valorVenda = converterMoedaParaFloat(document.getElementById('venda-valor-fechado').value);
             const dataVenda = document.getElementById('venda-data').value;
             const comissaoTotalPct = Number(document.getElementById('venda-comissao-total-pct').value);
             const corretorId = document.getElementById('venda-corretor-select').value;
@@ -1374,7 +1389,7 @@
             const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+            const valorRepasseProprietario = Math.max(0, valorVenda - valorComissaoTotal);
 
             const corretorObj = listaCorretores.find(c => String(c.id) === String(corretorId));
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
@@ -1422,7 +1437,7 @@
         }
 
         // =========================================================================
-        // FLUXO 2: FECHAMENTO DE LOCAÇÃO COM DOCUMENTOS
+        // FLUXO 2: FECHAMENTO DE LOCAÇÃO (MÁSCARA ATM)
         // =========================================================================
         function abrirModalLocacao(imovelId) {
             if (modoLeitura) return;
@@ -1441,7 +1456,7 @@
             document.getElementById('loc-inquilino-cpf').value = '';
             document.getElementById('loc-documentos').value = '';
             
-            document.getElementById('loc-valor-aluguel').value = imovel.valor_locacao || '';
+            document.getElementById('loc-valor-aluguel').value = formatarValorBRL(imovel.valor_locacao);
             const taxaAdmPadrao = (dadosImobAtual && dadosImobAtual.taxa_locacao_padrao_pct) ? dadosImobAtual.taxa_locacao_padrao_pct : 10.0;
             document.getElementById('loc-taxa-adm-pct').value = taxaAdmPadrao;
             document.getElementById('loc-dia-vencimento').value = 10;
@@ -1462,11 +1477,11 @@
         }
 
         function calcularRateioLocacao() {
-            const valorAluguel = Number(document.getElementById('loc-valor-aluguel').value) || 0;
+            const valorAluguel = converterMoedaParaFloat(document.getElementById('loc-valor-aluguel').value);
             const taxaAdmPct = Number(document.getElementById('loc-taxa-adm-pct').value) || 0;
 
             const taxaImob = (valorAluguel * taxaAdmPct) / 100;
-            const repasseDono = valorAluguel - taxaImob;
+            const repasseDono = Math.max(0, valorAluguel - taxaImob);
 
             document.getElementById('sim-loc-bruto').innerText = valorAluguel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('sim-loc-taxa-imob').innerText = taxaImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
@@ -1485,16 +1500,15 @@
             const inquilinoNome = document.getElementById('loc-inquilino-nome').value.trim();
             const inquilinoZap = document.getElementById('loc-inquilino-zap').value.trim();
             const inquilinoCpf = document.getElementById('loc-inquilino-cpf').value.trim();
-            const valorAluguel = Number(document.getElementById('loc-valor-aluguel').value);
+            const valorAluguel = converterMoedaParaFloat(document.getElementById('loc-valor-aluguel').value);
             const taxaAdmPct = Number(document.getElementById('loc-taxa-adm-pct').value);
             const diaVencimento = Number(document.getElementById('loc-dia-vencimento').value);
             const dataInicio = document.getElementById('loc-data-inicio').value;
             const dataFim = document.getElementById('loc-data-fim').value;
 
             const taxaImob = (valorAluguel * taxaAdmPct) / 100;
-            const repasseDono = valorAluguel - taxaImob;
+            const repasseDono = Math.max(0, valorAluguel - taxaImob);
 
-            // UPLOAD DE DOCUMENTOS DO INQUILINO NO STORAGE
             const fileInput = document.getElementById('loc-documentos');
             let docsUrls = [];
 
@@ -1518,7 +1532,6 @@
 
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando contrato e financeiro...';
 
-                // 1. Grava o contrato em contratos_locacao
                 const { data: contratoData, error: errContrato } = await supabaseClient
                     .from('contratos_locacao')
                     .insert([{
@@ -1542,7 +1555,6 @@
 
                 if (errContrato) throw errContrato;
 
-                // 2. Atualiza o status do imóvel para Alugado e pausa vitrine
                 const { error: errImovel } = await supabaseClient
                     .from('imoveis')
                     .update({ status: 'Alugado', ativa: false })
@@ -1550,7 +1562,6 @@
 
                 if (errImovel) throw errImovel;
 
-                // 3. Cria a primeira competência na tabela de recebíveis mensais
                 const mesAtual = String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear();
                 await supabaseClient
                     .from('locacao_mensalidades_recebiveis')
@@ -1628,7 +1639,7 @@
                 return matchBusca && matchStatus && matchFinalidade;
             });
 
-            paginaAtual = 1; // Reinicia paginação ao filtrar
+            paginaAtual = 1;
             renderizarTabela();
         }
 
