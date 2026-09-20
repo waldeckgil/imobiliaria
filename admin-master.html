@@ -1533,15 +1533,51 @@
             }
         }
 
-        function abrirComprovanteEmNovaAba(urlOuBase64) {
-            const w = window.open('');
-            if (urlOuBase64.startsWith('data:image')) {
-                w.document.write(`<body style="margin:0;background:#060913;display:flex;align-items:center;justify-content:center;height:100vh;"><img src="${urlOuBase64}" style="max-width:95vw;max-height:95vh;border-radius:8px;box-shadow:0 0 30px rgba(0,0,0,0.8);"/></body>`);
-            } else {
-                w.location.href = urlOuBase64;
+    function abrirComprovanteEmNovaAba(urlOuBase64) {
+            if (!urlOuBase64) {
+                mostrarToast('Anexo não localizado ou corrompido.', 'aviso');
+                return;
+            }
+
+            try {
+                // Caso 1: Se for URL HTTP normal do Storage
+                if (urlOuBase64.startsWith('http://') || urlOuBase64.startsWith('https://')) {
+                    window.open(urlOuBase64, '_blank');
+                    return;
+                }
+
+                // Caso 2: Se for Base64 (Imagem ou PDF) - Converte para Blob seguro
+                if (urlOuBase64.startsWith('data:')) {
+                    const partes = urlOuBase64.split(',');
+                    const cabecalho = partes[0];
+                    const base64Data = partes[1];
+                    const mimeType = cabecalho.match(/:(.*?);/)[1] || 'application/octet-stream';
+
+                    const byteCharacters = atob(base64Data);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], { type: mimeType });
+                    const blobUrl = URL.createObjectURL(blob);
+
+                    // Abre o Blob nativo sem bloqueio de about:blank
+                    const novaAba = window.open(blobUrl, '_blank');
+                    if (!novaAba) {
+                        window.location.href = blobUrl;
+                    }
+                    return;
+                }
+
+                // Fallback geral
+                window.open(urlOuBase64, '_blank');
+            } catch (err) {
+                console.error('[VISUALIZADOR ANEXO] Erro ao abrir:', err);
+                mostrarToast('Falha ao abrir anexo no navegador: ' + err.message, 'erro');
             }
         }
-
+        window.abrirComprovanteEmNovaAba = abrirComprovanteEmNovaAba;
         async function processarArquivoComprovanteResiliente(file, imobId) {
             if (!file) return null;
 
@@ -2201,10 +2237,9 @@
                 const matchMotivo = l.mensagem.match(/Motivo:\s*([^|]+)/i);
                 if (matchMotivo) motivo = matchMotivo[1].trim();
 
-                const documentoBtnHtml = urlDocumento
-                    ? `<button type="button" onclick="abrirComprovanteEmNovaAba('${urlDocumento}')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-950/90 border border-indigo-700 text-indigo-300 hover:text-white transition font-sans text-[10px] font-bold cursor-pointer shadow" title="Visualizar documento ou e-mail anexado"><i class="fa-solid fa-eye text-cyan-400"></i><span>Ver E-mail</span></button>`
+             const documentoBtnHtml = urlDocumento
+                    ? `<button type="button" onclick="abrirComprovanteEmNovaAba('${urlDocumento}')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-950/90 hover:bg-indigo-900 border border-indigo-700 text-indigo-200 hover:text-white transition font-sans text-[10px] font-bold cursor-pointer shadow" title="Visualizar prova documental anexada"><i class="fa-solid fa-paperclip text-amber-400"></i><span>VER ANEXO</span></button>`
                     : `<span class="text-slate-600 font-sans text-[10px] italic">Sem anexo</span>`;
-
                 return `
                 <tr class="hover:bg-slate-900/60 transition">
                     <td class="py-2.5 px-3 text-slate-300">
