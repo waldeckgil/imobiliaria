@@ -69,12 +69,17 @@
                            class="w-10 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-amber-400 font-bold outline-none text-xs" title="Dias antes do vencimento para alertar o gestor">
                     <span class="text-slate-400 text-[11px]">dias antes</span>
                 </div>
+<!-- BOTÃO DE AUDITORIA & EXPURGO -->
+                <button onclick="abrirModalAuditoriaMaster()" class="bg-rose-950/60 hover:bg-rose-900 text-rose-300 font-bold px-3 py-1.5 rounded-xl border border-rose-800/80 flex items-center gap-1.5 transition cursor-pointer text-xs shadow" title="Consultar Histórico de Expurgo e Auditoria">
+                    <i class="fa-solid fa-shield-halved text-rose-400 text-xs"></i>
+                    <span>Auditoria</span>
+                    <span id="badge-contador-auditoria" class="bg-rose-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full font-mono">0</span>
+                </button>
 
                 <button onclick="carregarDadosMaster()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold px-3 py-1.5 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer text-xs">
                     <i class="fa-solid fa-rotate text-xs"></i>
                     <span>Atualizar</span>
                 </button>
-
                 <button onclick="executarLogout()" class="hidden md:flex bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-1.5 rounded-xl border border-red-800/60 items-center gap-1.5 transition cursor-pointer text-xs">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
                     <span>Sair</span>
@@ -278,9 +283,71 @@
                     <p class="text-xs text-slate-500 italic">Nenhum comunicado ativo no momento.</p>
                 </div>
             </div>
-        </div>
+  
+</div>
 
     </main>
+
+    <!-- MODAL 7: PAINEL DE AUDITORIA MASTER & LOGS DE EXPURGO -->
+    <div id="modal-auditoria-master" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-5xl w-full p-4 sm:p-6 shadow-2xl relative border-2 border-rose-600/50 max-h-[92vh] flex flex-col">
+            <button type="button" onclick="fecharModalAuditoriaMaster()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- TOPO DO MODAL -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg border border-rose-500/40 shrink-0">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-black text-white">Livro de Auditoria Master • Registro de Expurgo</h3>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Histórico permanente e imutável de contas, dados e imobiliárias canceladas.</p>
+                    </div>
+                </div>
+
+                <div class="w-full sm:w-64 relative">
+                    <input type="text" id="filtro-busca-auditoria" oninput="filtrarTabelaAuditoria()" placeholder="Filtrar por nome, motivo..." 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-1.5 pl-8 pr-3 text-xs text-white outline-none focus:border-rose-400">
+                    <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-slate-500 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- TABELA DE AUDITORIA -->
+            <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800 sticky top-0">
+                        <tr>
+                            <th class="py-2.5 px-3">Data e Hora</th>
+                            <th class="py-2.5 px-3">Imobiliária Expurgada</th>
+                            <th class="py-2.5 px-3">Identificador (UUID)</th>
+                            <th class="py-2.5 px-3">Motivo Registrado</th>
+                            <th class="py-2.5 px-3 text-right">Executor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-auditoria-corpo" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-rose-400 text-xl mb-2"></i>
+                                <p>Consultando livro de auditoria...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
+                <span>Registros de auditoria: <strong id="contador-auditoria-modal" class="text-white">0</strong></span>
+                <button type="button" onclick="fecharModalAuditoriaMaster()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                    Fechar Janela
+                </button>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- ========================================================================= -->
     <!-- MODAL CENTRAL: HUB DE GESTÃO DA IMOBILIÁRIA (ARRASTÁVEL, VISUAL & NO CENTRO) -->
@@ -1988,14 +2055,15 @@
             btn.disabled = true;
 
             try {
+         
+// REGISTRO FORMAL E IMUTÁVEL DE AUDITORIA MASTER
                 await supabaseClient.from('avisos_sistema').insert([{
                     imobiliaria_id: null,
-                    titulo: `[AUDITORIA MASTER] Exclusão da Imobiliária: ${nomeEsperado}`,
-                    mensagem: `A imobiliária "${nomeEsperado}" (ID: ${imobId}) foi expurgada pelo Administrador Soberano. Motivo: ${motivo}`,
-                    tipo: 'urgente',
-                    ativo: true
+                    titulo: `[AUDITORIA EXPURGO] ${nomeEsperado}`,
+                    mensagem: `Imobiliária: "${nomeEsperado}" | UUID: ${imobId} | Motivo: ${motivo}`,
+                    tipo: 'auditoria_purge',
+                    ativo: false
                 }]);
-
                 await supabaseClient.from('locacao_mensalidades_recebiveis').delete().eq('imobiliaria_id', imobId);
                 await supabaseClient.from('contratos_locacao').delete().eq('imobiliaria_id', imobId);
                 await supabaseClient.from('vendas_fechadas').delete().eq('imobiliaria_id', imobId);
@@ -2032,13 +2100,125 @@
         // =========================================================================
         // AVISOS GLOBAIS
         // =========================================================================
+let listaAuditoriaGlobal = [];
+
+        async function carregarContadorAuditoria() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('avisos_sistema')
+                    .select('id')
+                    .or('tipo.eq.auditoria_purge,titulo.ilike.%AUDITORIA%');
+
+                if (!error && data) {
+                    const badge = document.getElementById('badge-contador-auditoria');
+                    if (badge) badge.innerText = data.length;
+                }
+            } catch (e) {
+                console.warn('[AUDITORIA] Erro ao carregar contagem:', e);
+            }
+        }
+
+        async function abrirModalAuditoriaMaster() {
+            document.getElementById('modal-auditoria-master').classList.remove('hidden');
+            const tbody = document.getElementById('tabela-auditoria-corpo');
+            tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-rose-400 text-xl mb-2"></i><p>Consultando livro de auditoria...</p></td></tr>';
+
+            try {
+                const { data: logs, error } = await supabaseClient
+                    .from('avisos_sistema')
+                    .select('*')
+                    .or('tipo.eq.auditoria_purge,titulo.ilike.%AUDITORIA%')
+                    .order('criado_em', { ascending: false });
+
+                if (error) throw error;
+                listaAuditoriaGlobal = logs || [];
+                renderizarLinhasAuditoria(listaAuditoriaGlobal);
+                carregarContadorAuditoria();
+
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-rose-400">Falha ao buscar registros de auditoria.</td></tr>';
+            }
+        }
+
+        function fecharModalAuditoriaMaster() {
+            document.getElementById('modal-auditoria-master').classList.add('hidden');
+        }
+
+        function renderizarLinhasAuditoria(logs) {
+            const tbody = document.getElementById('tabela-auditoria-corpo');
+            const contadorModal = document.getElementById('contador-auditoria-modal');
+
+            if (contadorModal) contadorModal.innerText = logs.length;
+
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500 font-sans">Nenhum registro de expurgo ou exclusão localizado.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = logs.map(l => {
+                const dt = new Date(l.criado_em);
+                const dataFmt = !isNaN(dt) ? `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${dt.getFullYear()} às ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}` : '--/--/----';
+
+                // Extrai nome e UUID a partir do texto padrão registrado
+                let nomeImob = l.titulo.replace('[AUDITORIA EXPURGO]', '').replace('[AUDITORIA MASTER] Exclusão da Imobiliária:', '').trim();
+                let motivo = l.mensagem || '-';
+                let uuidExibicao = '-';
+
+                const matchUuid = l.mensagem.match(/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/);
+                if (matchUuid) uuidExibicao = matchUuid[0];
+
+                const matchMotivo = l.mensagem.match(/Motivo:\s*(.*)/i);
+                if (matchMotivo) motivo = matchMotivo[1];
+
+                return `
+                <tr class="hover:bg-slate-900/60 transition">
+                    <td class="py-2.5 px-3 text-slate-300">
+                        <span class="text-white font-bold block">${dataFmt}</span>
+                    </td>
+                    <td class="py-2.5 px-3">
+                        <strong class="text-amber-400 font-bold font-sans">${nomeImob}</strong>
+                    </td>
+                    <td class="py-2.5 px-3">
+                        <span class="text-[10px] text-cyan-300 font-mono select-all bg-slate-950 px-1.5 py-0.5 rounded border border-slate-800">${uuidExibicao}</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-300 font-sans max-w-[280px] break-words">
+                        <span class="text-slate-300 italic">"${motivo}"</span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right">
+                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40">ADMIN SOBERANO</span>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filtrarTabelaAuditoria() {
+            const termo = document.getElementById('filtro-busca-auditoria').value.toLowerCase().trim();
+            if (!termo) {
+                renderizarLinhasAuditoria(listaAuditoriaGlobal);
+                return;
+            }
+
+            const filtrados = listaAuditoriaGlobal.filter(l => {
+                const tit = (l.titulo || '').toLowerCase();
+                const msg = (l.mensagem || '').toLowerCase();
+                return tit.includes(termo) || msg.includes(termo);
+            });
+
+            renderizarLinhasAuditoria(filtrados);
+        }
+
         async function carregarAvisos() {
+            carregarContadorAuditoria();
             const container = document.getElementById('lista-avisos-ativos');
             try {
+                // Filtra para NÃO misturar os logs de auditoria com comunicados de tela
                 const { data: avisos, error } = await supabaseClient
                     .from('avisos_sistema')
                     .select('*')
                     .eq('ativo', true)
+                    .neq('tipo', 'auditoria_purge')
+                    .not('titulo', 'ilike', '%AUDITORIA%')
                     .order('criado_em', { ascending: false });
 
                 if (error) throw error;
