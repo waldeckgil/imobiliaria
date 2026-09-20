@@ -27,39 +27,30 @@
         }
         *::-webkit-scrollbar-track,
         ::-webkit-scrollbar-track {
-            background: #060913 !important;
+            background: #060913 !important; /* Fundo escuro */
         }
         *::-webkit-scrollbar-thumb,
         ::-webkit-scrollbar-thumb {
-            background: #64748b !important;
-            border-radius: 9999px !important;
-            border: 2px solid #060913 !important;
+            background: #64748b !important; /* Cinza-médio nítido do Supabase */
+            border-radius: 9999px !important; /* Cantos arredondados */
+            border: 2px solid #060913 !important; /* Calha de respiro */
         }
         *::-webkit-scrollbar-thumb:hover,
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8 !important;
+            background: #94a3b8 !important; /* Clareia ao passar o mouse */
         }
 
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
-        
-        /* ANIMAÇÃO PARA OS TOASTS PROFISSIONAIS */
-        @keyframes slideInRight {
-            from { transform: translateX(110%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .toast-anim { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- CONTAINER DE TOASTS PROFISSIONAIS (SUBSTITUTO DOS ALERTS FEIOS DO NAVEGADOR) -->
-    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
-
-    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+   <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
-        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+
+    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -238,7 +229,7 @@
 
     </main>
 
-    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE -->
+    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE (COM MÁSCARA ATM) -->
     <div id="modal-proprietario-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/40 space-y-4 max-h-[90vh] flex flex-col">
             <button type="button" onclick="fecharModalProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -288,9 +279,9 @@
         </div>
     </div>
 
-    <!-- MODAL 1: REGISTRO DE VENDA (REESTRUTURADO: COMPRADOR COMPLETO & ANEXOS) -->
+    <!-- MODAL 1: REGISTRO DE VENDA (COM MÁSCARA ATM) -->
     <div id="modal-registrar-venda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-2xl w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalVenda()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -308,50 +299,15 @@
             </div>
 
             <form id="form-venda" onsubmit="confirmarFechamentoVenda(event)" class="space-y-3.5 text-xs flex-1 overflow-y-auto pr-1">
-                
-                <!-- SEÇÃO DO COMPRADOR -->
-                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-amber-500/30 space-y-3">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-check"></i> Ficha Cadastral do Comprador (Vínculo Permanente)
-                    </span>
-
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Nome Completo do Comprador *</label>
-                        <input type="text" id="venda-comprador-nome" required placeholder="Ex: Daniel Oliveira" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-bold text-slate-300 mb-1">WhatsApp / Celular do Comprador *</label>
-                            <input type="tel" id="venda-comprador-zap" required placeholder="(00) 90000-0000" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-amber-400">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-slate-300 mb-1">E-mail do Comprador</label>
-                            <input type="email" id="venda-comprador-email" placeholder="comprador@email.com" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-bold text-slate-300 mb-1">CPF ou CNPJ do Comprador</label>
-                            <input type="text" id="venda-comprador-cpf" placeholder="000.000.000-00" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-amber-400">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-slate-300 mb-1">RG do Comprador</label>
-                            <input type="text" id="venda-comprador-rg" placeholder="Registro Geral" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
-                        </div>
-                    </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nome Completo do Comprador *</label>
+                    <input type="text" id="venda-comprador-nome" required placeholder="Ex: Marcos Vinicius da Rocha" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
                 </div>
 
-                <!-- SEÇÃO FINANCEIRA DE FECHAMENTO -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor Real Fechado (R$) *</label>
+                        <label class="block font-bold text-slate-300 mb-1">Valor Real de Fechamento (R$) *</label>
                         <div class="relative">
                             <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
                             <input type="text" inputmode="numeric" id="venda-valor-fechado" required oninput="mascaraMoedaEvento(this); calcularRateioComissoes()" placeholder="0,00" 
@@ -360,17 +316,8 @@
                     </div>
 
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor Sinal / Entrada (R$)</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
-                            <input type="text" inputmode="numeric" id="venda-valor-sinal" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
-                        </div>
-                    </div>
-
-                    <div>
                         <label class="block font-bold text-slate-300 mb-1">Data da Venda *</label>
-                        <input type="date" id="venda-data" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 font-mono">
+                        <input type="date" id="venda-data" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
                     </div>
                 </div>
 
@@ -400,24 +347,6 @@
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
                         <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
                     </div>
-                </div>
-
-                <!-- ANEXOS DE DOCUMENTOS DA VENDA -->
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-paperclip text-amber-400"></i>
-                        <span>Anexar Documentos do Comprador (RG, CNH, Comprovante de Entrada/Sinal, Contrato)</span>
-                    </label>
-                    <div class="bg-slate-950 border border-slate-700 rounded-xl p-2.5 flex items-center gap-3">
-                        <input type="file" id="venda-documentos" accept=".pdf,image/*" multiple
-                               class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 cursor-pointer">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Observações & Condições de Fechamento</label>
-                    <textarea id="venda-observacoes" rows="2" placeholder="Ex: Financiamento aprovado na Caixa, sinal transferido via PIX, saldo em 30 dias..." 
-                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs"></textarea>
                 </div>
 
                 <!-- SIMULADOR FINANCEIRO DE VENDA -->
@@ -458,7 +387,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: REGISTRO DE LOCAÇÃO -->
+    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (COM MÁSCARA ATM) -->
     <div id="modal-registrar-locacao" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-purple-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalLocacao()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -627,69 +556,12 @@
         let isMasterSuporte = false;
         let imovelEmFocoProprietarioId = null;
 
+        // CONTROLES DE PAGINAÇÃO EM MEMÓRIA
         let paginaAtual = 1;
         const ITENS_POR_PAGINA = 12;
 
         // =========================================================================
-        // SISTEMA DE NOTIFICAÇÕES CORPORATIVAS (TOAST SYSTEM PROFISSIONAL)
-        // =========================================================================
-        function mostrarToast(tipo, titulo, mensagem) {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-
-            let config = {
-                borda: 'border-cyan-500/50',
-                fundo: 'bg-cyan-950/90 text-cyan-400',
-                icone: 'fa-solid fa-circle-info'
-            };
-
-            if (tipo === 'sucesso') {
-                config = {
-                    borda: 'border-emerald-500/60',
-                    fundo: 'bg-emerald-950/90 text-emerald-400',
-                    icone: 'fa-solid fa-circle-check'
-                };
-            } else if (tipo === 'erro') {
-                config = {
-                    borda: 'border-rose-500/60',
-                    fundo: 'bg-rose-950/90 text-rose-400',
-                    icone: 'fa-solid fa-triangle-exclamation'
-                };
-            } else if (tipo === 'aviso') {
-                config = {
-                    borda: 'border-amber-500/60',
-                    fundo: 'bg-amber-950/90 text-amber-400',
-                    icone: 'fa-solid fa-bell'
-                };
-            }
-
-            const toast = document.createElement('div');
-            toast.className = `toast-anim pointer-events-auto bg-slate-900/95 border ${config.borda} backdrop-blur-md shadow-2xl rounded-2xl p-4 flex items-start gap-3.5 max-w-sm w-full transition-all duration-300`;
-            
-            toast.innerHTML = `
-                <div class="w-8 h-8 rounded-xl ${config.fundo} flex items-center justify-center flex-shrink-0 text-sm shadow">
-                    <i class="${config.icone}"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <h4 class="text-xs font-black text-white tracking-wide leading-snug">${titulo}</h4>
-                    <p class="text-[11px] text-slate-300 leading-relaxed mt-0.5">${mensagem}</p>
-                </div>
-                <button type="button" class="text-slate-500 hover:text-white transition flex-shrink-0 text-xs p-1" onclick="this.parentElement.remove()">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            `;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => toast.remove(), 300);
-            }, 4500);
-        }
-
-        // =========================================================================
-        // MOTORES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
+        // MOTOES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
         // =========================================================================
         function formatarValorBRL(valor) {
             if (valor === null || valor === undefined || valor === '') return '';
@@ -805,13 +677,14 @@
 
             } catch (err) {
                 console.error(err);
-                mostrarToast('erro', 'Acesso Inválido', 'Não foi possível validar o perfil do usuário logado.');
-                setTimeout(() => window.location.href = 'login.html', 1500);
+                alert('Erro ao validar perfil de acesso.');
+                window.location.href = 'login.html';
             }
         }
 
         async function carregarDadosAuxiliares() {
             try {
+                // 1. Clientes (Proprietários)
                 const { data: clientes } = await supabaseClient
                     .from('clientes')
                     .select('id, nome, whatsapp, telefone, cpf_cnpj, rg, email')
@@ -822,6 +695,7 @@
                     if (c && c.id) mapaClientes[c.id] = c; 
                 });
 
+                // 2. Contratos Ativos de Locação (Mapeia Inquilino por Imóvel)
                 const { data: contratos } = await supabaseClient
                     .from('contratos_locacao')
                     .select('imovel_id, cliente_nome, status, documentos_anexos')
@@ -833,6 +707,7 @@
                     if (ct && ct.imovel_id) mapaInquilinosPorImovel[ct.imovel_id] = ct.cliente_nome;
                 });
 
+                // 3. Corretores Ativos
                 const { data: corretores } = await supabaseClient
                     .from('usuarios')
                     .select('id, nome_completo, comissao_venda_pct')
@@ -873,6 +748,7 @@
             }
         }
 
+        // MOTOR DE RENDERIZAÇÃO COM PAGINAÇÃO & BLINDAGEM DE NULOS
         function renderizarTabela() {
             const tbody = document.getElementById('tabela-imoveis-corpo');
             const totalItens = listaImoveisFiltrados.length;
@@ -1090,7 +966,7 @@
         }
 
         // =========================================================================
-        // MOTOR JSPDF MASTER
+        // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
         // =========================================================================
         function sanitizarTextoPdf(texto) {
             if (!texto) return '';
@@ -1172,6 +1048,7 @@
                 const pageHeight = doc.internal.pageSize.getHeight();
                 const imobNome = (dadosImobAtual && dadosImobAtual.nome_fantasia) ? dadosImobAtual.nome_fantasia : 'SGI IMOBILIÁRIA';
 
+                // 1. CABEÇALHO INSTITUCIONAL
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
@@ -1194,6 +1071,7 @@
                 doc.setFont('helvetica', 'bold');
                 doc.text(`Ref: ${imovel.codigo_ref || 'SGI'}`, pageWidth - 31.5, 15, { align: 'center' });
 
+                // 2. TÍTULO E LOCALIZAÇÃO
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(13);
                 doc.setFont('helvetica', 'bold');
@@ -1208,6 +1086,7 @@
                 const localTexto = sanitizarTextoPdf(`${imovel.bairro || 'Localização Privilegiada'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${tipoTexto} • ${localTexto}`, 15, 45);
 
+                // 3. FOTO DE CAPA INTELIGENTE
                 let posY = 51;
                 let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
 
@@ -1229,7 +1108,7 @@
                         doc.addImage(imgJpegBase64, 'JPEG', 15, posY, pageWidth - 30, 85, undefined, 'FAST');
                         posY += 90;
                     } catch (e) {
-                        console.warn('Foto indisponível via Canvas/CORS:', e);
+                        console.warn('Foto indisponível via Canvas/CORS, aplicando box reserva:', e);
                         doc.setFillColor(240, 245, 250);
                         doc.rect(15, posY, pageWidth - 30, 60, 'F');
                         doc.setTextColor(120, 130, 140);
@@ -1239,6 +1118,7 @@
                     }
                 }
 
+                // 4. ESPECIFICAÇÕES DO IMÓVEL
                 doc.setFillColor(245, 247, 250);
                 doc.roundedRect(15, posY, pageWidth - 30, 22, 2, 2, 'F');
 
@@ -1262,6 +1142,7 @@
 
                 posY += 28;
 
+                // 5. VALORES FINANCEIROS
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
@@ -1285,6 +1166,7 @@
 
                 posY += 20;
 
+                // 6. DESCRIÇÃO INSTITUCIONAL DO IMÓVEL
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
@@ -1297,6 +1179,7 @@
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
+                // 7. RODAPÉ DE CONTATO COMERCIAL
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
@@ -1314,7 +1197,7 @@
 
             } catch (err) {
                 console.error('Erro na compilação do PDF:', err);
-                mostrarToast('erro', 'Falha no PDF', 'Erro ao compilar ficha comercial: ' + err.message);
+                alert('Erro ao compilar a ficha em PDF: ' + err.message);
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -1324,7 +1207,7 @@
         }
 
         // =========================================================================
-        // FICHA DO PROPRIETÁRIO & PRETENSÃO LÍQUIDA
+        // FICHA DO PROPRIETÁRIO & PRETENSÃO LÍQUIDA (MÁSCARA ATM)
         // =========================================================================
         async function abrirModalProprietario(imovelId) {
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
@@ -1414,10 +1297,10 @@
                 const im = listaImoveisCompleta.find(i => i.id === imovelEmFocoProprietarioId);
                 if (im) im.valor_pretendido_proprietario = valorNumerico;
 
-                mostrarToast('sucesso', 'Pretensão Salva', 'Valor de interesse do proprietário salvo com sucesso!');
+                alert('Valor de interesse do proprietário salvo com sucesso!');
             } catch (err) {
                 console.error(err);
-                mostrarToast('erro', 'Falha ao Salvar', 'Erro ao salvar valor pretendido: ' + err.message);
+                alert('Erro ao salvar valor pretendido: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Salvar';
@@ -1430,7 +1313,7 @@
         }
 
         // =========================================================================
-        // FLUXO 1: FECHAMENTO DE VENDA COM CADASTRO DO COMPRADOR & ANEXOS
+        // FLUXO 1: FECHAMENTO DE VENDA (MÁSCARA ATM)
         // =========================================================================
         function abrirModalVenda(imovelId) {
             if (modoLeitura) return;
@@ -1443,14 +1326,6 @@
             document.getElementById('venda-valor-anuncio').innerText = Number(imovel.valor_venda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('venda-comprador-nome').value = '';
-            document.getElementById('venda-comprador-zap').value = '';
-            document.getElementById('venda-comprador-email').value = '';
-            document.getElementById('venda-comprador-cpf').value = '';
-            document.getElementById('venda-comprador-rg').value = '';
-            document.getElementById('venda-valor-sinal').value = '';
-            document.getElementById('venda-documentos').value = '';
-            document.getElementById('venda-observacoes').value = '';
-
             document.getElementById('venda-valor-fechado').value = formatarValorBRL(imovel.valor_venda);
             document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
 
@@ -1501,17 +1376,10 @@
 
             const btn = document.getElementById('btn-confirmar-venda');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando comprador & venda...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando venda...';
 
             const imovelId = document.getElementById('venda-imovel-id').value;
             const compradorNome = document.getElementById('venda-comprador-nome').value.trim();
-            const compradorZap = document.getElementById('venda-comprador-zap').value.trim();
-            const compradorEmail = document.getElementById('venda-comprador-email').value.trim();
-            const compradorCpf = document.getElementById('venda-comprador-cpf').value.trim();
-            const compradorRg = document.getElementById('venda-comprador-rg').value.trim();
-            const valorSinal = converterMoedaParaFloat(document.getElementById('venda-valor-sinal').value);
-            const observacoesVenda = document.getElementById('venda-observacoes').value.trim();
-
             const valorVenda = converterMoedaParaFloat(document.getElementById('venda-valor-fechado').value);
             const dataVenda = document.getElementById('venda-data').value;
             const comissaoTotalPct = Number(document.getElementById('venda-comissao-total-pct').value);
@@ -1527,72 +1395,11 @@
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
-                // 1. UPLOAD DE DOCUMENTOS DO COMPRADOR NO STORAGE
-                const fileInput = document.getElementById('venda-documentos');
-                let docsUrls = [];
-
-                if (fileInput.files && fileInput.files.length > 0) {
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Armazenando documentos do comprador...';
-                    for (let i = 0; i < fileInput.files.length; i++) {
-                        const file = fileInput.files[i];
-                        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-                        const path = `${imobiliariaId}/vendas/doc_comprador_${Date.now()}_${i}_${cleanName}`;
-                        
-                        const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, file, { upsert: true });
-                        if (!upErr) {
-                            const url = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
-                            docsUrls.push(url);
-                        } else {
-                            console.warn('Erro ao subir documento:', upErr);
-                        }
-                    }
-                }
-
-                // 2. CADASTRO COMPLETO DO COMPRADOR NA TABELA CLIENTES (VÍNCULO PERMANENTE PARA O DOSSIÊ 360°)
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando comprador oficial...';
-                let clienteCompradorId = null;
-
-                const { data: novoCliente, error: errCliente } = await supabaseClient
-                    .from('clientes')
-                    .insert([{
-                        imobiliaria_id: imobiliariaId,
-                        tipo: 'Comprador',
-                        nome: compradorNome,
-                        whatsapp: compradorZap,
-                        telefone: compradorZap,
-                        cpf_cnpj: compradorCpf || null,
-                        rg: compradorRg || null,
-                        email: compradorEmail || null,
-                        observacoes: `Comprador do Imóvel Ref. cadastrado no fechamento de venda em ${dataVenda}.`
-                    }])
-                    .select('id')
-                    .single();
-
-                if (!errCliente && novoCliente) {
-                    clienteCompradorId = novoCliente.id;
-                }
-
-                // 3. COMPILAÇÃO DE NOTAS E LINKS DE ANEXOS PARA AS OBSERVAÇÕES DA VENDA
-                let notasCompletas = [];
-                if (valorSinal > 0) {
-                    notasCompletas.push(`[ENTRADA/SINAL]: R$ ${valorSinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
-                }
-                if (observacoesVenda) {
-                    notasCompletas.push(`[CONDIÇÕES]: ${observacoesVenda}`);
-                }
-                if (docsUrls.length > 0) {
-                    notasCompletas.push(`[DOCUMENTOS ANEXOS]: ${docsUrls.join(' , ')}`);
-                }
-                const observacoesFinalTexto = notasCompletas.join(' | ');
-
-                // 4. INSERÇÃO EM VENDAS_FECHADAS COM CLIENTE_COMPRADOR_ID REAL VINCULADO
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Formalizando venda e comissões...';
                 const { error: errVenda } = await supabaseClient
                     .from('vendas_fechadas')
                     .insert([{
                         imobiliaria_id: imobiliariaId,
                         imovel_id: imovelId,
-                        cliente_comprador_id: clienteCompradorId,
                         cliente_comprador_nome: compradorNome,
                         corretor_id: corretorId ? Number(corretorId) : null,
                         corretor_nome: corretorNome,
@@ -1604,13 +1411,11 @@
                         valor_comissao_imobiliaria: valorComissaoImobiliaria,
                         valor_repasse_proprietario: valorRepasseProprietario,
                         data_venda: dataVenda,
-                        status_pagamento: 'Recebido',
-                        observacoes: observacoesFinalTexto || null
+                        status_pagamento: 'Recebido'
                     }]);
 
                 if (errVenda) throw errVenda;
 
-                // 5. ATUALIZAÇÃO DO STATUS DO IMÓVEL
                 const { error: errImovel } = await supabaseClient
                     .from('imoveis')
                     .update({ status: 'Vendido', ativa: false })
@@ -1619,13 +1424,12 @@
                 if (errImovel) throw errImovel;
 
                 fecharModalVenda();
-                mostrarToast('sucesso', 'Venda Concluída!', `Venda registrada com sucesso! Comprador "${compradorNome}" devidamente catalogado e vinculado ao Dossiê.`);
-                await carregarDadosAuxiliares();
+                alert('Venda registrada e comissões apuradas com sucesso!');
                 await carregarImoveis();
 
             } catch (err) {
                 console.error(err);
-                mostrarToast('erro', 'Falha no Fechamento', 'Erro ao registrar venda: ' + err.message);
+                alert('Erro ao registrar venda: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar Venda & Atualizar Status</span>';
@@ -1633,7 +1437,7 @@
         }
 
         // =========================================================================
-        // FLUXO 2: FECHAMENTO DE LOCAÇÃO COM DOCUMENTOS
+        // FLUXO 2: FECHAMENTO DE LOCAÇÃO (MÁSCARA ATM)
         // =========================================================================
         function abrirModalLocacao(imovelId) {
             if (modoLeitura) return;
@@ -1776,13 +1580,13 @@
                     }]);
 
                 fecharModalLocacao();
-                mostrarToast('sucesso', 'Locação Concluída!', `Contrato de locação registrado com sucesso! ${docsUrls.length > 0 ? docsUrls.length + ' documento(s) anexado(s).' : ''}`);
+                alert(`Contrato de locação registrado com sucesso! ${docsUrls.length > 0 ? docsUrls.length + ' documento(s) anexado(s).' : ''}`);
                 await carregarDadosAuxiliares();
                 await carregarImoveis();
 
             } catch (err) {
                 console.error(err);
-                mostrarToast('erro', 'Falha na Locação', 'Erro ao registrar locação: ' + err.message);
+                alert('Erro ao registrar locação: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-key"></i> <span>Confirmar Locação & Criar Contrato</span>';
@@ -1798,11 +1602,10 @@
                     .eq('id', imovelId);
 
                 if (error) throw error;
-                mostrarToast('aviso', 'Vitrine Atualizada', !estadoAtual ? 'O anúncio foi publicado na vitrine.' : 'O anúncio foi pausado da vitrine.');
                 await carregarImoveis();
             } catch (err) {
                 console.error(err);
-                mostrarToast('erro', 'Falha na Vitrine', 'Erro ao atualizar status da vitrine.');
+                alert('Erro ao atualizar status da vitrine.');
             }
         }
 
@@ -1875,11 +1678,10 @@
                 if (error) throw error;
 
                 fecharModalExcluir();
-                mostrarToast('sucesso', 'Imóvel Excluído', 'O anúncio foi removido permanentemente.');
                 await carregarImoveis();
             } catch (err) {
                 console.error(err);
-                mostrarToast('erro', 'Falha ao Excluir', 'Erro ao excluir o imóvel: ' + err.message);
+                alert('Erro ao excluir o imóvel: ' + err.message);
             } finally {
                 btn.innerHTML = 'Sim, Excluir';
                 btn.disabled = false;
