@@ -953,13 +953,12 @@
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug || ''}`;
-
-                atualizarPainelAssinatura(imobAlvo);
+atualizarPainelAssinatura(imobAlvo);
                 popularSeletorMeses();
           
                 carregarMetricas(imobAlvo.id);
                 carregarAgendaMes();
-                
+            }
         }
 
         async function carregarPerfilOperacional(userId) {
@@ -2983,7 +2982,7 @@
             }
         }
 
-       function atalhoAbaFinanceira() {
+      function atalhoAbaFinanceira() {
             if (!temPermissaoFinanceira) return;
             const boxFin = document.getElementById('box-dashboard-financeiro');
             if (boxFin) {
@@ -2997,6 +2996,151 @@
                 }
             }
        }
+
+        async function carregarDashboardFinanceiro() {
+            if (!dadosImobiliaria) return;
+            const mesRef = document.getElementById('filtro-mes-financeiro')?.value;
+            const imobId = dadosImobiliaria.id;
+
+            try {
+                // 1. Mensalidades de Locação do Mês
+                let queryLoc = supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .select('*, imoveis(codigo_ref, titulo)')
+                    .eq('imobiliaria_id', imobId);
+                
+                if (mesRef) queryLoc = queryLoc.eq('mes_referencia', mesRef);
+                const { data: mensalidades } = await queryLoc;
+
+                let totalAluguelBruto = 0;
+                let taxaImobQuitada = 0;
+                let taxaImobPendente = 0;
+                let repasseProprietarios = 0;
+
+                (mensalidades || []).forEach(m => {
+                    const bruto = Number(m.valor_aluguel || 0);
+                    const taxa = Number(m.valor_taxa_imobiliaria || 0);
+                    const repasse = Number(m.valor_repasse_proprietario || 0);
+
+                    totalAluguelBruto += bruto;
+                    repasseProprietarios += repasse;
+
+                    if (m.status_inquilino === 'Pago') {
+                        taxaImobQuitada += taxa;
+                    } else {
+                        taxaImobPendente += taxa;
+                    }
+                });
+
+                document.getElementById('fin-kpi-aluguel-bruto').innerText = totalAluguelBruto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-taxa-imob-recebida').innerText = taxaImobQuitada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-taxa-imob-pendente').innerText = `Pendente: ${taxaImobPendente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                document.getElementById('fin-kpi-repasse-proprietarios').innerText = repasseProprietarios.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                // Renderiza Tabela 1: Locações
+                const tbodyLoc = document.getElementById('tabela-fin-locacoes-corpo');
+                if (tbodyLoc) {
+                    if (!mensalidades || mensalidades.length === 0) {
+                        tbodyLoc.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês.</td></tr>';
+                    } else {
+                        tbodyLoc.innerHTML = mensalidades.map(m => `
+                            <tr>
+                                <td class="py-2.5 px-3 font-bold text-cyan-300 font-mono">${m.imoveis?.codigo_ref || '---'}</td>
+                                <td class="py-2.5 px-3 text-white font-sans font-bold">${m.mes_referencia || '---'}</td>
+                                <td class="py-2.5 px-3 text-white">R$ ${Number(m.valor_aluguel || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-amber-400 font-mono">${m.taxa_adm_pct || 10}%</td>
+                                <td class="py-2.5 px-3 text-emerald-400">R$ ${Number(m.valor_taxa_imobiliaria || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-cyan-300 font-bold">R$ ${Number(m.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">${m.status_inquilino || 'Pendente'}</span></td>
+                                <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_repasse === 'Repassado' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-400'}">${m.status_repasse || 'Aguardando'}</span></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+
+                // 2. Vendas Fechadas no Mês
+                let inicioMes = '';
+                let fimMes = '';
+                if (mesRef && mesRef.includes('/')) {
+                    const [m, a] = mesRef.split('/');
+                    inicioMes = `${a}-${m}-01`;
+                    fimMes = new Date(a, Number(m), 0).toISOString().split('T')[0];
+                }
+
+                let queryVendas = supabaseClient
+                    .from('vendas_fechadas')
+                    .select('*, imoveis(codigo_ref, titulo)')
+                    .eq('imobiliaria_id', imobId)
+                    .order('data_venda', { ascending: false });
+
+                if (inicioMes && fimMes) {
+                    queryVendas = queryVendas.gte('data_venda', inicioMes).lte('data_venda', fimMes);
+                }
+
+                const { data: vendas } = await queryVendas;
+
+                let totalComissaoVendasImob = 0;
+                let totalVgvFechado = 0;
+                let totalComissaoCorretores = 0;
+
+                (vendas || []).forEach(v => {
+                    totalVgvFechado += Number(v.valor_venda_real || 0);
+                    totalComissaoVendasImob += Number(v.valor_comissao_imobiliaria || 0);
+                    totalComissaoCorretores += Number(v.valor_comissao_corretor || 0);
+                });
+
+                document.getElementById('fin-kpi-comissao-vendas').innerText = totalComissaoVendasImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-vgv-vendas-mes').innerText = `VGV fechado: ${totalVgvFechado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                document.getElementById('fin-kpi-comissao-corretores').innerText = totalComissaoCorretores.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-qtd-vendas-corretores').innerText = `${(vendas || []).length} venda(s) registrada(s)`;
+
+                // Renderiza Tabela 2: Histórico de Vendas
+                const tbodyVendas = document.getElementById('tabela-fin-vendas-corpo');
+                if (tbodyVendas) {
+                    if (!vendas || vendas.length === 0) {
+                        tbodyVendas.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Nenhuma venda registrada para este mês.</td></tr>';
+                    } else {
+                        tbodyVendas.innerHTML = vendas.map(v => `
+                            <tr>
+                                <td class="py-2.5 px-3 text-slate-400 font-mono">${v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----'}</td>
+                                <td class="py-2.5 px-3 font-bold text-cyan-300 font-mono">${v.imoveis?.codigo_ref || '---'}</td>
+                                <td class="py-2.5 px-3 text-white font-sans font-bold">${v.cliente_comprador_nome || '---'}</td>
+                                <td class="py-2.5 px-3 text-slate-300 font-sans">${v.corretor_nome || 'Casa'}</td>
+                                <td class="py-2.5 px-3 text-emerald-400 font-mono">R$ ${Number(v.valor_venda_real || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-amber-300 font-mono font-bold">R$ ${Number(v.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-right text-white font-mono font-bold">R$ ${Number(v.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+
+                // Renderiza Tabela 3: Comissões dos Corretores
+                const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
+                if (tbodyCorretores) {
+                    if (!vendas || vendas.length === 0) {
+                        tbodyCorretores.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Nenhum repasse de corretor no período.</td></tr>';
+                    } else {
+                        tbodyCorretores.innerHTML = vendas.map(v => `
+                            <tr>
+                                <td class="py-2.5 px-3 text-slate-400 font-mono">${v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----'}</td>
+                                <td class="py-2.5 px-3 font-bold text-blue-300 font-sans">${v.corretor_nome || 'Casa'}</td>
+                                <td class="py-2.5 px-3 font-mono text-cyan-300">${v.imoveis?.codigo_ref || '---'}</td>
+                                <td class="py-2.5 px-3 text-white font-sans">${v.cliente_comprador_nome || '---'}</td>
+                                <td class="py-2.5 px-3 text-slate-300 font-mono">R$ ${Number(v.valor_venda_real || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-amber-300 font-mono">${v.comissao_corretor_pct || 0}%</td>
+                                <td class="py-2.5 px-3 text-cyan-300 font-mono font-bold">R$ ${Number(v.valor_comissao_corretor || 0).toLocaleString('pt-BR')}</td>
+                                <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">${v.status_pagamento || 'Recebido'}</span></td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+
+            } catch (err) {
+                console.error('[FINANCEIRO] Erro ao consolidar extrato:', err);
+            }
+        }
+
         async function carregarAvisosGestor() {
             try {
                 let container = document.getElementById('faixa-comunicado-global');
