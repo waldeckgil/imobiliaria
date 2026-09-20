@@ -11,7 +11,6 @@
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
     <style>
         /* PADRÃO IDÊNTICO AO SUPABASE: BARRA FÍSICA PERMANENTE */
         html {
@@ -47,18 +46,12 @@
             cursor: pointer;
         }
     </style>
-
-
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  
-     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
-
-  
-  
-    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -83,7 +76,6 @@
     <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
                     <i class="fa-solid fa-comments"></i>
@@ -119,44 +111,31 @@
         </div>
     </header>
 
-  
-
-
-    
-    <!-- NAVEGAÇÃO DOS MÓDULOS (ESTILO COCKPIT COM BORDAS DEFINIDAS E CENTRALIZADO) -->
+    <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-950/60 border-b border-slate-800/80 px-4 sm:px-8 py-2.5">
         <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3.5 overflow-x-auto text-sm sm:text-base py-1">
-            
             <a href="dashboard.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
                 <i class="fa-solid fa-chart-pie text-slate-400"></i>
                 <span>Dashboard 360</span>
             </a>
-
             <a href="imoveis-lista.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
                 <i class="fa-solid fa-house-chimney text-slate-400"></i>
                 <span>Catálogo de Imóveis</span>
             </a>
-
-            <!-- ATIVO NESTA TELA: CENTRAL DE ATENDIMENTOS COM BORDA CIANO NEON -->
             <a href="leads.html" class="px-4 py-2 rounded-xl font-black bg-slate-800 text-cyan-300 border border-cyan-400/60 shadow-lg shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
                 <i class="fa-solid fa-comments text-cyan-400"></i>
                 <span>Central de Atendimentos</span>
             </a>
-
             <a href="equipe.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
                 <i class="fa-solid fa-users text-slate-400"></i>
                 <span>Equipe & Permissões</span>
             </a>
-
             <a href="configurar-imobiliaria.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
                 <i class="fa-solid fa-gear text-slate-400"></i>
                 <span>Configurações & Publicidade</span>
             </a>
-
         </div>
     </nav>
-
-
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
@@ -188,9 +167,8 @@
         <!-- BARRA DE FILTROS E BUSCA -->
         <div class="box-tech p-4">
             <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-12 gap-3 text-xs">
-                
                 <div class="lg:col-span-5 relative">
-                    <input type="text" id="filtro-busca" placeholder="Buscar por nome, WhatsApp ou mensagem..." 
+                    <input type="text" id="filtro-busca" placeholder="Buscar por cliente, WhatsApp, ref ou mensagem..." 
                            oninput="aplicarFiltros()"
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white text-xs outline-none focus:border-cyan-400">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
@@ -199,12 +177,12 @@
                 <div class="lg:col-span-3">
                     <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Funil: Todos os Estágios</option>
-                        <option value="Novo">Novo</option>
-                        <option value="Em Atendimento">Em Atendimento</option>
-                        <option value="Visita Agendada">Visita Agendada</option>
-                        <option value="Proposta">Proposta Feita</option>
-                        <option value="Fechado">Venda Concluída</option>
-                        <option value="Perdido">Perdido</option>
+                        <option value="Novo">🔵 Novo</option>
+                        <option value="Em Atendimento">🟡 Em Atendimento</option>
+                        <option value="Visita Agendada">🟣 Visita Agendada</option>
+                        <option value="Proposta">🟠 Proposta Feita</option>
+                        <option value="Fechado">🟢 Venda Concluída</option>
+                        <option value="Perdido">⚫ Perdido</option>
                     </select>
                 </div>
 
@@ -219,7 +197,6 @@
                         <i class="fa-solid fa-rotate-left text-xs"></i>
                     </button>
                 </div>
-
             </div>
         </div>
 
@@ -230,10 +207,10 @@
                     <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
                         <tr>
                             <th class="py-3 px-4">Recebido em</th>
-                            <th class="py-3 px-3">Cliente (Comprador / Proprietário)</th>
+                            <th class="py-3 px-3">Cliente</th>
                             <th class="py-3 px-3">Origem / Imóvel</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
-                            <th class="py-3 px-3">Etapa Atual & Histórico</th>
+                            <th class="py-3 px-3">Estágio do Funil</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
                             <th class="py-3 px-4 text-right">Ação Direta</th>
                         </tr>
@@ -242,7 +219,7 @@
                         <tr>
                             <td colspan="7" class="py-12 text-center text-slate-500">
                                 <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                                <p>Carregando atendimentos e mensagens da vitrine...</p>
+                                <p>Carregando atendimentos e histórico...</p>
                             </td>
                         </tr>
                     </tbody>
@@ -251,131 +228,361 @@
 
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
                 <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads cadastrados</span>
-                <span class="font-mono text-[11px]">SGI • Timeline & CRM Multi-Etapas</span>
+                <span class="font-mono text-[11px]">SGI • Cockpit Unificado & CRM Imobiliário</span>
             </div>
         </div>
 
     </main>
 
-    <!-- MODAL DE LINHA DO TEMPO / HISTÓRICO COMPLETO DO CLIENTE -->
-    <div id="modal-timeline-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+    <!-- ==================================================================== -->
+    <!-- MODAL PRINCIPAL: COCKPIT UNIFICADO DO ATENDIMENTO (FICHA DO LEAD)    -->
+    <!-- ==================================================================== -->
+    <div id="modal-cockpit-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden">
+        <div class="box-tech max-w-4xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[94vh] flex flex-col bg-slate-900">
             
+            <!-- CABEÇALHO DO MODAL -->
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-cyan-400 font-black text-sm">
-                    <i class="fa-solid fa-timeline text-base"></i>
-                    <span>Linha do Tempo & Histórico do Cliente</span>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500 text-slate-950 flex items-center justify-center font-black">
+                        <i class="fa-solid fa-address-card text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-black text-white">Ficha de Atendimento do Lead</h3>
+                        <p class="text-[11px] text-slate-400 font-mono" id="cockpit-lead-header-info">Carregando...</p>
+                    </div>
                 </div>
-                <button onclick="fecharModalTimeline()" class="text-slate-500 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button onclick="fecharCockpitLead()" class="text-slate-500 hover:text-white transition cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
 
-            <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                <div>
-                    <h4 class="font-black text-white text-sm" id="timeline-lead-nome">---</h4>
-                    <p class="text-slate-400 font-mono text-[11px]" id="timeline-lead-contato">---</p>
+            <input type="hidden" id="cockpit-lead-id">
+
+            <!-- BLOCO 1: RESUMO DO CLIENTE + CARD DO IMÓVEL + CORRETOR -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs">
+                
+                <!-- DADOS DO CLIENTE -->
+                <div class="md:col-span-5 space-y-1 border-b md:border-b-0 md:border-r border-slate-800 pb-2 md:pb-0 md:pr-3">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase block tracking-wider">Cliente Interessado</span>
+                    <h4 class="font-black text-white text-sm" id="cockpit-cliente-nome">---</h4>
+                    <p class="text-cyan-300 font-mono text-xs flex items-center gap-1.5">
+                        <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+                        <span id="cockpit-cliente-whatsapp">---</span>
+                    </p>
+                    <p class="text-slate-400 text-[11px] truncate" id="cockpit-cliente-email">---</p>
                 </div>
-                <div class="text-right">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Contexto</span>
-                    <span class="text-cyan-400 font-bold font-mono text-xs" id="timeline-lead-imovel">---</span>
+
+                <!-- CONTEXTO DO IMÓVEL -->
+                <div class="md:col-span-4 space-y-1 border-b md:border-b-0 md:border-r border-slate-800 pb-2 md:pb-0 md:pr-3" id="cockpit-imovel-card">
+                    <!-- Dinâmico -->
+                </div>
+
+                <!-- CORRETOR RESPONSÁVEL -->
+                <div class="md:col-span-3 space-y-1">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase block tracking-wider">Corretor Atribuído</span>
+                    <select id="cockpit-corretor-select" onchange="aoMudarCorretorPeloCockpit(this.value)" 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg py-1.5 px-2.5 text-xs text-white outline-none focus:border-cyan-400 cursor-pointer">
+                        <option value="">Sem corretor</option>
+                    </select>
+                    <span class="text-[10px] text-slate-500 block pt-0.5">Altere para delegar o lead.</span>
                 </div>
             </div>
 
-            <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-2">
-                <label class="block text-[11px] font-bold uppercase text-slate-400">Inserir Nota Interna / Ocorrência</label>
-                <div class="flex gap-2">
-                    <input type="text" id="timeline-nova-nota" placeholder="Ex: Cliente pediu 2 dias para resposta..." 
-                           class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                    <button onclick="adicionarNotaManualHistorico()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        <span class="hidden sm:inline">Gravar</span>
-                    </button>
+            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS (PIPELINE INTERATIVO) -->
+            <div class="space-y-1.5">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5" id="cockpit-pipeline-botoes">
+                    <!-- Gerado via JavaScript -->
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto pr-2 space-y-4" id="timeline-container-eventos">
-                <div class="py-8 text-center text-slate-500 text-xs">
-                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
-                    <p>Carregando histórico do cliente...</p>
-                </div>
+            <!-- BLOCO 3: NAVEGAÇÃO POR ABAS -->
+            <div class="flex items-center gap-2 border-b border-slate-800 text-xs font-bold pt-1">
+                <button onclick="trocarAbaCockpit('timeline')" id="btn-aba-timeline" 
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-cyan-400 text-cyan-300 bg-slate-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-timeline"></i>
+                    <span>Histórico & Notas</span>
+                </button>
+
+                <button onclick="trocarAbaCockpit('visita')" id="btn-aba-visita" 
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Visita & Agenda</span>
+                </button>
+
+                <button onclick="trocarAbaCockpit('proposta')" id="btn-aba-proposta" 
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    <span>Proposta Comercial</span>
+                </button>
+
+                <button onclick="trocarAbaCockpit('fechamento')" id="btn-aba-fechamento" 
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-handshake text-amber-400"></i>
+                    <span>Concluir Venda (Aperto de Mão)</span>
+                </button>
             </div>
 
-            <div class="pt-2 border-t border-slate-800 text-right">
-                <button onclick="fecharModalTimeline()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl text-xs transition cursor-pointer">
-                    Fechar
+            <!-- CONTEÚDO DAS ABAS (CONTAINER SCROLLÁVEL) -->
+            <div class="flex-1 overflow-y-auto pr-1 text-xs space-y-3">
+                
+                <!-- ABA 1: HISTÓRICO & NOTAS INTERNAS -->
+                <div id="aba-conteudo-timeline" class="space-y-3">
+                    <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
+                        <label class="block text-[11px] font-bold uppercase text-slate-400">Adicionar Nota Interna ou Resumo de Conversa</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, solicitou proposta com 10% de entrada..." 
+                                   class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                            <button onclick="gravarNotaCockpit()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Registrar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="cockpit-timeline-lista" class="space-y-3 pt-2">
+                        <!-- Eventos inseridos dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- ABA 2: VISITA & AGENDAMENTO -->
+                <div id="aba-conteudo-visita" class="hidden space-y-4">
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <h4 class="font-black text-cyan-300 text-xs uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span>Programação da Visita ou Avaliação</span>
+                        </h4>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Data e Horário Combinados</label>
+                                <input type="datetime-local" id="cockpit-visita-data" 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Instruções de Portaria / Chaves</label>
+                                <input type="text" id="cockpit-visita-notas" placeholder="Ex: Chaves no chaveiro portaria 2..." 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800">
+                            <button onclick="salvarAgendamentoCockpit()" id="btn-cockpit-salvar-visita" 
+                                    class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2 px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Salvar Visita</span>
+                            </button>
+
+                            <button onclick="dispararConfirmacaoWhatsAppCockpit('confirmacao')" 
+                                    class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Confirmar no WhatsApp</span>
+                            </button>
+
+                            <button onclick="dispararConfirmacaoWhatsAppCockpit('reagendamento')" 
+                                    class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Avisar Remarcação</span>
+                            </button>
+
+                            <button onclick="abrirModalConfirmarDesmarcarVisita()" 
+                                    class="bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/60 font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 ml-auto">
+                                <i class="fa-solid fa-calendar-xmark"></i>
+                                <span>Desmarcar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 3: PROPOSTA COMERCIAL -->
+                <div id="aba-conteudo-proposta" class="hidden space-y-4">
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <h4 class="font-black text-purple-300 text-xs uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                            <span>Registro de Proposta Comercial Ofertada</span>
+                        </h4>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Valor da Proposta (R$)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
+                                    <input type="number" step="0.01" id="cockpit-proposta-valor" placeholder="0,00" 
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white font-mono font-bold text-xs outline-none focus:border-purple-400">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Forma de Pagamento / Condições</label>
+                                <input type="text" id="cockpit-proposta-condicoes" placeholder="Ex: 20% sinal + Financiamento Caixa..." 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
+                            <button onclick="salvarPropostaCockpit()" id="btn-cockpit-salvar-proposta" 
+                                    class="bg-purple-600 hover:bg-purple-500 text-white font-black py-2 px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Salvar Proposta</span>
+                            </button>
+
+                            <button onclick="enviarPropostaWhatsAppCockpit()" 
+                                    class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Enviar Resumo no WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 4: CONVERSÃO DE VENDA (APERTO DE MÃO) -->
+                <div id="aba-conteudo-fechamento" class="hidden space-y-4">
+                    <div class="bg-slate-950/90 p-4 rounded-xl border border-amber-500/40 space-y-3">
+                        <div class="flex items-center gap-2 text-amber-400 font-black text-xs uppercase">
+                            <i class="fa-solid fa-handshake text-base"></i>
+                            <span>Conclusão Formal de Venda & Rateio Financeiro</span>
+                        </div>
+
+                        <div id="cockpit-fechar-alerta-sem-imovel" class="hidden p-3 bg-red-950/40 border border-red-800 text-red-300 rounded-xl text-xs">
+                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para gerar o contrato e comissões, vincule um imóvel primeiro.
+                        </div>
+
+                        <div id="cockpit-fechar-formulario" class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Valor Real de Fechamento (R$) *</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
+                                        <input type="number" step="0.01" id="cockpit-venda-valor-real" oninput="calcularRateioCockpit()" 
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Data do Fechamento *</label>
+                                    <input type="date" id="cockpit-venda-data" 
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Comissão Total Negociada (%) *</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.1" id="cockpit-venda-comissao-total-pct" oninput="calcularRateioCockpit()" 
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
+                                        <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Fatia do Corretor (%) *</label>
+                                    <div class="relative">
+                                        <input type="number" step="0.5" id="cockpit-venda-comissao-corretor-pct" oninput="calcularRateioCockpit()" 
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                                        <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD DE RATEIO INSTANTÂNEO -->
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                                    Simulação de Comissões e Repasse ao Proprietário:
+                                </span>
+                                <div class="grid grid-cols-3 gap-2 text-[11px] pt-1">
+                                    <div>
+                                        <span class="text-slate-500 block">Comissão Bruta:</span>
+                                        <strong id="cockpit-sim-comissao-total" class="text-amber-400 font-mono">R$ 0,00</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block">Imobiliária:</span>
+                                        <strong id="cockpit-sim-imob" class="text-emerald-400 font-mono">R$ 0,00</strong>
+                                    </div>
+                                    <div>
+                                        <span class="text-slate-500 block">Corretor:</span>
+                                        <strong id="cockpit-sim-corretor" class="text-cyan-300 font-mono">R$ 0,00</strong>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-t border-slate-800 text-[11px] flex justify-between">
+                                    <span class="text-slate-400">Repasse Líquido ao Proprietário:</span>
+                                    <strong id="cockpit-sim-repasse" class="text-white font-mono text-xs">R$ 0,00</strong>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="iniciarConfirmacaoExplicativaVenda()" 
+                                    class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black flex items-center justify-center gap-2 transition shadow cursor-pointer text-xs">
+                                <i class="fa-solid fa-handshake"></i>
+                                <span>Avançar para Conclusão de Venda</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+                <div class="text-[11px] text-slate-500">
+                    Lead ID: <span class="font-mono text-slate-400" id="cockpit-lead-id-label">---</span>
+                </div>
+                <button onclick="fecharCockpitLead()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl text-xs transition cursor-pointer">
+                    Fechar Painel
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE AGENDAMENTO DE VISITA -->
-    <div id="modal-agendar-visita" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-cyan-400 font-black text-sm">
-                    <i class="fa-solid fa-calendar-days text-base"></i>
-                    <span>Agendar Visita / Avaliação</span>
+    <!-- ==================================================================== -->
+    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: APERTO DE MÃO (FECHAMENTO DE VENDA) -->
+    <!-- ==================================================================== -->
+    <div id="modal-confirmar-venda-explicativo" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4">
+            
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-2xl flex-shrink-0 font-black shadow-lg">
+                    <i class="fa-solid fa-handshake"></i>
                 </div>
-                <button onclick="fecharModalAgendamento()" class="text-slate-500 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <div>
+                    <h3 class="text-base font-black text-white">Confirmação de Venda Fechada</h3>
+                    <p class="text-xs text-amber-400 font-bold">Por favor, revise os impactos desta operação:</p>
+                </div>
+            </div>
+
+            <!-- QUADRO EXPLICATIVO DIDÁTICO PARA O GESTOR -->
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5 text-xs text-slate-300">
+                <p class="font-bold text-white text-[11px] uppercase tracking-wider">
+                    Ao confirmar, o sistema realizará automaticamente:
+                </p>
+                
+                <div class="flex items-start gap-2 text-slate-300">
+                    <i class="fa-solid fa-house-circle-xmark text-red-400 text-sm mt-0.5"></i>
+                    <span><strong>Baixa do Catálogo:</strong> O imóvel <span class="text-cyan-300 font-mono font-bold" id="conf-imovel-ref">Ref: ---</span> será marcado como <strong>"Vendido"</strong> e desativado da vitrine pública.</span>
+                </div>
+
+                <div class="flex items-start gap-2 text-slate-300">
+                    <i class="fa-solid fa-file-invoice-dollar text-emerald-400 text-sm mt-0.5"></i>
+                    <span><strong>Lançamento Financeiro:</strong> A venda de <strong class="text-emerald-400 font-mono" id="conf-valor-venda">R$ 0,00</strong> gerará o recebível de comissão para a imobiliária (<span class="text-emerald-300 font-mono font-bold" id="conf-valor-imob">R$ 0,00</span>) e comissão do corretor (<span class="text-cyan-300 font-mono font-bold" id="conf-valor-corretor">R$ 0,00</span>).</span>
+                </div>
+
+                <div class="flex items-start gap-2 text-slate-300">
+                    <i class="fa-solid fa-user-check text-cyan-400 text-sm mt-0.5"></i>
+                    <span><strong>Funil do CRM:</strong> O lead <strong class="text-white" id="conf-lead-nome">---</strong> avançará para a etapa <strong>"Concluído"</strong> e o histórico será registrado permanentemente.</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="fecharConfirmacaoExplicativaVenda()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                    Voltar e Revisar
                 </button>
-            </div>
-
-            <input type="hidden" id="agendamento-lead-id">
-
-            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <p class="text-slate-400">Cliente: <strong id="agendamento-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Contexto: <strong id="agendamento-lead-imovel" class="text-cyan-400 font-mono">---</strong></p>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Data e Hora do Compromisso</label>
-                <input type="datetime-local" id="agendamento-data" 
-                       class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Notas / Instruções de Acesso</label>
-                <textarea id="agendamento-notas" rows="3" placeholder="Ex: Buscar chaves na portaria..." 
-                          class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 resize-none"></textarea>
-            </div>
-
-            <div class="space-y-2 pt-2 border-t border-slate-800">
-                <div class="flex items-center gap-2">
-                    <button onclick="salvarAgendamento()" id="btn-salvar-agendamento" 
-                            class="flex-1 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/40">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Salvar / Remarcar</span>
-                    </button>
-
-                    <button onclick="cancelarVisitaAgendada()" id="btn-cancelar-visita" 
-                            class="bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-800/60 font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-1.5"
-                            title="Desmarcar visita">
-                        <i class="fa-solid fa-calendar-xmark"></i>
-                        <span class="hidden sm:inline">Desmarcar</span>
-                    </button>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <button onclick="dispararConfirmacaoWhatsApp('confirmacao')" id="btn-whatsapp-confirmar" 
-                            class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
-                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                        <span>Confirmar Visita</span>
-                    </button>
-
-                    <button onclick="dispararConfirmacaoWhatsApp('reagendamento')" id="btn-whatsapp-reagendar" 
-                            class="bg-amber-600/90 hover:bg-amber-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
-                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                        <span>Avisar Remarcação</span>
-                    </button>
-                </div>
+                <button onclick="executarConfirmacaoFinalVenda()" id="btn-executar-venda-final" 
+                        class="w-1/2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-amber-950/50 flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Sim, Concluir Venda</span>
+                </button>
             </div>
         </div>
     </div>
 
     <!-- MODAL CONFIRMAR DESMARCAR VISITA -->
-    <div id="modal-confirmar-desmarcar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 hidden">
+    <div id="modal-confirmar-desmarcar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[80] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-sm w-full p-6 text-center border border-amber-500/40 shadow-2xl space-y-3">
             <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mx-auto border border-amber-500/30">
                 <i class="fa-solid fa-calendar-xmark"></i>
@@ -383,7 +590,7 @@
             
             <h3 class="text-base font-black text-white">Desmarcar Visita?</h3>
             <p class="text-xs text-slate-400">
-                A data combinada será desmarcada e o lead retornará para o estágio 
+                A data combinada será removida e o lead retornará para o estágio 
                 <span class="text-amber-400 font-bold">"Em Atendimento"</span>.
             </p>
 
@@ -391,166 +598,10 @@
                 <button onclick="fecharModalConfirmarDesmarcar()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
                     Voltar
                 </button>
-                <button onclick="executarCancelamentoVisita()" id="btn-confirmar-desmarcar-acao" class="w-1/2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow">
+                <button onclick="executarCancelamentoVisitaCockpit()" id="btn-confirmar-desmarcar-acao" class="w-1/2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow">
                     Sim, Desmarcar
                 </button>
             </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE REGISTRO DE PROPOSTA COMERCIAL -->
-    <div id="modal-proposta-comercial" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 border border-purple-500/40 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-purple-400 font-black text-sm">
-                    <i class="fa-solid fa-hand-holding-dollar text-base"></i>
-                    <span>Registrar Proposta Comercial</span>
-                </div>
-                <button onclick="fecharModalProposta()" class="text-slate-500 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
-            </div>
-
-            <input type="hidden" id="proposta-lead-id">
-
-            <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <p class="text-slate-400">Cliente: <strong id="proposta-lead-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Contexto / Imóvel: <strong id="proposta-lead-imovel" class="text-purple-300 font-mono">---</strong></p>
-                <p class="text-slate-400">Valor Anunciado: <strong id="proposta-valor-anuncio" class="text-emerald-400 font-mono">---</strong></p>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Valor da Proposta Ofertada (R$)</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">R$</span>
-                    <input type="number" step="0.01" id="proposta-valor-input" placeholder="0,00" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white font-mono font-bold text-sm outline-none focus:border-purple-400">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Forma de Pagamento / Condições</label>
-                <textarea id="proposta-condicoes-input" rows="3" 
-                          placeholder="Ex: Sinal de 20% + Financiamento Bancário..." 
-                          class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 resize-none"></textarea>
-            </div>
-
-            <div class="space-y-2 pt-2 border-t border-slate-800">
-                <button onclick="salvarPropostaComercial()" id="btn-salvar-proposta" 
-                        class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-2.5 rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-purple-950/40">
-                    <i class="fa-solid fa-floppy-disk"></i>
-                    <span>Salvar Proposta</span>
-                </button>
-
-                <button onclick="enviarPropostaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-[11px] transition cursor-pointer flex items-center justify-center gap-1.5 shadow">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Enviar Resumo no WhatsApp</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE CONVERSÃO: FECHAMENTO DE VENDA DIRETO PELO CRM -->
-    <div id="modal-fechar-venda-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-lg w-full p-6 border border-amber-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2 text-amber-400 font-black text-sm">
-                    <i class="fa-solid fa-handshake text-base"></i>
-                    <span>Converter Atendimento em Venda Fechada</span>
-                </div>
-                <button onclick="fecharModalVendaLead()" class="text-slate-500 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
-            </div>
-
-            <input type="hidden" id="fechar-lead-id">
-            <input type="hidden" id="fechar-imovel-id">
-
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-xs">
-                <p class="text-slate-400">Cliente Comprador: <strong id="fechar-cliente-nome" class="text-white font-bold">---</strong></p>
-                <p class="text-slate-400">Imóvel: <strong id="fechar-imovel-titulo" class="text-cyan-300 font-bold">---</strong></p>
-                <p class="text-slate-400">Referência: <strong id="fechar-imovel-ref" class="text-cyan-400 font-mono">---</strong> • Anúncio: <strong id="fechar-valor-anuncio" class="text-emerald-400 font-mono">R$ 0,00</strong></p>
-            </div>
-
-            <form id="form-fechar-venda-lead" onsubmit="confirmarVendaPeloCRM(event)" class="space-y-3 text-xs flex-1 overflow-y-auto pr-1">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor Fechado de Venda (R$) *</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
-                            <input type="number" step="0.01" id="fechar-valor-real" required oninput="calcularRateioCRM()" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Data do Fechamento *</label>
-                        <input type="date" id="fechar-data-venda" required 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Comissão Total Negociada (%) *</label>
-                        <div class="relative">
-                            <input type="number" step="0.1" id="fechar-comissao-total-pct" required oninput="calcularRateioCRM()" 
-                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
-                            <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Corretor Fechador *</label>
-                        <select id="fechar-corretor-select" required onchange="aoMudarCorretorCRM()" 
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
-                            <option value="">Selecione...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Fatia do Corretor sobre a Comissão (%) *</label>
-                    <div class="relative">
-                        <input type="number" step="0.5" id="fechar-comissao-corretor-pct" required oninput="calcularRateioCRM()" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
-                        <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
-                    </div>
-                </div>
-
-                <!-- SIMULAÇÃO FINANCEIRA INSTANTÂNEA -->
-                <div class="bg-slate-950/90 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
-                        Rateio Financeiro Instantâneo:
-                    </span>
-                    <div class="grid grid-cols-3 gap-2 text-[11px] pt-1">
-                        <div>
-                            <span class="text-slate-500 block">Comissão Total:</span>
-                            <strong id="fechar-sim-comissao-total" class="text-amber-400 font-mono">R$ 0,00</strong>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 block">Imobiliária:</span>
-                            <strong id="fechar-sim-imob" class="text-emerald-400 font-mono">R$ 0,00</strong>
-                        </div>
-                        <div>
-                            <span class="text-slate-500 block">Corretor:</span>
-                            <strong id="fechar-sim-corretor" class="text-cyan-300 font-mono">R$ 0,00</strong>
-                        </div>
-                    </div>
-                    <div class="pt-2 border-t border-slate-800 text-[11px] flex justify-between">
-                        <span class="text-slate-400">Repasse Líquido ao Proprietário:</span>
-                        <strong id="fechar-sim-repasse" class="text-white font-mono text-xs">R$ 0,00</strong>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="fecharModalVendaLead()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
-                        Cancelar
-                    </button>
-                    <button type="submit" id="btn-confirmar-venda-crm" class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
-                        <i class="fa-solid fa-check"></i>
-                        <span>Concluir Venda & Gerar Financeiro</span>
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -578,10 +629,10 @@
 
     <!-- RODAPÉ TÉCNICO -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
-        SGI • Sistema de Gestão Imobiliária SaaS • CRM & Linha do Tempo
+        SGI • Sistema de Gestão Imobiliária SaaS • Central de Atendimento Cockpit
     </footer>
 
-    <!-- JAVASCRIPT COMPLETO -->
+    <!-- JAVASCRIPT COMPLETO E AUDITADO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -598,10 +649,16 @@
         let modoLeitura = false;
         let isMasterSuporte = false;
 
-        let leadEmAgendamento = null;
-        let leadEmProposta = null;
-        let leadEmTimeline = null;
-        let leadEmFechamento = null;
+        let leadAtivoCockpit = null;
+
+        const ESTAGIOS_FUNIL = [
+            { chave: 'Novo', rotulo: 'Novo', cor: 'blue', icone: 'fa-circle-dot' },
+            { chave: 'Em Atendimento', rotulo: 'Atendimento', cor: 'amber', icone: 'fa-headset' },
+            { chave: 'Visita Agendada', rotulo: 'Visita', cor: 'cyan', icone: 'fa-calendar-check' },
+            { chave: 'Proposta', rotulo: 'Proposta', cor: 'purple', icone: 'fa-hand-holding-dollar' },
+            { chave: 'Fechado', rotulo: 'Concluído', cor: 'emerald', icone: 'fa-handshake' },
+            { chave: 'Perdido', rotulo: 'Perdido', cor: 'slate', icone: 'fa-ban' }
+        ];
 
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -712,12 +769,12 @@
                 const selectFiltro = document.getElementById('filtro-corretor');
                 selectFiltro.innerHTML = '<option value="">Corretor: Todos</option>';
 
-                const selectModalFechar = document.getElementById('fechar-corretor-select');
-                selectModalFechar.innerHTML = '<option value="">Selecione o corretor...</option>';
+                const selectCockpit = document.getElementById('cockpit-corretor-select');
+                selectCockpit.innerHTML = '<option value="">Sem corretor atribuído</option>';
 
                 listaCorretores.forEach(c => {
                     selectFiltro.innerHTML += `<option value="${c.id}">${c.nome_completo} (${c.cargo})</option>`;
-                    selectModalFechar.innerHTML += `<option value="${c.id}">${c.nome_completo}</option>`;
+                    selectCockpit.innerHTML += `<option value="${c.id}">${c.nome_completo}</option>`;
                 });
             } catch (err) {
                 console.warn('Falha ao carregar lista de corretores:', err);
@@ -749,7 +806,7 @@
                 if (imoveisIds.length > 0) {
                     const { data: imoveisData, error: errImoveis } = await supabaseClient
                         .from('imoveis')
-                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao')
+                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao, status')
                         .in('id', imoveisIds);
 
                     if (!errImoveis && imoveisData) {
@@ -768,6 +825,12 @@
                 listaLeadsCompleta = leads;
                 atualizarMetricasFunil(listaLeadsCompleta);
                 renderizarTabelaLeads(listaLeadsCompleta);
+
+                // Se o modal cockpit estiver aberto para um lead, atualiza o contexto dele
+                if (leadAtivoCockpit) {
+                    const atualizado = listaLeadsCompleta.find(l => l.id === leadAtivoCockpit.id);
+                    if (atualizado) leadAtivoCockpit = atualizado;
+                }
 
             } catch (err) {
                 console.error('Erro ao consultar leads:', err.message || err);
@@ -873,70 +936,38 @@
                     `;
                 }
 
-                let opcoesCorretores = '<option value="">Sem corretor atribuído</option>';
+                let opcoesCorretores = '<option value="">Sem corretor</option>';
                 listaCorretores.forEach(c => {
                     const selected = (l.corretor_atribuido_id === c.id) ? 'selected' : '';
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                let blocoAgendamento = '';
-                if (l.data_agendamento) {
-                    const notaTexto = l.notas_agendamento ? l.notas_agendamento.replace(/"/g, '&quot;') : '';
-                    blocoAgendamento = `
-                        <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
-                            <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-[10px] px-2 py-0.5 rounded font-mono font-bold transition w-fit cursor-pointer">
-                                <i class="fa-solid fa-calendar-check text-cyan-400"></i>
-                                <span>${formatarDataVisita(l.data_agendamento)}</span>
-                            </button>
-                            ${l.notas_agendamento ? `
-                                <div onclick="abrirModalAgendamento('${l.id}')" 
-                                     class="cursor-pointer bg-slate-950 border border-amber-500/40 text-amber-200 text-[10px] px-2 py-0.5 rounded flex items-start gap-1.5 shadow-sm hover:border-amber-400 transition" 
-                                     title="Nota da visita: ${notaTexto}">
-                                    <i class="fa-solid fa-note-sticky text-amber-400 text-xs mt-0.5 flex-shrink-0"></i>
-                                    <span class="truncate font-medium">${l.notas_agendamento}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                } else if (l.status === 'Visita Agendada') {
-                    blocoAgendamento = `
-                        <button onclick="abrirModalAgendamento('${l.id}')" class="mt-1 flex items-center gap-1 bg-amber-950/80 hover:bg-amber-900 border border-amber-700/60 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse transition cursor-pointer">
-                            <i class="fa-solid fa-calendar-plus"></i>
-                            <span>Definir Data/Hora</span>
-                        </button>
-                    `;
+                // Badges da Etapa Atual
+                const statusAtual = l.status || 'Novo';
+                let badgeStatusHtml = '';
+                if (statusAtual === 'Novo') {
+                    badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-blue-950/80 text-blue-300 border border-blue-700/60 flex items-center gap-1.5"><i class="fa-solid fa-circle-dot"></i> Novo</span>';
+                } else if (statusAtual === 'Em Atendimento') {
+                    badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-amber-950/80 text-amber-300 border border-amber-700/60 flex items-center gap-1.5"><i class="fa-solid fa-headset"></i> Em Atendimento</span>';
+                } else if (statusAtual === 'Visita Agendada') {
+                    const txtData = l.data_agendamento ? ` • ${formatarDataVisita(l.data_agendamento)}` : '';
+                    badgeStatusHtml = `<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-cyan-950/80 text-cyan-300 border border-cyan-700/60 flex items-center gap-1.5"><i class="fa-solid fa-calendar-check"></i> Visita${txtData}</span>`;
+                } else if (statusAtual === 'Proposta') {
+                    badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-purple-950/80 text-purple-300 border border-purple-700/60 flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-dollar"></i> Proposta Feita</span>';
+                } else if (statusAtual === 'Fechado') {
+                    badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 flex items-center gap-1.5"><i class="fa-solid fa-handshake"></i> Concluído</span>';
+                } else {
+                    badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
 
-                let blocoProposta = '';
-                if (l.valor_proposta || l.status === 'Proposta') {
-                    const condTexto = l.condicoes_proposta ? l.condicoes_proposta.replace(/"/g, '&quot;') : '';
-                    blocoProposta = `
-                        <div class="mt-1 flex flex-col gap-1 w-full max-w-[220px]">
-                            <button onclick="abrirModalProposta('${l.id}')" 
-                                    class="flex items-center gap-1.5 bg-purple-950/90 hover:bg-purple-900 border border-purple-600/60 text-purple-200 text-[10px] px-2 py-0.5 rounded font-mono font-black transition w-fit cursor-pointer">
-                                <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
-                                <span>${l.valor_proposta ? 'R$ ' + Number(l.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'Definir Valor'}</span>
-                            </button>
-                            ${l.condicoes_proposta ? `
-                                <div onclick="abrirModalProposta('${l.id}')" 
-                                     class="cursor-pointer bg-slate-950 border border-purple-500/40 text-purple-300 text-[10px] px-2 py-0.5 rounded flex items-start gap-1.5 shadow-sm hover:border-purple-400 transition" 
-                                     title="Condições: ${condTexto}">
-                                    <i class="fa-solid fa-file-contract text-purple-400 text-xs mt-0.5 flex-shrink-0"></i>
-                                    <span class="truncate font-medium">${l.condicoes_proposta}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                }
-
+                // Montagem da URL de WhatsApp
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
                     if (ehAvaliacao) {
-                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação e negociação de imóvel através do nosso site. Podemos conversar sobre os detalhes do seu imóvel?`;
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação de imóvel através do nosso site. Podemos conversar sobre os detalhes do seu imóvel?`;
                         urlWa += `?text=${encodeURIComponent(texto)}`;
                     } else {
                         const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
@@ -949,22 +980,12 @@
                     }
                 }
 
-                // Botão de Converter em Venda caso o lead tenha imóvel vinculado e ainda não esteja Fechado
-                const botaoConverterVenda = (l.imovel_id && l.status !== 'Fechado') ? `
-                    <button onclick="abrirModalFecharVendaLead('${l.id}')" 
-                            ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
-                            class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-400 border border-amber-700/80 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
-                            title="Converter Atendimento em Venda Fechada">
-                        <i class="fa-solid fa-handshake text-xs"></i>
-                    </button>
-                ` : '';
-
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
                     
                     <td class="py-3 px-3">
-                        <span class="font-black text-white block">${l.nome}</span>
+                        <span class="font-black text-white block cursor-pointer hover:text-cyan-300 transition" onclick="abrirCockpitLead('${l.id}')">${l.nome}</span>
                         <span class="text-cyan-300 font-mono text-[11px] block">${l.whatsapp}</span>
                         ${l.email ? `<span class="text-slate-500 text-[10px] block truncate max-w-[140px]">${l.email}</span>` : ''}
                     </td>
@@ -977,20 +998,9 @@
                         </p>
                     </td>
 
-                    <td class="py-3 px-3">
-                        <div class="flex flex-col items-start gap-1">
-                            <select onchange="aoMudarStatusLead('${l.id}', this.value)" 
-                                    ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
-                                    class="bg-slate-950 border border-slate-700 rounded-lg py-1 px-2 text-[11px] font-bold text-cyan-300 outline-none focus:border-cyan-400 cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-50' : ''}">
-                                <option value="Novo" ${l.status === 'Novo' ? 'selected' : ''}>🔵 Novo</option>
-                                <option value="Em Atendimento" ${l.status === 'Em Atendimento' ? 'selected' : ''}>🟡 Em Atendimento</option>
-                                <option value="Visita Agendada" ${l.status === 'Visita Agendada' ? 'selected' : ''}>🟣 Visita Agendada</option>
-                                <option value="Proposta" ${l.status === 'Proposta' ? 'selected' : ''}>🟠 Proposta</option>
-                                <option value="Fechado" ${l.status === 'Fechado' ? 'selected' : ''}>🟢 Concluído</option>
-                                <option value="Perdido" ${l.status === 'Perdido' ? 'selected' : ''}>⚫ Perdido</option>
-                            </select>
-                            ${blocoAgendamento}
-                            ${blocoProposta}
+                    <td class="py-3 px-3 cursor-pointer" onclick="abrirCockpitLead('${l.id}')" title="Clique para gerenciar este lead">
+                        <div class="flex items-center gap-1.5">
+                            ${badgeStatusHtml}
                         </div>
                     </td>
 
@@ -1002,563 +1012,228 @@
                         </select>
                     </td>
 
+                    <!-- AÇÃO DIRETA LIMPA & EFICIENTE -->
                     <td class="py-3 px-4 text-right whitespace-nowrap">
-                        <div class="inline-flex items-center gap-1.5">
-                            ${botaoConverterVenda}
-
-                            <button onclick="abrirModalTimeline('${l.id}')" 
-                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 transition cursor-pointer" 
-                                    title="Linha do Tempo do Cliente">
-                                <i class="fa-solid fa-clock-rotate-left text-xs"></i>
-                            </button>
-
-                            <button onclick="abrirModalAgendamento('${l.id}')" 
-                                    ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
-                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-cyan-950/80 text-cyan-400 hover:text-cyan-300 border border-slate-700 hover:border-cyan-700 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
-                                    title="Agendar Visita">
-                                <i class="fa-solid fa-calendar-days text-xs"></i>
-                            </button>
-
-                            <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow transition cursor-pointer" title="WhatsApp">
+                        <div class="inline-flex items-center gap-2">
+                            
+                            <!-- BOTAO WHATSAPP PRIMÁRIO -->
+                            <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
-                                <span class="hidden sm:inline">Chamar</span>
+                                <span>Chamar</span>
                             </a>
 
+                            <!-- BOTAO COCKPIT UNIFICADO -->
+                            <button onclick="abrirCockpitLead('${l.id}')" 
+                                    class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 hover:border-cyan-400 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                                    title="Abrir Ficha e Gerenciar Atendimento">
+                                <i class="fa-solid fa-sliders text-cyan-400"></i>
+                                <span>Gerenciar</span>
+                            </button>
+
+                            <!-- BOTAO DESCARTAR LEAD -->
                             <button onclick="abrirModalExcluirLead('${l.id}', '${l.nome.replace(/'/g, "\\'")}')" 
                                     ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
-                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" title="Descartar">
+                                    class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
+                                    title="Descartar Atendimento">
                                 <i class="fa-regular fa-trash-can text-xs"></i>
                             </button>
+
                         </div>
                     </td>
                 </tr>`;
             }).join('');
         }
 
-        async function aoMudarStatusLead(leadId, novoStatus) {
-            if (modoLeitura && !isMasterSuporte) return;
-
-            const item = listaLeadsCompleta.find(l => l.id === leadId);
-            const statusAntigo = item ? (item.status || 'Novo') : 'Novo';
-
-            if (novoStatus === 'Visita Agendada') {
-                abrirModalAgendamento(leadId);
-            } else if (novoStatus === 'Proposta') {
-                abrirModalProposta(leadId);
-            } else if (novoStatus === 'Fechado' && item && item.imovel_id) {
-                // Abre o fechamento de venda formal caso tenha imóvel associado
-                abrirModalFecharVendaLead(leadId);
-                return;
-            }
-
-            await atualizarStatusLead(leadId, novoStatus);
-
-            if (statusAntigo !== novoStatus) {
-                await registrarEventoHistorico(
-                    leadId, 
-                    'status', 
-                    `Etapa alterada de "${statusAntigo}" para "${novoStatus}"`
-                ).catch(() => {});
-            }
-        }
-
-        async function atualizarStatusLead(leadId, novoStatus) {
-            if (modoLeitura && !isMasterSuporte) return;
-            try {
-                const { error } = await supabaseClient
-                    .from('leads_contatos')
-                    .update({ status: novoStatus })
-                    .eq('id', leadId);
-
-                if (error) throw error;
-                
-                const item = listaLeadsCompleta.find(l => l.id === leadId);
-                if (item) item.status = novoStatus;
-                
-                atualizarMetricasFunil(listaLeadsCompleta);
-                renderizarTabelaLeads(listaLeadsCompleta);
-
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao atualizar etapa do lead.');
-            }
-        }
-
-        // MODAL DE CONVERSÃO DO LEAD EM VENDA FECHADA
-        function abrirModalFecharVendaLead(leadId) {
-            if (modoLeitura && !isMasterSuporte) return;
-            const lead = listaLeadsCompleta.find(l => l.id === leadId);
-            if (!lead || !lead.imovel) {
-                alert('Este lead não possui um imóvel vinculado do catálogo para registro de venda.');
-                return;
-            }
-
-            leadEmFechamento = lead;
-
-            document.getElementById('fechar-lead-id').value = lead.id;
-            document.getElementById('fechar-imovel-id').value = lead.imovel.id;
-            document.getElementById('fechar-cliente-nome').innerText = lead.nome;
-            document.getElementById('fechar-imovel-titulo').innerText = lead.imovel.titulo;
-            document.getElementById('fechar-imovel-ref').innerText = `Ref: ${lead.imovel.codigo_ref}`;
-            document.getElementById('fechar-valor-anuncio').innerText = Number(lead.imovel.valor_venda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            // Sugere o valor da proposta negociada ou o valor de anúncio
-            const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
-            document.getElementById('fechar-valor-real').value = valorSugerido;
-            document.getElementById('fechar-data-venda').value = new Date().toISOString().split('T')[0];
-
-            // Puxa a comissão padrão da imobiliária
-            const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) ? dadosImobiliaria.comissao_venda_padrao_pct : 6.0;
-            document.getElementById('fechar-comissao-total-pct').value = comissaoPadrao;
-
-            // Seleciona o corretor atribuído ou deixa vazio
-            const selCorretor = document.getElementById('fechar-corretor-select');
-            selCorretor.value = lead.corretor_atribuido_id || '';
-
-            aoMudarCorretorCRM();
-            calcularRateioCRM();
-
-            document.getElementById('modal-fechar-venda-lead').classList.remove('hidden');
-        }
-
-        function fecharModalVendaLead() {
-            document.getElementById('modal-fechar-venda-lead').classList.add('hidden');
-            leadEmFechamento = null;
-        }
-
-        function aoMudarCorretorCRM() {
-            const corretorId = document.getElementById('fechar-corretor-select').value;
-            const corretor = listaCorretores.find(c => String(c.id) === String(corretorId));
-            if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
-                document.getElementById('fechar-comissao-corretor-pct').value = corretor.comissao_venda_pct;
-            } else {
-                document.getElementById('fechar-comissao-corretor-pct').value = 30.0;
-            }
-            calcularRateioCRM();
-        }
-
-        function calcularRateioCRM() {
-            const valorVenda = Number(document.getElementById('fechar-valor-real').value) || 0;
-            const comissaoTotalPct = Number(document.getElementById('fechar-comissao-total-pct').value) || 0;
-            const comissaoCorretorPct = Number(document.getElementById('fechar-comissao-corretor-pct').value) || 0;
-
-            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
-            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
-            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
-
-            document.getElementById('fechar-sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('fechar-sim-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('fechar-sim-corretor').innerText = valorComissaoCorretor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('fechar-sim-repasse').innerText = valorRepasseProprietario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-
-        async function confirmarVendaPeloCRM(event) {
-            event.preventDefault();
-            if (modoLeitura && !isMasterSuporte) return;
-
-            const btn = document.getElementById('btn-confirmar-venda-crm');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Concluindo venda...';
-
-            const leadId = document.getElementById('fechar-lead-id').value;
-            const imovelId = document.getElementById('fechar-imovel-id').value;
-            const valorVenda = Number(document.getElementById('fechar-valor-real').value);
-            const dataVenda = document.getElementById('fechar-data-venda').value;
-            const comissaoTotalPct = Number(document.getElementById('fechar-comissao-total-pct').value);
-            const corretorId = document.getElementById('fechar-corretor-select').value;
-            const comissaoCorretorPct = Number(document.getElementById('fechar-comissao-corretor-pct').value);
-
-            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
-            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
-            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
-
-            const corretorObj = listaCorretores.find(c => String(c.id) === String(corretorId));
-            const corretorNome = corretorObj ? corretorObj.nome_completo : null;
-
-            try {
-                // 1. Grava a transação na tabela de vendas fechadas
-                const { error: errVenda } = await supabaseClient
-                    .from('vendas_fechadas')
-                    .insert([{
-                        imobiliaria_id: imobiliariaId,
-                        imovel_id: imovelId,
-                        cliente_comprador_nome: leadEmFechamento.nome,
-                        corretor_id: corretorId ? Number(corretorId) : null,
-                        corretor_nome: corretorNome,
-                        valor_venda_real: valorVenda,
-                        comissao_total_pct: comissaoTotalPct,
-                        valor_comissao_total: valorComissaoTotal,
-                        comissao_corretor_pct: comissaoCorretorPct,
-                        valor_comissao_corretor: valorComissaoCorretor,
-                        valor_comissao_imobiliaria: valorComissaoImobiliaria,
-                        valor_repasse_proprietario: valorRepasseProprietario,
-                        data_venda: dataVenda,
-                        status_pagamento: 'Recebido'
-                    }]);
-
-                if (errVenda) throw errVenda;
-
-                // 2. Atualiza o imóvel para Vendido e pausa na vitrine
-                await supabaseClient
-                    .from('imoveis')
-                    .update({ status: 'Vendido', ativa: false })
-                    .eq('id', imovelId);
-
-                // 3. Atualiza o lead para Fechado
-                await supabaseClient
-                    .from('leads_contatos')
-                    .update({ status: 'Fechado' })
-                    .eq('id', leadId);
-
-                // 4. Registra no histórico do lead
-                await registrarEventoHistorico(
-                    leadId,
-                    'fechamento',
-                    `Venda formal concluída! Imóvel vendido por R$ ${valorVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Casa'}.`,
-                    { valor_venda: valorVenda, comissao_total: valorComissaoTotal }
-                ).catch(() => {});
-
-                fecharModalVendaLead();
-                alert('Venda concluída com sucesso! Os lançamentos já constam no Dashboard Financeiro.');
-                await carregarLeads();
-
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao registrar fechamento: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Concluir Venda & Gerar Financeiro</span>';
-            }
-        }
-
-        function abrirModalAgendamento(leadId) {
-            if (modoLeitura && !isMasterSuporte) return;
+        // ====================================================================
+        // LÓGICA DO COCKPIT UNIFICADO DO ATENDIMENTO
+        // ====================================================================
+        function abrirCockpitLead(leadId, abaInicial = 'timeline') {
             const lead = listaLeadsCompleta.find(l => l.id === leadId);
             if (!lead) return;
 
-            leadEmAgendamento = lead;
+            leadAtivoCockpit = lead;
 
+            document.getElementById('cockpit-lead-id').value = lead.id;
+            document.getElementById('cockpit-lead-id-label').innerText = lead.id;
+            document.getElementById('cockpit-lead-header-info').innerText = `Criado em ${new Date(lead.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+
+            document.getElementById('cockpit-cliente-nome').innerText = lead.nome;
+            document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
+            document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
+
+            // Card do Imóvel no Cockpit
+            const cardImovel = document.getElementById('cockpit-imovel-card');
             const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
-            let contextoTitulo = 'Interesse Geral na Imobiliária';
+
             if (ehAvaliacao) {
-                contextoTitulo = 'Avaliação / Captação de Imóvel';
+                cardImovel.innerHTML = `
+                    <span class="text-[10px] font-bold text-emerald-400 uppercase block tracking-wider">Origem do Atendimento</span>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-950 border border-emerald-600 text-emerald-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-white block">Captação & Avaliação</span>
+                            <span class="text-slate-400 text-[10px]">Cliente solicitou precificação</span>
+                        </div>
+                    </div>
+                `;
             } else if (lead.imovel) {
-                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
+                const foto = lead.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
+                const preco = lead.imovel.valor_venda 
+                    ? Number(lead.imovel.valor_venda).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                    : (lead.imovel.valor_locacao ? Number(lead.imovel.valor_locacao).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sob consulta');
+
+                const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
+                const urlVitrine = `${baseUrl}?imob=${imobiliariaSlug}&imovel=${lead.imovel.id}`;
+
+                cardImovel.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase block tracking-wider">Imóvel de Interesse</span>
+                        <a href="${urlVitrine}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1">
+                            <span>Ver na vitrine</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <img src="${foto}" class="w-8 h-8 rounded object-cover border border-slate-700 flex-shrink-0">
+                        <div class="truncate">
+                            <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${lead.imovel.codigo_ref} • ${preco}</span>
+                            <span class="font-bold text-white block truncate" title="${lead.imovel.titulo}">${lead.imovel.titulo}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                cardImovel.innerHTML = `
+                    <span class="text-[10px] font-bold text-slate-500 uppercase block tracking-wider">Imóvel de Interesse</span>
+                    <p class="text-slate-400 italic text-xs mt-1">Interesse geral na imobiliária (sem imóvel específico).</p>
+                `;
             }
 
-            document.getElementById('agendamento-lead-id').value = lead.id;
-            document.getElementById('agendamento-lead-nome').innerText = lead.nome;
-            document.getElementById('agendamento-lead-imovel').innerText = contextoTitulo;
+            // Seleciona o corretor no Cockpit
+            document.getElementById('cockpit-corretor-select').value = lead.corretor_atribuido_id || '';
 
+            // Renderiza os botões do Pipeline
+            renderizarPipelineCockpit(lead.status || 'Novo');
+
+            // Carrega valores na aba de Visita
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
                 d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-                document.getElementById('agendamento-data').value = d.toISOString().slice(0, 16);
+                document.getElementById('cockpit-visita-data').value = d.toISOString().slice(0, 16);
             } else {
-                document.getElementById('agendamento-data').value = '';
+                document.getElementById('cockpit-visita-data').value = '';
             }
+            document.getElementById('cockpit-visita-notas').value = lead.notas_agendamento || '';
 
-            document.getElementById('agendamento-notas').value = lead.notas_agendamento || '';
-            document.getElementById('modal-agendar-visita').classList.remove('hidden');
+            // Carrega valores na aba de Proposta
+            document.getElementById('cockpit-proposta-valor').value = lead.valor_proposta || '';
+            document.getElementById('cockpit-proposta-condicoes').value = lead.condicoes_proposta || '';
+
+            // Configura a aba de Fechamento de Venda
+            configurarAbaFechamentoCockpit(lead);
+
+            // Abre o modal e a aba desejada
+            trocarAbaCockpit(abaInicial);
+            document.getElementById('modal-cockpit-lead').classList.remove('hidden');
+
+            // Carrega a linha do tempo
+            carregarEventosTimelineCockpit(lead.id);
         }
 
-        function fecharModalAgendamento() {
-            document.getElementById('modal-agendar-visita').classList.add('hidden');
-            leadEmAgendamento = null;
+        function fecharCockpitLead() {
+            document.getElementById('modal-cockpit-lead').classList.add('hidden');
+            leadAtivoCockpit = null;
         }
 
-        async function salvarAgendamento() {
+        function renderizarPipelineCockpit(statusAtual) {
+            const container = document.getElementById('cockpit-pipeline-botoes');
+            container.innerHTML = ESTAGIOS_FUNIL.map(est => {
+                const ativo = (statusAtual === est.chave);
+                
+                let classes = 'border border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700 hover:text-white';
+                if (ativo) {
+                    if (est.chave === 'Novo') classes = 'border-blue-500 bg-blue-950/80 text-blue-300 font-black shadow-md';
+                    else if (est.chave === 'Em Atendimento') classes = 'border-amber-500 bg-amber-950/80 text-amber-300 font-black shadow-md';
+                    else if (est.chave === 'Visita Agendada') classes = 'border-cyan-400 bg-cyan-950/80 text-cyan-300 font-black shadow-md';
+                    else if (est.chave === 'Proposta') classes = 'border-purple-500 bg-purple-950/80 text-purple-300 font-black shadow-md';
+                    else if (est.chave === 'Fechado') classes = 'border-emerald-500 bg-emerald-950/80 text-emerald-300 font-black shadow-md';
+                    else if (est.chave === 'Perdido') classes = 'border-slate-600 bg-slate-800 text-slate-300 font-black shadow-md';
+                }
+
+                return `
+                    <button onclick="aoMudarEtapaPeloPipeline('${est.chave}')" 
+                            class="p-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer ${classes}">
+                        <i class="fa-solid ${est.icone} text-xs"></i>
+                        <span class="truncate">${est.rotulo}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        async function aoMudarEtapaPeloPipeline(novaEtapa) {
             if (modoLeitura && !isMasterSuporte) return;
-            const leadId = document.getElementById('agendamento-lead-id').value;
-            const dataValor = document.getElementById('agendamento-data').value;
-            const notas = document.getElementById('agendamento-notas').value.trim();
+            if (!leadAtivoCockpit) return;
 
-            if (!dataValor) {
-                alert('Por favor, defina o dia e o horário da visita.');
+            const etapaAntiga = leadAtivoCockpit.status || 'Novo';
+            if (etapaAntiga === novaEtapa) return;
+
+            // Se for mudar para Visita Agendada, direciona para a aba de visita
+            if (novaEtapa === 'Visita Agendada') {
+                trocarAbaCockpit('visita');
+            } else if (novaEtapa === 'Proposta') {
+                trocarAbaCockpit('proposta');
+            } else if (novaEtapa === 'Fechado') {
+                trocarAbaCockpit('fechamento');
                 return;
             }
 
-            const btn = document.getElementById('btn-salvar-agendamento');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
-            btn.disabled = true;
-
-            try {
-                const isoData = new Date(dataValor).toISOString();
-
-                const { error } = await supabaseClient
-                    .from('leads_contatos')
-                    .update({
-                        status: 'Visita Agendada',
-                        data_agendamento: isoData,
-                        notas_agendamento: notas || null
-                    })
-                    .eq('id', leadId);
-
-                if (error) throw error;
-
-                const item = listaLeadsCompleta.find(l => l.id === leadId);
-                if (item) {
-                    item.status = 'Visita Agendada';
-                    item.data_agendamento = isoData;
-                    item.notas_agendamento = notas;
-                }
-
-                await registrarEventoHistorico(
-                    leadId,
-                    'visita',
-                    `Visita/Avaliação agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Nota: "${notas}")` : ''),
-                    { data_visita: isoData, notas: notas }
-                ).catch(() => {});
-
-                fecharModalAgendamento();
-                atualizarMetricasFunil(listaLeadsCompleta);
-                renderizarTabelaLeads(listaLeadsCompleta);
-
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao salvar agendamento: ' + err.message);
-            } finally {
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar / Remarcar</span>';
-                btn.disabled = false;
-            }
-        }
-
-        function cancelarVisitaAgendada() {
-            if (modoLeitura && !isMasterSuporte) return;
-            document.getElementById('modal-confirmar-desmarcar').classList.remove('hidden');
-        }
-
-        function fecharModalConfirmarDesmarcar() {
-            document.getElementById('modal-confirmar-desmarcar').classList.add('hidden');
-        }
-
-        async function executarCancelamentoVisita() {
-            if (modoLeitura && !isMasterSuporte) return;
-            const leadId = document.getElementById('agendamento-lead-id').value;
-            if (!leadId) return;
-
-            const btn = document.getElementById('btn-confirmar-desmarcar-acao');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Desmarcando...';
-            btn.disabled = true;
-
             try {
                 const { error } = await supabaseClient
                     .from('leads_contatos')
-                    .update({
-                        status: 'Em Atendimento',
-                        data_agendamento: null
-                    })
-                    .eq('id', leadId);
+                    .update({ status: novaEtapa })
+                    .eq('id', leadAtivoCockpit.id);
 
                 if (error) throw error;
 
-                const item = listaLeadsCompleta.find(l => l.id === leadId);
-                if (item) {
-                    item.status = 'Em Atendimento';
-                    item.data_agendamento = null;
-                }
+                leadAtivoCockpit.status = novaEtapa;
+                renderizarPipelineCockpit(novaEtapa);
 
                 await registrarEventoHistorico(
-                    leadId,
-                    'visita',
-                    'A visita foi cancelada/desmarcada. O cliente retornou para "Em Atendimento".'
+                    leadAtivoCockpit.id,
+                    'status',
+                    `Etapa do funil alterada de "${etapaAntiga}" para "${novaEtapa}".`
                 );
 
-                fecharModalConfirmarDesmarcar();
-                fecharModalAgendamento();
-                atualizarMetricasFunil(listaLeadsCompleta);
-                renderizarTabelaLeads(listaLeadsCompleta);
-
-            } catch (err) {
-                console.error('Erro ao desmarcar visita:', err);
-                alert('Erro ao desmarcar visita: ' + (err.message || err));
-            } finally {
-                btn.innerHTML = 'Sim, Desmarcar';
-                btn.disabled = false;
-            }
-        }
-
-        function dispararConfirmacaoWhatsApp(tipo = 'confirmacao') {
-            if (!leadEmAgendamento) return;
-
-            const dataValor = document.getElementById('agendamento-data').value;
-            if (!dataValor) {
-                alert('Defina o dia e o horário antes de enviar a notificação.');
-                return;
-            }
-
-            const d = new Date(dataValor);
-            const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
-            const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-            
-            const ehAvaliacao = (leadEmAgendamento.mensagem && leadEmAgendamento.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
-            const refImovel = ehAvaliacao 
-                ? 'ao seu imóvel' 
-                : (leadEmAgendamento.imovel ? `ao imóvel Ref: ${leadEmAgendamento.imovel.codigo_ref}` : 'ao imóvel combinado');
-
-            const zapLimpo = ('' + leadEmAgendamento.whatsapp).replace(/\D/g, '');
-            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
-
-            let mensagem = '';
-            if (tipo === 'reagendamento') {
-                mensagem = `Olá ${leadEmAgendamento.nome}! Remarcamos nossa visita ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Combinado?`;
-            } else {
-                mensagem = `Olá ${leadEmAgendamento.nome}! Confirmamos nossa visita ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
-            }
-
-            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
-            window.open(urlWa, '_blank');
-        }
-
-        function abrirModalProposta(leadId) {
-            if (modoLeitura && !isMasterSuporte) return;
-            const lead = listaLeadsCompleta.find(l => l.id === leadId);
-            if (!lead) return;
-
-            leadEmProposta = lead;
-
-            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
-            let contextoTitulo = 'Interesse Geral';
-            if (ehAvaliacao) {
-                contextoTitulo = 'Captação / Avaliação de Imóvel';
-            } else if (lead.imovel) {
-                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
-            }
-
-            document.getElementById('proposta-lead-id').value = lead.id;
-            document.getElementById('proposta-lead-nome').innerText = lead.nome;
-            document.getElementById('proposta-lead-imovel').innerText = contextoTitulo;
-
-            const valorRef = lead.imovel ? (lead.imovel.valor_venda || lead.imovel.valor_locacao) : null;
-            document.getElementById('proposta-valor-anuncio').innerText = valorRef 
-                ? 'R$ ' + Number(valorRef).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) 
-                : 'Sob Consulta / Avaliação';
-
-            document.getElementById('proposta-valor-input').value = lead.valor_proposta || '';
-            document.getElementById('proposta-condicoes-input').value = lead.condicoes_proposta || '';
-
-            document.getElementById('modal-proposta-comercial').classList.remove('hidden');
-        }
-
-        function fecharModalProposta() {
-            document.getElementById('modal-proposta-comercial').classList.add('hidden');
-            leadEmProposta = null;
-        }
-
-        async function salvarPropostaComercial() {
-            if (modoLeitura && !isMasterSuporte) return;
-            const leadId = document.getElementById('proposta-lead-id').value;
-            const valor = document.getElementById('proposta-valor-input').value;
-            const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
-
-            const btn = document.getElementById('btn-salvar-proposta');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
-            btn.disabled = true;
-
-            try {
-                const { error } = await supabaseClient
-                    .from('leads_contatos')
-                    .update({
-                        status: 'Proposta',
-                        valor_proposta: valor ? Number(valor) : null,
-                        condicoes_proposta: condicoes || null
-                    })
-                    .eq('id', leadId);
-
-                if (error) throw error;
-
-                const item = listaLeadsCompleta.find(l => l.id === leadId);
-                if (item) {
-                    item.status = 'Proposta';
-                    item.valor_proposta = valor ? Number(valor) : null;
-                    item.condicoes_proposta = condicoes || null;
-                }
-
-                const valorFormatado = valor ? 'R$ ' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'não especificado';
-                await registrarEventoHistorico(
-                    leadId,
-                    'proposta',
-                    `Proposta comercial registrada no valor de ${valorFormatado}` + (condicoes ? `. Condições: "${condicoes}"` : ''),
-                    { valor: valor, condicoes: condicoes }
-                ).catch(() => {});
-
-                fecharModalProposta();
-                atualizarMetricasFunil(listaLeadsCompleta);
-                renderizarTabelaLeads(listaLeadsCompleta);
+                await carregarLeads();
+                await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
-                alert('Erro ao salvar proposta: ' + (err.message || err));
-            } finally {
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Proposta</span>';
-                btn.disabled = false;
+                alert('Erro ao atualizar etapa do funil: ' + err.message);
             }
         }
 
-        function enviarPropostaWhatsApp() {
-            if (!leadEmProposta) return;
+        function trocarAbaCockpit(aba) {
+            const abas = ['timeline', 'visita', 'proposta', 'fechamento'];
+            abas.forEach(a => {
+                const btn = document.getElementById(`btn-aba-${a}`);
+                const conteudo = document.getElementById(`aba-conteudo-${a}`);
 
-            const valor = document.getElementById('proposta-valor-input').value;
-            const condicoes = document.getElementById('proposta-condicoes-input').value.trim();
-
-            if (!valor) {
-                alert('Informe ao menos o valor ofertado para gerar a mensagem.');
-                return;
-            }
-
-            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            const ehAvaliacao = (leadEmProposta.mensagem && leadEmProposta.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
-            const refImovel = ehAvaliacao 
-                ? 'para a negociação do seu imóvel' 
-                : (leadEmProposta.imovel ? `para o imóvel Ref: ${leadEmProposta.imovel.codigo_ref}` : 'para o imóvel');
-                
-            const zapLimpo = ('' + leadEmProposta.whatsapp).replace(/\D/g, '');
-            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
-
-            let mensagem = `Olá ${leadEmProposta.nome}! Registramos formalmente a proposta comercial ${refImovel}:\n\n` +
-                           `💰 *Valor:* ${valorFormatado}\n` +
-                           (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
-                           `Nossa diretoria está acompanhando e qualquer dúvida estou à disposição!`;
-
-            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
-            window.open(urlWa, '_blank');
+                if (a === aba) {
+                    btn.className = 'px-3.5 py-2 rounded-t-xl border-b-2 border-cyan-400 text-cyan-300 bg-slate-800/60 flex items-center gap-1.5 transition cursor-pointer';
+                    conteudo.classList.remove('hidden');
+                } else {
+                    btn.className = 'px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer';
+                    conteudo.classList.add('hidden');
+                }
+            });
         }
 
-        async function abrirModalTimeline(leadId) {
-            const lead = listaLeadsCompleta.find(l => l.id === leadId);
-            if (!lead) return;
-
-            leadEmTimeline = lead;
-
-            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
-            let contextoTitulo = 'Interesse Geral';
-            if (ehAvaliacao) {
-                contextoTitulo = 'Captação / Avaliação';
-            } else if (lead.imovel) {
-                contextoTitulo = `Ref: ${lead.imovel.codigo_ref} - ${lead.imovel.titulo}`;
-            }
-
-            document.getElementById('timeline-lead-nome').innerText = lead.nome;
-            document.getElementById('timeline-lead-contato').innerText = `${lead.whatsapp} ${lead.email ? '• ' + lead.email : ''}`;
-            document.getElementById('timeline-lead-imovel').innerText = contextoTitulo;
-
-            document.getElementById('timeline-nova-nota').value = '';
-            document.getElementById('modal-timeline-lead').classList.remove('hidden');
-
-            await carregarEventosTimeline(leadId);
-        }
-
-        function fecharModalTimeline() {
-            document.getElementById('modal-timeline-lead').classList.add('hidden');
-            leadEmTimeline = null;
-        }
-
-        async function carregarEventosTimeline(leadId) {
-            const container = document.getElementById('timeline-container-eventos');
+        async function carregarEventosTimelineCockpit(leadId) {
+            const container = document.getElementById('cockpit-timeline-lista');
             container.innerHTML = `
-                <div class="py-8 text-center text-slate-500 text-xs">
+                <div class="py-6 text-center text-slate-500 text-xs">
                     <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
                     <p>Carregando histórico do cliente...</p>
                 </div>`;
@@ -1574,10 +1249,10 @@
 
                 if (!historico || historico.length === 0) {
                     container.innerHTML = `
-                        <div class="py-8 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl p-4">
-                            <i class="fa-solid fa-clock-rotate-left text-2xl text-slate-600 mb-2"></i>
+                        <div class="py-6 text-center text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl p-4">
+                            <i class="fa-solid fa-clock-rotate-left text-xl text-slate-600 mb-2"></i>
                             <p class="font-bold text-slate-400">Nenhum evento registrado ainda.</p>
-                            <p class="text-[11px] text-slate-600">As mudanças de etapa, visitas, propostas e notas manuais aparecerão aqui.</p>
+                            <p class="text-[11px] text-slate-600">As mudanças de etapa, notas, visitas e propostas aparecem aqui.</p>
                         </div>`;
                     return;
                 }
@@ -1615,7 +1290,7 @@
                                     <span class="text-[10px] text-slate-500 font-mono">${dataHora}</span>
                                 </div>
                                 <p class="text-white font-medium mt-1 leading-relaxed">${ev.descricao}</p>
-                                <p class="text-[10px] text-slate-500">Por: <strong class="text-slate-400">${ev.autor_nome || 'Sistema'}</strong></p>
+                                <p class="text-[10px] text-slate-500">Autor: <strong class="text-slate-400">${ev.autor_nome || 'Sistema'}</strong></p>
                             </div>
                         </div>
                     `;
@@ -1623,30 +1298,455 @@
 
             } catch (err) {
                 console.error(err);
-                container.innerHTML = `<div class="p-4 text-center text-red-400 text-xs">Erro ao consultar linha do tempo: ${err.message || ''}</div>`;
+                container.innerHTML = `<div class="p-4 text-center text-red-400 text-xs">Erro ao consultar histórico.</div>`;
             }
         }
 
-        async function adicionarNotaManualHistorico() {
-            if (!leadEmTimeline) return;
-            const input = document.getElementById('timeline-nova-nota');
+        async function gravarNotaCockpit() {
+            if (!leadAtivoCockpit) return;
+            const input = document.getElementById('cockpit-nova-nota-input');
             const texto = input.value.trim();
 
             if (!texto) {
-                alert('Digite a nota ou observação antes de salvar.');
+                alert('Digite uma anotação antes de registrar.');
                 return;
             }
 
             try {
-                await registrarEventoHistorico(leadEmTimeline.id, 'nota', texto);
+                await registrarEventoHistorico(leadAtivoCockpit.id, 'nota', texto);
                 input.value = '';
-                await carregarEventosTimeline(leadEmTimeline.id);
+                await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
             } catch (err) {
-                console.error('Falha na nota:', err);
-                alert('Erro ao salvar nota: ' + (err.message || ''));
+                console.error('Falha ao salvar nota:', err);
+                alert('Erro ao salvar anotação.');
             }
         }
 
+        async function aoMudarCorretorPeloCockpit(corretorId) {
+            if (modoLeitura && !isMasterSuporte) return;
+            if (!leadAtivoCockpit) return;
+
+            try {
+                const payload = {
+                    corretor_atribuido_id: corretorId ? Number(corretorId) : null
+                };
+
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update(payload)
+                    .eq('id', leadAtivoCockpit.id);
+
+                if (error) throw error;
+
+                const corretorObj = listaCorretores.find(c => String(c.id) === String(corretorId));
+                const nomeCorretor = corretorObj ? corretorObj.nome_completo : 'Nenhum';
+
+                leadAtivoCockpit.corretor_atribuido_id = payload.corretor_atribuido_id;
+
+                await registrarEventoHistorico(
+                    leadAtivoCockpit.id,
+                    'status',
+                    `Corretor responsável definido para: ${nomeCorretor}`
+                );
+
+                await carregarLeads();
+                await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao atribuir corretor.');
+            }
+        }
+
+        // ====================================================================
+        // LÓGICA DE AGENDAMENTO DE VISITA NO COCKPIT
+        // ====================================================================
+        async function salvarAgendamentoCockpit() {
+            if (modoLeitura && !isMasterSuporte) return;
+            if (!leadAtivoCockpit) return;
+
+            const dataValor = document.getElementById('cockpit-visita-data').value;
+            const notas = document.getElementById('cockpit-visita-notas').value.trim();
+
+            if (!dataValor) {
+                alert('Por favor, informe a data e o horário do compromisso.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-cockpit-salvar-visita');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+
+            try {
+                const isoData = new Date(dataValor).toISOString();
+
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Visita Agendada',
+                        data_agendamento: isoData,
+                        notas_agendamento: notas || null
+                    })
+                    .eq('id', leadAtivoCockpit.id);
+
+                if (error) throw error;
+
+                leadAtivoCockpit.status = 'Visita Agendada';
+                leadAtivoCockpit.data_agendamento = isoData;
+                leadAtivoCockpit.notas_agendamento = notas;
+
+                renderizarPipelineCockpit('Visita Agendada');
+
+                await registrarEventoHistorico(
+                    leadAtivoCockpit.id,
+                    'visita',
+                    `Visita/Avaliação agendada para ${formatarDataVisita(isoData)}` + (notas ? ` (Instruções: "${notas}")` : ''),
+                    { data_visita: isoData, notas: notas }
+                );
+
+                alert('Visita agendada com sucesso!');
+                await carregarLeads();
+                await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar agendamento: ' + err.message);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Visita</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function dispararConfirmacaoWhatsAppCockpit(tipo = 'confirmacao') {
+            if (!leadAtivoCockpit) return;
+
+            const dataValor = document.getElementById('cockpit-visita-data').value;
+            if (!dataValor) {
+                alert('Defina a data e hora antes de enviar o lembrete.');
+                return;
+            }
+
+            const d = new Date(dataValor);
+            const diaFormatado = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+            const horaFormatada = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            
+            const ehAvaliacao = (leadAtivoCockpit.mensagem && leadAtivoCockpit.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            const refImovel = ehAvaliacao 
+                ? 'ao seu imóvel' 
+                : (leadAtivoCockpit.imovel ? `ao imóvel Ref: ${leadAtivoCockpit.imovel.codigo_ref}` : 'ao imóvel combinado');
+
+            const zapLimpo = ('' + leadAtivoCockpit.whatsapp).replace(/\D/g, '');
+            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+
+            let mensagem = '';
+            if (tipo === 'reagendamento') {
+                mensagem = `Olá ${leadAtivoCockpit.nome}! Remarcamos nossa visita ${refImovel} para o dia ${diaFormatado} às ${horaFormatada}. Qualquer imprevisto me avise por aqui!`;
+            } else {
+                mensagem = `Olá ${leadAtivoCockpit.nome}! Confirmamos nossa visita ${refImovel} no dia ${diaFormatado} às ${horaFormatada}. Nos vemos lá!`;
+            }
+
+            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWa, '_blank');
+        }
+
+        function abrirModalConfirmarDesmarcarVisita() {
+            if (modoLeitura && !isMasterSuporte) return;
+            document.getElementById('modal-confirmar-desmarcar').classList.remove('hidden');
+        }
+
+        function fecharModalConfirmarDesmarcar() {
+            document.getElementById('modal-confirmar-desmarcar').classList.add('hidden');
+        }
+
+        async function executarCancelamentoVisitaCockpit() {
+            if (modoLeitura && !isMasterSuporte) return;
+            if (!leadAtivoCockpit) return;
+
+            const btn = document.getElementById('btn-confirmar-desmarcar-acao');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Desmarcando...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Em Atendimento',
+                        data_agendamento: null
+                    })
+                    .eq('id', leadAtivoCockpit.id);
+
+                if (error) throw error;
+
+                leadAtivoCockpit.status = 'Em Atendimento';
+                leadAtivoCockpit.data_agendamento = null;
+                document.getElementById('cockpit-visita-data').value = '';
+
+                renderizarPipelineCockpit('Em Atendimento');
+
+                await registrarEventoHistorico(
+                    leadAtivoCockpit.id,
+                    'visita',
+                    'A visita combinada foi desmarcada. O lead retornou para o estágio "Em Atendimento".'
+                );
+
+                fecharModalConfirmarDesmarcar();
+                await carregarLeads();
+                await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao desmarcar visita: ' + err.message);
+            } finally {
+                btn.innerHTML = 'Sim, Desmarcar';
+                btn.disabled = false;
+            }
+        }
+
+        // ====================================================================
+        // LÓGICA DE PROPOSTA COMERCIAL NO COCKPIT
+        // ====================================================================
+        async function salvarPropostaCockpit() {
+            if (modoLeitura && !isMasterSuporte) return;
+            if (!leadAtivoCockpit) return;
+
+            const valor = document.getElementById('cockpit-proposta-valor').value;
+            const condicoes = document.getElementById('cockpit-proposta-condicoes').value.trim();
+
+            const btn = document.getElementById('btn-cockpit-salvar-proposta');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        status: 'Proposta',
+                        valor_proposta: valor ? Number(valor) : null,
+                        condicoes_proposta: condicoes || null
+                    })
+                    .eq('id', leadAtivoCockpit.id);
+
+                if (error) throw error;
+
+                leadAtivoCockpit.status = 'Proposta';
+                leadAtivoCockpit.valor_proposta = valor ? Number(valor) : null;
+                leadAtivoCockpit.condicoes_proposta = condicoes || null;
+
+                renderizarPipelineCockpit('Proposta');
+
+                const valorFmt = valor ? 'R$ ' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'não informado';
+                await registrarEventoHistorico(
+                    leadAtivoCockpit.id,
+                    'proposta',
+                    `Proposta comercial formalizada no valor de ${valorFmt}` + (condicoes ? `. Condições: "${condicoes}"` : ''),
+                    { valor: valor, condicoes: condicoes }
+                );
+
+                alert('Proposta comercial salva!');
+                await carregarLeads();
+                await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar proposta: ' + err.message);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Proposta</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function enviarPropostaWhatsAppCockpit() {
+            if (!leadAtivoCockpit) return;
+
+            const valor = document.getElementById('cockpit-proposta-valor').value;
+            const condicoes = document.getElementById('cockpit-proposta-condicoes').value.trim();
+
+            if (!valor) {
+                alert('Informe ao menos o valor ofertado para compor a mensagem.');
+                return;
+            }
+
+            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const refImovel = leadAtivoCockpit.imovel ? `para o imóvel Ref: ${leadAtivoCockpit.imovel.codigo_ref}` : 'para a negociação em andamento';
+                
+            const zapLimpo = ('' + leadAtivoCockpit.whatsapp).replace(/\D/g, '');
+            const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
+
+            let mensagem = `Olá ${leadAtivoCockpit.nome}! Registramos formalmente sua proposta comercial ${refImovel}:\n\n` +
+                           `💰 *Valor:* ${valorFormatado}\n` +
+                           (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
+                           `Nossa diretoria já foi notificada e qualquer retorno te aviso imediatamente!`;
+
+            const urlWa = `https://wa.me/${numeroCompleto}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWa, '_blank');
+        }
+
+        // ====================================================================
+        // LÓGICA DE CONVERSÃO EM VENDA FECHADA (APERTO DE MÃO)
+        // ====================================================================
+        function configurarAbaFechamentoCockpit(lead) {
+            const containerAlerta = document.getElementById('cockpit-fechar-alerta-sem-imovel');
+            const containerForm = document.getElementById('cockpit-fechar-formulario');
+
+            if (!lead.imovel) {
+                containerAlerta.classList.remove('hidden');
+                containerForm.classList.add('hidden');
+                return;
+            }
+
+            containerAlerta.classList.add('hidden');
+            containerForm.classList.remove('hidden');
+
+            const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
+            document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
+            document.getElementById('cockpit-venda-data').value = new Date().toISOString().split('T')[0];
+
+            const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) ? dadosImobiliaria.comissao_venda_padrao_pct : 6.0;
+            document.getElementById('cockpit-venda-comissao-total-pct').value = comissaoPadrao;
+
+            // Busca fatia do corretor
+            let fatiaCorretor = 30.0;
+            if (lead.corretor_atribuido_id) {
+                const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
+                if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
+                    fatiaCorretor = corretor.comissao_venda_pct;
+                }
+            }
+            document.getElementById('cockpit-venda-comissao-corretor-pct').value = fatiaCorretor;
+
+            calcularRateioCockpit();
+        }
+
+        function calcularRateioCockpit() {
+            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value) || 0;
+            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
+            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
+
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+
+            document.getElementById('cockpit-sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('cockpit-sim-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('cockpit-sim-corretor').innerText = valorComissaoCorretor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('cockpit-sim-repasse').innerText = valorRepasseProprietario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // DISPARA O MODAL EXPLICATIVO DE CONFIRMAÇÃO DA VENDA
+        function iniciarConfirmacaoExplicativaVenda() {
+            if (modoLeitura && !isMasterSuporte) return;
+            if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
+
+            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
+            if (!valorVenda || valorVenda <= 0) {
+                alert('Informe um valor de venda válido para o fechamento.');
+                return;
+            }
+
+            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
+            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
+
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+
+            // Alimenta os dados no modal explicativo de confirmação
+            document.getElementById('conf-imovel-ref').innerText = `Ref: ${leadAtivoCockpit.imovel.codigo_ref}`;
+            document.getElementById('conf-valor-venda').innerText = valorVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-corretor').innerText = valorComissaoCorretor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-lead-nome').innerText = leadAtivoCockpit.nome;
+
+            document.getElementById('modal-confirmar-venda-explicativo').classList.remove('hidden');
+        }
+
+        function fecharConfirmacaoExplicativaVenda() {
+            document.getElementById('modal-confirmar-venda-explicativo').classList.add('hidden');
+        }
+
+        async function executarConfirmacaoFinalVenda() {
+            if (modoLeitura && !isMasterSuporte) return;
+            if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
+
+            const btn = document.getElementById('btn-executar-venda-final');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Concluindo venda...';
+            btn.disabled = true;
+
+            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
+            const dataVenda = document.getElementById('cockpit-venda-data').value;
+            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value);
+            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value);
+
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+
+            const corretorObj = listaCorretores.find(c => c.id === leadAtivoCockpit.corretor_atribuido_id);
+            const corretorNome = corretorObj ? corretorObj.nome_completo : null;
+
+            try {
+                // 1. Registra a venda na tabela de vendas fechadas
+                const { error: errVenda } = await supabaseClient
+                    .from('vendas_fechadas')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        imovel_id: leadAtivoCockpit.imovel.id,
+                        cliente_comprador_nome: leadAtivoCockpit.nome,
+                        corretor_id: leadAtivoCockpit.corretor_atribuido_id || null,
+                        corretor_nome: corretorNome,
+                        valor_venda_real: valorVenda,
+                        comissao_total_pct: comissaoTotalPct,
+                        valor_comissao_total: valorComissaoTotal,
+                        comissao_corretor_pct: comissaoCorretorPct,
+                        valor_comissao_corretor: valorComissaoCorretor,
+                        valor_comissao_imobiliaria: valorComissaoImobiliaria,
+                        valor_repasse_proprietario: valorRepasseProprietario,
+                        data_venda: dataVenda,
+                        status_pagamento: 'Recebido'
+                    }]);
+
+                if (errVenda) throw errVenda;
+
+                // 2. Atualiza o imóvel para Vendido e desativa da vitrine pública
+                await supabaseClient
+                    .from('imoveis')
+                    .update({ status: 'Vendido', ativa: false })
+                    .eq('id', leadAtivoCockpit.imovel.id);
+
+                // 3. Atualiza o status do lead para Concluído / Fechado
+                await supabaseClient
+                    .from('leads_contatos')
+                    .update({ status: 'Fechado' })
+                    .eq('id', leadAtivoCockpit.id);
+
+                // 4. Registra histórico oficial de auditoria
+                await registrarEventoHistorico(
+                    leadAtivoCockpit.id,
+                    'fechamento',
+                    `Venda formal concluída com sucesso! Imóvel vendido por R$ ${valorVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Imobiliária'}. Imóvel baixado da vitrine.`,
+                    { valor_venda: valorVenda, comissao_total: valorComissaoTotal }
+                );
+
+                fecharConfirmacaoExplicativaVenda();
+                fecharCockpitLead();
+
+                alert('Parabéns! Venda concluída, imóvel baixado e valores lançados no módulo financeiro com sucesso.');
+                await carregarLeads();
+
+            } catch (err) {
+                console.error('Erro no fechamento:', err);
+                alert('Erro ao concluir fechamento da venda: ' + err.message);
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Sim, Concluir Venda</span>';
+                btn.disabled = false;
+            }
+        }
+
+        // ====================================================================
+        // ATRIBUIÇÃO DIRETA DE CORRETOR NA TABELA
+        // ====================================================================
         async function atribuirCorretorLead(leadId, corretorId) {
             if (modoLeitura && !isMasterSuporte) return;
             try {
@@ -1679,6 +1779,9 @@
             }
         }
 
+        // ====================================================================
+        // FILTROS & BUSCA
+        // ====================================================================
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
@@ -1707,6 +1810,9 @@
             renderizarTabelaLeads(listaLeadsCompleta);
         }
 
+        // ====================================================================
+        // EXCLUSÃO DE LEAD
+        // ====================================================================
         function abrirModalExcluirLead(id, nome) {
             if (modoLeitura && !isMasterSuporte) return;
             document.getElementById('modal-excluir-lead-id').value = id;
