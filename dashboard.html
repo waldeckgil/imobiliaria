@@ -838,7 +838,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Sessão Criptografada via JWT
     </footer>
 
-    
+
     <!-- JAVASCRIPT MASTER -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
@@ -2597,22 +2597,46 @@ atualizarPainelAssinatura(imobAlvo);
                             <div><span class="text-slate-500 block text-[10px]">IPTU</span><strong class="text-white text-xs">R$ ${Number(imovel.valor_iptu || 0).toLocaleString('pt-BR')}</strong></div>
                         </div>
 
-                        <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
-                            <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
-                                <i class="fa-solid fa-user-tie"></i> Proprietário Titular do Imóvel
-                            </span>
+ <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-tie"></i> Proprietário Titular do Imóvel
+                                </span>
+                                <span class="text-[10px] text-amber-300/80 font-mono flex items-center gap-1">
+                                    <i class="fa-solid fa-hand-pointer text-[9px]"></i> Clique no nome para Dossiê
+                                </span>
+                            </div>
                             <div class="flex items-center justify-between flex-wrap gap-2">
                                 <div>
-                                    <h5 class="font-bold text-white text-xs">${prop.nome || 'Proprietário não vinculado'}</h5>
-                                    <span class="text-[10px] text-slate-400 font-mono">CPF: ${prop.cpf_cnpj || '---'} • Tel: ${prop.whatsapp || prop.telefone || '---'}</span>
+                                    ${imovel.proprietario_id ? `
+                                        <button type="button" onclick="abrirDossie360Cliente('${imovel.proprietario_id}', 'proprietario')" 
+                                                class="font-black text-white hover:text-amber-400 underline decoration-amber-500/60 hover:decoration-amber-400 transition cursor-pointer text-left text-sm flex items-center gap-1.5 group" 
+                                                title="Clique para abrir o Dossiê Completo de ${prop.nome || 'Proprietário'}">
+                                            <span>${prop.nome || 'Proprietário Vinculado'}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-amber-400 group-hover:scale-125 transition"></i>
+                                        </button>
+                                    ` : `
+                                        <h5 class="font-bold text-slate-400 text-xs">${prop.nome || 'Proprietário não vinculado'}</h5>
+                                    `}
+                                    <span class="text-[10px] text-slate-400 font-mono block mt-0.5">CPF: ${prop.cpf_cnpj || '---'} • Tel: ${prop.whatsapp || prop.telefone || '---'}</span>
                                 </div>
-                                ${zapProp ? `
-                                    <a href="https://wa.me/${zapProp}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
-                                        <i class="fa-brands fa-whatsapp"></i> Chamar Dono
-                                    </a>
-                                ` : ''}
+                                <div class="flex items-center gap-2">
+                                    ${imovel.proprietario_id ? `
+                                        <button type="button" onclick="abrirDossie360Cliente('${imovel.proprietario_id}', 'proprietario')" 
+                                                class="bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-700 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition cursor-pointer">
+                                            <i class="fa-solid fa-address-card text-xs"></i> Ver Ficha 360°
+                                        </button>
+                                    ` : ''}
+                                    ${zapProp ? `
+                                        <a href="https://wa.me/${zapProp}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                            <i class="fa-brands fa-whatsapp"></i> Chamar Dono
+                                        </a>
+                                    ` : ''}
+                                </div>
                             </div>
                         </div>
+
+
 
                         <!-- SEÇÃO DE DOCUMENTOS ANEXADOS -->
                         ${docsHtml}
@@ -2883,13 +2907,27 @@ atualizarPainelAssinatura(imobAlvo);
                                     </div>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Fechado</span>
                                 </div>
-
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
-                                    <div><span class="text-slate-500 block">Comprador:</span> <strong class="text-white">${v.cliente_comprador_nome}</strong></div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                                    <div>
+                                        <span class="text-slate-500 block">Comprador:</span> 
+                                        ${v.cliente_comprador_id ? `
+                                            <button type="button" onclick="abrirDossie360Cliente('${v.cliente_comprador_id}', 'comprador')" 
+                                                    class="text-white hover:text-amber-300 font-bold underline cursor-pointer text-left inline-flex items-center gap-1">
+                                                <span>${v.cliente_comprador_nome}</span>
+                                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-amber-400"></i>
+                                            </button>
+                                        ` : `
+                                            <strong class="text-white">${v.cliente_comprador_nome}</strong>
+                                        `}
+                                    </div>
                                     <div><span class="text-slate-500 block">Valor Venda:</span> <strong class="text-white font-mono">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR')}</strong></div>
                                     <div><span class="text-slate-500 block">Comissão Imob:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR')}</strong></div>
                                     <div><span class="text-slate-500 block">Corretor (${v.corretor_nome || 'Casa'}):</span> <strong class="text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')}</strong></div>
                                 </div>
+
+
+
+
                             </div>
                         `;
                     }).join('');
