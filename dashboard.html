@@ -2252,12 +2252,20 @@
             }
         }
 
+
+function fecharModalDashImovel() {
+            const modal = document.getElementById('modal-dash-imovel');
+            if (modal) modal.classList.add('hidden');
+        }
+
         window.abrirModalDetalhesImovel = abrirModalDetalhesImovel;
         window.fecharModalDashImovel = fecharModalDashImovel;
 
         // =========================================================================
         // MOTOR DE DETALHAMENTO DOS CARDS (DRILL-DOWN)
         // =========================================================================
+
+
         async function abrirDrilldown(tipo) {
             if (!dadosImobiliaria) return;
 
