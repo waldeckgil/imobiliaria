@@ -45,31 +45,9 @@
             filter: invert(1);
             cursor: pointer;
         }
-
-        /* ANIMAÇÃO DAS NOTIFICAÇÕES TOAST */
-        @keyframes toastEntrar {
-            from { transform: translateX(110%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes toastSair {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(110%); opacity: 0; }
-        }
-        .animar-toast-in { animation: toastEntrar 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animar-toast-out { animation: toastSair 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        /* ESTILO DO CARD DO FUNIL QUANDO SELECIONADO */
-        .card-funil-ativo {
-            box-shadow: 0 0 20px -3px rgba(34, 211, 238, 0.35) !important;
-            border-color: #38bdf8 !important;
-            transform: translateY(-2px);
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
-
-    <!-- CONTAINER FLUTUANTE GLOBAL DE TOASTS (NOTIFICAÇÕES DO SISTEMA) -->
-    <div id="container-toasts" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none p-2"></div>
 
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
@@ -120,7 +98,7 @@
                     <span>Ver Vitrine</span>
                 </a>
 
-                <button onclick="carregarLeads(true)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer" title="Atualizar Leads">
+                <button onclick="carregarLeads()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer" title="Atualizar Leads">
                     <i class="fa-solid fa-rotate text-xs"></i>
                     <span class="hidden sm:inline">Atualizar</span>
                 </button>
@@ -162,124 +140,28 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
         
-        <!-- CARDS DO FUNIL COMERCIAL (INTERATIVOS, COM TOOLTIPS E FILTRO POR CLIQUE) -->
+        <!-- CARDS DO FUNIL COMERCIAL -->
         <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            
-            <!-- CARD 1: NOVOS -->
-            <div onclick="clicarCardFunil('Novo')" 
-                 id="card-funil-Novo"
-                 class="group relative box-tech p-4 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Novos (Sem Retorno)</span>
-                    <i class="fa-solid fa-circle-dot text-blue-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
+            <div class="box-tech p-4 border-l-4 border-l-blue-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Novos (Sem Retorno)</span>
                 <span id="kpi-leads-novos" class="text-2xl font-black text-white mt-1 block">0</span>
-                <span class="text-[10px] text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-blue-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-blue-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-bell"></i>
-                        <span>Estágio: Novo Lead</span>
-                    </div>
-                    <p class="leading-relaxed">Clientes que acabaram de enviar formulário pelo site. Requer contato rápido no WhatsApp para não esfriar a oportunidade.</p>
-                </div>
             </div>
-
-            <!-- CARD 2: EM ATENDIMENTO -->
-            <div onclick="clicarCardFunil('Em Atendimento')" 
-                 id="card-funil-Em-Atendimento"
-                 class="group relative box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-amber-300/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Em Atendimento</span>
-                    <i class="fa-solid fa-headset text-amber-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
+            <div class="box-tech p-4 border-l-4 border-l-amber-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Em Atendimento</span>
                 <span id="kpi-leads-atendimento" class="text-2xl font-black text-amber-400 mt-1 block">0</span>
-                <span class="text-[10px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-amber-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-amber-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-headset"></i>
-                        <span>Estágio: Em Conversa</span>
-                    </div>
-                    <p class="leading-relaxed">O corretor já iniciou a sondagem com o cliente via WhatsApp/telefone para entender perfil, crédito e alinhar visitas.</p>
-                </div>
             </div>
-
-            <!-- CARD 3: VISITAS AGENDADAS -->
-            <div onclick="clicarCardFunil('Visita Agendada')" 
-                 id="card-funil-Visita-Agendada"
-                 class="group relative box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Visitas Agendadas</span>
-                    <i class="fa-solid fa-calendar-check text-cyan-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
+            <div class="box-tech p-4 border-l-4 border-l-cyan-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Visitas Agendadas</span>
                 <span id="kpi-leads-visitas" class="text-2xl font-black text-cyan-400 mt-1 block">0</span>
-                <span class="text-[10px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-cyan-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-cyan-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-calendar-days"></i>
-                        <span>Estágio: Visita Marcada</span>
-                    </div>
-                    <p class="leading-relaxed">Compromissos agendados no imóvel. Use a confirmação de WhatsApp para reduzir faltas e registrar instruções de portaria.</p>
-                </div>
             </div>
-
-            <!-- CARD 4: PROPOSTAS FEITAS -->
-            <div onclick="clicarCardFunil('Proposta')" 
-                 id="card-funil-Proposta"
-                 class="group relative box-tech p-4 border-l-4 border-l-purple-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-purple-300/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Propostas Feitas</span>
-                    <i class="fa-solid fa-hand-holding-dollar text-purple-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
+            <div class="box-tech p-4 border-l-4 border-l-purple-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Propostas Feitas</span>
                 <span id="kpi-leads-propostas" class="text-2xl font-black text-purple-400 mt-1 block">0</span>
-                <span class="text-[10px] text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-purple-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-purple-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-file-contract"></i>
-                        <span>Estágio: Negociação Ativa</span>
-                    </div>
-                    <p class="leading-relaxed">Cliente fez oferta de valor ou condições de pagamento. Fase crítica para alinhamento entre corretor, comprador e proprietário.</p>
-                </div>
             </div>
-
-            <!-- CARD 5: VENDAS CONCLUÍDAS -->
-            <div onclick="clicarCardFunil('Fechado')" 
-                 id="card-funil-Fechado"
-                 class="group relative box-tech p-4 border-l-4 border-l-emerald-400 col-span-2 sm:col-span-1 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Vendas Concluídas</span>
-                    <i class="fa-solid fa-handshake text-emerald-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
+            <div class="box-tech p-4 border-l-4 border-l-emerald-400 col-span-2 sm:col-span-1">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Vendas Concluídas</span>
                 <span id="kpi-leads-fechados" class="text-2xl font-black text-emerald-400 mt-1 block">0</span>
-                <span class="text-[10px] text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-emerald-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-emerald-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-trophy"></i>
-                        <span>Estágio: Venda Fechada</span>
-                    </div>
-                    <p class="leading-relaxed">Contrato assinado e comissões calculadas. O imóvel é retirado da vitrine pública e registrado no módulo financeiro.</p>
-                </div>
             </div>
-
         </div>
 
         <!-- BARRA DE FILTROS E BUSCA -->
@@ -293,7 +175,7 @@
                 </div>
 
                 <div class="lg:col-span-3">
-                    <select id="filtro-status" onchange="aoSelecionarFiltroStatusDropdown()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Funil: Todos os Estágios</option>
                         <option value="Novo">🔵 Novo</option>
                         <option value="Em Atendimento">🟡 Em Atendimento</option>
@@ -311,7 +193,7 @@
                 </div>
 
                 <div class="lg:col-span-1">
-                    <button onclick="limparFiltros(true)" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl border border-slate-700 transition cursor-pointer flex items-center justify-center" title="Limpar Filtros">
+                    <button onclick="limparFiltros()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl border border-slate-700 transition cursor-pointer flex items-center justify-center" title="Limpar Filtros">
                         <i class="fa-solid fa-rotate-left text-xs"></i>
                     </button>
                 </div>
@@ -345,8 +227,8 @@
             </div>
 
             <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
-                <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads encontrados</span>
-                <span class="font-mono text-[11px]">SGI • Central Cockpit & Notificações Ativas</span>
+                <span>Total de <strong id="contador-leads" class="text-white">0</strong> leads cadastrados</span>
+                <span class="font-mono text-[11px]">SGI • Cockpit Unificado & CRM Imobiliário</span>
             </div>
         </div>
 
@@ -449,7 +331,7 @@
                     <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
                         <label class="block text-[11px] font-bold uppercase text-slate-400">Adicionar Nota Interna ou Resumo de Conversa</label>
                         <div class="flex gap-2">
-                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, pediu proposta com 10% de entrada..." 
+                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, solicitou proposta com 10% de entrada..." 
                                    class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                             <button onclick="gravarNotaCockpit()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
                                 <i class="fa-solid fa-paper-plane"></i>
@@ -479,7 +361,7 @@
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Instruções de Portaria / Chaves</label>
-                                <input type="text" id="cockpit-visita-notas" placeholder="Ex: Chaves com o zelador no bloco B..." 
+                                <input type="text" id="cockpit-visita-notas" placeholder="Ex: Chaves no chaveiro portaria 2..." 
                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                             </div>
                         </div>
@@ -561,7 +443,7 @@
                         </div>
 
                         <div id="cockpit-fechar-alerta-sem-imovel" class="hidden p-3 bg-red-950/40 border border-red-800 text-red-300 rounded-xl text-xs">
-                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para gerar a baixa e as comissões, vincule um imóvel primeiro.
+                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para gerar o contrato e comissões, vincule um imóvel primeiro.
                         </div>
 
                         <div id="cockpit-fechar-formulario" class="space-y-3">
@@ -750,7 +632,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Central de Atendimento Cockpit
     </footer>
 
-    <!-- JAVASCRIPT COMPLETO COM TOASTS NATIVOS E FUNIL INTERATIVO -->
+    <!-- JAVASCRIPT COMPLETO E AUDITADO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -768,7 +650,6 @@
         let isMasterSuporte = false;
 
         let leadAtivoCockpit = null;
-        let filtroEstagioAtivoCard = null; // Guarda se há um card ativo filtrando
 
         const ESTAGIOS_FUNIL = [
             { chave: 'Novo', rotulo: 'Novo', cor: 'blue', icone: 'fa-circle-dot' },
@@ -779,81 +660,6 @@
             { chave: 'Perdido', rotulo: 'Perdido', cor: 'slate', icone: 'fa-ban' }
         ];
 
-        // ====================================================================
-        // SISTEMA DE NOTIFICAÇÕES NATIVAS (TOASTS ELEGANTES DARK TECH)
-        // ====================================================================
-        function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', duracaoMs = 4000) {
-            const container = document.getElementById('container-toasts');
-            if (!container) return;
-
-            const id = 'toast-' + Math.random().toString(36).substr(2, 9);
-            
-            let bgEstilo = 'bg-slate-900/95 border-cyan-500/80 text-cyan-300';
-            let icone = 'fa-circle-info text-cyan-400';
-            let barCor = 'bg-cyan-400';
-
-            if (tipo === 'sucesso') {
-                bgEstilo = 'bg-slate-900/95 border-emerald-500/80 text-emerald-300';
-                icone = 'fa-circle-check text-emerald-400';
-                barCor = 'bg-emerald-400';
-            } else if (tipo === 'aviso') {
-                bgEstilo = 'bg-slate-900/95 border-amber-500/80 text-amber-300';
-                icone = 'fa-triangle-exclamation text-amber-400';
-                barCor = 'bg-amber-400';
-            } else if (tipo === 'erro') {
-                bgEstilo = 'bg-slate-900/95 border-red-500/80 text-red-300';
-                icone = 'fa-circle-xmark text-red-400';
-                barCor = 'bg-red-400';
-            }
-
-            const toast = document.createElement('div');
-            toast.id = id;
-            toast.className = `animar-toast-in pointer-events-auto border rounded-xl p-3.5 shadow-2xl backdrop-blur-md relative overflow-hidden flex items-start gap-3 text-xs ${bgEstilo}`;
-
-            toast.innerHTML = `
-                <div class="text-base mt-0.5 flex-shrink-0">
-                    <i class="fa-solid ${icone}"></i>
-                </div>
-                <div class="flex-1 pr-2 space-y-0.5">
-                    <h5 class="font-black text-white text-xs tracking-wide">${titulo}</h5>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">${mensagem}</p>
-                </div>
-                <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-0.5 cursor-pointer">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-                <div class="absolute bottom-0 left-0 h-1 ${barCor} transition-all duration-[${duracaoMs}ms] w-full" id="bar-${id}"></div>
-            `;
-
-            container.appendChild(toast);
-
-            // Anima barra de progresso
-            setTimeout(() => {
-                const bar = document.getElementById(`bar-${id}`);
-                if (bar) {
-                    bar.style.transition = `width ${duracaoMs}ms linear`;
-                    bar.style.width = '0%';
-                }
-            }, 50);
-
-            // Auto-remover
-            setTimeout(() => {
-                removerToast(id);
-            }, duracaoMs);
-        }
-
-        function removerToast(id) {
-            const toast = document.getElementById(id);
-            if (!toast) return;
-            toast.classList.remove('animar-toast-in');
-            toast.classList.add('animar-toast-out');
-            setTimeout(() => {
-                if (toast.parentNode) toast.parentNode.removeChild(toast);
-            }, 250);
-        }
-
-        // ====================================================================
-        // INICIALIZAÇÃO DA PÁGINA
-        // ====================================================================
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
             if (error || !session) {
@@ -944,8 +750,8 @@
 
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Acesso Negado', 'Erro ao validar perfil de acesso.');
-                setTimeout(() => window.location.href = 'login.html', 1500);
+                alert('Erro ao validar acesso.');
+                window.location.href = 'login.html';
             }
         }
 
@@ -975,7 +781,7 @@
             }
         }
 
-        async function carregarLeads(notificarUsuario = false) {
+        async function carregarLeads() {
             const tbody = document.getElementById('tabela-leads-corpo');
             tbody.innerHTML = `
                 <tr>
@@ -1018,22 +824,18 @@
 
                 listaLeadsCompleta = leads;
                 atualizarMetricasFunil(listaLeadsCompleta);
-                aplicarFiltros();
+                renderizarTabelaLeads(listaLeadsCompleta);
 
+                // Se o modal cockpit estiver aberto para um lead, atualiza o contexto dele
                 if (leadAtivoCockpit) {
                     const atualizado = listaLeadsCompleta.find(l => l.id === leadAtivoCockpit.id);
                     if (atualizado) leadAtivoCockpit = atualizado;
-                }
-
-                if (notificarUsuario) {
-                    notificar('sucesso', 'Central Atualizada', `${listaLeadsCompleta.length} atendimentos sincronizados com sucesso.`);
                 }
 
             } catch (err) {
                 console.error('Erro ao consultar leads:', err.message || err);
                 tbody.innerHTML = `
                     <tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar lista de leads.</td></tr>`;
-                notificar('erro', 'Falha na Consulta', 'Não foi possível obter a lista de atendimentos.');
             }
         }
 
@@ -1085,54 +887,6 @@
             }
         }
 
-        // ====================================================================
-        // INTERAÇÃO DOS CARDS DO FUNIL (FILTRO POR CLIQUE)
-        // ====================================================================
-        function clicarCardFunil(status) {
-            const select = document.getElementById('filtro-status');
-
-            // Se clicar no card que já está ativo, desmarca e volta a mostrar todos
-            if (filtroEstagioAtivoCard === status) {
-                filtroEstagioAtivoCard = null;
-                select.value = '';
-                notificar('info', 'Filtro Removido', 'Exibindo todos os estágios do funil.');
-            } else {
-                filtroEstagioAtivoCard = status;
-                select.value = status;
-                notificar('info', 'Funil Filtrado', `Exibindo apenas atendimentos em "${status}".`);
-            }
-
-            atualizarDestaqueCardsFunil();
-            aplicarFiltros();
-        }
-
-        function aoSelecionarFiltroStatusDropdown() {
-            const select = document.getElementById('filtro-status');
-            filtroEstagioAtivoCard = select.value || null;
-            atualizarDestaqueCardsFunil();
-            aplicarFiltros();
-        }
-
-        function atualizarDestaqueCardsFunil() {
-            const cardsIds = {
-                'Novo': 'card-funil-Novo',
-                'Em Atendimento': 'card-funil-Em-Atendimento',
-                'Visita Agendada': 'card-funil-Visita-Agendada',
-                'Proposta': 'card-funil-Proposta',
-                'Fechado': 'card-funil-Fechado'
-            };
-
-            Object.keys(cardsIds).forEach(st => {
-                const el = document.getElementById(cardsIds[st]);
-                if (!el) return;
-                if (st === filtroEstagioAtivoCard) {
-                    el.classList.add('card-funil-ativo');
-                } else {
-                    el.classList.remove('card-funil-ativo');
-                }
-            });
-        }
-
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
@@ -1141,8 +895,8 @@
                     <tr>
                         <td colspan="7" class="py-12 text-center text-slate-500">
                             <i class="fa-solid fa-inbox text-3xl mb-2 text-slate-600"></i>
-                            <p class="font-bold text-slate-400">Nenhum atendimento encontrado para este filtro.</p>
-                            <p class="text-[11px] text-slate-600 mt-0.5">Tente limpar os filtros ou selecionar outro estágio do funil.</p>
+                            <p class="font-bold text-slate-400">Nenhum atendimento encontrado.</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Os contatos preenchidos na vitrine pública aparecerão aqui.</p>
                         </td>
                     </tr>`;
                 return;
@@ -1244,7 +998,7 @@
                         </p>
                     </td>
 
-                    <td class="py-3 px-3 cursor-pointer" onclick="abrirCockpitLead('${l.id}')" title="Clique para gerenciar este atendimento">
+                    <td class="py-3 px-3 cursor-pointer" onclick="abrirCockpitLead('${l.id}')" title="Clique para gerenciar este lead">
                         <div class="flex items-center gap-1.5">
                             ${badgeStatusHtml}
                         </div>
@@ -1451,13 +1205,12 @@
                     `Etapa do funil alterada de "${etapaAntiga}" para "${novaEtapa}".`
                 );
 
-                notificar('sucesso', 'Etapa Atualizada', `Lead avançou para "${novaEtapa}".`);
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha ao Mudar Etapa', err.message);
+                alert('Erro ao atualizar etapa do funil: ' + err.message);
             }
         }
 
@@ -1555,18 +1308,17 @@
             const texto = input.value.trim();
 
             if (!texto) {
-                notificar('aviso', 'Campo Obrigatório', 'Digite a nota interna antes de registrar.');
+                alert('Digite uma anotação antes de registrar.');
                 return;
             }
 
             try {
                 await registrarEventoHistorico(leadAtivoCockpit.id, 'nota', texto);
                 input.value = '';
-                notificar('sucesso', 'Nota Registrada', 'Observação arquivada no histórico do cliente.');
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
             } catch (err) {
                 console.error('Falha ao salvar nota:', err);
-                notificar('erro', 'Falha ao Gravar', 'Não foi possível salvar a anotação.');
+                alert('Erro ao salvar anotação.');
             }
         }
 
@@ -1597,13 +1349,12 @@
                     `Corretor responsável definido para: ${nomeCorretor}`
                 );
 
-                notificar('sucesso', 'Corretor Atribuído', `Atendimento delegado para ${nomeCorretor}.`);
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha na Delegação', err.message);
+                alert('Erro ao atribuir corretor.');
             }
         }
 
@@ -1618,7 +1369,7 @@
             const notas = document.getElementById('cockpit-visita-notas').value.trim();
 
             if (!dataValor) {
-                notificar('aviso', 'Data Obrigatória', 'Por favor, informe a data e o horário da visita.');
+                alert('Por favor, informe a data e o horário do compromisso.');
                 return;
             }
 
@@ -1653,13 +1404,13 @@
                     { data_visita: isoData, notas: notas }
                 );
 
-                notificar('sucesso', 'Visita Salva', `Agendada para ${formatarDataVisita(isoData)} com sucesso.`);
+                alert('Visita agendada com sucesso!');
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha ao Agendar', err.message);
+                alert('Erro ao salvar agendamento: ' + err.message);
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Visita</span>';
                 btn.disabled = false;
@@ -1671,7 +1422,7 @@
 
             const dataValor = document.getElementById('cockpit-visita-data').value;
             if (!dataValor) {
-                notificar('aviso', 'Data Não Definida', 'Defina a data e hora da visita antes de notificar via WhatsApp.');
+                alert('Defina a data e hora antes de enviar o lembrete.');
                 return;
             }
 
@@ -1739,13 +1490,12 @@
                 );
 
                 fecharModalConfirmarDesmarcar();
-                notificar('info', 'Visita Desmarcada', 'O compromisso foi cancelado e o lead retornou para Em Atendimento.');
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha ao Desmarcar', err.message);
+                alert('Erro ao desmarcar visita: ' + err.message);
             } finally {
                 btn.innerHTML = 'Sim, Desmarcar';
                 btn.disabled = false;
@@ -1792,13 +1542,13 @@
                     { valor: valor, condicoes: condicoes }
                 );
 
-                notificar('sucesso', 'Proposta Salva', `Registrada proposta de ${valorFmt}.`);
+                alert('Proposta comercial salva!');
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha ao Salvar Proposta', err.message);
+                alert('Erro ao salvar proposta: ' + err.message);
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Proposta</span>';
                 btn.disabled = false;
@@ -1812,7 +1562,7 @@
             const condicoes = document.getElementById('cockpit-proposta-condicoes').value.trim();
 
             if (!valor) {
-                notificar('aviso', 'Valor Obrigatório', 'Informe o valor da proposta para compor a mensagem.');
+                alert('Informe ao menos o valor ofertado para compor a mensagem.');
                 return;
             }
 
@@ -1890,7 +1640,7 @@
 
             const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
             if (!valorVenda || valorVenda <= 0) {
-                notificar('aviso', 'Valor Inválido', 'Informe um valor de fechamento maior que zero.');
+                alert('Informe um valor de venda válido para o fechamento.');
                 return;
             }
 
@@ -1982,12 +1732,12 @@
                 fecharConfirmacaoExplicativaVenda();
                 fecharCockpitLead();
 
-                notificar('sucesso', 'Venda Fechada com Sucesso!', `Imóvel baixado da vitrine e comissões lançadas no financeiro.`, 6000);
+                alert('Parabéns! Venda concluída, imóvel baixado e valores lançados no módulo financeiro com sucesso.');
                 await carregarLeads();
 
             } catch (err) {
                 console.error('Erro no fechamento:', err);
-                notificar('erro', 'Falha no Fechamento', err.message);
+                alert('Erro ao concluir fechamento da venda: ' + err.message);
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Sim, Concluir Venda</span>';
                 btn.disabled = false;
@@ -2023,11 +1773,9 @@
                     `Corretor responsável definido para: ${nomeCorretor}`
                 ).catch(() => {});
 
-                notificar('sucesso', 'Corretor Atribuído', `Atendimento delegado para ${nomeCorretor}.`);
-
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha ao Atribuir', err.message);
+                alert('Erro ao atribuir corretor.');
             }
         }
 
@@ -2055,17 +1803,11 @@
             renderizarTabelaLeads(filtrados);
         }
 
-        function limparFiltros(notificarUsuario = false) {
-            filtroEstagioAtivoCard = null;
+        function limparFiltros() {
             document.getElementById('filtro-busca').value = '';
             document.getElementById('filtro-status').value = '';
             document.getElementById('filtro-corretor').value = '';
-            atualizarDestaqueCardsFunil();
             renderizarTabelaLeads(listaLeadsCompleta);
-
-            if (notificarUsuario) {
-                notificar('info', 'Filtros Restaurados', 'Todos os filtros foram limpos.');
-            }
         }
 
         // ====================================================================
@@ -2097,11 +1839,10 @@
                 if (error) throw error;
 
                 fecharModalExcluirLead();
-                notificar('info', 'Lead Removido', 'Atendimento e histórico excluídos com sucesso.');
                 await carregarLeads();
             } catch (err) {
                 console.error(err);
-                notificar('erro', 'Falha ao Excluir', err.message);
+                alert('Erro ao excluir atendimento: ' + err.message);
             } finally {
                 btn.innerHTML = 'Sim, Descartar';
                 btn.disabled = false;
