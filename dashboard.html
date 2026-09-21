@@ -863,14 +863,20 @@
                 </div>
             </div>
 
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+<div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs gap-2 flex-wrap">
+                <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>Conversar no WhatsApp</span>
                 </a>
-                <button onclick="fecharModalAgendamento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
-                    Fechar Dossiê
-                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="alternarBoxReagendamento()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow cursor-pointer">
+                        <i class="fa-solid fa-calendar-days text-xs"></i>
+                        <span>Reagendar Visita</span>
+                    </button>
+                    <button onclick="fecharModalAgendamento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-3.5 rounded-xl transition cursor-pointer">
+                        Fechar Dossiê
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -3869,7 +3875,9 @@ async function carregarAgendaMes() {
             if (modal) modal.classList.add('hidden');
         }
 
-async function abrirDossieAgendamento(leadId) {
+let leadAtualEmEdicao = null;
+
+        async function abrirDossieAgendamento(leadId) {
             const modal = document.getElementById('modal-dash-agendamento');
             const corpo = document.getElementById('agendamento-modal-conteudo');
             const btnZap = document.getElementById('agendamento-modal-btn-zap');
@@ -3893,6 +3901,7 @@ async function abrirDossieAgendamento(leadId) {
                     .single();
 
                 if (error || !lead) throw new Error('Agendamento não localizado.');
+                leadAtualEmEdicao = lead;
 
                 // 2. Busca segura do imóvel vinculado (se houver)
                 let imovel = null;
@@ -3924,6 +3933,14 @@ async function abrirDossieAgendamento(leadId) {
 
                 const dataFormatada = lead.data_agendamento ? new Date(lead.data_agendamento).toLocaleString('pt-BR') : 'Data não definida';
 
+                // Valor formato YYYY-MM-DDTHH:mm para input datetime-local
+                let valorInputDatetime = '';
+                if (lead.data_agendamento) {
+                    const dt = new Date(lead.data_agendamento);
+                    dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
+                    valorInputDatetime = dt.toISOString().slice(0, 16);
+                }
+
                 if (corpo) {
                     corpo.innerHTML = `
                         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
@@ -3941,7 +3958,43 @@ async function abrirDossieAgendamento(leadId) {
                                 <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white font-mono">${lead.whatsapp || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-white">${lead.email || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">Corretor Responsável:</span> <strong class="text-cyan-300">${corretorNome}</strong></div>
-                                <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono">${dataFormatada}</strong></div>
+                                <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono" id="rotulo-horario-visita-modal">${dataFormatada}</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- GAVETA EXPANSÍVEL DE REAGENDAMENTO -->
+                        <div id="box-reagendamento-inline" class="hidden bg-slate-900/90 border border-amber-500/50 p-3.5 rounded-xl space-y-3 shadow-xl">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <span class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-days text-amber-400"></i> Reagendar Visita
+                                </span>
+                                <button type="button" onclick="alternarBoxReagendamento()" class="text-slate-400 hover:text-white cursor-pointer text-xs">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Novo Dia e Horário:</label>
+                                    <input type="datetime-local" id="input-novo-agendamento-data" value="${valorInputDatetime}" 
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Motivo / Nova Nota:</label>
+                                    <input type="text" id="input-novo-agendamento-nota" placeholder="Ex: Cliente pediu para mudar para a tarde" 
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-amber-400">
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-800/80">
+                                <button type="button" onclick="alternarBoxReagendamento()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition cursor-pointer">
+                                    Cancelar
+                                </button>
+                                <button type="button" onclick="confirmarReagendamentoLead()" id="btn-salvar-reagendamento" 
+                                        class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow cursor-pointer">
+                                    <i class="fa-solid fa-check text-[10px]"></i>
+                                    <span>Salvar Novo Horário</span>
+                                </button>
                             </div>
                         </div>
 
@@ -3976,11 +4029,73 @@ async function abrirDossieAgendamento(leadId) {
             }
         }
 
+        function alternarBoxReagendamento() {
+            const box = document.getElementById('box-reagendamento-inline');
+            if (!box) return;
+            box.classList.toggle('hidden');
+            if (!box.classList.contains('hidden')) {
+                box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        async function confirmarReagendamentoLead() {
+            if (!leadAtualEmEdicao || !dadosImobiliaria) return;
+
+            const inputData = document.getElementById('input-novo-agendamento-data')?.value;
+            const inputNota = document.getElementById('input-novo-agendamento-nota')?.value.trim();
+            const btn = document.getElementById('btn-salvar-reagendamento');
+
+            if (!inputData) {
+                exibirToast('aviso', 'Informe uma data e horário válidos.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+            try {
+                const novaDataIso = new Date(inputData).toISOString();
+                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
+
+                if (inputNota) {
+                    const timestampNota = new Date().toLocaleDateString('pt-BR');
+                    notasAtualizadas = notasAtualizadas 
+                        ? `${notasAtualizadas} | [Reagendado em ${timestampNota}]: ${inputNota}`
+                        : `[Reagendado em ${timestampNota}]: ${inputNota}`;
+                }
+
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        data_agendamento: novaDataIso,
+                        notas_agendamento: notasAtualizadas || null
+                    })
+                    .eq('id', leadAtualEmEdicao.id)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (error) throw error;
+
+                exibirToast('sucesso', 'Visita reagendada com sucesso!');
+
+                // 1. Atualiza o calendário e contadores
+                await carregarAgendaMes();
+
+                // 2. Recarrega o próprio modal atualizado
+                await abrirDossieAgendamento(leadAtualEmEdicao.id);
+
+            } catch (err) {
+                console.error('[REAGENDAMENTO] Erro:', err);
+                exibirToast('erro', 'Erro ao reagendar visita. Tente novamente.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> Salvar Novo Horário';
+            }
+        }
+
         function fecharModalAgendamento() {
             const modal = document.getElementById('modal-dash-agendamento');
             if (modal) modal.classList.add('hidden');
+            leadAtualEmEdicao = null;
         }
-
         // =========================================================================
         // AVISOS GLOBAIS DO SISTEMA
         // =========================================================================
