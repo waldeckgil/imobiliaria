@@ -27,32 +27,39 @@
         }
         *::-webkit-scrollbar-track,
         ::-webkit-scrollbar-track {
-            background: #060913 !important; /* Fundo escuro */
+            background: #060913 !important;
         }
         *::-webkit-scrollbar-thumb,
         ::-webkit-scrollbar-thumb {
-            background: #64748b !important; /* Cinza-médio nítido do Supabase */
-            border-radius: 9999px !important; /* Cantos arredondados */
-            border: 2px solid #060913 !important; /* Calha de respiro */
+            background: #64748b !important;
+            border-radius: 9999px !important;
+            border: 2px solid #060913 !important;
         }
         *::-webkit-scrollbar-thumb:hover,
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8 !important; /* Clareia ao passar o mouse */
+            background: #94a3b8 !important;
         }
 
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+        
+        /* ANIMAÇÃO PARA OS TOASTS PROFISSIONAIS */
+        @keyframes slideInRight {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast-anim { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-   <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <!-- CONTAINER DE TOASTS PROFISSIONAIS (SUBSTITUTO DOS ALERTS DO NAVEGADOR) -->
+    <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
-
-
-
-    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -258,7 +265,7 @@
                 <div class="flex items-center gap-3">
                     <div class="relative flex-1">
                         <span class="absolute left-3 top-2 text-xs font-bold text-slate-400">R$</span>
-                        <input type="number" step="0.01" id="prop-valor-pretendido-input" placeholder="0,00" 
+                        <input type="text" inputmode="numeric" id="prop-valor-pretendido-input" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-900 border border-amber-500/40 rounded-xl py-1.5 pl-9 pr-3 text-amber-300 font-mono font-black text-sm outline-none focus:border-amber-400">
                     </div>
                     <button type="button" onclick="salvarValorPretendidoDono()" id="btn-salvar-pretensao" 
@@ -281,9 +288,9 @@
         </div>
     </div>
 
-    <!-- MODAL 1: REGISTRO DE VENDA (STATUS VENDIDO & COMISSÕES) -->
+    <!-- MODAL 1: REGISTRO DE VENDA (COMPRADOR EM MAIÚSCULO & GAVETA DE DOCUMENTOS ACUMULATIVA) -->
     <div id="modal-registrar-venda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
+        <div class="box-tech max-w-2xl w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalVenda()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -301,25 +308,70 @@
             </div>
 
             <form id="form-venda" onsubmit="confirmarFechamentoVenda(event)" class="space-y-3.5 text-xs flex-1 overflow-y-auto pr-1">
-                <div>
-                    <label class="block font-bold text-slate-300 mb-1">Nome Completo do Comprador *</label>
-                    <input type="text" id="venda-comprador-nome" required placeholder="Ex: Marcos Vinicius da Rocha" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                
+                <!-- SEÇÃO DO COMPRADOR (PADRÃO MAIÚSCULO) -->
+                <div class="bg-slate-900/60 p-3.5 rounded-xl border border-amber-500/30 space-y-3">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-check"></i> Ficha Cadastral do Comprador (Vínculo Permanente)
+                    </span>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Nome Completo do Comprador *</label>
+                        <input type="text" id="venda-comprador-nome" required placeholder="Ex: MARIANA SILVA" 
+                               oninput="this.value = this.value.toUpperCase()"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white uppercase font-bold outline-none focus:border-amber-400">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">WhatsApp / Celular do Comprador *</label>
+                            <input type="tel" id="venda-comprador-zap" required placeholder="(00) 90000-0000" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-amber-400">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">E-mail do Comprador</label>
+                            <input type="email" id="venda-comprador-email" placeholder="comprador@email.com" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">CPF ou CNPJ do Comprador</label>
+                            <input type="text" id="venda-comprador-cpf" placeholder="000.000.000-00" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-amber-400">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">RG do Comprador</label>
+                            <input type="text" id="venda-comprador-rg" placeholder="Registro Geral" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- SEÇÃO FINANCEIRA DE FECHAMENTO -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor Real de Fechamento (R$) *</label>
+                        <label class="block font-bold text-slate-300 mb-1">Valor Real Fechado (R$) *</label>
                         <div class="relative">
                             <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
-                            <input type="number" step="0.01" id="venda-valor-fechado" required oninput="calcularRateioComissoes()" 
+                            <input type="text" inputmode="numeric" id="venda-valor-fechado" required oninput="mascaraMoedaEvento(this); calcularRateioComissoes()" placeholder="0,00" 
                                    class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400">
                         </div>
                     </div>
 
                     <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor Sinal / Entrada (R$)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
+                            <input type="text" inputmode="numeric" id="venda-valor-sinal" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
+                                   class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                        </div>
+                    </div>
+
+                    <div>
                         <label class="block font-bold text-slate-300 mb-1">Data da Venda *</label>
-                        <input type="date" id="venda-data" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        <input type="date" id="venda-data" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 font-mono">
                     </div>
                 </div>
 
@@ -349,6 +401,29 @@
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
                         <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
                     </div>
+                </div>
+
+                <!-- ANEXOS DE DOCUMENTOS DA VENDA (GAVETA CUMULATIVA INTELIGENTE) -->
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-paperclip text-amber-400"></i>
+                            <span>Anexar Documentos do Comprador (RG, CNH, Comprovante de Sinal, Contrato)</span>
+                        </span>
+                        <span id="contador-docs-venda" class="text-[10px] text-amber-400 font-mono font-bold">0 anexado(s)</span>
+                    </label>
+                    <div class="bg-slate-950 border border-slate-700 rounded-xl p-2.5 flex items-center gap-3">
+                        <input type="file" id="venda-documentos" accept=".pdf,image/*" multiple onchange="processarSelecaoDocsVenda(event)"
+                               class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-slate-950 cursor-pointer">
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Anexe quantos arquivos precisar (5 ou mais). Você pode selecionar novos arquivos sequencialmente.</p>
+                    <div id="container-docs-venda-preview" class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2"></div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Observações & Condições de Fechamento</label>
+                    <textarea id="venda-observacoes" rows="2" placeholder="Ex: Financiamento aprovado na Caixa, sinal transferido via PIX, saldo em 30 dias..." 
+                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs"></textarea>
                 </div>
 
                 <!-- SIMULADOR FINANCEIRO DE VENDA -->
@@ -389,7 +464,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: REGISTRO DE LOCAÇÃO (STATUS ALUGADO & REPASSES MENSAIS COM ANEXOS) -->
+    <!-- MODAL 2: REGISTRO DE LOCAÇÃO -->
     <div id="modal-registrar-locacao" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-purple-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalLocacao()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -411,8 +486,9 @@
             <form id="form-locacao" onsubmit="confirmarFechamentoLocacao(event)" class="space-y-3.5 text-xs flex-1 overflow-y-auto pr-1">
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Nome Completo do Inquilino (Locatário) *</label>
-                    <input type="text" id="loc-inquilino-nome" required placeholder="Ex: Carlos Eduardo de Souza" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-purple-400">
+                    <input type="text" id="loc-inquilino-nome" required placeholder="Ex: CARLOS EDUARDO DE SOUZA" 
+                           oninput="this.value = this.value.toUpperCase()"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white uppercase font-bold outline-none focus:border-purple-400">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -446,7 +522,7 @@
                         <label class="block font-bold text-slate-300 mb-1">Aluguel Bruto (R$) *</label>
                         <div class="relative">
                             <span class="absolute left-2.5 top-2 text-xs font-bold text-slate-500">R$</span>
-                            <input type="number" step="0.01" id="loc-valor-aluguel" required oninput="calcularRateioLocacao()" 
+                            <input type="text" inputmode="numeric" id="loc-valor-aluguel" required oninput="mascaraMoedaEvento(this); calcularRateioLocacao()" placeholder="0,00" 
                                    class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-8 pr-2 text-purple-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
                         </div>
                     </div>
@@ -558,9 +634,169 @@
         let isMasterSuporte = false;
         let imovelEmFocoProprietarioId = null;
 
-        // CONTROLES DE PAGINAÇÃO EM MEMÓRIA
         let paginaAtual = 1;
         const ITENS_POR_PAGINA = 12;
+
+        // ESTADO DA GAVETA DE DOCUMENTOS DO COMPRADOR NA VENDA
+        let listaDocsVendaEstado = [];
+
+        // =========================================================================
+        // SISTEMA DE NOTIFICAÇÕES CORPORATIVAS (TOAST SYSTEM PROFISSIONAL)
+        // =========================================================================
+        function mostrarToast(tipo, titulo, mensagem) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            let config = {
+                borda: 'border-cyan-500/50',
+                fundo: 'bg-cyan-950/90 text-cyan-400',
+                icone: 'fa-solid fa-circle-info'
+            };
+
+            if (tipo === 'sucesso') {
+                config = {
+                    borda: 'border-emerald-500/60',
+                    fundo: 'bg-emerald-950/90 text-emerald-400',
+                    icone: 'fa-solid fa-circle-check'
+                };
+            } else if (tipo === 'erro') {
+                config = {
+                    borda: 'border-rose-500/60',
+                    fundo: 'bg-rose-950/90 text-rose-400',
+                    icone: 'fa-solid fa-triangle-exclamation'
+                };
+            } else if (tipo === 'aviso') {
+                config = {
+                    borda: 'border-amber-500/60',
+                    fundo: 'bg-amber-950/90 text-amber-400',
+                    icone: 'fa-solid fa-bell'
+                };
+            }
+
+            const toast = document.createElement('div');
+            toast.className = `toast-anim pointer-events-auto bg-slate-900/95 border ${config.borda} backdrop-blur-md shadow-2xl rounded-2xl p-4 flex items-start gap-3.5 max-w-sm w-full transition-all duration-300`;
+            
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-xl ${config.fundo} flex items-center justify-center flex-shrink-0 text-sm shadow">
+                    <i class="${config.icone}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="text-xs font-black text-white tracking-wide leading-snug">${titulo}</h4>
+                    <p class="text-[11px] text-slate-300 leading-relaxed mt-0.5">${mensagem}</p>
+                </div>
+                <button type="button" class="text-slate-500 hover:text-white transition flex-shrink-0 text-xs p-1" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4500);
+        }
+
+        // =========================================================================
+        // MOTORES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
+        // =========================================================================
+        function formatarValorBRL(valor) {
+            if (valor === null || valor === undefined || valor === '') return '';
+            const num = Number(valor);
+            if (isNaN(num)) return '';
+            return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function converterMoedaParaFloat(texto) {
+            if (!texto) return 0;
+            const limpo = String(texto).replace(/\./g, '').replace(',', '.').replace(/[^0-9.]/g, '');
+            const num = parseFloat(limpo);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function mascaraMoedaEvento(input) {
+            let valor = input.value.replace(/\D/g, '');
+            if (!valor) {
+                input.value = '';
+                return;
+            }
+            const floatVal = (parseInt(valor, 10) / 100).toFixed(2);
+            input.value = Number(floatVal).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // =========================================================================
+        // GAVETA CUMULATIVA DE DOCUMENTOS DO COMPRADOR NA VENDA
+        // =========================================================================
+        function processarSelecaoDocsVenda(event) {
+            const files = Array.from(event.target.files);
+            if (!files.length) return;
+
+            files.forEach(file => {
+                listaDocsVendaEstado.push({
+                    nome: file.name,
+                    url: URL.createObjectURL(file),
+                    fileObj: file
+                });
+            });
+
+            // Reseta o input nativo para permitir selecionar novos arquivos sequencialmente
+            event.target.value = '';
+            renderizarDocsVendaPreview();
+        }
+
+        function renderizarDocsVendaPreview() {
+            const container = document.getElementById('container-docs-venda-preview');
+            const contador = document.getElementById('contador-docs-venda');
+            if (!container) return;
+
+            container.innerHTML = '';
+            if (contador) contador.innerText = `${listaDocsVendaEstado.length} anexado(s)`;
+
+            if (listaDocsVendaEstado.length === 0) {
+                container.innerHTML = '<p class="text-[11px] text-slate-500 italic col-span-2">Nenhum documento anexado ainda.</p>';
+                return;
+            }
+
+            listaDocsVendaEstado.forEach((doc, index) => {
+                const isPdf = doc.nome.toLowerCase().endsWith('.pdf');
+                const thumbVisual = isPdf 
+                    ? `<div class="w-9 h-9 rounded-lg bg-red-950/60 border border-red-800/60 flex flex-col items-center justify-center text-red-400 flex-shrink-0 shadow">
+                           <i class="fa-solid fa-file-pdf text-xs"></i>
+                           <span class="text-[7px] font-black uppercase">PDF</span>
+                       </div>`
+                    : `<img src="${doc.url}" alt="Doc" class="w-9 h-9 rounded-lg object-cover border border-amber-800/60 bg-slate-900 flex-shrink-0 shadow">`;
+
+                const card = document.createElement('div');
+                card.className = 'bg-slate-950 p-2 rounded-xl border border-amber-500/40 flex items-center justify-between gap-2.5 text-xs hover:border-amber-400 transition';
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 truncate min-w-0">
+                        ${thumbVisual}
+                        <div class="truncate">
+                            <span class="text-white truncate font-bold text-[11px] block" title="${doc.nome}">${doc.nome}</span>
+                            <span class="text-[9px] text-amber-400 font-mono block">${isPdf ? 'Documento PDF' : 'Arquivo de Imagem'}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <a href="${doc.url}" target="_blank" class="p-1.5 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800" title="Visualizar prévia">
+                            <i class="fa-solid fa-eye text-xs"></i>
+                        </a>
+                        <button type="button" onclick="removerDocVenda(${index})" class="p-1.5 rounded-lg bg-slate-900 hover:bg-red-900/80 text-red-400 hover:text-red-200 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Remover">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function removerDocVenda(index) {
+            listaDocsVendaEstado.splice(index, 1);
+            renderizarDocsVendaPreview();
+        }
 
         async function inicializarCatalogo() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -649,14 +885,13 @@
 
             } catch (err) {
                 console.error(err);
-                alert('Erro ao validar perfil de acesso.');
-                window.location.href = 'login.html';
+                mostrarToast('erro', 'Acesso Inválido', 'Não foi possível validar o perfil do usuário logado.');
+                setTimeout(() => window.location.href = 'login.html', 1500);
             }
         }
 
         async function carregarDadosAuxiliares() {
             try {
-                // 1. Clientes (Proprietários)
                 const { data: clientes } = await supabaseClient
                     .from('clientes')
                     .select('id, nome, whatsapp, telefone, cpf_cnpj, rg, email')
@@ -667,7 +902,6 @@
                     if (c && c.id) mapaClientes[c.id] = c; 
                 });
 
-                // 2. Contratos Ativos de Locação (Mapeia Inquilino por Imóvel)
                 const { data: contratos } = await supabaseClient
                     .from('contratos_locacao')
                     .select('imovel_id, cliente_nome, status, documentos_anexos')
@@ -679,7 +913,6 @@
                     if (ct && ct.imovel_id) mapaInquilinosPorImovel[ct.imovel_id] = ct.cliente_nome;
                 });
 
-                // 3. Corretores Ativos
                 const { data: corretores } = await supabaseClient
                     .from('usuarios')
                     .select('id, nome_completo, comissao_venda_pct')
@@ -720,7 +953,6 @@
             }
         }
 
-        // MOTOR DE RENDERIZAÇÃO COM PAGINAÇÃO & BLINDAGEM DE NULOS
         function renderizarTabela() {
             const tbody = document.getElementById('tabela-imoveis-corpo');
             const totalItens = listaImoveisFiltrados.length;
@@ -729,7 +961,6 @@
             if (paginaAtual > totalPaginas) paginaAtual = totalPaginas;
             if (paginaAtual < 1) paginaAtual = 1;
 
-            // Atualiza Controles de Paginação
             const inicio = (paginaAtual - 1) * ITENS_POR_PAGINA;
             const fim = Math.min(inicio + ITENS_POR_PAGINA, totalItens);
             const itensPagina = listaImoveisFiltrados.slice(inicio, fim);
@@ -772,7 +1003,6 @@
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 inline-flex items-center gap-1"><i class="fa-solid fa-tag text-[9px]"></i> Venda</span>';
                 }
 
-                // Blindagem de Proprietário e Inquilino
                 const propObj = (im.proprietario_id && mapaClientes[im.proprietario_id]) ? mapaClientes[im.proprietario_id] : null;
                 const nomeProprietario = propObj ? (propObj.nome || 'Proprietário Cadastrado') : '<span class="text-slate-500 italic">Sem proprietário</span>';
                 
@@ -781,7 +1011,6 @@
                     ? `<div class="flex items-center gap-1.5 mt-1 text-[11px] text-purple-300 font-bold"><i class="fa-solid fa-key text-purple-400 text-xs"></i> <span>Inquilino: ${nomeInquilino || 'Contrato Ativo'}</span></div>`
                     : '';
 
-                // Valores Comerciais
                 let blocoValores = '';
                 if (ehAmbos) {
                     blocoValores = `
@@ -815,7 +1044,6 @@
                 const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
 
-                // BOTÕES INTELIGENTES: VENDA VS LOCAÇÃO
                 let botoesFechamento = '';
                 if (im.status === 'Disponível' || im.status === 'Em Proposta') {
                     if (ehLocacao) {
@@ -932,7 +1160,6 @@
             }).join('');
         }
 
-        // FUNÇÃO DE NAVEGAÇÃO DE PÁGINAS
         function mudarPagina(delta) {
             const totalPaginas = Math.ceil(listaImoveisFiltrados.length / ITENS_POR_PAGINA) || 1;
             const novaPagina = paginaAtual + delta;
@@ -942,19 +1169,17 @@
             }
         }
 
-// =========================================================================
-        // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
+        // =========================================================================
+        // MOTOR JSPDF MASTER
         // =========================================================================
         function sanitizarTextoPdf(texto) {
             if (!texto) return '';
-            // Remove emojis e caracteres fora do Latin-1 que quebram a fonte do jsPDF
             return texto
                 .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu, '')
                 .replace(/[^\x00-\xFF]/g, ' ')
                 .trim();
         }
 
-        // Converte qualquer formato (WebP, PNG, JPG) para JPEG puro compatível com jsPDF via Canvas
         async function converterImgParaJpegSeguro(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -967,12 +1192,10 @@
                         canvas.height = img.naturalHeight || img.height || 600;
                         const ctx = canvas.getContext('2d');
                         
-                        // Fundo branco sólido (evita transparência preta de WebP/PNG)
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
-                        // Exporta garantidamente como JPEG real
                         resolve(canvas.toDataURL('image/jpeg', 0.85));
                     } catch (err) {
                         reject(err);
@@ -980,7 +1203,6 @@
                 };
 
                 img.onerror = () => {
-                    // Fallback se crossOrigin for bloqueado: tenta via blob
                     fetch(url)
                         .then(r => r.blob())
                         .then(blob => {
@@ -1030,7 +1252,6 @@
                 const pageHeight = doc.internal.pageSize.getHeight();
                 const imobNome = (dadosImobAtual && dadosImobAtual.nome_fantasia) ? dadosImobAtual.nome_fantasia : 'SGI IMOBILIÁRIA';
 
-                // 1. CABEÇALHO INSTITUCIONAL
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
@@ -1046,7 +1267,6 @@
                 const fone = (dadosImobAtual && (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato)) ? (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato) : '';
                 doc.text(`${sanitizarTextoPdf(creci)} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
 
-                // Tarja Código de Referência
                 doc.setFillColor(28, 107, 160);
                 doc.roundedRect(pageWidth - 48, 8, 33, 11, 2, 2, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -1054,7 +1274,6 @@
                 doc.setFont('helvetica', 'bold');
                 doc.text(`Ref: ${imovel.codigo_ref || 'SGI'}`, pageWidth - 31.5, 15, { align: 'center' });
 
-                // 2. TÍTULO E LOCALIZAÇÃO
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(13);
                 doc.setFont('helvetica', 'bold');
@@ -1069,11 +1288,9 @@
                 const localTexto = sanitizarTextoPdf(`${imovel.bairro || 'Localização Privilegiada'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${tipoTexto} • ${localTexto}`, 15, 45);
 
-         // 3. FOTO DE CAPA INTELIGENTE (Busca Capa -> Galeria -> ou imagem em Documentos)
                 let posY = 51;
                 let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
 
-                // Resgate: se a foto foi anexada em documentos por engano
                 if (!urlFoto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
                     const imgDoc = imovel.documentos_anexos.find(url => {
                         const u = String(url).toLowerCase();
@@ -1082,7 +1299,6 @@
                     if (imgDoc) urlFoto = imgDoc;
                 }
 
-                // Se ainda assim não houver foto, utiliza a foto padrão de capa para não ficar em branco
                 if (!urlFoto) {
                     urlFoto = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80';
                 }
@@ -1093,7 +1309,7 @@
                         doc.addImage(imgJpegBase64, 'JPEG', 15, posY, pageWidth - 30, 85, undefined, 'FAST');
                         posY += 90;
                     } catch (e) {
-                        console.warn('Foto indisponível via Canvas/CORS, aplicando box reserva:', e);
+                        console.warn('Foto indisponível via Canvas/CORS:', e);
                         doc.setFillColor(240, 245, 250);
                         doc.rect(15, posY, pageWidth - 30, 60, 'F');
                         doc.setTextColor(120, 130, 140);
@@ -1103,7 +1319,6 @@
                     }
                 }
 
-                // 4. ESPECIFICAÇÕES DO IMÓVEL
                 doc.setFillColor(245, 247, 250);
                 doc.roundedRect(15, posY, pageWidth - 30, 22, 2, 2, 'F');
 
@@ -1127,7 +1342,6 @@
 
                 posY += 28;
 
-                // 5. VALORES FINANCEIROS
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
@@ -1151,7 +1365,6 @@
 
                 posY += 20;
 
-                // 6. DESCRIÇÃO INSTITUCIONAL DO IMÓVEL (COM SANITIZAÇÃO DE EMOJIS)
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
@@ -1164,7 +1377,6 @@
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
-                // 7. RODAPÉ DE CONTATO COMERCIAL
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
@@ -1182,7 +1394,7 @@
 
             } catch (err) {
                 console.error('Erro na compilação do PDF:', err);
-                alert('Erro ao compilar a ficha em PDF: ' + err.message);
+                mostrarToast('erro', 'Falha no PDF', 'Erro ao compilar ficha comercial: ' + err.message);
             } finally {
                 if (btn) {
                     btn.disabled = false;
@@ -1202,7 +1414,7 @@
             document.getElementById('prop-modal-imovel-titulo').innerText = imovel.titulo || 'Sem título';
             document.getElementById('prop-modal-imovel-ref').innerText = `Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'}`;
 
-            document.getElementById('prop-valor-pretendido-input').value = imovel.valor_pretendido_proprietario || '';
+            document.getElementById('prop-valor-pretendido-input').value = formatarValorBRL(imovel.valor_pretendido_proprietario);
 
             const container = document.getElementById('prop-modal-conteudo');
             container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados...</p></div>';
@@ -1271,7 +1483,7 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
             try {
-                const valorNumerico = inputVal ? Number(inputVal) : null;
+                const valorNumerico = inputVal ? converterMoedaParaFloat(inputVal) : null;
                 const { error } = await supabaseClient
                     .from('imoveis')
                     .update({ valor_pretendido_proprietario: valorNumerico })
@@ -1282,10 +1494,10 @@
                 const im = listaImoveisCompleta.find(i => i.id === imovelEmFocoProprietarioId);
                 if (im) im.valor_pretendido_proprietario = valorNumerico;
 
-                alert('Valor de interesse do proprietário salvo com sucesso!');
+                mostrarToast('sucesso', 'Pretensão Salva', 'Valor de interesse do proprietário salvo com sucesso!');
             } catch (err) {
                 console.error(err);
-                alert('Erro ao salvar valor pretendido: ' + err.message);
+                mostrarToast('erro', 'Falha ao Salvar', 'Erro ao salvar valor pretendido: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Salvar';
@@ -1298,7 +1510,7 @@
         }
 
         // =========================================================================
-        // FLUXO 1: FECHAMENTO DE VENDA
+        // FLUXO 1: FECHAMENTO DE VENDA COM CADASTRO DO COMPRADOR & GAVETA DE ANEXOS
         // =========================================================================
         function abrirModalVenda(imovelId) {
             if (modoLeitura) return;
@@ -1311,7 +1523,18 @@
             document.getElementById('venda-valor-anuncio').innerText = Number(imovel.valor_venda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('venda-comprador-nome').value = '';
-            document.getElementById('venda-valor-fechado').value = imovel.valor_venda || '';
+            document.getElementById('venda-comprador-zap').value = '';
+            document.getElementById('venda-comprador-email').value = '';
+            document.getElementById('venda-comprador-cpf').value = '';
+            document.getElementById('venda-comprador-rg').value = '';
+            document.getElementById('venda-valor-sinal').value = '';
+            document.getElementById('venda-observacoes').value = '';
+
+            // Reinicia a gaveta acumulativa de documentos da venda
+            listaDocsVendaEstado = [];
+            renderizarDocsVendaPreview();
+
+            document.getElementById('venda-valor-fechado').value = formatarValorBRL(imovel.valor_venda);
             document.getElementById('venda-data').value = new Date().toISOString().split('T')[0];
 
             const comissaoPadraoImob = (dadosImobAtual && dadosImobAtual.comissao_venda_padrao_pct) ? dadosImobAtual.comissao_venda_padrao_pct : 6.0;
@@ -1340,14 +1563,14 @@
         }
 
         function calcularRateioComissoes() {
-            const valorVenda = Number(document.getElementById('venda-valor-fechado').value) || 0;
+            const valorVenda = converterMoedaParaFloat(document.getElementById('venda-valor-fechado').value);
             const comissaoTotalPct = Number(document.getElementById('venda-comissao-total-pct').value) || 0;
             const comissaoCorretorPct = Number(document.getElementById('venda-comissao-corretor-pct').value) || 0;
 
             const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+            const valorRepasseProprietario = Math.max(0, valorVenda - valorComissaoTotal);
 
             document.getElementById('sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('sim-comissao-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -1361,11 +1584,19 @@
 
             const btn = document.getElementById('btn-confirmar-venda');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando venda...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando comprador & venda...';
 
             const imovelId = document.getElementById('venda-imovel-id').value;
-            const compradorNome = document.getElementById('venda-comprador-nome').value.trim();
-            const valorVenda = Number(document.getElementById('venda-valor-fechado').value);
+            // GARANTIA DE PADRÃO MAIÚSCULO NO BANCO
+            const compradorNome = document.getElementById('venda-comprador-nome').value.trim().toUpperCase();
+            const compradorZap = document.getElementById('venda-comprador-zap').value.trim();
+            const compradorEmail = document.getElementById('venda-comprador-email').value.trim();
+            const compradorCpf = document.getElementById('venda-comprador-cpf').value.trim();
+            const compradorRg = document.getElementById('venda-comprador-rg').value.trim();
+            const valorSinal = converterMoedaParaFloat(document.getElementById('venda-valor-sinal').value);
+            const observacoesVenda = document.getElementById('venda-observacoes').value.trim();
+
+            const valorVenda = converterMoedaParaFloat(document.getElementById('venda-valor-fechado').value);
             const dataVenda = document.getElementById('venda-data').value;
             const comissaoTotalPct = Number(document.getElementById('venda-comissao-total-pct').value);
             const corretorId = document.getElementById('venda-corretor-select').value;
@@ -1374,17 +1605,78 @@
             const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+            const valorRepasseProprietario = Math.max(0, valorVenda - valorComissaoTotal);
 
             const corretorObj = listaCorretores.find(c => String(c.id) === String(corretorId));
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
+                // 1. UPLOAD DOS DOCUMENTOS CUMULATIVOS DA GAVETA
+                let docsUrls = [];
+
+                if (listaDocsVendaEstado.length > 0) {
+                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Armazenando ${listaDocsVendaEstado.length} documento(s)...`;
+                    for (let i = 0; i < listaDocsVendaEstado.length; i++) {
+                        const docItem = listaDocsVendaEstado[i];
+                        const file = docItem.fileObj;
+                        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+                        const path = `${imobiliariaId}/vendas/doc_comprador_${Date.now()}_${i}_${cleanName}`;
+                        
+                        const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, file, { upsert: true });
+                        if (!upErr) {
+                            const url = supabaseClient.storage.from('imoveis-midias').getPublicUrl(path).data.publicUrl;
+                            docsUrls.push(url);
+                        } else {
+                            console.warn('Erro ao subir documento:', upErr);
+                        }
+                    }
+                }
+
+                // 2. CADASTRO COMPLETO DO COMPRADOR NA TABELA CLIENTES (NOME EM MAIÚSCULO)
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando comprador oficial...';
+                let clienteCompradorId = null;
+
+                const { data: novoCliente, error: errCliente } = await supabaseClient
+                    .from('clientes')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        tipo: 'Comprador',
+                        nome: compradorNome,
+                        whatsapp: compradorZap,
+                        telefone: compradorZap,
+                        cpf_cnpj: compradorCpf || null,
+                        rg: compradorRg || null,
+                        email: compradorEmail || null,
+                        observacoes: `Comprador cadastrado no fechamento de venda em ${dataVenda}.`
+                    }])
+                    .select('id')
+                    .single();
+
+                if (!errCliente && novoCliente) {
+                    clienteCompradorId = novoCliente.id;
+                }
+
+                // 3. COMPILAÇÃO DE NOTAS E LINKS DE ANEXOS PARA OBSERVAÇÕES
+                let notasCompletas = [];
+                if (valorSinal > 0) {
+                    notasCompletas.push(`[ENTRADA/SINAL]: R$ ${valorSinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
+                }
+                if (observacoesVenda) {
+                    notasCompletas.push(`[CONDIÇÕES]: ${observacoesVenda}`);
+                }
+                if (docsUrls.length > 0) {
+                    notasCompletas.push(`[DOCUMENTOS ANEXOS]: ${docsUrls.join(' , ')}`);
+                }
+                const observacoesFinalTexto = notasCompletas.join(' | ');
+
+                // 4. GRAVAÇÃO EM VENDAS_FECHADAS COM VÍNCULO REAL DO COMPRADOR
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Formalizando venda e comissões...';
                 const { error: errVenda } = await supabaseClient
                     .from('vendas_fechadas')
                     .insert([{
                         imobiliaria_id: imobiliariaId,
                         imovel_id: imovelId,
+                        cliente_comprador_id: clienteCompradorId,
                         cliente_comprador_nome: compradorNome,
                         corretor_id: corretorId ? Number(corretorId) : null,
                         corretor_nome: corretorNome,
@@ -1396,11 +1688,13 @@
                         valor_comissao_imobiliaria: valorComissaoImobiliaria,
                         valor_repasse_proprietario: valorRepasseProprietario,
                         data_venda: dataVenda,
-                        status_pagamento: 'Recebido'
+                        status_pagamento: 'Recebido',
+                        observacoes: observacoesFinalTexto || null
                     }]);
 
                 if (errVenda) throw errVenda;
 
+                // 5. ATUALIZAÇÃO DO STATUS DO IMÓVEL
                 const { error: errImovel } = await supabaseClient
                     .from('imoveis')
                     .update({ status: 'Vendido', ativa: false })
@@ -1409,12 +1703,13 @@
                 if (errImovel) throw errImovel;
 
                 fecharModalVenda();
-                alert('Venda registrada e comissões apuradas com sucesso!');
+                mostrarToast('sucesso', 'Venda Concluída!', `Venda registrada com sucesso! Comprador "${compradorNome}" catalogado com ${docsUrls.length} documento(s).`);
+                await carregarDadosAuxiliares();
                 await carregarImoveis();
 
             } catch (err) {
                 console.error(err);
-                alert('Erro ao registrar venda: ' + err.message);
+                mostrarToast('erro', 'Falha no Fechamento', 'Erro ao registrar venda: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar Venda & Atualizar Status</span>';
@@ -1441,7 +1736,7 @@
             document.getElementById('loc-inquilino-cpf').value = '';
             document.getElementById('loc-documentos').value = '';
             
-            document.getElementById('loc-valor-aluguel').value = imovel.valor_locacao || '';
+            document.getElementById('loc-valor-aluguel').value = formatarValorBRL(imovel.valor_locacao);
             const taxaAdmPadrao = (dadosImobAtual && dadosImobAtual.taxa_locacao_padrao_pct) ? dadosImobAtual.taxa_locacao_padrao_pct : 10.0;
             document.getElementById('loc-taxa-adm-pct').value = taxaAdmPadrao;
             document.getElementById('loc-dia-vencimento').value = 10;
@@ -1462,11 +1757,11 @@
         }
 
         function calcularRateioLocacao() {
-            const valorAluguel = Number(document.getElementById('loc-valor-aluguel').value) || 0;
+            const valorAluguel = converterMoedaParaFloat(document.getElementById('loc-valor-aluguel').value);
             const taxaAdmPct = Number(document.getElementById('loc-taxa-adm-pct').value) || 0;
 
             const taxaImob = (valorAluguel * taxaAdmPct) / 100;
-            const repasseDono = valorAluguel - taxaImob;
+            const repasseDono = Math.max(0, valorAluguel - taxaImob);
 
             document.getElementById('sim-loc-bruto').innerText = valorAluguel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('sim-loc-taxa-imob').innerText = taxaImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
@@ -1482,19 +1777,18 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando contrato e documentos...';
 
             const imovelId = document.getElementById('loc-imovel-id').value;
-            const inquilinoNome = document.getElementById('loc-inquilino-nome').value.trim();
+            const inquilinoNome = document.getElementById('loc-inquilino-nome').value.trim().toUpperCase();
             const inquilinoZap = document.getElementById('loc-inquilino-zap').value.trim();
             const inquilinoCpf = document.getElementById('loc-inquilino-cpf').value.trim();
-            const valorAluguel = Number(document.getElementById('loc-valor-aluguel').value);
+            const valorAluguel = converterMoedaParaFloat(document.getElementById('loc-valor-aluguel').value);
             const taxaAdmPct = Number(document.getElementById('loc-taxa-adm-pct').value);
             const diaVencimento = Number(document.getElementById('loc-dia-vencimento').value);
             const dataInicio = document.getElementById('loc-data-inicio').value;
             const dataFim = document.getElementById('loc-data-fim').value;
 
             const taxaImob = (valorAluguel * taxaAdmPct) / 100;
-            const repasseDono = valorAluguel - taxaImob;
+            const repasseDono = Math.max(0, valorAluguel - taxaImob);
 
-            // UPLOAD DE DOCUMENTOS DO INQUILINO NO STORAGE
             const fileInput = document.getElementById('loc-documentos');
             let docsUrls = [];
 
@@ -1518,7 +1812,6 @@
 
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando contrato e financeiro...';
 
-                // 1. Grava o contrato em contratos_locacao
                 const { data: contratoData, error: errContrato } = await supabaseClient
                     .from('contratos_locacao')
                     .insert([{
@@ -1542,7 +1835,6 @@
 
                 if (errContrato) throw errContrato;
 
-                // 2. Atualiza o status do imóvel para Alugado e pausa vitrine
                 const { error: errImovel } = await supabaseClient
                     .from('imoveis')
                     .update({ status: 'Alugado', ativa: false })
@@ -1550,7 +1842,6 @@
 
                 if (errImovel) throw errImovel;
 
-                // 3. Cria a primeira competência na tabela de recebíveis mensais
                 const mesAtual = String(new Date().getMonth() + 1).padStart(2, '0') + '/' + new Date().getFullYear();
                 await supabaseClient
                     .from('locacao_mensalidades_recebiveis')
@@ -1569,13 +1860,13 @@
                     }]);
 
                 fecharModalLocacao();
-                alert(`Contrato de locação registrado com sucesso! ${docsUrls.length > 0 ? docsUrls.length + ' documento(s) anexado(s).' : ''}`);
+                mostrarToast('sucesso', 'Locação Concluída!', `Contrato de locação registrado com sucesso! ${docsUrls.length > 0 ? docsUrls.length + ' documento(s) anexado(s).' : ''}`);
                 await carregarDadosAuxiliares();
                 await carregarImoveis();
 
             } catch (err) {
                 console.error(err);
-                alert('Erro ao registrar locação: ' + err.message);
+                mostrarToast('erro', 'Falha na Locação', 'Erro ao registrar locação: ' + err.message);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-key"></i> <span>Confirmar Locação & Criar Contrato</span>';
@@ -1591,10 +1882,11 @@
                     .eq('id', imovelId);
 
                 if (error) throw error;
+                mostrarToast('aviso', 'Vitrine Atualizada', !estadoAtual ? 'O anúncio foi publicado na vitrine.' : 'O anúncio foi pausado da vitrine.');
                 await carregarImoveis();
             } catch (err) {
                 console.error(err);
-                alert('Erro ao atualizar status da vitrine.');
+                mostrarToast('erro', 'Falha na Vitrine', 'Erro ao atualizar status da vitrine.');
             }
         }
 
@@ -1628,7 +1920,7 @@
                 return matchBusca && matchStatus && matchFinalidade;
             });
 
-            paginaAtual = 1; // Reinicia paginação ao filtrar
+            paginaAtual = 1;
             renderizarTabela();
         }
 
@@ -1667,10 +1959,11 @@
                 if (error) throw error;
 
                 fecharModalExcluir();
+                mostrarToast('sucesso', 'Imóvel Excluído', 'O anúncio foi removido permanentemente.');
                 await carregarImoveis();
             } catch (err) {
                 console.error(err);
-                alert('Erro ao excluir o imóvel: ' + err.message);
+                mostrarToast('erro', 'Falha ao Excluir', 'Erro ao excluir o imóvel: ' + err.message);
             } finally {
                 btn.innerHTML = 'Sim, Excluir';
                 btn.disabled = false;

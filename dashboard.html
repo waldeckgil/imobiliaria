@@ -316,20 +316,21 @@
                 </div>
             </div>
 
-            <!-- CARD 9: FINANCEIRO EXECUTIVO -->
+            <!-- CARD 9: FINANCEIRO EXECUTIVO (TOTALMENTE INTEGRADO E HARMONIZADO) -->
             <div id="card-kpi-financeiro" onclick="atalhoAbaFinanceira()" class="box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer hover:scale-[1.02] hover:border-amber-300 hover:shadow-xl transition group bg-gradient-to-r from-amber-950/20 via-slate-900 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
                     <span class="text-amber-400 font-black transition text-[11px] flex items-center gap-1.5">
-                        <i class="fa-solid fa-coins"></i> Financeiro Mês
+                        <i class="fa-solid fa-coins"></i> Receita Imobiliária (Mês)
                     </span>
                     <i class="fa-solid fa-arrow-down-long text-amber-400 text-sm group-hover:translate-y-0.5 transition"></i>
                 </div>
                 <div class="mt-2 flex items-baseline justify-between">
                     <div>
-                        <span id="kpi-receita-financeira-mes" class="text-2xl font-black text-amber-300 font-mono">R$ 0,00</span>
-                        <span class="text-[10px] text-slate-400 block" id="kpi-rotulo-financeiro-mes">Receita Imobiliária</span>
+                        <span id="kpi-receita-financeira-mes" class="text-2xl font-black text-emerald-400 font-mono">R$ 0,00</span>
+                        <span class="text-[10px] text-slate-300 font-bold block mt-0.5" id="kpi-rotulo-financeiro-mes">Efetivada (Quitada) • Carregando...</span>
+                        <span class="text-[9px] text-amber-400/90 font-mono block" id="kpi-sub-financeiro-pendente">Projetado total: R$ 0,00</span>
                     </div>
-                    <span class="text-[9px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition">Abrir &darr;</span>
+                    <span class="text-[9px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition">Extrato &darr;</span>
                 </div>
             </div>
 
@@ -338,12 +339,15 @@
         <!-- DASHBOARD FINANCEIRO CONSOLIDADO -->
         <div id="box-dashboard-financeiro" class="box-tech p-5 space-y-4 hidden">
             <div id="aba-conteudo-financeiro" class="space-y-6">
+                
+                <!-- CABEÇALHO DO EXTRATO COM SELETOR DE MÊS INTEGRADO -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                         <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
-                            <i class="fa-solid fa-calculator"></i> Gestão de Receitas, Taxas & Repasses
+                            <i class="fa-solid fa-calculator"></i> Gestão de Receitas, Taxas & Repasses 360°
                         </span>
                         <h3 class="text-base font-black text-white mt-0.5">Extrato Financeiro Consolidado</h3>
+                        <p class="text-[11px] text-slate-400">Total transparência entre caixa realizado (quitado) e faturamento a receber da competência.</p>
                     </div>
 
                     <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -354,48 +358,57 @@
                     </div>
                 </div>
 
+                <!-- CARDS DE METRICA DO EXTRATO (5 CARDS AUDITADOS E INTERLIGADOS) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                    <!-- CARD 1 -->
                     <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-purple-500 border border-slate-800">
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Aluguéis Bruto do Mês</span>
                         <span id="fin-kpi-aluguel-bruto" class="text-2xl font-black text-white font-mono mt-1 block">R$ 0,00</span>
                         <span class="text-[10px] text-purple-400 block mt-0.5">Cobrança total dos inquilinos</span>
                     </div>
 
+                    <!-- CARD 2 -->
                     <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-emerald-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Retenção Alugueis Taxa da Imob</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Taxa Imobiliária (Locação)</span>
                         <span id="fin-kpi-taxa-imob-recebida" class="text-2xl font-black text-emerald-400 font-mono mt-1 block">R$ 0,00</span>
                         <div class="flex items-center justify-between text-[10px] mt-0.5">
-                            <span class="text-emerald-400">Quitado</span>
-                            <span id="fin-kpi-taxa-imob-pendente" class="text-amber-400 font-mono">Pendente: R$ 0,00</span>
+                            <span class="text-emerald-400 font-bold">Quitado</span>
+                            <span id="fin-kpi-taxa-imob-pendente" class="text-amber-400 font-mono font-bold">Pendente: R$ 0,00</span>
                         </div>
                     </div>
 
+                    <!-- CARD 3 -->
                     <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-cyan-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Repasse Liquido aos Proprietários</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Repasse aos Proprietários</span>
                         <span id="fin-kpi-repasse-proprietarios" class="text-2xl font-black text-cyan-300 font-mono mt-1 block">R$ 0,00</span>
-                        <span class="text-[10px] text-slate-400 block mt-0.5">Líquido destinado aos donos</span>
+                        <div class="flex items-center justify-between text-[10px] mt-0.5">
+                            <span id="fin-kpi-repasse-realizado" class="text-cyan-400 font-mono">Repassado: R$ 0,00</span>
+                            <span id="fin-kpi-repasse-pendente" class="text-amber-300 font-mono">Aguardando: R$ 0,00</span>
+                        </div>
                     </div>
 
+                    <!-- CARD 4 -->
                     <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-amber-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Tot. Comissões/Imobiliária</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Comissões Imob (Vendas)</span>
                         <span id="fin-kpi-comissao-vendas" class="text-2xl font-black text-amber-300 font-mono mt-1 block">R$ 0,00</span>
                         <span id="fin-kpi-vgv-vendas-mes" class="text-[10px] text-slate-400 block mt-0.5">VGV fechado: R$ 0,00</span>
                     </div>
 
+                    <!-- CARD 5 -->
                     <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-blue-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Tot. Comissões/Corretores</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Tot. Comissões / Corretores</span>
                         <span id="fin-kpi-comissao-corretores" class="text-2xl font-black text-blue-300 font-mono mt-1 block">R$ 0,00</span>
                         <span id="fin-kpi-qtd-vendas-corretores" class="text-[10px] text-slate-400 block mt-0.5">0 repasses de equipe</span>
                     </div>
                 </div>
 
-                <!-- TABELA 1: LOCAÇÕES -->
+                <!-- TABELA 1: LOCAÇÕES (COM VENCIMENTO E STATUS SEMÂNTICO INTELIGENTE) -->
                 <div class="space-y-3 pt-2">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <h4 class="text-xs font-black uppercase text-purple-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-receipt"></i> 1. Extrato de Aluguéis, Retenções & Repasses
+                            <i class="fa-solid fa-receipt"></i> 1. Extrato de Aluguéis, Retenções & Repasses (Locações)
                         </h4>
-                        <span class="text-[10px] text-slate-400">Extrato analítico mensal de locações</span>
+                        <span class="text-[10px] text-slate-400 font-mono">Clique no imóvel para ver o Raio-X ou no locatário para abrir o dossiê</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -403,29 +416,30 @@
                             <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
                                 <tr>
                                     <th class="py-2.5 px-3">Imóvel (Ref)</th>
+                                    <th class="py-2.5 px-3">Vencimento</th>
                                     <th class="py-2.5 px-3">Competência</th>
                                     <th class="py-2.5 px-3">Aluguel Bruto</th>
                                     <th class="py-2.5 px-3">Taxa Imob (%)</th>
                                     <th class="py-2.5 px-3">Retenção Imob</th>
-                                    <th class="py-2.5 px-3">Repasse Dono</th>
-                                    <th class="py-2.5 px-3">Inquilino</th>
-                                    <th class="py-2.5 px-3 text-right">Repasse Dono</th>
+                                    <th class="py-2.5 px-3">Locatário / Inquilino</th>
+                                    <th class="py-2.5 px-3">Status Inquilino</th>
+                                    <th class="py-2.5 px-3 text-right">Status Repasse Dono</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-fin-locacoes-corpo" class="divide-y divide-slate-800/60 text-[11px]">
-                                <tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
+                                <tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- TABELA 2: HISTÓRICO DE VENDAS -->
+                <!-- TABELA 2: HISTÓRICO DE VENDAS (ORDENAÇÃO POR DATA E CORRETOR COM LINKS 360°) -->
                 <div class="space-y-3 pt-4 border-t border-slate-800">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                         <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
                             <i class="fa-solid fa-handshake"></i> 2. Histórico de Imóveis Vendidos no Mês
                         </h4>
-                        <span class="text-[10px] text-slate-500">Rateio de comissões por imóvel</span>
+                        <span class="text-[10px] text-slate-500 font-mono">Ordenado por data decrescente e corretor • Clique no corretor para abrir o dossiê</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -449,39 +463,100 @@
                     </div>
                 </div>
 
-                <!-- TABELA 3: COMISSÕES POR CORRETOR -->
-                <div class="space-y-3 pt-4 border-t border-slate-800">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                        <h4 class="text-xs font-black uppercase text-blue-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-users-viewfinder"></i> 3. Comissões dos Corretores & Funcionários
-                        </h4>
-                        <span class="text-[10px] text-slate-500">Folha de repasses de vendas por corretor no mês selecionado</span>
+                <!-- TABELA 3: COMISSÕES DOS CORRETORES & FUNCIONÁRIOS (SEGMENTADO VENDA / LOCAÇÃO) -->
+                <div class="space-y-4 pt-4 border-t border-slate-800">
+                    
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-2">
+                        <div>
+                            <h4 class="text-xs font-black uppercase text-blue-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-users-viewfinder"></i> 3. Comissões dos Corretores & Funcionários
+                            </h4>
+                            <span class="text-[10px] text-slate-400">Extrato analítico por corretor com segmentação de Venda e Locação</span>
+                        </div>
+
+                        <!-- FILTROS DE SEGMENTAÇÃO (TODAS / VENDA / LOCAÇÃO) -->
+                        <div class="flex items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 text-[11px] font-bold">
+                            <button id="btn-filtro-op-todas" onclick="filtrarOperacaoCorretores('todas')" class="px-3 py-1 rounded-lg bg-blue-500 text-slate-950 font-black transition cursor-pointer">
+                                Todas
+                            </button>
+                            <button id="btn-filtro-op-venda" onclick="filtrarOperacaoCorretores('venda')" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
+                                Somente Vendas
+                            </button>
+                            <button id="btn-filtro-op-locacao" onclick="filtrarOperacaoCorretores('locacao')" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition cursor-pointer">
+                                Somente Locações
+                            </button>
+                        </div>
                     </div>
 
+                    <!-- CARDS RESUMO: TOTAL DE COMISSÃO POR CORRETOR NO MÊS -->
+                    <div id="cards-resumo-corretores" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <!-- Renderizado via JS -->
+                    </div>
+
+                    <!-- TABELA DETALHADA COM DISTINÇÃO VENDA X LOCAÇÃO -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300 font-mono">
                             <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
                                 <tr>
-                                    <th class="py-2.5 px-3">Data</th>
+                                    <th class="py-2.5 px-3">Tipo Operação</th>
+                                    <th class="py-2.5 px-3">Data / Ref</th>
                                     <th class="py-2.5 px-3">Corretor Fechador</th>
                                     <th class="py-2.5 px-3">Imóvel (Ref)</th>
-                                    <th class="py-2.5 px-3">Cliente Comprador</th>
-                                    <th class="py-2.5 px-3">VGV Fechado</th>
-                                    <th class="py-2.5 px-3">Fatia Corretor (%)</th>
+                                    <th class="py-2.5 px-3">Cliente</th>
+                                    <th class="py-2.5 px-3">VGV / Base</th>
+                                    <th class="py-2.5 px-3">Fatia (%)</th>
                                     <th class="py-2.5 px-3">R$ Comissão Corretor</th>
                                     <th class="py-2.5 px-3 text-right">Status Repasse</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-fin-corretores-corpo" class="divide-y divide-slate-800/60 text-[11px]">
-                                <tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Carregando comissões dos corretores...</td></tr>
+                                <tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Carregando comissões dos corretores...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
 
     </main>
+
+    <!-- NOVO MODAL: DOSSIÊ COMPLETO DO CORRETOR / FUNCIONÁRIO (CADASTRO, CRECI, REGRAS E GANHOS) -->
+    <div id="modal-dossie-corretor" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-2xl w-full p-6 border border-blue-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-base border border-blue-500/30">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-white uppercase tracking-wide" id="dossie-corretor-titulo">Dossiê do Corretor</h3>
+                        <p class="text-[11px] text-slate-400">Regras comerciais, comissões configuradas e histórico de fechamentos.</p>
+                    </div>
+                </div>
+                <button onclick="fecharModalDossieCorretor()" class="text-slate-400 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="dossie-corretor-conteudo">
+                <div class="py-8 text-center text-slate-500">
+                    <i class="fa-solid fa-spinner fa-spin text-blue-400 text-xl mb-2"></i>
+                    <p>Consultando ficha do corretor...</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <a id="dossie-corretor-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Conversar no WhatsApp</span>
+                </a>
+                <button onclick="fecharModalDossieCorretor()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Fechar Dossiê
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL PANORÂMICO 360° COM 4 BANDAS INTEGRADAS: DONOS, INQUILINOS, COMPRADORES & LEADS -->
     <div id="modal-drilldown-clientes" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 hidden">
@@ -881,6 +956,11 @@
         let cacheCompradoresCompletos = [];
         let cacheLeadsCompletos = [];
 
+        // CACHE DE CORRETORES & OPERAÇÕES FINANCEIRAS
+        let cacheUsuariosCorretores = [];
+        let cacheOperacoesFinanceirasCorretores = [];
+        let filtroOperacaoAtiva = 'todas';
+
         // ESTADO GLOBAL DA AGENDA
         const hojeRef = new Date();
         let mesAtualAgenda = hojeRef.getMonth();
@@ -981,7 +1061,8 @@
                 atualizarPainelAssinatura(imobAlvo);
                 popularSeletorMeses();
           
-                carregarMetricas(imobAlvo.id);
+                await carregarMetricas(imobAlvo.id);
+                await carregarDashboardFinanceiro();
                 carregarAgendaMes();
             }
         }
@@ -1023,7 +1104,8 @@
                 atualizarPainelAssinatura(imob);
                 popularSeletorMeses();
 
-                carregarMetricas(imob.id);
+                await carregarMetricas(imob.id);
+                await carregarDashboardFinanceiro();
                 carregarAgendaMes();
 
             } catch (err) {
@@ -1034,6 +1116,7 @@
 
         function popularSeletorMeses() {
             const select = document.getElementById('filtro-mes-financeiro');
+            if (!select) return;
             select.innerHTML = '';
 
             const hoje = new Date();
@@ -1215,7 +1298,7 @@
                 document.getElementById('kpi-imoveis-alugados').innerText = alugadosCount || 0;
                 document.getElementById('kpi-receita-locacao').innerText = totalComissaoMensal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
 
-                // 5. VENDAS FECHADAS
+                // 5. VENDAS FECHADAS (HISTÓRICO ACUMULADO)
                 const { data: vendas, count: vendasCount } = await supabaseClient
                     .from('vendas_fechadas')
                     .select('valor_venda_real', { count: 'exact' })
@@ -1247,38 +1330,6 @@
                     .eq('status', 'Proposta');
 
                 document.getElementById('kpi-propostas-analise').innerText = propostasCount || 0;
-
-                // 8. FINANCEIRO MÊS
-                if (temPermissaoFinanceira) {
-                    const hoje = new Date();
-                    const mesNum = String(hoje.getMonth() + 1).padStart(2, '0');
-                    const anoNum = hoje.getFullYear();
-                    const mesAtualRef = `${mesNum}/${anoNum}`;
-                    const inicioMes = `${anoNum}-${mesNum}-01`;
-                    const fimMes = new Date(anoNum, hoje.getMonth() + 1, 0).toISOString().split('T')[0];
-
-                    const { data: vendasMes } = await supabaseClient
-                        .from('vendas_fechadas')
-                        .select('valor_comissao_imobiliaria')
-                        .eq('imobiliaria_id', imobId)
-                        .gte('data_venda', inicioMes)
-                        .lte('data_venda', fimMes);
-
-                    const comissaoVendasMes = (vendasMes || []).reduce((acc, v) => acc + Number(v.valor_comissao_imobiliaria || 0), 0);
-
-                    const { data: locacoesMes } = await supabaseClient
-                        .from('locacao_mensalidades_recebiveis')
-                        .select('valor_taxa_imobiliaria')
-                        .eq('imobiliaria_id', imobId)
-                        .eq('mes_referencia', mesAtualRef)
-                        .eq('status_inquilino', 'Pago');
-
-                    const taxasLocacaoMes = (locacoesMes || []).reduce((acc, l) => acc + Number(l.valor_taxa_imobiliaria || 0), 0);
-                    const receitaTotalImob = comissaoVendasMes + taxasLocacaoMes;
-
-                    document.getElementById('kpi-receita-financeira-mes').innerText = receitaTotalImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    document.getElementById('kpi-rotulo-financeiro-mes').innerText = `Ref: ${mesAtualRef} • Clique para extratos`;
-                }
 
             } catch (err) {
                 console.error('Erro ao consultar KPIs:', err);
@@ -1351,7 +1402,6 @@
             const listaComp = document.getElementById('lista-drilldown-compradores');
             const listaLeads = document.getElementById('lista-drilldown-leads');
 
-            // Limpa as 4 lupas individuais
             const bProp = document.getElementById('input-busca-proprietarios');
             const bInq = document.getElementById('input-busca-inquilinos');
             const bComp = document.getElementById('input-busca-compradores');
@@ -1369,7 +1419,6 @@
             modal.classList.remove('hidden');
 
             try {
-                // 1. Clientes
                 const { data: clientes, error: errCli } = await supabaseClient
                     .from('clientes')
                     .select('*')
@@ -1378,25 +1427,21 @@
 
                 if (errCli) throw errCli;
 
-                // 2. Imóveis
                 const { data: imoveisData } = await supabaseClient
                     .from('imoveis')
                     .select('id, codigo_ref, titulo, status, proprietario_id, finalidade, valor_venda, valor_locacao, documentos_anexos, foto_capa')
                     .eq('imobiliaria_id', dadosImobiliaria.id);
 
-                // 3. Contratos de Locação
                 const { data: contratosData } = await supabaseClient
                     .from('contratos_locacao')
                     .select('*')
                     .eq('imobiliaria_id', dadosImobiliaria.id);
 
-                // 4. Vendas Fechadas (Para Compradores)
                 const { data: vendasData } = await supabaseClient
                     .from('vendas_fechadas')
                     .select('*, imoveis(id, codigo_ref, titulo, foto_capa)')
                     .eq('imobiliaria_id', dadosImobiliaria.id);
 
-                // 5. Leads
                 const { data: leadsData } = await supabaseClient
                     .from('leads_contatos')
                     .select('*')
@@ -1472,7 +1517,6 @@
                     }
                 });
 
-                // Resgata compradores de vendas antigas que porventura não estavam em clientes
                 (vendasData || []).forEach(v => {
                     const jaExiste = cacheCompradoresCompletos.some(c => 
                         (v.cliente_comprador_id && c.id === v.cliente_comprador_id) || 
@@ -1518,9 +1562,6 @@
             }
         }
 
-        // =========================================================================
-        // RENDERIZAÇÃO 1: PROPRIETÁRIOS
-        // =========================================================================
         function renderizarProprietarios(lista) {
             const container = document.getElementById('lista-drilldown-proprietarios');
             const badge = document.getElementById('badge-total-proprietarios');
@@ -1579,7 +1620,7 @@
                     return `
                         <div class="flex items-center justify-between px-2.5 py-1 rounded-lg border text-[10px] ${corChip}">
                             <div class="flex items-center gap-1.5 truncate">
-                                <span class="font-mono font-bold">Ref: ${im.codigo_ref}</span>
+                                <button type="button" onclick="window.abrirModalDetalhesImovel('${im.id}')" class="font-mono font-bold hover:underline text-cyan-300">Ref: ${im.codigo_ref}</button>
                                 <span class="truncate">• ${detalheChip}</span>
                             </div>
                             ${im.repasse_dono ? `<strong class="font-mono text-emerald-400 ml-2">R$ ${Number(im.repasse_dono).toLocaleString('pt-BR')} repasse</strong>` : ''}
@@ -1625,9 +1666,6 @@
             }).join('');
         }
 
-        // =========================================================================
-        // RENDERIZAÇÃO 2: INQUILINOS
-        // =========================================================================
         function renderizarInquilinos(lista) {
             const container = document.getElementById('lista-drilldown-inquilinos');
             const badge = document.getElementById('badge-total-inquilinos');
@@ -1706,9 +1744,6 @@
             }).join('');
         }
 
-        // =========================================================================
-        // RENDERIZAÇÃO 3: COMPRADORES (NOVA BANDA DEDICADA ÂMBAR/DOURADA)
-        // =========================================================================
         function renderizarCompradores(lista) {
             const container = document.getElementById('lista-drilldown-compradores');
             const badge = document.getElementById('badge-total-compradores');
@@ -1775,9 +1810,6 @@
             }).join('');
         }
 
-        // =========================================================================
-        // RENDERIZAÇÃO 4: LEADS & CONTATOS
-        // =========================================================================
         function renderizarLeads(lista) {
             const container = document.getElementById('lista-drilldown-leads');
             const badge = document.getElementById('badge-total-leads');
@@ -1814,7 +1846,7 @@
                             <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-[10px] space-y-0.5">
                                 <div class="flex items-center gap-1.5 text-cyan-300">
                                     <i class="fa-solid fa-house-chimney text-cyan-400 text-xs flex-shrink-0"></i>
-                                    <span class="font-mono font-bold">Ref: ${imovel.codigo_ref}</span>
+                                    <button type="button" onclick="window.abrirModalDetalhesImovel('${imovel.id}')" class="font-mono font-bold hover:underline text-cyan-400">Ref: ${imovel.codigo_ref}</button>
                                     <span class="truncate text-slate-300">• ${imovel.titulo}</span>
                                 </div>
                             </div>
@@ -1850,9 +1882,6 @@
             }).join('');
         }
 
-        // =========================================================================
-        // FILTROS REATIVOS DAS 4 LUPAS INDEPENDENTES
-        // =========================================================================
         function filtrarProprietarios(termo) {
             const t = (termo || '').toLowerCase().trim();
             if (!t) {
@@ -1927,8 +1956,6 @@
         // MOTOR DO DOSSIÊ 360° DO CLIENTE: MULTI-PERFIL (COMPRADOR, INQUILINO, DONO)
         // =========================================================================
         async function abrirDossieUniversal(clienteId, nomeFallback, cpfFallback, tipoAcesso) {
-            console.log('[DOSSIÊ UNIVERSAL] Chamado com:', { clienteId, nomeFallback, cpfFallback, tipoAcesso });
-            
             const modal = document.getElementById('modal-dossie-cliente');
             const corpo = document.getElementById('dossie-cliente-conteudo');
             const btnZap = document.getElementById('dossie-cliente-btn-zap');
@@ -2016,9 +2043,6 @@
             let blocoNegociosHtml = '';
             const imobId = dadosImobiliaria ? dadosImobiliaria.id : null;
 
-            // =====================================================================
-            // CASO 1: CLIENTE É COMPRADOR (OU TIPOACESSO === 'COMPRADOR')
-            // =====================================================================
             if (tipoAcesso === 'comprador' || (cliente.tipo && cliente.tipo.toLowerCase().includes('comprad'))) {
                 let queryVendas = supabaseClient
                     .from('vendas_fechadas')
@@ -2047,7 +2071,6 @@
                             const dataFmt = v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----';
                             const foto = imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
 
-                            // Extrai anexos de documentos salvos no texto de observações
                             let docsVendaUrls = [];
                             if (v.observacoes && v.observacoes.includes('[DOCUMENTOS ANEXOS]:')) {
                                 const raw = v.observacoes.split('[DOCUMENTOS ANEXOS]:')[1].split('|')[0].trim();
@@ -2062,7 +2085,9 @@
                                         <div class="flex items-center gap-3">
                                             <img src="${foto}" alt="Capa" class="w-14 h-14 rounded-lg object-cover border border-slate-700 flex-shrink-0">
                                             <div>
-                                                <span class="text-[10px] text-cyan-400 font-mono font-bold block">Ref: ${imovel.codigo_ref || '---'} • ${imovel.tipo || 'Imóvel'}</span>
+                                                <button type="button" onclick="window.abrirModalDetalhesImovel('${imovel.id}')" class="text-[10px] text-cyan-400 font-mono font-bold hover:underline block text-left">
+                                                    Ref: ${imovel.codigo_ref || '---'} • ${imovel.tipo || 'Imóvel'} &rarr;
+                                                </button>
                                                 <h5 class="text-sm font-bold text-white leading-snug">${imovel.titulo || 'Imóvel Adquirido'}</h5>
                                                 <span class="text-[10px] text-slate-400 block">${imovel.bairro || 'Localização'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}</span>
                                             </div>
@@ -2075,7 +2100,12 @@
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-2 border-t border-slate-800 bg-slate-900/50 p-2.5 rounded-lg">
                                         <div><span class="text-slate-500 block text-[10px]">Valor da Venda:</span> <strong class="text-emerald-400 font-mono text-xs">R$ ${Number(v.valor_venda_real || 0).toLocaleString('pt-BR')}</strong></div>
                                         <div><span class="text-slate-500 block text-[10px]">Data do Fechamento:</span> <strong class="text-white font-mono">${dataFmt}</strong></div>
-                                        <div><span class="text-slate-500 block text-[10px]">Corretor Fechador:</span> <strong class="text-cyan-300">${v.corretor_nome || 'Casa'}</strong></div>
+                                        <div>
+                                            <span class="text-slate-500 block text-[10px]">Corretor Fechador:</span> 
+                                            <button type="button" onclick="window.abrirDossieCorretor('${v.corretor_id || ''}', '${(v.corretor_nome || 'Casa').replace(/'/g, "\\'")}')" class="text-cyan-300 hover:underline font-bold">
+                                                ${v.corretor_nome || 'Casa'}
+                                            </button>
+                                        </div>
                                         <div><span class="text-slate-500 block text-[10px]">Comissão Imobiliária:</span> <strong class="text-amber-300 font-mono">R$ ${Number(v.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}</strong></div>
                                     </div>
 
@@ -2086,7 +2116,6 @@
                                         </div>
                                     ` : ''}
 
-                                    <!-- BOTÕES COM OLHINHO 👁️ DOS DOCUMENTOS -->
                                     ${docsHtml}
                                 </div>
                             `;
@@ -2094,9 +2123,6 @@
                     </div>
                 `;
 
-            // =====================================================================
-            // CASO 2: CLIENTE É PROPRIETÁRIO
-            // =====================================================================
             } else if (tipoAcesso === 'proprietario' || (cliente.tipo && cliente.tipo.toLowerCase().includes('propriet'))) {
                 let queryImoveis = supabaseClient.from('imoveis').select('*');
                 if (cliente.id && cliente.id !== 'avulso') {
@@ -2142,7 +2168,10 @@
                                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                                         <div class="flex items-center justify-between">
                                             <div>
-                                                <span class="font-bold text-white text-xs">${im.titulo}</span>
+                                                <button type="button" onclick="window.abrirModalDetalhesImovel('${im.id}')" class="font-bold text-white text-xs hover:underline text-left flex items-center gap-1">
+                                                    <span>${im.titulo}</span>
+                                                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-cyan-400"></i>
+                                                </button>
                                                 <span class="text-[10px] text-cyan-400 font-mono block">Ref: ${im.codigo_ref} • ${im.bairro || 'Localização'}</span>
                                             </div>
                                             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${im.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-emerald-950 text-emerald-400 border border-emerald-800'}">
@@ -2152,7 +2181,12 @@
 
                                         ${contrato ? `
                                             <div class="bg-purple-950/20 p-2.5 rounded-lg border border-purple-800/30 text-[11px] grid grid-cols-1 sm:grid-cols-3 gap-2">
-                                                <div><span class="text-slate-500 block text-[10px]">Inquilino Atual:</span> <strong class="text-white">${contrato.cliente_nome}</strong></div>
+                                                <div>
+                                                    <span class="text-slate-500 block text-[10px]">Inquilino Atual:</span> 
+                                                    <button type="button" onclick="window.abrirDossieUniversal('${contrato.cliente_id || ''}', '${(contrato.cliente_nome || '').replace(/'/g, "\\'")}', '${contrato.cliente_cpf_cnpj || ''}', 'inquilino')" class="text-white hover:underline font-bold">
+                                                        ${contrato.cliente_nome}
+                                                    </button>
+                                                </div>
                                                 <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(contrato.valor_aluguel_bruto).toLocaleString('pt-BR')}</strong></div>
                                                 <div><span class="text-slate-500 block text-[10px]">Seu Repasse Líquido:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(contrato.valor_repasse_proprietario).toLocaleString('pt-BR')}</strong></div>
                                             </div>
@@ -2173,6 +2207,7 @@
                                 <thead class="bg-slate-950 text-slate-500 uppercase text-[9px] border-b border-slate-800">
                                     <tr>
                                         <th class="py-2 px-2">Referência</th>
+                                        <th class="py-2 px-2">Vencimento</th>
                                         <th class="py-2 px-2">Aluguel Pago</th>
                                         <th class="py-2 px-2">Valor Repasse</th>
                                         <th class="py-2 px-2">Inquilino</th>
@@ -2180,10 +2215,11 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-800/60 text-[10px]">
-                                    ${repasses.length === 0 ? '<tr><td colspan="5" class="py-4 text-center text-slate-500 font-sans">Nenhum repasse registrado até o momento.</td></tr>' : 
+                                    ${repasses.length === 0 ? '<tr><td colspan="6" class="py-4 text-center text-slate-500 font-sans">Nenhum repasse registrado até o momento.</td></tr>' : 
                                     repasses.map(r => `
                                         <tr>
                                             <td class="py-2 px-2 font-bold text-white">${r.mes_referencia}</td>
+                                            <td class="py-2 px-2 text-slate-400 font-mono">${r.data_vencimento ? r.data_vencimento.split('-').reverse().join('/') : '--/--/----'}</td>
                                             <td class="py-2 px-2 text-emerald-400">R$ ${Number(r.valor_aluguel).toLocaleString('pt-BR')}</td>
                                             <td class="py-2 px-2 text-cyan-300 font-bold">R$ ${Number(r.valor_repasse_proprietario).toLocaleString('pt-BR')}</td>
                                             <td class="py-2 px-2 text-slate-300">${r.status_inquilino || 'Pendente'}</td>
@@ -2200,9 +2236,6 @@
                     </div>
                 `;
 
-            // =====================================================================
-            // CASO 3: CLIENTE É INQUILINO (LOCATÁRIO)
-            // =====================================================================
             } else {
                 let queryContratos = supabaseClient
                     .from('contratos_locacao')
@@ -2254,7 +2287,9 @@
                             <div class="bg-slate-950 p-4 rounded-xl border border-purple-500/40 space-y-3">
                                 <div class="flex items-start justify-between">
                                     <div>
-                                        <span class="text-[10px] text-cyan-400 font-mono font-bold block">Ref Imóvel: ${contratoAtivo.imoveis ? contratoAtivo.imoveis.codigo_ref : '---'}</span>
+                                        <button type="button" onclick="window.abrirModalDetalhesImovel('${contratoAtivo.imovel_id}')" class="text-[10px] text-cyan-400 font-mono font-bold hover:underline block text-left">
+                                            Ref Imóvel: ${contratoAtivo.imoveis ? contratoAtivo.imoveis.codigo_ref : '---'} &rarr;
+                                        </button>
                                         <h5 class="text-sm font-bold text-white">${contratoAtivo.imoveis ? contratoAtivo.imoveis.titulo : 'Imóvel Locado'}</h5>
                                     </div>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800">
@@ -2265,7 +2300,10 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-2 border-t border-slate-800">
                                     <div><span class="text-slate-500 block text-[10px]">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono text-xs">R$ ${Number(contratoAtivo.valor_aluguel_bruto).toLocaleString('pt-BR')}/mês</strong></div>
                                     <div><span class="text-slate-500 block text-[10px]">Dia Vencimento:</span> <strong class="text-amber-300 font-mono">Todo dia ${contratoAtivo.dia_vencimento_aluguel || '10'}</strong></div>
-                                    <div><span class="text-slate-500 block text-[10px]">Proprietário Titular:</span> <strong class="text-white">${donoImovel ? donoImovel.nome : 'Não vinculado'}</strong></div>
+                                    <div>
+                                        <span class="text-slate-500 block text-[10px]">Proprietário Titular:</span> 
+                                        <strong class="text-white">${donoImovel ? donoImovel.nome : 'Não vinculado'}</strong>
+                                    </div>
                                 </div>
 
                                 ${docsContratoHtml}
@@ -2347,6 +2385,9 @@
         }
         window.fecharModalDossieCliente = fecharModalDossieCliente;
 
+        // =========================================================================
+        // MOTOR DO RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE TOTAL)
+        // =========================================================================
         async function abrirModalDetalhesImovel(imovelId) {
             if (!imovelId) return;
 
@@ -2662,7 +2703,9 @@
                                         <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
                                         <div>
                                             <span class="font-bold text-white text-xs block leading-snug uppercase">${imovel.titulo || 'Imóvel Alugado'}</span>
-                                            <span class="text-[10px] text-purple-300 font-mono">Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'}</span>
+                                            <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${c.imovel_id}')" class="text-[10px] text-purple-300 font-mono hover:underline block text-left">
+                                                Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'} &rarr;
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-2">
@@ -2724,7 +2767,9 @@
                                         <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
                                         <div>
                                             <span class="font-bold text-white text-xs block uppercase">${imovel.titulo || 'Imóvel Vendido'}</span>
-                                            <span class="text-[10px] text-amber-300 font-mono">Ref: ${imovel.codigo_ref || '---'} • Vendido em: ${dtFormatada}</span>
+                                            <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${v.imovel_id}')" class="text-[10px] text-amber-300 font-mono hover:underline block text-left">
+                                                Ref: ${imovel.codigo_ref || '---'} • Vendido em: ${dtFormatada} &rarr;
+                                            </button>
                                         </div>
                                     </div>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Fechado</span>
@@ -2741,7 +2786,12 @@
                                     </div>
                                     <div><span class="text-slate-500 block">Valor Venda:</span> <strong class="text-white font-mono">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR')}</strong></div>
                                     <div><span class="text-slate-500 block">Comissão Imob:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR')}</strong></div>
-                                    <div><span class="text-slate-500 block">Corretor (${v.corretor_nome || 'Casa'}):</span> <strong class="text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')}</strong></div>
+                                    <div>
+                                        <span class="text-slate-500 block">Corretor:</span> 
+                                        <button type="button" onclick="fecharDrilldown(); window.abrirDossieCorretor('${v.corretor_id || ''}', '${(v.corretor_nome || 'Casa').replace(/'/g, "\\'")}')" class="text-cyan-300 font-mono hover:underline">
+                                            ${v.corretor_nome || 'Casa'} (R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')})
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         `;
@@ -2851,16 +2901,29 @@
             }
         }
 
+        // =========================================================================
+        // MOTOR FINANCEIRO CONSOLIDADO (HARMONIZADO, COM VENCIMENTOS E CORRETORES)
+        // =========================================================================
         async function carregarDashboardFinanceiro() {
             if (!dadosImobiliaria) return;
-            const mesRef = document.getElementById('filtro-mes-financeiro')?.value;
             const imobId = dadosImobiliaria.id;
+            const mesRef = document.getElementById('filtro-mes-financeiro')?.value;
 
             try {
+                // 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA
+                const { data: usuariosEquipe } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId);
+                
+                cacheUsuariosCorretores = usuariosEquipe || [];
+
+                // 2. LOCAÇÕES (MENSALIDADES RECEBÍVEIS)
                 let queryLoc = supabaseClient
                     .from('locacao_mensalidades_recebiveis')
-                    .select('*, imoveis(codigo_ref, titulo)')
-                    .eq('imobiliaria_id', imobId);
+                    .select('*, imoveis(id, codigo_ref, titulo, corretor_responsavel_id), contratos_locacao(id, cliente_id, cliente_nome, cliente_cpf_cnpj)')
+                    .eq('imobiliaria_id', imobId)
+                    .order('data_vencimento', { ascending: true });
                 
                 if (mesRef) queryLoc = queryLoc.eq('mes_referencia', mesRef);
                 const { data: mensalidades } = await queryLoc;
@@ -2868,7 +2931,9 @@
                 let totalAluguelBruto = 0;
                 let taxaImobQuitada = 0;
                 let taxaImobPendente = 0;
-                let repasseProprietarios = 0;
+                let repasseProprietariosTotal = 0;
+                let repasseProprietariosFeito = 0;
+                let repasseProprietariosPendente = 0;
 
                 (mensalidades || []).forEach(m => {
                     const bruto = Number(m.valor_aluguel || 0);
@@ -2876,7 +2941,13 @@
                     const repasse = Number(m.valor_repasse_proprietario || 0);
 
                     totalAluguelBruto += bruto;
-                    repasseProprietarios += repasse;
+                    repasseProprietariosTotal += repasse;
+
+                    if (m.status_repasse === 'Repassado') {
+                        repasseProprietariosFeito += repasse;
+                    } else {
+                        repasseProprietariosPendente += repasse;
+                    }
 
                     if (m.status_inquilino === 'Pago') {
                         taxaImobQuitada += taxa;
@@ -2888,28 +2959,76 @@
                 document.getElementById('fin-kpi-aluguel-bruto').innerText = totalAluguelBruto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('fin-kpi-taxa-imob-recebida').innerText = taxaImobQuitada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('fin-kpi-taxa-imob-pendente').innerText = `Pendente: ${taxaImobPendente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-                document.getElementById('fin-kpi-repasse-proprietarios').innerText = repasseProprietarios.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-repasse-proprietarios').innerText = repasseProprietariosTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-repasse-realizado').innerText = `Repassado: ${repasseProprietariosFeito.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                document.getElementById('fin-kpi-repasse-pendente').innerText = `Disponível/Aguard: ${repasseProprietariosPendente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
 
+                // TABELA 1: LOCAÇÕES COM DATA DE VENCIMENTO E STATUS SEMÂNTICO
                 const tbodyLoc = document.getElementById('tabela-fin-locacoes-corpo');
                 if (tbodyLoc) {
                     if (!mensalidades || mensalidades.length === 0) {
-                        tbodyLoc.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês.</td></tr>';
+                        tbodyLoc.innerHTML = '<tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês de referência.</td></tr>';
                     } else {
-                        tbodyLoc.innerHTML = mensalidades.map(m => `
-                            <tr>
-                                <td class="py-2.5 px-3 font-bold text-cyan-300 font-mono">${m.imoveis?.codigo_ref || '---'}</td>
-                                <td class="py-2.5 px-3 text-white font-sans font-bold">${m.mes_referencia || '---'}</td>
-                                <td class="py-2.5 px-3 text-white">R$ ${Number(m.valor_aluguel || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-amber-400 font-mono">${m.taxa_adm_pct || 10}%</td>
-                                <td class="py-2.5 px-3 text-emerald-400">R$ ${Number(m.valor_taxa_imobiliaria || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-cyan-300 font-bold">R$ ${Number(m.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">${m.status_inquilino || 'Pendente'}</span></td>
-                                <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_repasse === 'Repassado' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-400'}">${m.status_repasse || 'Aguardando'}</span></td>
-                            </tr>
-                        `).join('');
+                        tbodyLoc.innerHTML = mensalidades.map(m => {
+                            const refImob = m.imoveis?.codigo_ref || '---';
+                            const vencFmt = m.data_vencimento ? m.data_vencimento.split('-').reverse().join('/') : '--/--/----';
+                            const inquilinoNome = m.contratos_locacao?.cliente_nome || 'Inquilino em Contrato';
+                            const cliId = m.contratos_locacao?.cliente_id || '';
+                            const cliCpf = m.contratos_locacao?.cliente_cpf_cnpj || '';
+
+                            // STATUS SEMÂNTICO INTELIGENTE DO REPASSE AO DONO
+                            let badgeRepasseHtml = '';
+                            if (m.status_inquilino !== 'Pago') {
+                                badgeRepasseHtml = `
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 justify-end ml-auto w-fit" title="O repasse aguarda o pagamento do inquilino">
+                                        <i class="fa-solid fa-hourglass-half text-[8px]"></i> Aguardando Pgto Inquilino
+                                    </span>
+                                `;
+                            } else if (m.status_inquilino === 'Pago' && m.status_repasse !== 'Repassado') {
+                                badgeRepasseHtml = `
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1 justify-end ml-auto w-fit" title="Inquilino pagou! Liberado para repasse ao proprietário">
+                                        <i class="fa-solid fa-hand-holding-dollar text-[8px]"></i> Disponível p/ Repasse
+                                    </span>
+                                `;
+                            } else {
+                                badgeRepasseHtml = `
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 justify-end ml-auto w-fit">
+                                        <i class="fa-solid fa-circle-check text-[8px]"></i> Repassado ao Dono
+                                    </span>
+                                `;
+                            }
+
+                            return `
+                                <tr>
+                                    <td class="py-2.5 px-3">
+                                        <button type="button" onclick="window.abrirModalDetalhesImovel('${m.imovel_id}')" class="font-bold text-cyan-300 hover:text-cyan-200 underline font-mono cursor-pointer flex items-center gap-1">
+                                            <span>${refImob}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-cyan-400"></i>
+                                        </button>
+                                    </td>
+                                    <td class="py-2.5 px-3 text-amber-300 font-mono font-bold">${vencFmt}</td>
+                                    <td class="py-2.5 px-3 text-white font-sans font-bold">${m.mes_referencia || '---'}</td>
+                                    <td class="py-2.5 px-3 text-white font-bold">R$ ${Number(m.valor_aluguel || 0).toLocaleString('pt-BR')}</td>
+                                    <td class="py-2.5 px-3 text-amber-400 font-mono">${m.taxa_adm_pct || 10}%</td>
+                                    <td class="py-2.5 px-3 text-emerald-400 font-bold">R$ ${Number(m.valor_taxa_imobiliaria || 0).toLocaleString('pt-BR')}</td>
+                                    <td class="py-2.5 px-3">
+                                        <button type="button" onclick="window.abrirDossieUniversal('${cliId}', '${(inquilinoNome).replace(/'/g, "\\'")}', '${cliCpf}', 'inquilino')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left uppercase">
+                                            ${inquilinoNome}
+                                        </button>
+                                    </td>
+                                    <td class="py-2.5 px-3">
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'}">
+                                            ${m.status_inquilino || 'Pendente'}
+                                        </span>
+                                    </td>
+                                    <td class="py-2.5 px-3 text-right">${badgeRepasseHtml}</td>
+                                </tr>
+                            `;
+                        }).join('');
                     }
                 }
 
+                // 3. VENDAS DO MÊS DE REFERÊNCIA
                 let inicioMes = '';
                 let fimMes = '';
                 if (mesRef && mesRef.includes('/')) {
@@ -2920,7 +3039,7 @@
 
                 let queryVendas = supabaseClient
                     .from('vendas_fechadas')
-                    .select('*, imoveis(codigo_ref, titulo)')
+                    .select('*, imoveis(id, codigo_ref, titulo)')
                     .eq('imobiliaria_id', imobId)
                     .order('data_venda', { ascending: false });
 
@@ -2930,65 +3049,427 @@
 
                 const { data: vendas } = await queryVendas;
 
+                // ORDENAÇÃO SECUNDÁRIA POR CORRETOR
+                const vendasOrdenadas = (vendas || []).slice().sort((a, b) => {
+                    if (a.data_venda === b.data_venda) {
+                        return (a.corretor_nome || '').localeCompare(b.corretor_nome || '');
+                    }
+                    return new Date(b.data_venda) - new Date(a.data_venda);
+                });
+
                 let totalComissaoVendasImob = 0;
                 let totalVgvFechado = 0;
-                let totalComissaoCorretores = 0;
+                let totalComissaoCorretoresVendas = 0;
 
-                (vendas || []).forEach(v => {
+                vendasOrdenadas.forEach(v => {
                     totalVgvFechado += Number(v.valor_venda_real || 0);
                     totalComissaoVendasImob += Number(v.valor_comissao_imobiliaria || 0);
-                    totalComissaoCorretores += Number(v.valor_comissao_corretor || 0);
+                    totalComissaoCorretoresVendas += Number(v.valor_comissao_corretor || 0);
                 });
 
                 document.getElementById('fin-kpi-comissao-vendas').innerText = totalComissaoVendasImob.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('fin-kpi-vgv-vendas-mes').innerText = `VGV fechado: ${totalVgvFechado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-                document.getElementById('fin-kpi-comissao-corretores').innerText = totalComissaoCorretores.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                document.getElementById('fin-kpi-qtd-vendas-corretores').innerText = `${(vendas || []).length} venda(s) registrada(s)`;
 
+                // TABELA 2: HISTÓRICO DE VENDAS
                 const tbodyVendas = document.getElementById('tabela-fin-vendas-corpo');
                 if (tbodyVendas) {
-                    if (!vendas || vendas.length === 0) {
+                    if (vendasOrdenadas.length === 0) {
                         tbodyVendas.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Nenhuma venda registrada para este mês.</td></tr>';
                     } else {
-                        tbodyVendas.innerHTML = vendas.map(v => `
-                            <tr>
-                                <td class="py-2.5 px-3 text-slate-400 font-mono">${v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----'}</td>
-                                <td class="py-2.5 px-3 font-bold text-cyan-300 font-mono">${v.imoveis?.codigo_ref || '---'}</td>
-                                <td class="py-2.5 px-3 text-white font-sans font-bold uppercase">${v.cliente_comprador_nome || '---'}</td>
-                                <td class="py-2.5 px-3 text-slate-300 font-sans">${v.corretor_nome || 'Casa'}</td>
-                                <td class="py-2.5 px-3 text-emerald-400 font-mono">R$ ${Number(v.valor_venda_real || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-amber-300 font-mono font-bold">R$ ${Number(v.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-right text-white font-mono font-bold">R$ ${Number(v.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</td>
-                            </tr>
-                        `).join('');
+                        tbodyVendas.innerHTML = vendasOrdenadas.map(v => {
+                            const refImob = v.imoveis?.codigo_ref || '---';
+                            const dtFormat = v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----';
+                            return `
+                                <tr>
+                                    <td class="py-2.5 px-3 text-slate-400 font-mono">${dtFormat}</td>
+                                    <td class="py-2.5 px-3">
+                                        <button type="button" onclick="window.abrirModalDetalhesImovel('${v.imovel_id}')" class="font-bold text-cyan-300 hover:text-cyan-200 underline font-mono cursor-pointer flex items-center gap-1">
+                                            <span>${refImob}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-cyan-400"></i>
+                                        </button>
+                                    </td>
+                                    <td class="py-2.5 px-3 text-white font-sans font-bold uppercase">
+                                        <button type="button" onclick="window.abrirDossieUniversal('${v.cliente_comprador_id || ''}', '${(v.cliente_comprador_nome || '').replace(/'/g, "\\'")}', '', 'comprador')" class="hover:text-amber-300 underline text-left">
+                                            ${v.cliente_comprador_nome || '---'}
+                                        </button>
+                                    </td>
+                                    <td class="py-2.5 px-3">
+                                        <button type="button" onclick="window.abrirDossieCorretor('${v.corretor_id || ''}', '${(v.corretor_nome || 'Casa').replace(/'/g, "\\'")}')" class="text-blue-300 hover:text-blue-200 underline font-bold">
+                                            ${v.corretor_nome || 'Casa'}
+                                        </button>
+                                    </td>
+                                    <td class="py-2.5 px-3 text-emerald-400 font-mono">R$ ${Number(v.valor_venda_real || 0).toLocaleString('pt-BR')}</td>
+                                    <td class="py-2.5 px-3 text-amber-300 font-mono font-bold">R$ ${Number(v.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}</td>
+                                    <td class="py-2.5 px-3 text-cyan-300 font-mono">R$ ${Number(v.valor_comissao_corretor || 0).toLocaleString('pt-BR')}</td>
+                                    <td class="py-2.5 px-3 text-right text-white font-mono font-bold">R$ ${Number(v.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</td>
+                                </tr>
+                            `;
+                        }).join('');
                     }
                 }
 
-                const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
-                if (tbodyCorretores) {
-                    if (!vendas || vendas.length === 0) {
-                        tbodyCorretores.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-500 font-sans">Nenhum repasse de corretor no período.</td></tr>';
-                    } else {
-                        tbodyCorretores.innerHTML = vendas.map(v => `
-                            <tr>
-                                <td class="py-2.5 px-3 text-slate-400 font-mono">${v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----'}</td>
-                                <td class="py-2.5 px-3 font-bold text-blue-300 font-sans">${v.corretor_nome || 'Casa'}</td>
-                                <td class="py-2.5 px-3 font-mono text-cyan-300">${v.imoveis?.codigo_ref || '---'}</td>
-                                <td class="py-2.5 px-3 text-white font-sans uppercase">${v.cliente_comprador_nome || '---'}</td>
-                                <td class="py-2.5 px-3 text-slate-300 font-mono">R$ ${Number(v.valor_venda_real || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-amber-300 font-mono">${v.comissao_corretor_pct || 0}%</td>
-                                <td class="py-2.5 px-3 text-cyan-300 font-mono font-bold">R$ ${Number(v.valor_comissao_corretor || 0).toLocaleString('pt-BR')}</td>
-                                <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">${v.status_pagamento || 'Recebido'}</span></td>
-                            </tr>
-                        `).join('');
+                // 4. CONSOLIDAÇÃO DE OPERAÇÕES DE CORRETORES (VENDA + LOCAÇÃO)
+                cacheOperacoesFinanceirasCorretores = [];
+
+                // Adiciona vendas aos corretores
+                vendasOrdenadas.forEach(v => {
+                    cacheOperacoesFinanceirasCorretores.push({
+                        tipo_operacao: 'venda',
+                        tipo_label: 'VENDA',
+                        data_ref: v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----',
+                        corretor_id: v.corretor_id,
+                        corretor_nome: v.corretor_nome || 'Casa / Imobiliária',
+                        imovel_id: v.imovel_id,
+                        imovel_ref: v.imoveis?.codigo_ref || '---',
+                        cliente_nome: v.cliente_comprador_nome || 'Comprador',
+                        cliente_id: v.cliente_comprador_id || '',
+                        cliente_tipo: 'comprador',
+                        vgv_base: Number(v.valor_venda_real || 0),
+                        pct_corretor: Number(v.comissao_corretor_pct || 0),
+                        valor_comissao: Number(v.valor_comissao_corretor || 0),
+                        status_repasse: v.status_pagamento || 'Recebido'
+                    });
+                });
+
+                // Adiciona comissões de locação aos corretores responsáveis
+                (mensalidades || []).forEach(m => {
+                    const corretorId = m.imoveis?.corretor_responsavel_id;
+                    const corretorObj = cacheUsuariosCorretores.find(u => u.id === corretorId);
+
+                    if (corretorObj) {
+                        const pctLoc = Number(corretorObj.comissao_locacao_pct || 0);
+                        const baseTaxa = Number(m.valor_taxa_imobiliaria || 0);
+                        const comissaoCorretorLoc = (pctLoc > 0) ? (baseTaxa * (pctLoc / 100)) : 0;
+
+                        cacheOperacoesFinanceirasCorretores.push({
+                            tipo_operacao: 'locacao',
+                            tipo_label: 'LOCAÇÃO',
+                            data_ref: m.mes_referencia || '--/----',
+                            corretor_id: corretorObj.id,
+                            corretor_nome: corretorObj.nome_completo || 'Corretor',
+                            imovel_id: m.imovel_id,
+                            imovel_ref: m.imoveis?.codigo_ref || '---',
+                            cliente_nome: m.contratos_locacao?.cliente_nome || 'Inquilino',
+                            cliente_id: m.contratos_locacao?.cliente_id || '',
+                            cliente_tipo: 'inquilino',
+                            vgv_base: Number(m.valor_aluguel || 0),
+                            pct_corretor: pctLoc,
+                            valor_comissao: comissaoCorretorLoc,
+                            status_repasse: (m.status_inquilino === 'Pago') ? 'Disponível' : 'Aguardando Inquilino'
+                        });
                     }
-                }
+                });
+
+                // TOTALIZADORES DOS CORRETORES
+                const totalGeralComissaoCorretores = cacheOperacoesFinanceirasCorretores.reduce((acc, op) => acc + op.valor_comissao, 0);
+                document.getElementById('fin-kpi-comissao-corretores').innerText = totalGeralComissaoCorretores.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('fin-kpi-qtd-vendas-corretores').innerText = `${cacheOperacoesFinanceirasCorretores.length} comissões mapeadas`;
+
+                renderizarSecaoCorretores();
+
+                // 5. HARMONIZAÇÃO DO CARD 9 PRINCIPAL DO COCKPIT
+                // Receita Realizada = Taxa Imob Quitado + Vendas Pagas
+                // Receita Projetada Total = Taxa Imob Total + Comissões Totais de Vendas
+                const receitaRealizadaMes = taxaImobQuitada + totalComissaoVendasImob;
+                const receitaProjetadaTotal = (taxaImobQuitada + taxaImobPendente) + totalComissaoVendasImob;
+
+                const kpiReceitaMes = document.getElementById('kpi-receita-financeira-mes');
+                const kpiRotuloMes = document.getElementById('kpi-rotulo-financeiro-mes');
+                const kpiSubPendente = document.getElementById('kpi-sub-financeiro-pendente');
+
+                if (kpiReceitaMes) kpiReceitaMes.innerText = receitaRealizadaMes.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                if (kpiRotuloMes) kpiRotuloMes.innerText = `Realizado: Vendas + Locações Pagas (${mesRef})`;
+                if (kpiSubPendente) kpiSubPendente.innerText = `Faturamento Projetado: ${receitaProjetadaTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
 
             } catch (err) {
                 console.error('[FINANCEIRO] Erro ao consolidar extrato:', err);
             }
         }
+
+        // =========================================================================
+        // RENDERIZAÇÃO E FILTROS DA TABELA 3 (CORRETORES - VENDA X LOCAÇÃO)
+        // =========================================================================
+        function filtrarOperacaoCorretores(tipo) {
+            filtroOperacaoAtiva = tipo;
+
+            const btnTodas = document.getElementById('btn-filtro-op-todas');
+            const btnVenda = document.getElementById('btn-filtro-op-venda');
+            const btnLocacao = document.getElementById('btn-filtro-op-locacao');
+
+            const resetClass = 'px-3 py-1 rounded-lg text-slate-400 hover:text-white transition cursor-pointer';
+            const activeClass = 'px-3 py-1 rounded-lg bg-blue-500 text-slate-950 font-black transition cursor-pointer';
+
+            btnTodas.className = resetClass;
+            btnVenda.className = resetClass;
+            btnLocacao.className = resetClass;
+
+            if (tipo === 'venda') btnVenda.className = activeClass;
+            else if (tipo === 'locacao') btnLocacao.className = activeClass;
+            else btnTodas.className = activeClass;
+
+            renderizarSecaoCorretores();
+        }
+
+        function renderizarSecaoCorretores() {
+            // 1. CARDS RESUMO POR CORRETOR (TOTAL DE GANHOS NO MÊS)
+            const containerCards = document.getElementById('cards-resumo-corretores');
+            if (containerCards) {
+                const mapaGanhosCorretor = {};
+
+                cacheOperacoesFinanceirasCorretores.forEach(op => {
+                    const chave = op.corretor_id || op.corretor_nome;
+                    if (!mapaGanhosCorretor[chave]) {
+                        mapaGanhosCorretor[chave] = {
+                            corretor_id: op.corretor_id,
+                            nome: op.corretor_nome,
+                            totalVenda: 0,
+                            totalLocacao: 0,
+                            totalGeral: 0,
+                            qtdVendas: 0,
+                            qtdLocacoes: 0
+                        };
+                    }
+                    if (op.tipo_operacao === 'venda') {
+                        mapaGanhosCorretor[chave].totalVenda += op.valor_comissao;
+                        mapaGanhosCorretor[chave].qtdVendas++;
+                    } else {
+                        mapaGanhosCorretor[chave].totalLocacao += op.valor_comissao;
+                        mapaGanhosCorretor[chave].qtdLocacoes++;
+                    }
+                    mapaGanhosCorretor[chave].totalGeral += op.valor_comissao;
+                });
+
+                const corretoresArray = Object.values(mapaGanhosCorretor);
+
+                if (corretoresArray.length === 0) {
+                    containerCards.innerHTML = '<p class="text-slate-500 text-xs py-2 col-span-full italic">Nenhum repasse a corretores registrado para o mês selecionado.</p>';
+                } else {
+                    containerCards.innerHTML = corretoresArray.map(c => `
+                        <div class="bg-slate-950 p-3.5 rounded-xl border border-blue-900/40 hover:border-blue-400 transition space-y-2 group shadow-sm">
+                            <div class="flex items-start justify-between">
+                                <div class="min-w-0">
+                                    <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="font-bold text-white text-xs block truncate uppercase hover:text-blue-300 transition text-left">
+                                        ${c.nome}
+                                    </button>
+                                    <span class="text-[10px] text-slate-400 font-mono block">Equipe de Vendas & Locações</span>
+                                </div>
+                                <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="w-6 h-6 rounded-lg bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center text-[10px] group-hover:scale-110 transition" title="Ver Dossiê">
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[11px] flex items-center justify-between font-mono">
+                                <span class="text-slate-400 text-[10px]">Total a Receber:</span>
+                                <strong class="text-cyan-300 font-black">R$ ${c.totalGeral.toLocaleString('pt-BR')}</strong>
+                            </div>
+
+                            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
+                                <span class="text-amber-300 font-mono">${c.qtdVendas} Venda(s): R$ ${c.totalVenda.toLocaleString('pt-BR')}</span>
+                                <span class="text-purple-300 font-mono">${c.qtdLocacoes} Locação(ões): R$ ${c.totalLocacao.toLocaleString('pt-BR')}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // 2. TABELA DE ITENS COM FILTRO ATIVO
+            const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
+            if (!tbodyCorretores) return;
+
+            let itensFiltrados = cacheOperacoesFinanceirasCorretores;
+            if (filtroOperacaoAtiva === 'venda') {
+                itensFiltrados = cacheOperacoesFinanceirasCorretores.filter(op => op.tipo_operacao === 'venda');
+            } else if (filtroOperacaoAtiva === 'locacao') {
+                itensFiltrados = cacheOperacoesFinanceirasCorretores.filter(op => op.tipo_operacao === 'locacao');
+            }
+
+            if (itensFiltrados.length === 0) {
+                tbodyCorretores.innerHTML = `<tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Nenhuma comissão registrada para a categoria selecionada (${filtroOperacaoAtiva.toUpperCase()}).</td></tr>`;
+                return;
+            }
+
+            tbodyCorretores.innerHTML = itensFiltrados.map(op => {
+                const ehVenda = op.tipo_operacao === 'venda';
+                const badgeTipo = ehVenda 
+                    ? '<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800">VENDA</span>'
+                    : '<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950 text-purple-300 border border-purple-800">LOCAÇÃO</span>';
+
+                return `
+                    <tr>
+                        <td class="py-2.5 px-3">${badgeTipo}</td>
+                        <td class="py-2.5 px-3 text-slate-400 font-mono">${op.data_ref}</td>
+                        <td class="py-2.5 px-3">
+                            <button type="button" onclick="window.abrirDossieCorretor('${op.corretor_id || ''}', '${op.corretor_nome.replace(/'/g, "\\'")}')" class="font-bold text-blue-300 hover:text-blue-200 underline font-sans cursor-pointer">
+                                ${op.corretor_nome}
+                            </button>
+                        </td>
+                        <td class="py-2.5 px-3 font-mono">
+                            <button type="button" onclick="window.abrirModalDetalhesImovel('${op.imovel_id}')" class="font-bold text-cyan-300 hover:text-cyan-200 underline cursor-pointer flex items-center gap-1">
+                                <span>${op.imovel_ref}</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-cyan-400"></i>
+                            </button>
+                        </td>
+                        <td class="py-2.5 px-3 text-white font-sans uppercase">
+                            <button type="button" onclick="window.abrirDossieUniversal('${op.cliente_id}', '${op.cliente_nome.replace(/'/g, "\\'")}', '', '${op.cliente_tipo}')" class="hover:underline">
+                                ${op.cliente_nome}
+                            </button>
+                        </td>
+                        <td class="py-2.5 px-3 text-slate-300 font-mono">R$ ${op.vgv_base.toLocaleString('pt-BR')}</td>
+                        <td class="py-2.5 px-3 text-amber-300 font-mono font-bold">${op.pct_corretor}%</td>
+                        <td class="py-2.5 px-3 text-cyan-300 font-mono font-black">R$ ${op.valor_comissao.toLocaleString('pt-BR')}</td>
+                        <td class="py-2.5 px-3 text-right">
+                            <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">
+                                ${op.status_repasse}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // =========================================================================
+        // MOTOR DO DOSSIÊ DO CORRETOR / FUNCIONÁRIO (FICHA COMERCIAL & HISTÓRICO)
+        // =========================================================================
+        async function abrirDossieCorretor(corretorId, corretorNome) {
+            const modal = document.getElementById('modal-dossie-corretor');
+            const corpo = document.getElementById('dossie-corretor-conteudo');
+            const titulo = document.getElementById('dossie-corretor-titulo');
+            const btnZap = document.getElementById('dossie-corretor-btn-zap');
+
+            if (!modal || !corpo) return;
+
+            corpo.innerHTML = `
+                <div class="py-12 text-center text-slate-500">
+                    <i class="fa-solid fa-spinner fa-spin text-blue-400 text-2xl mb-2"></i>
+                    <p>Consultando perfil comercial do corretor...</p>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+
+            try {
+                let corretor = null;
+
+                if (corretorId && corretorId !== 'null' && corretorId !== 'undefined' && corretorId !== '') {
+                    corretor = cacheUsuariosCorretores.find(u => String(u.id) === String(corretorId));
+                    if (!corretor) {
+                        const { data } = await supabaseClient.from('usuarios').select('*').eq('id', corretorId).maybeSingle();
+                        corretor = data;
+                    }
+                }
+
+                if (!corretor && corretorNome) {
+                    corretor = cacheUsuariosCorretores.find(u => u.nome_completo && u.nome_completo.toLowerCase() === corretorNome.toLowerCase());
+                }
+
+                if (!corretor) {
+                    corretor = {
+                        nome_completo: corretorNome || 'Corretor / Membro da Casa',
+                        cargo: 'Corretor Associado',
+                        creci_individual: 'Não informado',
+                        email: 'Não informado',
+                        whatsapp: '',
+                        comissao_venda_pct: dadosImobiliaria?.comissao_venda_padrao_pct || 40,
+                        comissao_locacao_pct: dadosImobiliaria?.taxa_locacao_padrao_pct || 50
+                    };
+                }
+
+                titulo.innerText = `Dossiê Comercial • ${corretor.nome_completo.toUpperCase()}`;
+
+                const zapLimpo = ('' + (corretor.whatsapp || '')).replace(/\D/g, '');
+                btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${corretor.nome_completo}! Gostaria de falar sobre o fechamento das suas comissões.`)}` : '#';
+                btnZap.style.display = zapLimpo ? 'inline-flex' : 'none';
+
+                // Operações do mês deste corretor
+                const minhasOps = cacheOperacoesFinanceirasCorretores.filter(op => 
+                    (corretor.id && String(op.corretor_id) === String(corretor.id)) ||
+                    (op.corretor_nome && op.corretor_nome.toLowerCase() === (corretor.nome_completo || '').toLowerCase())
+                );
+
+                const totalVendasGanhos = minhasOps.filter(o => o.tipo_operacao === 'venda').reduce((acc, o) => acc + o.valor_comissao, 0);
+                const totalLocacaoGanhos = minhasOps.filter(o => o.tipo_operacao === 'locacao').reduce((acc, o) => acc + o.valor_comissao, 0);
+                const totalGeralGanhos = totalVendasGanhos + totalLocacaoGanhos;
+
+                corpo.innerHTML = `
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-blue-400 block">Ficha Funcional & CRECI</span>
+                                <h4 class="text-base font-black text-white uppercase">${corretor.nome_completo}</h4>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800">
+                                CRECI: ${corretor.creci_individual || 'Não cadastrado'}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                            <div><span class="text-slate-500 block">Cargo / Função:</span> <strong class="text-white">${corretor.cargo || 'Corretor'}</strong></div>
+                            <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-cyan-300 font-mono">${corretor.whatsapp || 'Não informado'}</strong></div>
+                            <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${corretor.email || 'Não informado'}</strong></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 bg-slate-900/60 p-2.5 rounded-lg text-center font-mono">
+                            <div>
+                                <span class="text-slate-400 text-[10px] block">Comissão Padrão (Venda)</span>
+                                <strong class="text-amber-300 text-sm">${corretor.comissao_venda_pct || 0}%</strong>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 text-[10px] block">Comissão Padrão (Locação)</span>
+                                <strong class="text-purple-300 text-sm">${corretor.comissao_locacao_pct || 0}%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-coins"></i> Total a Receber no Mês Selecionado
+                            </h4>
+                            <span class="text-cyan-300 font-mono font-bold text-sm">R$ ${totalGeralGanhos.toLocaleString('pt-BR')}</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 text-center text-[11px] font-mono">
+                            <div class="bg-slate-950 p-2 rounded-lg border border-amber-900/40">
+                                <span class="text-slate-500 block text-[10px]">Ganhos de Vendas</span>
+                                <strong class="text-amber-300 font-bold">R$ ${totalVendasGanhos.toLocaleString('pt-BR')}</strong>
+                            </div>
+                            <div class="bg-slate-950 p-2 rounded-lg border border-purple-900/40">
+                                <span class="text-slate-500 block text-[10px]">Ganhos de Locações</span>
+                                <strong class="text-purple-300 font-bold">R$ ${totalLocacaoGanhos.toLocaleString('pt-BR')}</strong>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 pt-2">
+                            <span class="text-[10px] uppercase font-bold text-slate-400 block">Itens Fechados no Período:</span>
+                            ${minhasOps.length === 0 ? '<p class="text-slate-500 italic py-2">Nenhuma operação fechada por este corretor no mês selecionado.</p>' : 
+                            minhasOps.map(op => `
+                                <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-[11px]">
+                                    <div>
+                                        <span class="font-bold text-white uppercase">${op.tipo_label} • Ref: ${op.imovel_ref}</span>
+                                        <span class="text-[10px] text-slate-400 block">Cliente: ${op.cliente_nome} (${op.data_ref})</span>
+                                    </div>
+                                    <div class="text-right font-mono">
+                                        <strong class="text-cyan-300 block">R$ ${op.valor_comissao.toLocaleString('pt-BR')}</strong>
+                                        <span class="text-[9px] text-slate-400">${op.pct_corretor}% comissão</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+            } catch (err) {
+                console.error(err);
+                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar dossiê do corretor.</p>';
+            }
+        }
+
+        function fecharModalDossieCorretor() {
+            const modal = document.getElementById('modal-dossie-corretor');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        window.abrirDossieCorretor = abrirDossieCorretor;
+        window.fecharModalDossieCorretor = fecharModalDossieCorretor;
 
         // =========================================================================
         // MOTOR DA AGENDA DE VISITAS & ATENDIMENTOS
@@ -3087,6 +3568,7 @@
                 cell.className = `h-11 rounded-lg border p-1 flex flex-col justify-between items-center transition cursor-pointer relative ${estiloBorda}`;
                 cell.innerHTML = `
                     <span class="text-xs ${ehSelecionado ? 'text-white' : ''}">${dia}</span>
+                    
                     ${temVisitas ? `
                         <div class="flex items-center gap-0.5">
                             <span class="w-2 h-2 rounded-full ${ehSelecionado ? 'bg-white' : 'bg-cyan-400 shadow shadow-cyan-400/80'}"></span>
@@ -3149,7 +3631,7 @@
 
                         <div class="pt-1 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-800">
                             <span>Contato: <strong>${ag.whatsapp || ag.email || 'Não informado'}</strong></span>
-                            <button onclick="abrirDossieAgendamento('${ag.id}')" class="text-cyan-400 hover:underline font-bold">
+                            <button onclick="abrirDossieAgendamento('${ag.id}')" class="text-cyan-400 hover:underline font-bold cursor-pointer">
                                 Ver Ficha Completa &rarr;
                             </button>
                         </div>

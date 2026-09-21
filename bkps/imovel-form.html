@@ -11,8 +11,6 @@
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
-
     <style>
         /* PADRÃO IDÊNTICO AO SUPABASE: BARRA FÍSICA PERMANENTE */
         html {
@@ -48,17 +46,12 @@
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
     </style>
 
-
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
- 
-
-
-    <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -285,7 +278,7 @@
                 </div>
             </div>
 
-            <!-- 5. VALORES FINANCEIROS GERAIS DO IMÓVEL -->
+            <!-- 5. VALORES FINANCEIROS GERAIS DO IMÓVEL (COM MÁSCARA MONETÁRIA BRASILEIRA) -->
             <div class="box-tech p-6 space-y-4">
                 <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
                     <i class="fa-solid fa-dollar-sign"></i> 5. Valores Comerciais de Anúncio
@@ -294,22 +287,22 @@
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Valor de Venda (R$)</label>
-                        <input type="number" step="0.01" id="campo-valor-venda" placeholder="0,00" 
+                        <input type="text" inputmode="numeric" id="campo-valor-venda" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Valor de Locação (R$/mês)</label>
-                        <input type="number" step="0.01" id="campo-valor-locacao" oninput="sincronizarValorLocacao(this.value)" placeholder="0,00" 
+                        <input type="text" inputmode="numeric" id="campo-valor-locacao" oninput="mascaraMoedaEvento(this); sincronizarValorLocacao(this.value)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-amber-300 font-black text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Condomínio Mensal (R$)</label>
-                        <input type="number" step="0.01" id="campo-valor-condominio" placeholder="0,00" 
+                        <input type="text" inputmode="numeric" id="campo-valor-condominio" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">IPTU Anual (R$)</label>
-                        <input type="number" step="0.01" id="campo-valor-iptu" placeholder="0,00" 
+                        <input type="text" inputmode="numeric" id="campo-valor-iptu" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                 </div>
@@ -469,7 +462,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                         <div>
                             <label class="block font-bold text-slate-300 mb-1">Aluguel Bruto (R$/mês) *</label>
-                            <input type="number" step="0.01" id="loc-valor-aluguel" oninput="calcularComissaoLocacao()" placeholder="0,00" 
+                            <input type="text" inputmode="numeric" id="loc-valor-aluguel" oninput="mascaraMoedaEvento(this); calcularComissaoLocacao()" placeholder="0,00" 
                                    class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-emerald-400 font-mono font-black text-xs outline-none focus:border-emerald-400">
                         </div>
 
@@ -591,8 +584,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Módulo de Catalogação & Locações
     </footer>
 
-   
- <!-- JAVASCRIPT MASTER: UPLOADS, RENOMEAÇÃO COM LÁPIS E CONTROLES -->
+    <!-- JAVASCRIPT MASTER: UPLOADS, RENOMEAÇÃO COM LÁPIS E CONTROLES -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -608,6 +600,37 @@
         let listaFotosEstado = [];
         let listaDocumentosEstado = [];
         let listaDocsLocatarioEstado = [];
+
+        // =========================================================================
+        // MOTOES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
+        // =========================================================================
+        function formatarValorBRL(valor) {
+            if (valor === null || valor === undefined || valor === '') return '';
+            const num = Number(valor);
+            if (isNaN(num)) return '';
+            return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function converterMoedaParaFloat(texto) {
+            if (!texto) return 0;
+            const limpo = String(texto).replace(/\./g, '').replace(',', '.').replace(/[^0-9.]/g, '');
+            const num = parseFloat(limpo);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function mascaraMoedaEvento(input) {
+            let valor = input.value.replace(/\D/g, '');
+            if (!valor) {
+                input.value = '';
+                return;
+            }
+            // Algoritmo progressivo de centavos para milhar (ex: 2500000 -> 25.000,00)
+            const floatVal = (parseInt(valor, 10) / 100).toFixed(2);
+            input.value = Number(floatVal).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
 
         async function inicializarFormulario() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -709,7 +732,7 @@
         }
 
         function calcularComissaoLocacao() {
-            const aluguel = Number(document.getElementById('loc-valor-aluguel').value || 0);
+            const aluguel = converterMoedaParaFloat(document.getElementById('loc-valor-aluguel').value);
             const taxaPct = Number(document.getElementById('loc-taxa-adm').value || 10);
 
             const valorComissao = aluguel * (taxaPct / 100);
@@ -1009,10 +1032,11 @@
                     document.getElementById('campo-proprietario').value = imovel.proprietario_id;
                 }
 
-                document.getElementById('campo-valor-venda').value = imovel.valor_venda || '';
-                document.getElementById('campo-valor-locacao').value = imovel.valor_locacao || '';
-                document.getElementById('campo-valor-condominio').value = imovel.valor_condominio || '';
-                document.getElementById('campo-valor-iptu').value = imovel.valor_iptu || '';
+                // INSERÇÃO FORMATADA EM BRL PARA EDIÇÃO
+                document.getElementById('campo-valor-venda').value = formatarValorBRL(imovel.valor_venda);
+                document.getElementById('campo-valor-locacao').value = formatarValorBRL(imovel.valor_locacao);
+                document.getElementById('campo-valor-condominio').value = formatarValorBRL(imovel.valor_condominio);
+                document.getElementById('campo-valor-iptu').value = formatarValorBRL(imovel.valor_iptu);
 
                 document.getElementById('campo-quartos').value = imovel.quartos || 0;
                 document.getElementById('campo-suites').value = imovel.suites || 0;
@@ -1057,7 +1081,7 @@
                             nomeArquivo = decodeURIComponent(docUrl.split('#nome=')[1]);
                         } else {
                             nomeArquivo = decodeURIComponent(docUrl.split('/').pop().split('?')[0].split('#')[0]);
-                            nomeArquivo = nomeArquivo.replace(/^\d{10,}_/, ''); // Limpa prefixos automáticos como 178959..._
+                            nomeArquivo = nomeArquivo.replace(/^\d{10,}_/, '');
                         }
                         listaDocumentosEstado.push({
                             nome: nomeArquivo,
@@ -1087,7 +1111,7 @@
                         document.getElementById('loc-email').value = contrato.cliente_email || '';
                         document.getElementById('loc-cpf').value = contrato.cliente_cpf_cnpj || '';
                         document.getElementById('loc-rg').value = contrato.cliente_rg || '';
-                        document.getElementById('loc-valor-aluguel').value = contrato.valor_aluguel_bruto || '';
+                        document.getElementById('loc-valor-aluguel').value = formatarValorBRL(contrato.valor_aluguel_bruto);
                         document.getElementById('loc-taxa-adm').value = contrato.taxa_administracao_pct || 10;
                         document.getElementById('loc-data-inicio').value = contrato.data_inicio || '';
                         document.getElementById('loc-data-fim').value = contrato.data_fim || '';
@@ -1288,7 +1312,6 @@
                         const urlFinalComNome = `${publicUrl}#nome=${encodeURIComponent(itemDoc.nome)}`;
                         urlsDocumentosFinais.push(urlFinalComNome);
                     } else {
-                        // Preserva ou atualiza o nome editado na URL
                         const baseUrl = itemDoc.url.split('#')[0];
                         const urlFinalComNome = `${baseUrl}#nome=${encodeURIComponent(itemDoc.nome)}`;
                         urlsDocumentosFinais.push(urlFinalComNome);
@@ -1323,6 +1346,7 @@
                     }
                 }
 
+                // CONVERSÃO PRECISA DOS VALORES COM MÁSCARA PARA NÚMEROS DO POSTGRESQL (NUMERIC)
                 const payloadImovel = {
                     imobiliaria_id: imobiliariaId,
                     codigo_ref: document.getElementById('campo-codigo-ref').value.trim(),
@@ -1336,10 +1360,10 @@
 
                     proprietario_id: document.getElementById('campo-proprietario').value || null,
 
-                    valor_venda: document.getElementById('campo-valor-venda').value ? Number(document.getElementById('campo-valor-venda').value) : 0,
-                    valor_locacao: document.getElementById('campo-valor-locacao').value ? Number(document.getElementById('campo-valor-locacao').value) : 0,
-                    valor_condominio: document.getElementById('campo-valor-condominio').value ? Number(document.getElementById('campo-valor-condominio').value) : 0,
-                    valor_iptu: document.getElementById('campo-valor-iptu').value ? Number(document.getElementById('campo-valor-iptu').value) : 0,
+                    valor_venda: converterMoedaParaFloat(document.getElementById('campo-valor-venda').value),
+                    valor_locacao: converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value),
+                    valor_condominio: converterMoedaParaFloat(document.getElementById('campo-valor-condominio').value),
+                    valor_iptu: converterMoedaParaFloat(document.getElementById('campo-valor-iptu').value),
 
                     quartos: Number(document.getElementById('campo-quartos').value || 0),
                     suites: Number(document.getElementById('campo-suites').value || 0),
@@ -1387,7 +1411,7 @@
                     const cpfInquilino = document.getElementById('loc-cpf').value.trim();
                     const rgInquilino = document.getElementById('loc-rg').value.trim();
 
-                    const aluguelBruto = Number(document.getElementById('loc-valor-aluguel').value || 0);
+                    const aluguelBruto = converterMoedaParaFloat(document.getElementById('loc-valor-aluguel').value);
                     const taxaPct = Number(document.getElementById('loc-taxa-adm').value || 10);
                     const valorComissao = aluguelBruto * (taxaPct / 100);
                     const valorRepasse = Math.max(0, aluguelBruto - valorComissao);
@@ -1453,7 +1477,6 @@
                     window.location.href = 'imoveis-lista.html';
                 }, 1500);
 
-    
             } catch (err) {
                 console.error(err);
 
@@ -1465,7 +1488,6 @@
                     const codDigitado = document.getElementById('campo-codigo-ref').value.trim();
                     mensagemAmigavel = `O Código de Referência "${codDigitado}" já está em uso em outro imóvel da sua imobiliária. Por favor, utilize um código diferente.`;
                     
-                    // Foca e destaca o campo com erro
                     const inputCod = document.getElementById('campo-codigo-ref');
                     if (inputCod) {
                         inputCod.classList.add('border-rose-500', 'bg-rose-950/30');
@@ -1482,8 +1504,6 @@
                 btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Salvar Imóvel</span>';
                 btn.disabled = false;
             }
-
-
         }
 
         async function executarLogout() {
