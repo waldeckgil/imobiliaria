@@ -191,10 +191,12 @@
 
 
         <!-- FAIXA DE ALERTAS INTELIGENTES: VISITAS DE HOJE E AMANHÃ -->
-        <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
+    <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
 
-        <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
+    <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
 
+        <!-- CARD 1: DISPONÍVEIS -->
             
             <!-- CARD 1: DISPONÍVEIS -->
             <div onclick="abrirDrilldown('disponiveis')" class="box-tech p-4 border-l-4 border-l-blue-500 cursor-pointer hover:scale-[1.02] hover:border-blue-400 hover:shadow-xl transition group bg-gradient-to-r from-blue-950/15 to-transparent">
@@ -3565,6 +3567,8 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
         // =========================================================================
         // MOTOR DA AGENDA DE VISITAS & ATENDIMENTOS
         // =========================================================================
+
+
 async function carregarAgendaMes() {
             if (!dadosImobiliaria) return;
 
@@ -3719,6 +3723,7 @@ async function carregarAgendaMes() {
                 console.error('[ALERTAS TOPO] Erro:', err);
             }
         }
+
         function renderizarGradeCalendario() {
             const grid = document.getElementById('grid-calendario-dias');
             if (!grid) return;
