@@ -3677,24 +3677,24 @@ async function carregarAgendaMes() {
                     const zapLimpo = ('' + (v.whatsapp || '')).replace(/\D/g, '');
                     const imovel = v.imovel_id ? mapaImoveis[v.imovel_id] : null;
 
-                    let estiloCard = ehHoje 
-                        ? 'border-emerald-500 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 shadow-emerald-950/30' 
-                        : 'border-cyan-500/80 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 shadow-cyan-950/30';
+let estiloCard = ehHoje 
+                        ? 'border-amber-400 bg-gradient-to-r from-amber-950/50 via-slate-900 to-slate-950 shadow-amber-950/50 border-l-4' 
+                        : 'border-cyan-500/80 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 shadow-cyan-950/30 border-l-4';
                     
                     let badgeTopo = ehHoje 
-                        ? '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500 text-slate-950 shadow animate-pulse flex items-center gap-1"><i class="fa-solid fa-bell"></i> VISITA MARCADA PARA HOJE</span>'
+                        ? '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-400 text-slate-950 shadow-md shadow-amber-950 animate-pulse flex items-center gap-1"><i class="fa-solid fa-bell text-slate-950"></i> VISITA MARCADA PARA HOJE</span>'
                         : '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1"><i class="fa-solid fa-clock"></i> VISITA AGENDADA PARA AMANHÃ</span>';
 
                     return `
-                        <div class="box-tech p-3.5 border-l-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl transition ${estiloCard}">
+                        <div class="box-tech p-3.5 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl transition ${estiloCard}">
                             <div class="flex items-start sm:items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl ${ehHoje ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'} flex items-center justify-center text-base flex-shrink-0">
+                                <div class="w-10 h-10 rounded-xl ${ehHoje ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-inner' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'} flex items-center justify-center text-base flex-shrink-0">
                                     <i class="fa-solid fa-calendar-check"></i>
                                 </div>
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2 flex-wrap">
                                         ${badgeTopo}
-                                        <span class="text-white font-mono font-black text-xs bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                                        <span class="text-amber-300 font-mono font-black text-xs bg-slate-950 px-2 py-0.5 rounded border border-amber-500/40">
                                             ${horaFmt}
                                         </span>
                                         <strong class="text-white uppercase font-black tracking-wide">${v.nome}</strong>
