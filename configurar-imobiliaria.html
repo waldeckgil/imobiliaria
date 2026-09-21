@@ -326,38 +326,76 @@
                 </div>
             </div>
 
-            <!-- SEÇÃO 4: POLÍTICAS DE COMISSÕES & TAXAS PADRÃO DA IMOBILIÁRIA -->
-            <div class="box-tech p-6 space-y-4 border border-cyan-500/30 bg-cyan-950/10">
+            <!-- SEÇÃO 4: POLÍTICAS DE COMISSÕES & TAXAS PADRÃO (DIVIDIDAS EM EMPRESA VS EQUIPE) -->
+            <div class="box-tech p-6 space-y-5 border border-cyan-500/30 bg-cyan-950/10">
                 <div class="border-b border-slate-800 pb-3">
                     <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-hand-holding-dollar text-base"></i> 4. Políticas de Comissões & Honorários Padrão
+                        <i class="fa-solid fa-hand-holding-dollar text-base"></i> 4. Políticas de Comissões, Honorários & Repasses Padrão
                     </h3>
-                    <p class="text-xs text-slate-400 mt-1">
-                        Defina as alíquotas padrão que a imobiliária retém nas operações. Esses valores servirão de base automática no cálculo de fechamento de vendas, contratos de aluguel e apuração da receita líquida da empresa.
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Configure abaixo os percentuais da empresa e a política padrão de repasse para novos corretores. A comissão de locação para a equipe é <strong>opcional</strong>.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-1.5">
-                        <label class="block font-bold text-slate-200">Comissão Padrão de Vendas da Imobiliária (%) *</label>
-                        <div class="relative">
-                            <input type="number" step="0.1" min="0" max="100" id="conf-comissao-venda" required placeholder="Ex: 6.0" 
-                                   class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl py-2.5 pl-3 pr-10 text-cyan-300 font-mono font-black text-sm outline-none focus:border-cyan-400">
-                            <span class="absolute right-3.5 top-2.5 text-cyan-400 font-black text-xs">%</span>
+                <!-- BLOCO A: HONORÁRIOS DA IMOBILIÁRIA (COBRADOS DOS CLIENTES) -->
+                <div class="space-y-3">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-building-columns text-xs"></i> A. Honorários da Imobiliária (Cobrados dos Clientes)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-200">Comissão de Vendas da Imobiliária (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.1" min="0" max="100" id="conf-comissao-venda" required placeholder="Ex: 6.0" 
+                                       class="w-full bg-slate-900 border border-cyan-500/50 rounded-xl py-2 pl-3 pr-9 text-cyan-300 font-mono font-black text-xs outline-none focus:border-cyan-400">
+                                <span class="absolute right-3 top-2 text-cyan-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Cobrado do proprietário no fechamento da venda (mercado: 5% a 6%).</p>
                         </div>
-                        <p class="text-[10px] text-slate-500">Percentual total cobrado sobre o VGV na venda do imóvel (Prática de mercado: 5.0% a 6.0%).</p>
-                    </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block font-bold text-slate-200">Taxa de Administração de Locação da Imobiliária (%) *</label>
-                        <div class="relative">
-                            <input type="number" step="0.1" min="0" max="100" id="conf-taxa-locacao" required placeholder="Ex: 10.0" 
-                                   class="w-full bg-slate-950 border border-amber-500/50 rounded-xl py-2.5 pl-3 pr-10 text-amber-300 font-mono font-black text-sm outline-none focus:border-amber-400">
-                            <span class="absolute right-3.5 top-2.5 text-amber-400 font-black text-xs">%</span>
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-200">Taxa de Administração de Locação (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.1" min="0" max="100" id="conf-taxa-locacao" required placeholder="Ex: 10.0" 
+                                       class="w-full bg-slate-900 border border-amber-500/50 rounded-xl py-2 pl-3 pr-9 text-amber-300 font-mono font-black text-xs outline-none focus:border-amber-400">
+                                <span class="absolute right-3 top-2 text-amber-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Retido mensalmente pela imobiliária do aluguel bruto (padrão: 8% a 10%).</p>
                         </div>
-                        <p class="text-[10px] text-slate-500">Percentual mensal retido pela imobiliária sobre o aluguel bruto pago pelo inquilino (Padrão: 8.0% a 10.0%).</p>
                     </div>
                 </div>
+
+                <!-- BLOCO B: POLÍTICA PADRÃO DE REPASSE À EQUIPE / CORRETORES (OPCIONAL) -->
+                <div class="space-y-3 pt-2">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-blue-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-xs"></i> B. Repasse Padrão aos Corretores (Política Sugerida para Novos Cadastros)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/80 p-4 rounded-xl border border-blue-900/40">
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-200">Repasse Padrão de Vendas ao Corretor (%)</label>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="conf-repasse-venda-corretor" placeholder="Ex: 30.0" 
+                                       class="w-full bg-slate-900 border border-blue-500/40 rounded-xl py-2 pl-3 pr-9 text-blue-300 font-mono font-bold text-xs outline-none focus:border-blue-400">
+                                <span class="absolute right-3 top-2 text-blue-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">% da fatia sobre a comissão que a imobiliária recebeu na venda.</p>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-200">Repasse Padrão de Locações ao Corretor (%)</label>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase bg-slate-900 px-1.5 py-0.2 rounded border border-slate-800">Opcional</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="conf-repasse-locacao-corretor" placeholder="0.0" 
+                                       class="w-full bg-slate-900 border border-purple-500/40 rounded-xl py-2 pl-3 pr-9 text-purple-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
+                                <span class="absolute right-3 top-2 text-purple-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Deixe em branco ou 0% se a receita de aluguel for 100% da imobiliária.</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- BOTÃO SALVAR COM BLOQUEIO RIGOROSO -->
@@ -401,7 +439,6 @@
                 return;
             }
 
-            // Lê dias de aviso configurados pelo Administrador Master
             try {
                 const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
                 if (cfg && cfg.dias_aviso_vencimento) diasAvisoGlobal = Number(cfg.dias_aviso_vencimento);
@@ -415,7 +452,7 @@
             // 1. SUPORTE MASTER SOBERANO
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
-                modoLeitura = false; // Master tem poder total para editar
+                modoLeitura = false;
 
                 let targetId = impersonateId;
                 let imobAlvo = null;
@@ -432,7 +469,6 @@
                     imobiliariaId = imobAlvo.id;
                     dadosImobAtual = imobAlvo;
 
-                    // Exibe a barra de suporte
                     document.getElementById('faixa-modo-suporte').classList.remove('hidden');
                     document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia || 'Imobiliária'} (/${imobAlvo.slug || ''})`;
 
@@ -481,7 +517,6 @@
             }
         }
 
-        // AVALIAÇÃO DA RÉGUA DE COBRANÇA (3 ESTADOS DINÂMICOS COM BLINDAGEM DE DATAS)
         function avaliarVencimento(imob) {
             const hoje = new Date();
             hoje.setHours(0,0,0,0);
@@ -491,7 +526,6 @@
                 return;
             }
 
-            // Parsing blindado contra datas parciais ou ISO completa
             const dataPura = String(imob.data_vencimento).split('T')[0];
             const partes = dataPura.split('-');
             if (partes.length < 3) {
@@ -517,7 +551,6 @@
             const txtDesc = document.getElementById('txt-status-desc');
             const txtCiclo = document.getElementById('txt-dias-restantes');
 
-            // 1. ESTADO: VENCIDO (BLOQUEIO / MODO LEITURA)
             if (diffDias < 0 || imob.status === 'blocked') {
                 if (!isMasterSuporte) {
                     modoLeitura = true;
@@ -533,7 +566,6 @@
                 txtCiclo.innerText = `Vencido há ${Math.abs(diffDias)} dias`;
                 txtCiclo.className = 'text-xs font-bold text-rose-400';
             } 
-            // 2. ESTADO: AVISO PRÉVIO (DENTRO DOS DIAS CONFIGURADOS)
             else if (diffDias <= diasAvisoGlobal) {
                 modoLeitura = false;
                 document.getElementById('faixa-alerta-vencimento').classList.remove('hidden');
@@ -545,7 +577,6 @@
                 txtCiclo.innerText = `Faltam ${diffDias} dias`;
                 txtCiclo.className = 'text-xs font-bold text-amber-400';
             } 
-            // 3. ESTADO: EM DIA (REGULAR OU CORTESIA DOURADA)
             else {
                 modoLeitura = false;
                 const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
@@ -567,7 +598,6 @@
             }
         }
 
-        // CARREGA RECIBOS HISTÓRICOS APROVADOS PELO ADMINISTRADOR
         async function carregarHistoricoFaturasGestor(imobId) {
             const tbody = document.getElementById('tabela-faturas-gestor');
             try {
@@ -611,7 +641,6 @@
             }
         }
 
-        // PREENCHE FORMULÁRIO COM PROTEÇÃO DEFENSIVA
         function preencherFormulario(imob) {
             if (!imob) return;
             document.getElementById('conf-nome-fantasia').value = imob.nome_fantasia || '';
@@ -632,14 +661,17 @@
             document.getElementById('conf-linkedin').value = imob.linkedin || '';
             document.getElementById('conf-sobre').value = imob.sobre_corretor || '';
 
-            // Políticas de Comissões e Taxas Padrão da Empresa
+            // Bloco A: Honorários da Empresa
             document.getElementById('conf-comissao-venda').value = (imob.comissao_venda_padrao_pct !== null && imob.comissao_venda_padrao_pct !== undefined) ? imob.comissao_venda_padrao_pct : 6.0;
             document.getElementById('conf-taxa-locacao').value = (imob.taxa_locacao_padrao_pct !== null && imob.taxa_locacao_padrao_pct !== undefined) ? imob.taxa_locacao_padrao_pct : 10.0;
+
+            // Bloco B: Repasse Padrão aos Corretores
+            document.getElementById('conf-repasse-venda-corretor').value = (imob.repasse_corretor_venda_padrao_pct !== null && imob.repasse_corretor_venda_padrao_pct !== undefined) ? imob.repasse_corretor_venda_padrao_pct : 30.0;
+            document.getElementById('conf-repasse-locacao-corretor').value = (imob.repasse_corretor_locacao_padrao_pct !== null && imob.repasse_corretor_locacao_padrao_pct !== undefined) ? imob.repasse_corretor_locacao_padrao_pct : 0.0;
 
             if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
             if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
 
-            // TRATAMENTO DA GRATUIDADE / CORTESIA
             const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
 
@@ -666,7 +698,6 @@
             }
         }
 
-        // SALVAR CONFIGURAÇÕES COM TRAVA RIGOROSA CONTRA DUPLO CLIQUE
         async function salvarConfiguracoes(event) {
             event.preventDefault();
             if (modoLeitura && !isMasterSuporte) return;
@@ -706,6 +737,9 @@
                     }
                 }
 
+                const repasseVendaVal = document.getElementById('conf-repasse-venda-corretor').value;
+                const repasseLocacaoVal = document.getElementById('conf-repasse-locacao-corretor').value;
+
                 const payload = {
                     nome_fantasia: document.getElementById('conf-nome-fantasia').value.trim(),
                     razao_social: document.getElementById('conf-razao-social').value.trim(),
@@ -723,8 +757,15 @@
                     youtube: document.getElementById('conf-youtube').value.trim(),
                     linkedin: document.getElementById('conf-linkedin').value.trim(),
                     sobre_corretor: document.getElementById('conf-sobre').value.trim(),
+                    
+                    // Honorários da Imobiliária
                     comissao_venda_padrao_pct: Number(document.getElementById('conf-comissao-venda').value) || 6.0,
                     taxa_locacao_padrao_pct: Number(document.getElementById('conf-taxa-locacao').value) || 10.0,
+
+                    // Repasses Padrão à Equipe
+                    repasse_corretor_venda_padrao_pct: (repasseVendaVal !== '') ? Number(repasseVendaVal) : 30.0,
+                    repasse_corretor_locacao_padrao_pct: (repasseLocacaoVal !== '') ? Number(repasseLocacaoVal) : 0.0,
+
                     logo_url: novaLogoUrl,
                     banner_url: novaBannerUrl
                 };
@@ -732,15 +773,13 @@
                 const { error } = await supabaseClient.from('imobiliarias').update(payload).eq('id', imobiliariaId);
                 if (error) throw error;
 
-                // Atualiza cache em memória
                 dadosImobAtual = { ...dadosImobAtual, ...payload };
 
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = 'Configurações corporativas, taxas padrão e dados visuais salvos com sucesso!';
+                alertaTexto.innerText = 'Configurações corporativas, taxas da imobiliária e regras da equipe salvas com sucesso!';
                 alerta.classList.remove('hidden');
 
-                // Rolagem suave até o feedback visual
                 alerta.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             } catch (err) {
@@ -756,9 +795,8 @@
             }
         }
 
- async function carregarCatalogoParaPDF() {
+        async function carregarCatalogoParaPDF() {
             try {
-                // Carrega TODOS os imóveis da imobiliária (sem filtrar apenas os ativos)
                 const { data: imoveis, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
@@ -788,9 +826,6 @@
             }
         }
       
-// =========================================================================
-        // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
-        // =========================================================================
         function sanitizarTextoPdf(texto) {
             if (!texto) return '';
             return texto
@@ -799,7 +834,6 @@
                 .trim();
         }
 
-        // Converte qualquer formato (WebP, PNG, JPG) para JPEG puro compatível com jsPDF via Canvas
         async function converterImgParaJpegSeguro(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -812,12 +846,10 @@
                         canvas.height = img.naturalHeight || img.height || 600;
                         const ctx = canvas.getContext('2d');
                         
-                        // Fundo branco sólido (evita transparência preta de WebP/PNG)
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
-                        // Exporta garantidamente como JPEG real
                         resolve(canvas.toDataURL('image/jpeg', 0.85));
                     } catch (err) {
                         reject(err);
@@ -825,7 +857,6 @@
                 };
 
                 img.onerror = () => {
-                    // Fallback se crossOrigin for bloqueado: tenta via blob
                     fetch(url)
                         .then(r => r.blob())
                         .then(blob => {
@@ -852,7 +883,6 @@
             });
         }
 
-        // MOTOR JSPDF: GERAÇÃO DA FICHA COMERCIAL COM CANVAS JPEG & SANITIZAÇÃO
         async function gerarFichaPDF() {
             const imovelId = document.getElementById('seletor-imovel-pdf').value;
             if (!imovelId) {
@@ -874,7 +904,6 @@
                 const pageHeight = doc.internal.pageSize.getHeight();
                 const nomeFantasia = dadosImobAtual ? (dadosImobAtual.nome_fantasia || 'SGI IMOBILIÁRIA') : 'SGI IMOBILIÁRIA';
 
-                // 1. CABEÇALHO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
@@ -890,7 +919,6 @@
                 const fone = dadosImobAtual ? (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato || '') : '';
                 doc.text(`${sanitizarTextoPdf(creci)} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
 
-                // Tarja Ref
                 doc.setFillColor(28, 107, 160);
                 doc.roundedRect(pageWidth - 48, 8, 33, 11, 2, 2, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -898,7 +926,6 @@
                 doc.setFont('helvetica', 'bold');
                 doc.text(`Ref: ${imovel.codigo_ref || 'SGI'}`, pageWidth - 31.5, 15, { align: 'center' });
 
-                // 2. TÍTULO & LOCALIZAÇÃO
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(13);
                 doc.setFont('helvetica', 'bold');
@@ -912,11 +939,9 @@
                 const localStr = sanitizarTextoPdf(`${imovel.bairro || 'Localização'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${sanitizarTextoPdf(imovel.tipo || 'Padrão')} • ${localStr}`, 15, 45);
 
-         // 3. FOTO DE CAPA INTELIGENTE (Busca Capa -> Galeria -> ou imagem em Documentos)
                 let posY = 51;
                 let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
 
-                // Fallback de resgate: se a foto foi colocada em documentos por engano
                 if (!urlFoto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
                     const imgDoc = imovel.documentos_anexos.find(url => {
                         const u = url.toLowerCase();
@@ -940,7 +965,6 @@
                     }
                 }
 
-                // 4. QUADRO DE ESPECIFICAÇÕES
                 doc.setFillColor(245, 247, 250);
                 doc.roundedRect(15, posY, pageWidth - 30, 22, 2, 2, 'F');
 
@@ -964,7 +988,6 @@
 
                 posY += 28;
 
-                // 5. VALORES
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
@@ -986,7 +1009,6 @@
 
                 posY += 20;
 
-                // 6. DESCRIÇÃO (COM SANITIZAÇÃO DE EMOJIS)
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
@@ -999,7 +1021,6 @@
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
-                // 7. RODAPÉ DE CONTATO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
@@ -1023,7 +1044,6 @@
             }
         }
 
-
         function sanitizarZap(num) {
             let limpo = ('' + num).replace(/\D/g, '');
             if (limpo && !limpo.startsWith('55')) limpo = '55' + limpo;
@@ -1043,6 +1063,785 @@
         }
 
         window.addEventListener('DOMContentLoaded', inicializarConfiguracoes);
+    </script>
+</body>
+</html>
+
+--- END OF FILE configurar-imobiliaria.html ---
+
+ETAPA 3: Arquivo equipe.html Atualizado
+
+Agora o modal de novo colaborador puxa dinamicamente a política da imobiliária.
+Se a imobiliária definiu 0% em locação no configurar-imobiliaria.html, o novo
+membro já nasce preenchido com 0%, respeitando a opcionalidade sem exigir que o
+gestor redigite nada.
+
+--- START OF FILE equipe.html ---
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipe & Permissões - SGI Gestão Imobiliária</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-2xl sticky top-0 z-50">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
+                <span>MODO SUPORTE MASTER:</span>
+                <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
+                <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Gestão de Equipe com Bypass RLS e Edição Liberada</span>
+            </div>
+            <button onclick="window.close()" class="bg-slate-950 hover:bg-slate-900 text-amber-400 font-bold px-3 py-1 rounded-lg text-[11px] flex items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+                <span>Fechar Suporte</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
+    <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
+        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+            <span>MODO SOMENTE LEITURA: Assinatura pendente. O cadastro e edição de colaboradores estão desabilitados.</span>
+        </div>
+    </div>
+
+    <!-- CABEÇALHO TOPBAR -->
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 id="topbar-imob-nome" class="text-sm font-black text-white tracking-wide">CARREGANDO...</h1>
+                        <span id="topbar-cargo-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                            DONO
+                        </span>
+                    </div>
+                    <p id="topbar-user-nome" class="text-xs text-slate-400">Identificando usuário...</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs">
+                <button onclick="abrirModalColaborador()" id="btn-novo-membro" 
+                        class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-user-plus text-xs"></i>
+                    <span>Adicionar Colaborador</span>
+                </button>
+
+                <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO DOS MÓDULOS -->
+    <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
+        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
+            <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
+            </a>
+            <a href="imoveis-lista.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-house-chimney mr-1"></i> Catálogo de Imóveis
+            </a>
+            <a href="leads.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-comments mr-1"></i> Central de Atendimentos
+            </a>
+            <a href="equipe.html" class="px-3 py-1.5 rounded-lg font-black bg-slate-800 text-cyan-400 border border-slate-700 whitespace-nowrap">
+                <i class="fa-solid fa-users mr-1"></i> Equipe & Permissões
+            </a>
+            <a href="configurar-imobiliaria.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
+                <i class="fa-solid fa-gear mr-1"></i> Configurações & Publicidades
+            </a>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
+        
+        <!-- CARDS DE RECURSOS HUMANOS -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="box-tech p-4 border-l-4 border-l-cyan-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Total de Colaboradores</span>
+                <span id="kpi-total-equipe" class="text-2xl font-black text-white mt-1 block">0</span>
+            </div>
+            <div class="box-tech p-4 border-l-4 border-l-emerald-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Corretores em Campo</span>
+                <span id="kpi-corretores" class="text-2xl font-black text-emerald-400 mt-1 block">0</span>
+            </div>
+            <div class="box-tech p-4 border-l-4 border-l-purple-400">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Gerência / Diretoria</span>
+                <span id="kpi-gerencia" class="text-2xl font-black text-purple-400 mt-1 block">0</span>
+            </div>
+            <div class="box-tech p-4 border-l-4 border-l-rose-500">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Acessos Desativados</span>
+                <span id="kpi-inativos" class="text-2xl font-black text-rose-400 mt-1 block">0</span>
+            </div>
+        </div>
+
+        <!-- QUADRO DE BLINDAGEM DE CARTEIRA E FINANCEIRO -->
+        <div class="box-tech p-4 border border-cyan-500/30 bg-cyan-950/10 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="text-xs">
+                <h4 class="font-bold text-white">Blindagem Patrimonial & Controle Financeiro</h4>
+                <p class="text-slate-400 mt-0.5 leading-relaxed">
+                    Corretores associados têm comissões individuais configuradas e operam o catálogo com telefones de proprietários e dados de faturamento global <strong>ocultos por padrão</strong>, a menos que você conceda permissões expressas na matriz abaixo.
+                </p>
+            </div>
+        </div>
+
+        <!-- TABELA DE MEMBROS DA EQUIPE -->
+        <div class="box-tech overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800">
+                        <tr>
+                            <th class="py-3 px-4">Profissional</th>
+                            <th class="py-3 px-3">Cargo</th>
+                            <th class="py-3 px-3">CRECI</th>
+                            <th class="py-3 px-3">WhatsApp</th>
+                            <th class="py-3 px-3">Comissões Acordadas</th>
+                            <th class="py-3 px-3">Privilégios & Acessos</th>
+                            <th class="py-3 px-3 text-center">Status</th>
+                            <th class="py-3 px-4 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-equipe-corpo" class="divide-y divide-slate-800/60">
+                        <tr>
+                            <td colspan="8" class="py-12 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
+                                <p>Carregando membros da equipe...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RODAPÉ DA TABELA -->
+            <div class="bg-slate-950/80 px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span>Total de <strong id="contador-equipe" class="text-white">0</strong> profissionais registrados</span>
+                <span class="font-mono text-[11px]">SGI • Controle de Comissões e Acesso Baseado em Papéis (RBAC)</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DE CADASTRO E EDIÇÃO DE COLABORADOR -->
+    <div id="modal-colaborador" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative max-h-[92vh] flex flex-col">
+            <button onclick="fecharModalColaborador()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 text-cyan-400 font-black text-sm uppercase tracking-wide">
+                <i class="fa-solid fa-user-gear"></i>
+                <span id="modal-titulo">Novo Colaborador</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Cadastre o corretor, pactue suas taxas de comissão e defina suas regras de acesso.</p>
+
+            <form id="form-colaborador" onsubmit="salvarColaborador(event)" class="space-y-4 mt-4 text-xs overflow-y-auto pr-1 flex-1">
+                <input type="hidden" id="colab-id-edicao" value="">
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nome Completo *</label>
+                    <input type="text" id="colab-nome" required placeholder="Ex: Lucas Mendes" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">WhatsApp Pessoal (com DDD) *</label>
+                        <input type="tel" id="colab-zap" required placeholder="(48) 99999-9999" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">CRECI Individual</label>
+                        <input type="text" id="colab-creci" placeholder="Ex: 34567F" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Cargo / Função *</label>
+                        <select id="colab-cargo" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                            <option value="corretor" selected>Corretor Associado</option>
+                            <option value="gerente">Gerente de Vendas</option>
+                            <option value="secretaria">Secretária / Apoio</option>
+                            <option value="dono">Dono / Sócio</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">E-mail de Login *</label>
+                        <input type="email" id="colab-email" required placeholder="corretor@imobiliaria.com" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <!-- BLOCO DE COMISSÕES ACORDADAS COM O MEMBRO -->
+                <div class="bg-slate-950/90 border border-cyan-500/40 rounded-xl p-3.5 space-y-3">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-percent"></i> Acordo de Comissões Deste Profissional
+                    </span>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">Comissão em Vendas (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="colab-comissao-venda" required placeholder="30.0" 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                                <span class="absolute right-3 top-2 text-slate-500 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[9px] text-slate-500 mt-0.5">% da fatia sobre a comissão recebida pela imobiliária.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-300 mb-1">Comissão em Locações (%)</label>
+                                <span class="text-[9px] text-slate-500 uppercase font-mono">Opcional</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="colab-comissao-locacao" placeholder="0.0" 
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-purple-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
+                                <span class="absolute right-3 top-2 text-slate-500 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[9px] text-slate-500 mt-0.5">% sobre a taxa de locação repassada ao corretor (0% se não houver repasse).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SENHA PROVISÓRIA (APENAS PARA NOVO CADASTRO) -->
+                <div id="bloco-senha-novo">
+                    <label class="block font-bold text-slate-300 mb-1">Senha Provisória de Acesso *</label>
+                    <div class="relative flex items-center">
+                        <input type="text" id="colab-senha" minlength="6" placeholder="Mínimo 6 caracteres" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-24 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
+                        <button type="button" onclick="gerarSenhaAleatoria()" class="absolute right-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded-lg text-[10px] font-bold">
+                            Gerar Senha
+                        </button>
+                    </div>
+                </div>
+
+                <!-- MATRIZ DE PERMISSÕES GRANULARES (JSONB) -->
+                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block">Privilégios Operacionais & Blindagem:</span>
+                    
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-proprietarios" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Pode visualizar telefones e dados de proprietários</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-precos" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Pode editar preços e destinação de imóveis</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-financeiro" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Acesso ao Painel Financeiro Global (Receitas, Aluguéis e Faturamento da Imobiliária)</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                        <input type="checkbox" id="perm-comissoes-equipe" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+                        <span>Pode visualizar comissões de toda a equipe (se desmarcado, vê apenas a sua)</span>
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="fecharModalColaborador()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-colab" class="px-6 py-2.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black flex items-center gap-1.5 transition shadow cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Salvar Colaborador</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE SUCESSO COM LINK PARA O WHATSAPP -->
+    <div id="modal-sucesso-zap" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-sm w-full p-6 text-center border border-emerald-500/40 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mx-auto mb-3 border border-emerald-500/30">
+                <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <h3 class="text-base font-black text-white">Colaborador Cadastrado!</h3>
+            <p class="text-xs text-slate-400 mt-1">Deseja enviar a mensagem com link de login e senha provisória diretamente para o WhatsApp dele?</p>
+
+            <a id="btn-link-zap-enviar" href="#" target="_blank" onclick="fecharModalSucessoZap()" 
+               class="mt-5 w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                <span>Enviar Acesso no WhatsApp</span>
+            </a>
+
+            <button onclick="fecharModalSucessoZap()" class="mt-2 text-slate-400 hover:text-white text-xs underline">
+                Enviar mais tarde
+            </button>
+        </div>
+    </div>
+
+    <!-- RODAPÉ TÉCNICO -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
+        SGI • Sistema de Gestão Imobiliária SaaS • Gestão de Equipe & Permissões
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let imobiliariaId = null;
+        let dadosImobiliaria = null;
+        let listaEquipeCompleta = [];
+        let modoLeitura = false;
+        let isMasterSuporte = false;
+
+        async function inicializarEquipe() {
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const email = session.user.email.toLowerCase();
+            const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
+
+            // 1. MODO MASTER BYPASS (SUPORTE SOBERANO)
+            if (email === 'waldeckgil@gmail.com') {
+                isMasterSuporte = true;
+                modoLeitura = false;
+
+                let targetId = impersonateId;
+                let imobAlvo = null;
+
+                if (targetId) {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').eq('id', targetId).single();
+                    imobAlvo = data;
+                } else {
+                    const { data } = await supabaseClient.from('imobiliarias').select('*').limit(1).single();
+                    imobAlvo = data;
+                }
+
+                if (imobAlvo) {
+                    imobiliariaId = imobAlvo.id;
+                    dadosImobiliaria = imobAlvo;
+
+                    document.getElementById('faixa-modo-suporte').classList.remove('hidden');
+                    document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia} (/${imobAlvo.slug})`;
+
+                    document.getElementById('topbar-imob-nome').innerText = `${imobAlvo.nome_fantasia.toUpperCase()} (MODO SUPORTE)`;
+                    document.getElementById('topbar-user-nome').innerText = 'waldeckgil@gmail.com • Super Admin';
+                    document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
+                    document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
+                    
+                    await carregarMembrosEquipe();
+                }
+                return;
+            }
+
+            // 2. GESTOR DA IMOBILIÁRIA (VERIFICAÇÃO DE PRIVILÉGIO DONO)
+            try {
+                const { data: usuario, error: errUser } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .single();
+
+                if (errUser || !usuario) throw new Error('Perfil não encontrado.');
+
+                if (usuario.cargo !== 'dono') {
+                    alert('Acesso Restrito: Apenas gestores titulares podem administrar a equipe e suas comissões.');
+                    window.location.href = 'imoveis-lista.html';
+                    return;
+                }
+
+                const { data: imob, error: errImob } = await supabaseClient
+                    .from('imobiliarias')
+                    .select('*')
+                    .eq('id', usuario.imobiliaria_id)
+                    .single();
+
+                if (errImob || !imob) throw new Error('Imobiliária não localizada.');
+
+                imobiliariaId = imob.id;
+                dadosImobiliaria = imob;
+
+                document.getElementById('topbar-imob-nome').innerText = imob.nome_fantasia.toUpperCase();
+                document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email}`;
+                document.getElementById('topbar-cargo-badge').innerText = usuario.cargo.toUpperCase();
+
+                const hoje = new Date().toISOString().split('T')[0];
+                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
+                modoLeitura = (imob.status === 'blocked' || vencido);
+
+                if (modoLeitura) {
+                    document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                    const btn = document.getElementById('btn-novo-membro');
+                    btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                }
+
+                await carregarMembrosEquipe();
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao validar privilégios da equipe.');
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function carregarMembrosEquipe() {
+            const tbody = document.getElementById('tabela-equipe-corpo');
+            try {
+                const { data, error } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('imobiliaria_id', imobiliariaId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                listaEquipeCompleta = data || [];
+                atualizarMetricasRH(listaEquipeCompleta);
+                renderizarTabelaEquipe(listaEquipeCompleta);
+
+            } catch (err) {
+                console.error('Erro ao consultar equipe:', err);
+                tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-red-400">Erro ao carregar colaboradores.</td></tr>`;
+            }
+        }
+
+        function atualizarMetricasRH(membros) {
+            document.getElementById('kpi-total-equipe').innerText = membros.length;
+            document.getElementById('kpi-corretores').innerText = membros.filter(m => m.cargo === 'corretor').length;
+            document.getElementById('kpi-gerencia').innerText = membros.filter(m => m.cargo === 'dono' || m.cargo === 'gerente').length;
+            document.getElementById('kpi-inativos').innerText = membros.filter(m => m.ativo === false).length;
+            document.getElementById('contador-equipe').innerText = membros.length;
+        }
+
+        function renderizarTabelaEquipe(membros) {
+            const tbody = document.getElementById('tabela-equipe-corpo');
+
+            if (membros.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="py-12 text-center text-slate-500">
+                            <i class="fa-solid fa-users text-3xl mb-2 text-slate-600"></i>
+                            <p class="font-bold text-slate-400">Nenhum membro cadastrado.</p>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Clique em "Adicionar Colaborador" para incluir sua equipe.</p>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = membros.map(m => {
+                const iniciais = (m.nome_completo || 'C').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+                const perms = m.permissoes || {};
+                
+                const badgeProprietario = perms.ver_proprietarios 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px]" title="Pode ver telefones dos proprietários">Proprietários OK</span>'
+                    : '<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-500 text-[10px]" title="Telefones dos proprietários ocultos">Proprietários Ocultos</span>';
+
+                const badgePrecos = perms.editar_precos 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px]">Edita Preços</span>' 
+                    : '';
+
+                const badgeFinanceiro = perms.acesso_financeiro 
+                    ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700 text-[10px] font-bold">Financeiro Geral</span>' 
+                    : '<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-500 text-[10px]">Financeiro Restrito</span>';
+
+                const toggleClass = m.ativo ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
+                const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
+
+                const comissaoVenda = (m.comissao_venda_pct !== null && m.comissao_venda_pct !== undefined) ? m.comissao_venda_pct : 30;
+                const comissaoLocacao = (m.comissao_locacao_pct !== null && m.comissao_locacao_pct !== undefined) ? m.comissao_locacao_pct : 0;
+
+                return `
+                <tr class="hover:bg-slate-900/50 transition">
+                    <td class="py-3 px-4 flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-cyan-300 flex items-center justify-center font-black text-xs">
+                            ${iniciais}
+                        </div>
+                        <div>
+                            <span class="font-bold text-white block">${m.nome_completo}</span>
+                            <span class="text-[11px] text-slate-500 font-mono">${m.email}</span>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${m.cargo === 'dono' ? 'bg-amber-950 text-amber-400 border border-amber-800' : 'bg-slate-800 text-slate-300'}">
+                            ${m.cargo || 'corretor'}
+                        </span>
+                    </td>
+
+                    <td class="py-3 px-3 font-mono text-slate-400">${m.creci_individual || '---'}</td>
+
+                    <td class="py-3 px-3 font-mono text-cyan-300">${m.whatsapp || '---'}</td>
+
+                    <td class="py-3 px-3">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono font-bold text-[10px]" title="Comissão do corretor em vendas">
+                                Venda: ${comissaoVenda}%
+                            </span>
+                            <span class="px-2 py-0.5 rounded ${Number(comissaoLocacao) > 0 ? 'bg-purple-950 text-purple-300 border border-purple-800' : 'bg-slate-900 text-slate-500 border border-slate-800'} font-mono font-bold text-[10px]" title="Comissão do corretor em locações">
+                                Loc: ${comissaoLocacao}%
+                            </span>
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3">
+                        <div class="flex items-center gap-1 flex-wrap">
+                            ${badgeProprietario}
+                            ${badgeFinanceiro}
+                            ${badgePrecos}
+                        </div>
+                    </td>
+
+                    <td class="py-3 px-3 text-center">
+                        <button onclick="alternarStatusColaborador(${m.id}, ${m.ativo})" 
+                                ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                title="Clique para ativar ou bloquear acesso"
+                                class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}">
+                            <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
+                        </button>
+                    </td>
+
+                    <td class="py-3 px-4 text-right whitespace-nowrap">
+                        <button onclick="abrirModalEdicaoColaborador(${m.id})" 
+                                ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
+                                class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 hover:text-cyan-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" title="Editar Privilégios & Comissões">
+                            <i class="fa-regular fa-pen-to-square text-xs"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function alternarStatusColaborador(idNum, statusAtual) {
+            if (modoLeitura && !isMasterSuporte) return;
+            try {
+                const { error } = await supabaseClient
+                    .from('usuarios')
+                    .update({ ativo: !statusAtual })
+                    .eq('id', idNum);
+
+                if (error) throw error;
+                await carregarMembrosEquipe();
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao alterar status do colaborador.');
+            }
+        }
+
+        function abrirModalColaborador() {
+            if (modoLeitura && !isMasterSuporte) return;
+            document.getElementById('form-colaborador').reset();
+            document.getElementById('colab-id-edicao').value = '';
+            document.getElementById('modal-titulo').innerText = 'Novo Colaborador';
+            document.getElementById('bloco-senha-novo').classList.remove('hidden');
+            document.getElementById('colab-senha').required = true;
+            
+            // Puxa as diretrizes padrão da imobiliária configuradas em configurar-imobiliaria.html
+            const padraoVenda = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_venda_padrao_pct !== null && dadosImobiliaria.repasse_corretor_venda_padrao_pct !== undefined) 
+                ? dadosImobiliaria.repasse_corretor_venda_padrao_pct 
+                : 30.0;
+
+            const padraoLocacao = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_locacao_padrao_pct !== null && dadosImobiliaria.repasse_corretor_locacao_padrao_pct !== undefined) 
+                ? dadosImobiliaria.repasse_corretor_locacao_padrao_pct 
+                : 0.0;
+
+            document.getElementById('colab-comissao-venda').value = padraoVenda;
+            document.getElementById('colab-comissao-locacao').value = padraoLocacao;
+
+            gerarSenhaAleatoria();
+            document.getElementById('modal-colaborador').classList.remove('hidden');
+        }
+
+        function abrirModalEdicaoColaborador(idNum) {
+            if (modoLeitura && !isMasterSuporte) return;
+            const membro = listaEquipeCompleta.find(m => m.id === idNum);
+            if (!membro) return;
+
+            document.getElementById('colab-id-edicao').value = membro.id;
+            document.getElementById('modal-titulo').innerText = 'Editar Colaborador: ' + membro.nome_completo;
+            document.getElementById('colab-nome').value = membro.nome_completo || '';
+            document.getElementById('colab-zap').value = membro.whatsapp || '';
+            document.getElementById('colab-creci').value = membro.creci_individual || '';
+            document.getElementById('colab-cargo').value = membro.cargo || 'corretor';
+            document.getElementById('colab-email').value = membro.email || '';
+            
+            document.getElementById('colab-comissao-venda').value = (membro.comissao_venda_pct !== null && membro.comissao_venda_pct !== undefined) ? membro.comissao_venda_pct : 30.0;
+            document.getElementById('colab-comissao-locacao').value = (membro.comissao_locacao_pct !== null && membro.comissao_locacao_pct !== undefined) ? membro.comissao_locacao_pct : 0.0;
+
+            document.getElementById('bloco-senha-novo').classList.add('hidden');
+            document.getElementById('colab-senha').required = false;
+
+            const p = membro.permissoes || {};
+            document.getElementById('perm-proprietarios').checked = !!p.ver_proprietarios;
+            document.getElementById('perm-precos').checked = !!p.editar_precos;
+            document.getElementById('perm-financeiro').checked = !!p.acesso_financeiro;
+            document.getElementById('perm-comissoes-equipe').checked = !!p.ver_comissoes_gerais;
+
+            document.getElementById('modal-colaborador').classList.remove('hidden');
+        }
+
+        function fecharModalColaborador() {
+            document.getElementById('modal-colaborador').classList.add('hidden');
+        }
+
+        function fecharModalSucessoZap() {
+            document.getElementById('modal-sucesso-zap').classList.add('hidden');
+        }
+
+        function gerarSenhaAleatoria() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#';
+            let senha = '';
+            for (let i = 0; i < 8; i++) {
+                senha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('colab-senha').value = senha;
+        }
+
+        async function salvarColaborador(event) {
+            event.preventDefault();
+            if (modoLeitura && !isMasterSuporte) return;
+
+            const btn = document.getElementById('btn-salvar-colab');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Salvando...';
+            btn.disabled = true;
+
+            const idEdicao = document.getElementById('colab-id-edicao').value;
+            const nome = document.getElementById('colab-nome').value.trim();
+            const zap = sanitizarZap(document.getElementById('colab-zap').value.trim());
+            const creci = document.getElementById('colab-creci').value.trim();
+            const cargo = document.getElementById('colab-cargo').value;
+            const email = document.getElementById('colab-email').value.trim().toLowerCase();
+            const senha = document.getElementById('colab-senha').value;
+            const comissaoVenda = Number(document.getElementById('colab-comissao-venda').value) || 30.0;
+            const comissaoLocacao = (document.getElementById('colab-comissao-locacao').value !== '') ? Number(document.getElementById('colab-comissao-locacao').value) : 0.0;
+
+            const permissoesObj = {
+                ver_proprietarios: document.getElementById('perm-proprietarios').checked,
+                editar_precos: document.getElementById('perm-precos').checked,
+                acesso_financeiro: document.getElementById('perm-financeiro').checked,
+                ver_comissoes_gerais: document.getElementById('perm-comissoes-equipe').checked
+            };
+
+            try {
+                if (idEdicao) {
+                    const { error } = await supabaseClient
+                        .from('usuarios')
+                        .update({
+                            nome_completo: nome,
+                            whatsapp: zap,
+                            creci_individual: creci,
+                            cargo: cargo,
+                            comissao_venda_pct: comissaoVenda,
+                            comissao_locacao_pct: comissaoLocacao,
+                            permissoes: permissoesObj
+                        })
+                        .eq('id', idEdicao);
+
+                    if (error) throw error;
+                    fecharModalColaborador();
+                    await carregarMembrosEquipe();
+
+                } else {
+                    const tempAuthClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+                        auth: { persistSession: false, autoRefreshToken: false }
+                    });
+
+                    const { data: authData, error: authError } = await tempAuthClient.auth.signUp({
+                        email: email,
+                        password: senha,
+                        options: { data: { nome_completo: nome } }
+                    });
+
+                    if (authError) throw authError;
+                    if (!authData.user) throw new Error('Não foi possível registrar o usuário de autenticação.');
+
+                    const { error: dbError } = await supabaseClient
+                        .from('usuarios')
+                        .insert([{
+                            user_id: authData.user.id,
+                            imobiliaria_id: imobiliariaId,
+                            nome_completo: nome,
+                            whatsapp: zap,
+                            email: email,
+                            cargo: cargo,
+                            creci_individual: creci,
+                            comissao_venda_pct: comissaoVenda,
+                            comissao_locacao_pct: comissaoLocacao,
+                            ativo: true,
+                            permissoes: permissoesObj
+                        }]);
+
+                    if (dbError) throw dbError;
+
+                    fecharModalColaborador();
+                    await carregarMembrosEquipe();
+
+                    const linkLogin = window.location.origin + window.location.pathname.replace('equipe.html', 'login.html');
+                    const msg = encodeURIComponent(`Olá ${nome}! Seu acesso à plataforma da nossa imobiliária foi configurado com sucesso:\n\n🔗 Link de Acesso: ${linkLogin}\n📧 E-mail: ${email}\n🔑 Senha Provisória: ${senha}\n\nPor favor, faça seu login e altere sua senha no primeiro acesso.`);
+                    const urlWa = `https://wa.me/${zap}?text=${msg}`;
+
+                    document.getElementById('btn-link-zap-enviar').href = urlWa;
+                    document.getElementById('modal-sucesso-zap').classList.remove('hidden');
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar colaborador: ' + (err.message || 'Verifique os dados informados.'));
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Colaborador</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function sanitizarZap(num) {
+            let limpo = ('' + num).replace(/\D/g, '');
+            if (!limpo.startsWith('55')) limpo = '55' + limpo;
+            return limpo;
+        }
+
+        async function executarLogout() {
+            if (isMasterSuporte) {
+                window.close();
+                return;
+            }
+            if (confirm('Deseja realmente sair?')) {
+                await supabaseClient.auth.signOut();
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', inicializarEquipe);
     </script>
 </body>
 </html>
