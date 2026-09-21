@@ -1041,8 +1041,16 @@
                 if (im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-300 border-purple-800';
                 if (im.status === 'Vendido') statusBadge = 'bg-rose-950 text-rose-300 border-rose-800 font-black';
 
-                const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
-                const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
+ const estaDisponivel = (im.status === 'Disponível');
+                const toggleClass = (estaDisponivel && im.ativa) 
+                    ? 'bg-emerald-500 text-slate-950 hover:bg-emerald-400' 
+                    : (estaDisponivel ? 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700' : 'bg-slate-900 text-slate-600 border border-slate-800/80 opacity-40 cursor-not-allowed');
+                
+                const toggleTexto = (estaDisponivel && im.ativa) ? 'No Ar' : 'Pausado';
+                const toggleIcone = estaDisponivel ? 'fa-solid fa-circle text-[7px]' : 'fa-solid fa-lock text-[8px]';
+                const toggleTitle = estaDisponivel 
+                    ? 'Clique para alternar presença na vitrine' 
+                    : `Imóvel com status "${im.status}". Apenas imóveis Disponíveis podem ser publicados na vitrine.`;
 
                 let botoesFechamento = '';
                 if (im.status === 'Disponível' || im.status === 'Em Proposta') {
@@ -1119,14 +1127,13 @@
                     </td>
 
                     <td class="py-3 px-3 text-center">
-                        <button onclick="alternarVisibilidadeVitrine('${im.id}', ${Boolean(im.ativa)})" 
+                        <button onclick="alternarVisibilidadeVitrine('${im.id}', ${Boolean(im.ativa)}, '${im.status}')" 
                                 ${modoLeitura ? 'disabled' : ''}
-                                title="Clique para alternar presença na vitrine"
+                                title="${toggleTitle}"
                                 class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}">
-                            <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
+                            <i class="${toggleIcone} mr-1"></i> ${toggleTexto}
                         </button>
                     </td>
-
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5">
                             ${botoesFechamento}
@@ -1872,24 +1879,32 @@
                 btn.innerHTML = '<i class="fa-solid fa-key"></i> <span>Confirmar Locação & Criar Contrato</span>';
             }
         }
-
-        async function alternarVisibilidadeVitrine(imovelId, estadoAtual) {
+async function alternarVisibilidadeVitrine(imovelId, estadoAtual, statusImovel) {
             if (modoLeitura) return;
+
+            // BLINDAGEM DE NEGÓCIO: Somente imóveis "Disponível" podem ir para a vitrine
+            if (statusImovel && statusImovel !== 'Disponível') {
+                mostrarToast('aviso', 'Ação Não Permitida', `Imóvel com status "${statusImovel}". Somente imóveis com status "Disponível" podem ser colocados no ar.`);
+                return;
+            }
+
             try {
                 const { error } = await supabaseClient
                     .from('imoveis')
                     .update({ ativa: !estadoAtual })
-                    .eq('id', imovelId);
+                    .eq('id', imovelId)
+                    .eq('imobiliaria_id', imobiliariaId);
 
                 if (error) throw error;
-                mostrarToast('aviso', 'Vitrine Atualizada', !estadoAtual ? 'O anúncio foi publicado na vitrine.' : 'O anúncio foi pausado da vitrine.');
+
+                mostrarToast('sucesso', 'Vitrine Atualizada', !estadoAtual ? 'O anúncio foi publicado na vitrine com sucesso.' : 'O anúncio foi pausado da vitrine.');
                 await carregarImoveis();
             } catch (err) {
                 console.error(err);
                 mostrarToast('erro', 'Falha na Vitrine', 'Erro ao atualizar status da vitrine.');
             }
         }
-
+  
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
