@@ -3730,7 +3730,7 @@ let estiloCard = ehHoje
             }
         }
 
-        function renderizarGradeCalendario() {
+  function renderizarGradeCalendario() {
             const grid = document.getElementById('grid-calendario-dias');
             if (!grid) return;
             grid.innerHTML = '';
@@ -3743,7 +3743,7 @@ let estiloCard = ehHoje
 
             for (let i = 0; i < primeiroDiaSemana; i++) {
                 const cellVazia = document.createElement('div');
-                cellVazia.className = 'h-11 rounded-lg bg-slate-950/30 border border-slate-900/50 opacity-20';
+                cellVazia.className = 'h-12 rounded-xl bg-slate-950/30 border border-slate-900/40 opacity-20';
                 grid.appendChild(cellVazia);
             }
 
@@ -3758,30 +3758,47 @@ let estiloCard = ehHoje
                 cell.type = 'button';
                 cell.onclick = () => selecionarDiaAgenda(dataChave);
 
-                let estiloBorda = 'border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-300';
+                // HIERARQUIA VISUAL DE ESTILOS DO BOX
+                let estiloBox = 'border border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-400';
 
                 if (ehSelecionado) {
-                    estiloBorda = 'border-blue-500 bg-blue-600 text-white font-black shadow-lg shadow-blue-950';
+                    estiloBox = 'border-2 border-blue-400 bg-blue-600 text-white font-black shadow-xl shadow-blue-950 scale-[1.03] z-10';
+                } else if (ehHoje && temVisitas) {
+                    estiloBox = 'border-2 border-amber-400 bg-gradient-to-b from-amber-950/60 to-cyan-950/70 text-amber-300 font-black shadow-lg shadow-amber-950/60 ring-2 ring-cyan-500/40';
                 } else if (ehHoje) {
-                    estiloBorda = 'border-amber-400 bg-amber-950/30 text-amber-300 font-bold';
+                    estiloBox = 'border-2 border-amber-400 bg-amber-950/30 text-amber-300 font-bold';
+                } else if (temVisitas) {
+                    // BOX TOTALMENTE DESTACADO PARA DIAS COM VISITAS
+                    estiloBox = 'border-2 border-cyan-400/90 bg-cyan-950/60 hover:bg-cyan-900/70 text-cyan-200 font-black shadow-lg shadow-cyan-950/80 ring-1 ring-cyan-400/30';
                 }
 
-                cell.className = `h-11 rounded-lg border p-1 flex flex-col justify-between items-center transition cursor-pointer relative ${estiloBorda}`;
+                // INDICADOR DE VISITAS CHAMATIVO (PÍLULA COM CONTADOR)
+                let indicadorVisitasHtml = '<span class="h-3"></span>';
+                if (temVisitas) {
+                    if (ehSelecionado) {
+                        indicadorVisitasHtml = `
+                            <span class="px-1.5 py-0.5 rounded-full bg-white text-blue-700 text-[9px] font-black font-mono shadow flex items-center gap-0.5">
+                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
+                            </span>
+                        `;
+                    } else {
+                        indicadorVisitasHtml = `
+                            <span class="px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black font-mono shadow-md shadow-cyan-400/50 flex items-center gap-0.5 animate-pulse">
+                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
+                            </span>
+                        `;
+                    }
+                }
+
+                cell.className = `h-12 rounded-xl p-1 flex flex-col justify-between items-center transition-all duration-200 cursor-pointer relative ${estiloBox}`;
                 cell.innerHTML = `
-                    <span class="text-xs ${ehSelecionado ? 'text-white' : ''}">${dia}</span>
-                    
-                    ${temVisitas ? `
-                        <div class="flex items-center gap-0.5">
-                            <span class="w-2 h-2 rounded-full ${ehSelecionado ? 'bg-white' : 'bg-cyan-400 shadow shadow-cyan-400/80'}"></span>
-                            ${qtdVisitas > 1 ? `<span class="text-[9px] font-bold ${ehSelecionado ? 'text-white' : 'text-cyan-300'} font-mono">${qtdVisitas}</span>` : ''}
-                        </div>
-                    ` : '<span class="h-2"></span>'}
+                    <span class="text-xs ${ehSelecionado ? 'text-white' : (temVisitas ? 'text-cyan-300 font-black' : '')}">${dia}</span>
+                    ${indicadorVisitasHtml}
                 `;
 
                 grid.appendChild(cell);
             }
         }
-
         function selecionarDiaAgenda(dataIso) {
             dataIsoSelecionadaAgenda = dataIso;
             renderizarGradeCalendario();
