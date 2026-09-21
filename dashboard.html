@@ -932,6 +932,35 @@
         </div>
     </div>
 
+<!-- MODAL DE CONFIRMAÇÃO DO SISTEMA (CUSTOMIZADO DARK TECH) -->
+    <div id="modal-confirmacao-acao" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[90] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 border border-amber-500/50 shadow-2xl space-y-4 text-center toast-ativo">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl mx-auto shadow-inner">
+                <i class="fa-solid fa-pause"></i>
+            </div>
+            <div class="space-y-1.5">
+                <h3 id="modal-confirma-titulo" class="text-base font-black text-white uppercase tracking-wide">Pausar Publicação</h3>
+                <p id="modal-confirma-msg" class="text-xs text-slate-200">Deseja realmente pausar a publicação deste imóvel na vitrine?</p>
+                <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-950 p-2.5 rounded-lg border border-slate-800 mt-2 space-y-1.5 text-left">
+                    <p>Ele sairá do site público imediatamente, mas continuará disponível no seu estoque interno.</p>
+                    <p class="text-cyan-300 font-medium flex items-center gap-1.5 pt-1 border-t border-slate-900">
+                        <i class="fa-solid fa-circle-info text-cyan-400 flex-shrink-0"></i>
+                        <span>Para voltar a ativar este imóvel no site, acesse o <strong>Catálogo de Imóveis</strong>.</span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button id="btn-cancelar-confirma" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                    Cancelar
+                </button>
+                <button id="btn-executar-confirma" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-amber-950/40 flex items-center gap-1.5">
+                    <i class="fa-solid fa-pause text-[10px]"></i>
+                    <span>Confirmar Pausa</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Sessão Criptografada via JWT
@@ -2892,36 +2921,57 @@ corpo.innerHTML = imoveis.map(im => `
             }
         }
 
-async function pausarPublicacaoImovel(imovelId, codigoRef) {
+
+function pausarPublicacaoImovel(imovelId, codigoRef) {
             if (!imovelId || !dadosImobiliaria) return;
 
-            const confirmar = confirm(`Deseja realmente pausar a publicação do imóvel Ref: ${codigoRef || ''} na vitrine?\n\nEle sairá do site público imediatamente, mas continuará disponível no seu estoque interno.`);
-            if (!confirmar) return;
+            const modal = document.getElementById('modal-confirmacao-acao');
+            const msgEl = document.getElementById('modal-confirma-msg');
+            const btnConfirmar = document.getElementById('btn-executar-confirma');
+            const btnCancelar = document.getElementById('btn-cancelar-confirma');
 
-            try {
-                const { error } = await supabaseClient
-                    .from('imoveis')
-                    .update({ ativa: false })
-                    .eq('id', imovelId)
-                    .eq('imobiliaria_id', dadosImobiliaria.id);
+            if (!modal) return;
 
-                if (error) throw error;
-
-                exibirToast('sucesso', `Imóvel Ref: ${codigoRef || ''} pausado com sucesso!`);
-
-                // Recarrega contadores do Dashboard e a lista do modal em tempo real
-                await carregarMetricas(dadosImobiliaria.id);
-                await abrirDrilldown('imoveis-ativos');
-
-            } catch (err) {
-                console.error('[PAUSAR IMÓVEL] Erro:', err);
-                exibirToast('erro', 'Não foi possível pausar o imóvel. Tente novamente.');
+            if (msgEl) {
+                msgEl.innerHTML = `Deseja realmente pausar a publicação do imóvel <strong class="text-cyan-300 font-mono">Ref: ${codigoRef || ''}</strong> na vitrine?`;
             }
+
+            modal.classList.remove('hidden');
+
+            // Recria os botões para limpar eventos de cliques antigos
+            const novoBtnConfirmar = btnConfirmar.cloneNode(true);
+            const novoBtnCancelar = btnCancelar.cloneNode(true);
+            btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
+            btnCancelar.parentNode.replaceChild(novoBtnCancelar, btnCancelar);
+
+            novoBtnCancelar.onclick = () => {
+                modal.classList.add('hidden');
+            };
+
+            novoBtnConfirmar.onclick = async () => {
+                modal.classList.add('hidden');
+                try {
+                    const { error } = await supabaseClient
+                        .from('imoveis')
+                        .update({ ativa: false })
+                        .eq('id', imovelId)
+                        .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                    if (error) throw error;
+
+                    exibirToast('sucesso', `Imóvel Ref: ${codigoRef || ''} pausado! Para reativar no site, acesse o Catálogo de Imóveis.`);
+
+                    // Recarrega contadores do Dashboard e a lista do modal em tempo real
+                    await carregarMetricas(dadosImobiliaria.id);
+                    await abrirDrilldown('imoveis-ativos');
+
+                } catch (err) {
+                    console.error('[PAUSAR IMÓVEL] Erro:', err);
+                    exibirToast('erro', 'Não foi possível pausar o imóvel. Tente novamente.');
+                }
+            };
         }
         window.pausarPublicacaoImovel = pausarPublicacaoImovel;
-
-
-
 
         function atalhoAbaFinanceira() {
             if (!temPermissaoFinanceira) return;
