@@ -3932,13 +3932,18 @@ let leadAtualEmEdicao = null;
                 }
 
                 const dataFormatada = lead.data_agendamento ? new Date(lead.data_agendamento).toLocaleString('pt-BR') : 'Data não definida';
-
-                // Valor formato YYYY-MM-DDTHH:mm para input datetime-local
-                let valorInputDatetime = '';
+// Prepara data (YYYY-MM-DD) e hora (HH:mm) para os inputs visuais
+                let valorInputData = '';
+                let valorInputHora = '10:00';
                 if (lead.data_agendamento) {
                     const dt = new Date(lead.data_agendamento);
-                    dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
-                    valorInputDatetime = dt.toISOString().slice(0, 16);
+                    const ano = dt.getFullYear();
+                    const mes = String(dt.getMonth() + 1).padStart(2, '0');
+                    const dia = String(dt.getDate()).padStart(2, '0');
+                    valorInputData = `${ano}-${mes}-${dia}`;
+                    const h = String(dt.getHours()).padStart(2, '0');
+                    const m = String(dt.getMinutes()).padStart(2, '0');
+                    valorInputHora = `${h}:${m}`;
                 }
 
                 if (corpo) {
@@ -3962,26 +3967,39 @@ let leadAtualEmEdicao = null;
                             </div>
                         </div>
 
-                        <!-- GAVETA EXPANSÍVEL DE REAGENDAMENTO -->
-                        <div id="box-reagendamento-inline" class="hidden bg-slate-900/90 border border-amber-500/50 p-3.5 rounded-xl space-y-3 shadow-xl">
+                        <!-- GAVETA EXPANSÍVEL DE REAGENDAMENTO (COM CLIQUE VISUAL DE CALENDÁRIO & HORAS) -->
+                        <div id="box-reagendamento-inline" class="hidden bg-slate-900/95 border border-amber-500/50 p-3.5 rounded-xl space-y-3 shadow-2xl">
                             <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                                 <span class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-calendar-days text-amber-400"></i> Reagendar Visita
+                                    <i class="fa-solid fa-calendar-days text-amber-400"></i> Selecionar Nova Data & Horário no Calendário
                                 </span>
                                 <button type="button" onclick="alternarBoxReagendamento()" class="text-slate-400 hover:text-white cursor-pointer text-xs">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
                                 <div>
-                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Novo Dia e Horário:</label>
-                                    <input type="datetime-local" id="input-novo-agendamento-data" value="${valorInputDatetime}" 
-                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400">
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px] flex items-center gap-1">
+                                        <i class="fa-regular fa-calendar text-amber-400"></i> Nova Data:
+                                    </label>
+                                    <input type="date" id="input-novo-agendamento-data" value="${valorInputData}" 
+                                           onclick="try{this.showPicker()}catch(e){}"
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert" 
+                                           title="Clique para abrir o calendário">
                                 </div>
                                 <div>
-                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Motivo / Nova Nota:</label>
-                                    <input type="text" id="input-novo-agendamento-nota" placeholder="Ex: Cliente pediu para mudar para a tarde" 
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px] flex items-center gap-1">
+                                        <i class="fa-regular fa-clock text-amber-400"></i> Novo Horário:
+                                    </label>
+                                    <input type="time" id="input-novo-agendamento-hora" value="${valorInputHora}" 
+                                           onclick="try{this.showPicker()}catch(e){}"
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert" 
+                                           title="Clique para escolher o horário">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Motivo (Opcional):</label>
+                                    <input type="text" id="input-novo-agendamento-nota" placeholder="Ex: Cliente pediu para a tarde" 
                                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-amber-400">
                                 </div>
                             </div>
@@ -4042,11 +4060,12 @@ let leadAtualEmEdicao = null;
             if (!leadAtualEmEdicao || !dadosImobiliaria) return;
 
             const inputData = document.getElementById('input-novo-agendamento-data')?.value;
+            const inputHora = document.getElementById('input-novo-agendamento-hora')?.value || '10:00';
             const inputNota = document.getElementById('input-novo-agendamento-nota')?.value.trim();
             const btn = document.getElementById('btn-salvar-reagendamento');
 
             if (!inputData) {
-                exibirToast('aviso', 'Informe uma data e horário válidos.');
+                exibirToast('aviso', 'Selecione a data da visita no calendário.');
                 return;
             }
 
@@ -4054,7 +4073,12 @@ let leadAtualEmEdicao = null;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
 
             try {
-                const novaDataIso = new Date(inputData).toISOString();
+                // Montagem da data combinando o calendário e o horário sem distorção de fuso
+                const [ano, mes, dia] = inputData.split('-').map(Number);
+                const [hora, min] = inputHora.split(':').map(Number);
+                const dataObj = new Date(ano, mes - 1, dia, hora || 0, min || 0, 0);
+                const novaDataIso = dataObj.toISOString();
+
                 let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
 
                 if (inputNota) {
@@ -4090,7 +4114,6 @@ let leadAtualEmEdicao = null;
                 btn.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> Salvar Novo Horário';
             }
         }
-
         function fecharModalAgendamento() {
             const modal = document.getElementById('modal-dash-agendamento');
             if (modal) modal.classList.add('hidden');
