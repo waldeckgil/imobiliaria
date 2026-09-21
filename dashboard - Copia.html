@@ -2654,8 +2654,8 @@
                         corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel ativo na vitrine no momento.</p>';
                         return;
                     }
-    
-corpo.innerHTML = imoveis.map(im => `
+
+                    corpo.innerHTML = imoveis.map(im => `
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-cyan-500/40 transition">
                             <div class="flex items-center gap-3">
                                 <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
@@ -2665,15 +2665,9 @@ corpo.innerHTML = imoveis.map(im => `
                                     <span class="text-[11px] font-black text-cyan-300 block mt-0.5">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2 flex-shrink-0">
-                                <button onclick="pausarPublicacaoImovel('${im.id}', '${im.codigo_ref}')" class="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-800/80 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer flex items-center gap-1.5 shadow-sm" title="Pausar exibição na vitrine pública">
-                                    <i class="fa-solid fa-pause text-[10px]"></i>
-                                    <span>Pausar</span>
-                                </button>
-                                <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
-                                    Ver Raio-X
-                                </button>
-                            </div>
+                            <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
+                                Ver Raio-X
+                            </button>
                         </div>
                     `).join('');
 
@@ -2891,37 +2885,6 @@ corpo.innerHTML = imoveis.map(im => `
                 boxModal.classList.add('max-w-3xl');
             }
         }
-
-async function pausarPublicacaoImovel(imovelId, codigoRef) {
-            if (!imovelId || !dadosImobiliaria) return;
-
-            const confirmar = confirm(`Deseja realmente pausar a publicação do imóvel Ref: ${codigoRef || ''} na vitrine?\n\nEle sairá do site público imediatamente, mas continuará disponível no seu estoque interno.`);
-            if (!confirmar) return;
-
-            try {
-                const { error } = await supabaseClient
-                    .from('imoveis')
-                    .update({ ativa: false })
-                    .eq('id', imovelId)
-                    .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                if (error) throw error;
-
-                exibirToast('sucesso', `Imóvel Ref: ${codigoRef || ''} pausado com sucesso!`);
-
-                // Recarrega contadores do Dashboard e a lista do modal em tempo real
-                await carregarMetricas(dadosImobiliaria.id);
-                await abrirDrilldown('imoveis-ativos');
-
-            } catch (err) {
-                console.error('[PAUSAR IMÓVEL] Erro:', err);
-                exibirToast('erro', 'Não foi possível pausar o imóvel. Tente novamente.');
-            }
-        }
-        window.pausarPublicacaoImovel = pausarPublicacaoImovel;
-
-
-
 
         function atalhoAbaFinanceira() {
             if (!temPermissaoFinanceira) return;
