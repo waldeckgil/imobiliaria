@@ -300,7 +300,6 @@
                         <option value="Visita Agendada">🟣 Visita Agendada</option>
                         <option value="Proposta">🟠 Proposta Feita</option>
                         <option value="Fechado">🟢 Venda Concluída</option>
-                        <option value="Cancelado">🚫 Cancelado</option>
                         <option value="Perdido">⚫ Perdido</option>
                     </select>
                 </div>
@@ -407,10 +406,10 @@
                 </div>
             </div>
 
-            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS (PIPELINE INTERATIVO COM CANCELADO INCLUSO) -->
+            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS (PIPELINE INTERATIVO) -->
             <div class="space-y-1.5">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
-                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5" id="cockpit-pipeline-botoes">
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5" id="cockpit-pipeline-botoes">
                     <!-- Gerado via JavaScript -->
                 </div>
             </div>
@@ -507,7 +506,7 @@
                             <button onclick="abrirModalConfirmarDesmarcarVisita()" 
                                     class="bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/60 font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 ml-auto">
                                 <i class="fa-solid fa-calendar-xmark"></i>
-                                <span>Desmarcar Visita</span>
+                                <span>Desmarcar</span>
                             </button>
                         </div>
                     </div>
@@ -771,14 +770,12 @@
         let leadAtivoCockpit = null;
         let filtroEstagioAtivoCard = null; // Guarda se há um card ativo filtrando
 
-        // ESTÁGIOS DO FUNIL COM O ESTÁGIO "CANCELADO" OFICIALIZADO E INTEGRADO
         const ESTAGIOS_FUNIL = [
             { chave: 'Novo', rotulo: 'Novo', cor: 'blue', icone: 'fa-circle-dot' },
             { chave: 'Em Atendimento', rotulo: 'Atendimento', cor: 'amber', icone: 'fa-headset' },
             { chave: 'Visita Agendada', rotulo: 'Visita', cor: 'cyan', icone: 'fa-calendar-check' },
             { chave: 'Proposta', rotulo: 'Proposta', cor: 'purple', icone: 'fa-hand-holding-dollar' },
             { chave: 'Fechado', rotulo: 'Concluído', cor: 'emerald', icone: 'fa-handshake' },
-            { chave: 'Cancelado', rotulo: 'Cancelado', cor: 'rose', icone: 'fa-calendar-xmark' },
             { chave: 'Perdido', rotulo: 'Perdido', cor: 'slate', icone: 'fa-ban' }
         ];
 
@@ -1191,7 +1188,7 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Badges da Etapa Atual (Com badge explícita para CANCELADO)
+                // Badges da Etapa Atual
                 const statusAtual = l.status || 'Novo';
                 let badgeStatusHtml = '';
                 if (statusAtual === 'Novo') {
@@ -1205,8 +1202,6 @@
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-purple-950/80 text-purple-300 border border-purple-700/60 flex items-center gap-1.5"><i class="fa-solid fa-hand-holding-dollar"></i> Proposta Feita</span>';
                 } else if (statusAtual === 'Fechado') {
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 flex items-center gap-1.5"><i class="fa-solid fa-handshake"></i> Concluído</span>';
-                } else if (statusAtual === 'Cancelado') {
-                    badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-rose-950/90 text-rose-300 border border-rose-700/80 shadow flex items-center gap-1.5"><i class="fa-solid fa-calendar-xmark text-rose-400"></i> Cancelado</span>';
                 } else {
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
@@ -1364,7 +1359,7 @@
             // Seleciona o corretor no Cockpit
             document.getElementById('cockpit-corretor-select').value = lead.corretor_atribuido_id || '';
 
-            // Renderiza os botões do Pipeline com o status atual
+            // Renderiza os botões do Pipeline
             renderizarPipelineCockpit(lead.status || 'Novo');
 
             // Carrega valores na aba de Visita
@@ -1409,7 +1404,6 @@
                     else if (est.chave === 'Visita Agendada') classes = 'border-cyan-400 bg-cyan-950/80 text-cyan-300 font-black shadow-md';
                     else if (est.chave === 'Proposta') classes = 'border-purple-500 bg-purple-950/80 text-purple-300 font-black shadow-md';
                     else if (est.chave === 'Fechado') classes = 'border-emerald-500 bg-emerald-950/80 text-emerald-300 font-black shadow-md';
-                    else if (est.chave === 'Cancelado') classes = 'border-rose-500 bg-rose-950/90 text-rose-300 font-black shadow-md';
                     else if (est.chave === 'Perdido') classes = 'border-slate-600 bg-slate-800 text-slate-300 font-black shadow-md';
                 }
 
@@ -1441,37 +1435,20 @@
             }
 
             try {
-                const payloadUpdate = { status: novaEtapa };
-
-                // Se o lead for cancelado ou perdido, remove agendamento ativo
-                if (novaEtapa === 'Cancelado' || novaEtapa === 'Perdido') {
-                    payloadUpdate.data_agendamento = null;
-                }
-
                 const { error } = await supabaseClient
                     .from('leads_contatos')
-                    .update(payloadUpdate)
+                    .update({ status: novaEtapa })
                     .eq('id', leadAtivoCockpit.id);
 
                 if (error) throw error;
 
                 leadAtivoCockpit.status = novaEtapa;
-                if (payloadUpdate.data_agendamento === null) {
-                    leadAtivoCockpit.data_agendamento = null;
-                    document.getElementById('cockpit-visita-data').value = '';
-                }
-
                 renderizarPipelineCockpit(novaEtapa);
-
-                let descricaoHistorico = `Etapa do funil alterada de "${etapaAntiga}" para "${novaEtapa}".`;
-                if (novaEtapa === 'Cancelado') {
-                    descricaoHistorico = `Atendimento marcado como Cancelado (Desistência/Agenda) pelo operador.`;
-                }
 
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
-                    (novaEtapa === 'Cancelado' ? 'cancelamento_visita' : 'status'),
-                    descricaoHistorico
+                    'status',
+                    `Etapa do funil alterada de "${etapaAntiga}" para "${novaEtapa}".`
                 );
 
                 notificar('sucesso', 'Etapa Atualizada', `Lead avançou para "${novaEtapa}".`);
@@ -1536,9 +1513,6 @@
                     if (ev.tipo_evento === 'visita') {
                         icone = 'fa-calendar-days';
                         corBadge = 'text-cyan-300 bg-cyan-950/90 border-cyan-700';
-                    } else if (ev.tipo_evento === 'cancelamento_visita') {
-                        icone = 'fa-calendar-xmark';
-                        corBadge = 'text-rose-300 bg-rose-950/90 border-rose-700';
                     } else if (ev.tipo_evento === 'proposta') {
                         icone = 'fa-hand-holding-dollar';
                         corBadge = 'text-purple-300 bg-purple-950/90 border-purple-700';
@@ -1558,7 +1532,7 @@
                                 <div class="flex items-center justify-between">
                                     <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded border ${corBadge} font-bold inline-flex items-center gap-1">
                                         <i class="fa-solid ${icone}"></i>
-                                        <span>${ev.tipo_evento.replace('_', ' ').toUpperCase()}</span>
+                                        <span>${ev.tipo_evento.toUpperCase()}</span>
                                     </span>
                                     <span class="text-[10px] text-slate-500 font-mono">${dataHora}</span>
                                 </div>
