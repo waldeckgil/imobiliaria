@@ -189,8 +189,12 @@
             </div>
         </div>
 
+
+        <!-- FAIXA DE ALERTAS INTELIGENTES: VISITAS DE HOJE E AMANHÃ -->
+        <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
+
         <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
+
             
             <!-- CARD 1: DISPONÍVEIS -->
             <div onclick="abrirDrilldown('disponiveis')" class="box-tech p-4 border-l-4 border-l-blue-500 cursor-pointer hover:scale-[1.02] hover:border-blue-400 hover:shadow-xl transition group bg-gradient-to-r from-blue-950/15 to-transparent">
@@ -3561,7 +3565,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
         // =========================================================================
         // MOTOR DA AGENDA DE VISITAS & ATENDIMENTOS
         // =========================================================================
-        async function carregarAgendaMes() {
+async function carregarAgendaMes() {
             if (!dadosImobiliaria) return;
 
             const labelMesAno = document.getElementById('label-mes-ano-agenda');
@@ -3611,11 +3615,110 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                     selecionarDiaAgenda(dataIsoSelecionadaAgenda);
                 }
 
+                // Dispara os alertas inteligentes no topo do painel
+                await verificarAlertasTopoVisitas(dadosImobiliaria.id);
+
             } catch (err) {
                 console.error('[AGENDA] Erro ao carregar agendamentos:', err);
             }
         }
 
+        async function verificarAlertasTopoVisitas(imobId) {
+            const container = document.getElementById('container-alertas-agendamentos');
+            if (!container) return;
+
+            const agora = new Date();
+            const hojeStr = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+            
+            const amanha = new Date(agora);
+            amanha.setDate(agora.getDate() + 1);
+            const amanhaStr = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
+
+            try {
+                const { data: visitas, error } = await supabaseClient
+                    .from('leads_contatos')
+                    .select('id, nome, whatsapp, data_agendamento, imovel_id, notas_agendamento')
+                    .eq('imobiliaria_id', imobId)
+                    .gte('data_agendamento', `${hojeStr}T00:00:00`)
+                    .lte('data_agendamento', `${amanhaStr}T23:59:59`)
+                    .order('data_agendamento', { ascending: true });
+
+                if (error || !visitas || visitas.length === 0) {
+                    container.classList.add('hidden');
+                    container.innerHTML = '';
+                    return;
+                }
+
+                // Busca dados dos imóveis para os alertas
+                const imovelIds = visitas.map(v => v.imovel_id).filter(Boolean);
+                let mapaImoveis = {};
+                if (imovelIds.length > 0) {
+                    const { data: ims } = await supabaseClient
+                        .from('imoveis')
+                        .select('id, codigo_ref, titulo')
+                        .in('id', imovelIds);
+                    (ims || []).forEach(im => { mapaImoveis[im.id] = im; });
+                }
+
+                container.innerHTML = visitas.map(v => {
+                    const dataChave = v.data_agendamento ? v.data_agendamento.split('T')[0] : '';
+                    const ehHoje = (dataChave === hojeStr);
+                    const horaFmt = v.data_agendamento ? new Date(v.data_agendamento).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
+                    const zapLimpo = ('' + (v.whatsapp || '')).replace(/\D/g, '');
+                    const imovel = v.imovel_id ? mapaImoveis[v.imovel_id] : null;
+
+                    let estiloCard = ehHoje 
+                        ? 'border-emerald-500 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 shadow-emerald-950/30' 
+                        : 'border-cyan-500/80 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 shadow-cyan-950/30';
+                    
+                    let badgeTopo = ehHoje 
+                        ? '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-500 text-slate-950 shadow animate-pulse flex items-center gap-1"><i class="fa-solid fa-bell"></i> VISITA MARCADA PARA HOJE</span>'
+                        : '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1"><i class="fa-solid fa-clock"></i> VISITA AGENDADA PARA AMANHÃ</span>';
+
+                    return `
+                        <div class="box-tech p-3.5 border-l-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl transition ${estiloCard}">
+                            <div class="flex items-start sm:items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl ${ehHoje ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'} flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        ${badgeTopo}
+                                        <span class="text-white font-mono font-black text-xs bg-slate-950 px-2 py-0.5 rounded border border-slate-800">
+                                            ${horaFmt}
+                                        </span>
+                                        <strong class="text-white uppercase font-black tracking-wide">${v.nome}</strong>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400 flex items-center gap-1.5 flex-wrap">
+                                        ${imovel ? `
+                                            <span class="text-cyan-300 font-mono font-bold">Ref: ${imovel.codigo_ref}</span>
+                                            <span>• ${imovel.titulo}</span>
+                                        ` : '<span>Visita geral com cliente</span>'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
+                                ${zapLimpo ? `
+                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i> Chamar
+                                    </a>
+                                ` : ''}
+                                <button type="button" onclick="abrirDossieAgendamento('${v.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer flex items-center gap-1 border border-slate-700">
+                                    <i class="fa-solid fa-file-lines text-xs"></i>
+                                    <span>Ver Ficha</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.classList.remove('hidden');
+
+            } catch (err) {
+                console.error('[ALERTAS TOPO] Erro:', err);
+            }
+        }
         function renderizarGradeCalendario() {
             const grid = document.getElementById('grid-calendario-dias');
             if (!grid) return;
@@ -3761,7 +3864,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
             if (modal) modal.classList.add('hidden');
         }
 
-        async function abrirDossieAgendamento(leadId) {
+async function abrirDossieAgendamento(leadId) {
             const modal = document.getElementById('modal-dash-agendamento');
             const corpo = document.getElementById('agendamento-modal-conteudo');
             const btnZap = document.getElementById('agendamento-modal-btn-zap');
@@ -3777,23 +3880,44 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
             if (modal) modal.classList.remove('hidden');
 
             try {
+                // 1. Busca direta no banco sem joins rígidos (elimina o erro de PGRST200)
                 const { data: lead, error } = await supabaseClient
                     .from('leads_contatos')
-                    .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro, valor_venda, valor_locacao), usuarios(nome_completo)')
+                    .select('*')
                     .eq('id', leadId)
                     .single();
 
                 if (error || !lead) throw new Error('Agendamento não localizado.');
 
+                // 2. Busca segura do imóvel vinculado (se houver)
+                let imovel = null;
+                if (lead.imovel_id) {
+                    const { data: im } = await supabaseClient
+                        .from('imoveis')
+                        .select('id, codigo_ref, titulo, foto_capa, bairro, valor_venda, valor_locacao')
+                        .eq('id', lead.imovel_id)
+                        .maybeSingle();
+                    imovel = im;
+                }
+
+                // 3. Busca segura do corretor responsável (se houver)
+                let corretorNome = 'Não atribuído';
+                if (lead.corretor_atribuido_id) {
+                    const { data: us } = await supabaseClient
+                        .from('usuarios')
+                        .select('nome_completo')
+                        .eq('id', lead.corretor_atribuido_id)
+                        .maybeSingle();
+                    if (us && us.nome_completo) corretorNome = us.nome_completo;
+                }
+
                 const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '');
                 if (btnZap) {
-                    btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}` : '#';
+                    btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${lead.nome}! Sou da imobiliária e estou entrando em contato para confirmar sua visita.`)}` : '#';
                     btnZap.style.display = zapLimpo ? 'inline-flex' : 'none';
                 }
 
                 const dataFormatada = lead.data_agendamento ? new Date(lead.data_agendamento).toLocaleString('pt-BR') : 'Data não definida';
-                const imovel = lead.imoveis || null;
-                const corretorNome = lead.usuarios ? lead.usuarios.nome_completo : 'Não atribuído';
 
                 if (corpo) {
                     corpo.innerHTML = `
@@ -3809,7 +3933,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800">
-                                <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white">${lead.whatsapp || 'Não informado'}</strong></div>
+                                <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white font-mono">${lead.whatsapp || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-white">${lead.email || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">Corretor Responsável:</span> <strong class="text-cyan-300">${corretorNome}</strong></div>
                                 <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono">${dataFormatada}</strong></div>
