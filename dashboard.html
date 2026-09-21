@@ -4169,94 +4169,128 @@ Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposi�
             }
         }
 
-        async function cancelarCompromissoAgenda() {
+function cancelarCompromissoAgenda() {
             if (!leadAtualEmEdicao || !dadosImobiliaria) return;
+
+            const modalConfirma = document.getElementById('modal-confirmacao-acao');
+            const tituloEl = document.getElementById('modal-confirma-titulo');
+            const msgEl = document.getElementById('modal-confirma-msg');
+            const btnConfirmar = document.getElementById('btn-executar-confirma');
+            const btnCancelar = document.getElementById('btn-cancelar-confirma');
+
+            if (!modalConfirma) return;
 
             const nomeCliente = leadAtualEmEdicao.nome || 'o cliente';
             const dataAnteriorFmt = leadAtualEmEdicao.data_agendamento 
                 ? new Date(leadAtualEmEdicao.data_agendamento).toLocaleString('pt-BR') 
                 : 'Data não definida';
 
-            const confirmar = confirm(`Atenção: Deseja realmente cancelar a visita agendada com ${nomeCliente}?\n\nO compromisso será excluído da agenda e registrado no histórico de auditoria do sistema.`);
-            if (!confirmar) return;
-
-            try {
-                // 1. Identifica o autor da ação para auditoria
-                let autorNome = 'Super Administrador';
-                if (!isMasterSuporte && dadosUsuario && dadosUsuario.nome_completo) {
-                    autorNome = dadosUsuario.nome_completo;
-                }
-
-                const agoraIso = new Date().toISOString();
-                const timestampHoje = new Date().toLocaleDateString('pt-BR');
-
-                // 2. Busca dados do imóvel para enriquecer o log de auditoria
-                let refImovel = 'Não vinculado';
-                let tituloImovel = '';
-                if (leadAtualEmEdicao.imovel_id) {
-                    const { data: im } = await supabaseClient
-                        .from('imoveis')
-                        .select('codigo_ref, titulo')
-                        .eq('id', leadAtualEmEdicao.imovel_id)
-                        .maybeSingle();
-                    if (im) {
-                        refImovel = im.codigo_ref;
-                        tituloImovel = im.titulo;
-                    }
-                }
-
-                // 3. REGISTRO OFICIAL DE AUDITORIA NA TABELA leads_historico
-                await supabaseClient
-                    .from('leads_historico')
-                    .insert([{
-                        lead_id: leadAtualEmEdicao.id,
-                        imobiliaria_id: dadosImobiliaria.id,
-                        autor_nome: autorNome,
-                        tipo_evento: 'cancelamento_visita',
-                        descricao: `Visita cancelada na agenda por ${autorNome}. Imóvel Ref: ${refImovel}. Data anterior agendada: ${dataAnteriorFmt}`,
-                        detalhes: {
-                            acao: 'Cancelamento de visita',
-                            autor: autorNome,
-                            cliente_nome: leadAtualEmEdicao.nome,
-                            cliente_whatsapp: leadAtualEmEdicao.whatsapp,
-                            imovel_id: leadAtualEmEdicao.imovel_id,
-                            imovel_ref: refImovel,
-                            imovel_titulo: tituloImovel,
-                            data_agendamento_cancelada: leadAtualEmEdicao.data_agendamento,
-                            data_cancelamento: agoraIso
-                        },
-                        criado_em: agoraIso
-                    }]);
-
-                // 4. Atualiza leads_contatos: remove da agenda (data_agendamento = null) e documenta nas notas
-                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
-                notasAtualizadas = notasAtualizadas 
-                    ? `${notasAtualizadas} | [Visita cancelada por ${autorNome} em ${timestampHoje}]`
-                    : `[Visita cancelada por ${autorNome} em ${timestampHoje}]`;
-
-                const { error: errUpdate } = await supabaseClient
-                    .from('leads_contatos')
-                    .update({
-                        data_agendamento: null,
-                        status: 'Cancelado',
-                        notas_agendamento: notasAtualizadas
-                    })
-                    .eq('id', leadAtualEmEdicao.id)
-                    .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                if (errUpdate) throw errUpdate;
-
-                fecharModalAgendamento();
-                exibirToast('aviso', `Compromisso com ${nomeCliente} cancelado e auditado com sucesso!`);
-
-                // 5. Atualiza o calendário, os contadores e a faixa de alertas do topo
-                await carregarAgendaMes();
-                await carregarMetricas(dadosImobiliaria.id);
-
-            } catch (err) {
-                console.error('[CANCELAR VISITA / AUDITORIA] Erro:', err);
-                exibirToast('erro', 'Erro ao cancelar compromisso. Tente novamente.');
+            // Configura o visual do modal do sistema para alerta de cancelamento
+            if (tituloEl) tituloEl.innerHTML = '<span class="text-rose-400 flex items-center justify-center gap-2"><i class="fa-solid fa-calendar-xmark"></i> Cancelar Visita da Agenda</span>';
+            if (msgEl) {
+                msgEl.innerHTML = `Deseja realmente cancelar a visita agendada com <strong class="text-white uppercase font-bold">${nomeCliente}</strong>?<br><span class="text-[11px] text-slate-400 block mt-1">Horário marcado: ${dataAnteriorFmt}</span>`;
             }
+
+            modalConfirma.classList.remove('hidden');
+
+            // Clona botões para limpar cliques anteriores
+            const novoBtnConfirmar = btnConfirmar.cloneNode(true);
+            const novoBtnCancelar = btnCancelar.cloneNode(true);
+
+            novoBtnConfirmar.className = 'bg-rose-600 hover:bg-rose-500 text-white font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-rose-950/40 flex items-center gap-1.5';
+            novoBtnConfirmar.innerHTML = '<i class="fa-solid fa-trash-can text-[10px]"></i><span>Sim, Cancelar Visita</span>';
+
+            novoBtnCancelar.innerHTML = 'Voltar';
+
+            btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
+            btnCancelar.parentNode.replaceChild(novoBtnCancelar, btnCancelar);
+
+            novoBtnCancelar.onclick = () => {
+                modalConfirma.classList.add('hidden');
+            };
+
+            novoBtnConfirmar.onclick = async () => {
+                modalConfirma.classList.add('hidden');
+                novoBtnConfirmar.disabled = true;
+
+                try {
+                    // 1. Identifica o autor para auditoria
+                    let autorNome = 'Super Administrador';
+                    if (!isMasterSuporte && dadosUsuario && dadosUsuario.nome_completo) {
+                        autorNome = dadosUsuario.nome_completo;
+                    }
+
+                    const agoraIso = new Date().toISOString();
+                    const timestampHoje = new Date().toLocaleDateString('pt-BR');
+
+                    // 2. Busca dados do imóvel para a auditoria
+                    let refImovel = 'Não vinculado';
+                    let tituloImovel = '';
+                    if (leadAtualEmEdicao.imovel_id) {
+                        const { data: im } = await supabaseClient
+                            .from('imoveis')
+                            .select('codigo_ref, titulo')
+                            .eq('id', leadAtualEmEdicao.imovel_id)
+                            .maybeSingle();
+                        if (im) {
+                            refImovel = im.codigo_ref;
+                            tituloImovel = im.titulo;
+                        }
+                    }
+
+                    // 3. REGISTRO OFICIAL DE AUDITORIA NA TABELA leads_historico
+                    await supabaseClient
+                        .from('leads_historico')
+                        .insert([{
+                            lead_id: leadAtualEmEdicao.id,
+                            imobiliaria_id: dadosImobiliaria.id,
+                            autor_nome: autorNome,
+                            tipo_evento: 'cancelamento_visita',
+                            descricao: `Visita cancelada na agenda por ${autorNome}. Imóvel Ref: ${refImovel}. Data anterior agendada: ${dataAnteriorFmt}`,
+                            detalhes: {
+                                acao: 'Cancelamento de visita',
+                                autor: autorNome,
+                                cliente_nome: leadAtualEmEdicao.nome,
+                                cliente_whatsapp: leadAtualEmEdicao.whatsapp,
+                                imovel_id: leadAtualEmEdicao.imovel_id,
+                                imovel_ref: refImovel,
+                                imovel_titulo: tituloImovel,
+                                data_agendamento_cancelada: leadAtualEmEdicao.data_agendamento,
+                                data_cancelamento: agoraIso
+                            },
+                            criado_em: agoraIso
+                        }]);
+
+                    // 4. Atualiza leads_contatos removendo da agenda e carimbando nas notas
+                    let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
+                    notasAtualizadas = notasAtualizadas 
+                        ? `${notasAtualizadas} | [Visita cancelada por ${autorNome} em ${timestampHoje}]`
+                        : `[Visita cancelada por ${autorNome} em ${timestampHoje}]`;
+
+                    const { error: errUpdate } = await supabaseClient
+                        .from('leads_contatos')
+                        .update({
+                            data_agendamento: null,
+                            status: 'Cancelado',
+                            notas_agendamento: notasAtualizadas
+                        })
+                        .eq('id', leadAtualEmEdicao.id)
+                        .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                    if (errUpdate) throw errUpdate;
+
+                    fecharModalAgendamento();
+                    exibirToast('aviso', `Compromisso com ${nomeCliente} cancelado e auditado com sucesso!`);
+
+                    // 5. Atualiza calendário, contadores e faixa de alertas do topo
+                    await carregarAgendaMes();
+                    await carregarMetricas(dadosImobiliaria.id);
+
+                } catch (err) {
+                    console.error('[CANCELAR VISITA / AUDITORIA] Erro:', err);
+                    exibirToast('erro', 'Erro ao cancelar compromisso. Tente novamente.');
+                }
+            };
         }
 
         function fecharModalAgendamento() {
