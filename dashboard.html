@@ -862,13 +862,16 @@
                     <p>Carregando dados do agendamento...</p>
                 </div>
             </div>
-
 <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs gap-2 flex-wrap">
                 <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>Conversar no WhatsApp</span>
                 </a>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button" onclick="cancelarCompromissoAgenda()" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 hover:text-white border border-rose-800/80 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow" title="Cancelar este compromisso e auditar">
+                        <i class="fa-solid fa-calendar-xmark text-xs"></i>
+                        <span>Cancelar Visita</span>
+                    </button>
                     <button type="button" onclick="alternarBoxReagendamento()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow cursor-pointer">
                         <i class="fa-solid fa-calendar-days text-xs"></i>
                         <span>Reagendar Visita</span>
@@ -4073,7 +4076,7 @@ let leadAtualEmEdicao = null;
             }
         }
 
-        async function confirmarReagendamentoLead() {
+async function confirmarReagendamentoLead() {
             if (!leadAtualEmEdicao || !dadosImobiliaria) return;
 
             const inputData = document.getElementById('input-novo-agendamento-data')?.value;
@@ -4087,24 +4090,27 @@ let leadAtualEmEdicao = null;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando & Preparando WhatsApp...';
 
             try {
-                // Montagem da data combinando o calendário e o horário sem distorção de fuso
+                // 1. Monta data local precisa
                 const [ano, mes, dia] = inputData.split('-').map(Number);
                 const [hora, min] = inputHora.split(':').map(Number);
                 const dataObj = new Date(ano, mes - 1, dia, hora || 0, min || 0, 0);
                 const novaDataIso = dataObj.toISOString();
 
-                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
+                const dataFmt = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
+                const horaFmt = `${String(hora).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
 
+                const timestampNota = new Date().toLocaleDateString('pt-BR');
+                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
                 if (inputNota) {
-                    const timestampNota = new Date().toLocaleDateString('pt-BR');
                     notasAtualizadas = notasAtualizadas 
-                        ? `${notasAtualizadas} | [Reagendado em ${timestampNota}]: ${inputNota}`
-                        : `[Reagendado em ${timestampNota}]: ${inputNota}`;
+                        ? `${notasAtualizadas} | [Reagendado em ${timestampNota} para ${dataFmt} às ${horaFmt}]: ${inputNota}`
+                        : `[Reagendado em ${timestampNota} para ${dataFmt} às ${horaFmt}]: ${inputNota}`;
                 }
 
+                // 2. Atualiza no Supabase
                 const { error } = await supabaseClient
                     .from('leads_contatos')
                     .update({
@@ -4116,12 +4122,43 @@ let leadAtualEmEdicao = null;
 
                 if (error) throw error;
 
-                exibirToast('sucesso', 'Visita reagendada com sucesso!');
+                // 3. Busca dados do imóvel para a mensagem do WhatsApp (se houver)
+                let dadosImovelTexto = 'Visita a imóvel';
+                if (leadAtualEmEdicao.imovel_id) {
+                    const { data: im } = await supabaseClient
+                        .from('imoveis')
+                        .select('codigo_ref, titulo, bairro, cidade')
+                        .eq('id', leadAtualEmEdicao.imovel_id)
+                        .maybeSingle();
+                    if (im) {
+                        dadosImovelTexto = `*${im.titulo}*\n📌 *Ref:* ${im.codigo_ref}${im.bairro ? ` • *Bairro:* ${im.bairro}` : ''}`;
+                    }
+                }
 
-                // 1. Atualiza o calendário e contadores
+                // 4. Monta e dispara a mensagem no WhatsApp do cliente
+                const zapLimpo = ('' + (leadAtualEmEdicao.whatsapp || '')).replace(/\D/g, '');
+                if (zapLimpo) {
+                    const nomeImob = dadosImobiliaria.nome_fantasia || 'Nossa Imobiliária';
+                    const mensagemZap = 
+`Olá *${leadAtualEmEdicao.nome}*, tudo bem?
+
+Passando para confirmar o *reagendamento da sua visita* com a *${nomeImob}*:
+
+📅 *Nova Data:* ${dataFmt}
+⏰ *Novo Horário:* ${horaFmt}
+🏠 *Imóvel:*
+${dadosImovelTexto}
+
+Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposição!`;
+
+                    const urlZap = `https://wa.me/${zapLimpo}?text=${encodeURIComponent(mensagemZap)}`;
+                    window.open(urlZap, '_blank');
+                }
+
+                exibirToast('sucesso', 'Visita reagendada e WhatsApp aberto para notificar o cliente!');
+
+                // 5. Atualiza calendário, contadores e recarrega a ficha do modal
                 await carregarAgendaMes();
-
-                // 2. Recarrega o próprio modal atualizado
                 await abrirDossieAgendamento(leadAtualEmEdicao.id);
 
             } catch (err) {
@@ -4131,11 +4168,103 @@ let leadAtualEmEdicao = null;
                 btn.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> Salvar Novo Horário';
             }
         }
+
+        async function cancelarCompromissoAgenda() {
+            if (!leadAtualEmEdicao || !dadosImobiliaria) return;
+
+            const nomeCliente = leadAtualEmEdicao.nome || 'o cliente';
+            const dataAnteriorFmt = leadAtualEmEdicao.data_agendamento 
+                ? new Date(leadAtualEmEdicao.data_agendamento).toLocaleString('pt-BR') 
+                : 'Data não definida';
+
+            const confirmar = confirm(`Atenção: Deseja realmente cancelar a visita agendada com ${nomeCliente}?\n\nO compromisso será excluído da agenda e registrado no histórico de auditoria do sistema.`);
+            if (!confirmar) return;
+
+            try {
+                // 1. Identifica o autor da ação para auditoria
+                let autorNome = 'Super Administrador';
+                if (!isMasterSuporte && dadosUsuario && dadosUsuario.nome_completo) {
+                    autorNome = dadosUsuario.nome_completo;
+                }
+
+                const agoraIso = new Date().toISOString();
+                const timestampHoje = new Date().toLocaleDateString('pt-BR');
+
+                // 2. Busca dados do imóvel para enriquecer o log de auditoria
+                let refImovel = 'Não vinculado';
+                let tituloImovel = '';
+                if (leadAtualEmEdicao.imovel_id) {
+                    const { data: im } = await supabaseClient
+                        .from('imoveis')
+                        .select('codigo_ref, titulo')
+                        .eq('id', leadAtualEmEdicao.imovel_id)
+                        .maybeSingle();
+                    if (im) {
+                        refImovel = im.codigo_ref;
+                        tituloImovel = im.titulo;
+                    }
+                }
+
+                // 3. REGISTRO OFICIAL DE AUDITORIA NA TABELA leads_historico
+                await supabaseClient
+                    .from('leads_historico')
+                    .insert([{
+                        lead_id: leadAtualEmEdicao.id,
+                        imobiliaria_id: dadosImobiliaria.id,
+                        autor_nome: autorNome,
+                        tipo_evento: 'cancelamento_visita',
+                        descricao: `Visita cancelada na agenda por ${autorNome}. Imóvel Ref: ${refImovel}. Data anterior agendada: ${dataAnteriorFmt}`,
+                        detalhes: {
+                            acao: 'Cancelamento de visita',
+                            autor: autorNome,
+                            cliente_nome: leadAtualEmEdicao.nome,
+                            cliente_whatsapp: leadAtualEmEdicao.whatsapp,
+                            imovel_id: leadAtualEmEdicao.imovel_id,
+                            imovel_ref: refImovel,
+                            imovel_titulo: tituloImovel,
+                            data_agendamento_cancelada: leadAtualEmEdicao.data_agendamento,
+                            data_cancelamento: agoraIso
+                        },
+                        criado_em: agoraIso
+                    }]);
+
+                // 4. Atualiza leads_contatos: remove da agenda (data_agendamento = null) e documenta nas notas
+                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
+                notasAtualizadas = notasAtualizadas 
+                    ? `${notasAtualizadas} | [Visita cancelada por ${autorNome} em ${timestampHoje}]`
+                    : `[Visita cancelada por ${autorNome} em ${timestampHoje}]`;
+
+                const { error: errUpdate } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        data_agendamento: null,
+                        status: 'Cancelado',
+                        notas_agendamento: notasAtualizadas
+                    })
+                    .eq('id', leadAtualEmEdicao.id)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (errUpdate) throw errUpdate;
+
+                fecharModalAgendamento();
+                exibirToast('aviso', `Compromisso com ${nomeCliente} cancelado e auditado com sucesso!`);
+
+                // 5. Atualiza o calendário, os contadores e a faixa de alertas do topo
+                await carregarAgendaMes();
+                await carregarMetricas(dadosImobiliaria.id);
+
+            } catch (err) {
+                console.error('[CANCELAR VISITA / AUDITORIA] Erro:', err);
+                exibirToast('erro', 'Erro ao cancelar compromisso. Tente novamente.');
+            }
+        }
+
         function fecharModalAgendamento() {
             const modal = document.getElementById('modal-dash-agendamento');
             if (modal) modal.classList.add('hidden');
             leadAtualEmEdicao = null;
         }
+
         // =========================================================================
         // AVISOS GLOBAIS DO SISTEMA
         // =========================================================================
