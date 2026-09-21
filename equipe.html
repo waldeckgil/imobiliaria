@@ -479,6 +479,15 @@
                 return;
             }
 
+            // Diretrizes padrão da Imobiliária salvas no configurar-imobiliaria.html
+            const padraoVendaImob = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_venda_padrao_pct !== null && dadosImobiliaria.repasse_corretor_venda_padrao_pct !== undefined) 
+                ? Number(dadosImobiliaria.repasse_corretor_venda_padrao_pct) 
+                : 30;
+
+            const padraoLocacaoImob = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_locacao_padrao_pct !== null && dadosImobiliaria.repasse_corretor_locacao_padrao_pct !== undefined) 
+                ? Number(dadosImobiliaria.repasse_corretor_locacao_padrao_pct) 
+                : 0;
+
             tbody.innerHTML = membros.map(m => {
                 const iniciais = (m.nome_completo || 'C').split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
                 const perms = m.permissoes || {};
@@ -498,8 +507,14 @@
                 const toggleClass = m.ativo ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
                 const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
 
-                const comissaoVenda = (m.comissao_venda_pct !== null && m.comissao_venda_pct !== undefined) ? m.comissao_venda_pct : 30;
-                const comissaoLocacao = (m.comissao_locacao_pct !== null && m.comissao_locacao_pct !== undefined) ? m.comissao_locacao_pct : 0;
+                // Aplica a comissão do colaborador ou herda o padrão configurado na imobiliária
+                const comissaoVenda = (m.comissao_venda_pct !== null && m.comissao_venda_pct !== undefined) 
+                    ? m.comissao_venda_pct 
+                    : padraoVendaImob;
+
+                const comissaoLocacao = (m.comissao_locacao_pct !== null && m.comissao_locacao_pct !== undefined) 
+                    ? m.comissao_locacao_pct 
+                    : padraoLocacaoImob;
 
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
@@ -615,8 +630,17 @@
             document.getElementById('colab-cargo').value = membro.cargo || 'corretor';
             document.getElementById('colab-email').value = membro.email || '';
             
-            document.getElementById('colab-comissao-venda').value = (membro.comissao_venda_pct !== null && membro.comissao_venda_pct !== undefined) ? membro.comissao_venda_pct : 30.0;
-            document.getElementById('colab-comissao-locacao').value = (membro.comissao_locacao_pct !== null && membro.comissao_locacao_pct !== undefined) ? membro.comissao_locacao_pct : 0.0;
+            // Padrões de fallback caso o usuário não tenha taxa individual gravada
+            const padraoVenda = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_venda_padrao_pct !== null && dadosImobiliaria.repasse_corretor_venda_padrao_pct !== undefined) 
+                ? dadosImobiliaria.repasse_corretor_venda_padrao_pct 
+                : 30.0;
+
+            const padraoLocacao = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_locacao_padrao_pct !== null && dadosImobiliaria.repasse_corretor_locacao_padrao_pct !== undefined) 
+                ? dadosImobiliaria.repasse_corretor_locacao_padrao_pct 
+                : 0.0;
+
+            document.getElementById('colab-comissao-venda').value = (membro.comissao_venda_pct !== null && membro.comissao_venda_pct !== undefined) ? membro.comissao_venda_pct : padraoVenda;
+            document.getElementById('colab-comissao-locacao').value = (membro.comissao_locacao_pct !== null && membro.comissao_locacao_pct !== undefined) ? membro.comissao_locacao_pct : padraoLocacao;
 
             document.getElementById('bloco-senha-novo').classList.add('hidden');
             document.getElementById('colab-senha').required = false;
