@@ -4013,16 +4013,14 @@ try {
                     mapaNomesCorretores[u.id] = u.nome_completo || 'Corretor';
                 });
 
-// BLINDAGEM: Apenas atendimentos no estágio 'Visita Agendada' entram na agenda
                 const { data: agendamentos, error } = await supabaseClient
                     .from('leads_contatos')
-                    .select('id, nome, whatsapp, email, data_agendamento, notas_agendamento, imovel_id, corretor_atribuido_id, status')
+                    .select('id, nome, whatsapp, email, data_agendamento, notas_agendamento, imovel_id, corretor_atribuido_id')
                     .eq('imobiliaria_id', dadosImobiliaria.id)
-                    .eq('status', 'Visita Agendada')
-                    .not('data_agendamento', 'is', null)
                     .gte('data_agendamento', primeiroDiaMes)
                     .lte('data_agendamento', ultimoDiaMes)
                     .order('data_agendamento', { ascending: true });
+
                 if (error) throw error;
 
                 mapaAgendamentosMes = {};
@@ -4102,18 +4100,15 @@ try {
             amanha.setDate(agora.getDate() + 1);
             const amanhaStr = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
 
-      try {
-                // BLINDAGEM: Apenas visitas ativas e confirmadas geram alerta no topo
+            try {
                 const { data: visitas, error } = await supabaseClient
                     .from('leads_contatos')
-                    .select('id, nome, whatsapp, data_agendamento, imovel_id, notas_agendamento, status')
+                    .select('id, nome, whatsapp, data_agendamento, imovel_id, notas_agendamento')
                     .eq('imobiliaria_id', imobId)
-                    .eq('status', 'Visita Agendada')
-                    .not('data_agendamento', 'is', null)
                     .gte('data_agendamento', `${hojeStr}T00:00:00`)
                     .lte('data_agendamento', `${amanhaStr}T23:59:59`)
                     .order('data_agendamento', { ascending: true });
-                    
+
                 if (error || !visitas || visitas.length === 0) {
                     container.classList.add('hidden');
                     container.innerHTML = '';

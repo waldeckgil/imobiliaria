@@ -1505,12 +1505,11 @@ function atualizarMetricasFunil(leads) {
                 return;
             }
 
-
-try {
+            try {
                 const payloadUpdate = { status: novaEtapa };
 
-                // REGRA DE NEGÓCIO: Se saiu de 'Visita Agendada' para 'Em Atendimento', 'Proposta', 'Cancelado' ou 'Perdido', desocupa a agenda
-                if (novaEtapa !== 'Visita Agendada') {
+                // Se o lead for cancelado ou perdido, remove agendamento ativo
+                if (novaEtapa === 'Cancelado' || novaEtapa === 'Perdido') {
                     payloadUpdate.data_agendamento = null;
                 }
 
@@ -1518,7 +1517,6 @@ try {
                     .from('leads_contatos')
                     .update(payloadUpdate)
                     .eq('id', leadAtivoCockpit.id);
-
 
                 if (error) throw error;
 
