@@ -419,8 +419,7 @@
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300 font-mono">
-                            <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
-      <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+                 <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
                                 <tr>
                                     <th class="py-2.5 px-3">Imóvel (Ref)</th>
                                     <th class="py-2.5 px-3">Vencimento</th>
@@ -1071,6 +1070,79 @@
                     <button type="submit" id="btn-salvar-repasse" class="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-cyan-950/40 cursor-pointer">
                         <i class="fa-solid fa-check"></i>
                         <span>Confirmar Repasse</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+<!-- MODAL DE LANÇAMENTO DE PAGAMENTO / ADIANTAMENTO AO CORRETOR -->
+    <div id="modal-pagar-corretor" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[85] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 border border-blue-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-blue-400 font-black text-sm uppercase">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/40">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </div>
+                    <span>Efetivar Pagamento ao Corretor</span>
+                </div>
+                <button type="button" onclick="fecharModalPagarCorretor()" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                <div class="flex justify-between"><span class="text-slate-500">Corretor:</span><strong id="pgto-corretor-nome" class="text-white uppercase font-bold">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Competência:</span><strong id="pgto-corretor-mes" class="text-cyan-300 font-mono">---</strong></div>
+                <div class="flex justify-between pt-1 border-t border-slate-800"><span class="text-slate-400">Saldo Pendente a Pagar:</span><strong id="pgto-corretor-saldo-pendente" class="text-amber-300 font-mono text-sm">R$ 0,00</strong></div>
+            </div>
+
+            <form id="form-pagar-corretor" onsubmit="salvarPagamentoCorretor(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="pgto-corretor-id">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor do Pagamento (R$):</label>
+                        <input type="number" step="0.01" min="0.01" id="pgto-corretor-valor" required
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-emerald-400 font-mono font-bold text-sm outline-none focus:border-blue-400">
+                        <span class="text-[10px] text-slate-500 mt-0.5 block">Permite valor total ou parcial.</span>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Data do Pagamento:</label>
+                        <input type="date" id="pgto-corretor-data" required
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-blue-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Forma de Pagamento:</label>
+                        <select id="pgto-corretor-forma" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-blue-400">
+                            <option value="PIX">PIX</option>
+                            <option value="Transferência / TED">Transferência / TED</option>
+                            <option value="Dinheiro">Dinheiro em Espécie</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Observação / Referência:</label>
+                        <input type="text" id="pgto-corretor-obs" placeholder="Ex: Quitação comissão venda Ref 447"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-blue-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante Bancário (Opcional):</label>
+                    <input type="file" id="pgto-corretor-arquivo" accept=".pdf,.png,.jpg,.jpeg,.webp"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-blue-300 hover:file:bg-slate-700 cursor-pointer">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalPagarCorretor()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-pgto-corretor" class="px-5 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-blue-950/40 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Pagamento</span>
                     </button>
                 </div>
             </form>
@@ -3113,13 +3185,21 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
             const mesRef = document.getElementById('filtro-mes-financeiro')?.value;
 
             try {
-                // 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA
+    // 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA E PAGAMENTOS DO MÊS
                 const { data: usuariosEquipe } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('imobiliaria_id', imobId);
                 
                 cacheUsuariosCorretores = usuariosEquipe || [];
+
+                const { data: pagamentosCorretoresData } = await supabaseClient
+                    .from('corretores_pagamentos')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId)
+                    .eq('mes_referencia', mesRef);
+                
+                window.cachePagamentosCorretoresMes = pagamentosCorretoresData || [];
 
                 // 2. LOCAÇÕES (MENSALIDADES RECEBÍVEIS)
                 let queryLoc = supabaseClient
@@ -3486,13 +3566,18 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
         }
 
         function renderizarSecaoCorretores() {
-            // 1. CARDS RESUMO POR CORRETOR (TOTAL DE GANHOS NO MÊS)
+  
+
+            // 2. TABELA DE ITENS COM FILTRO ATIVO
+            const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
+            if (!tbodyCorretores) return;
+// 1. CARDS RESUMO POR CORRETOR COM SALDO GERADO, PAGO E PENDENTE
             const containerCards = document.getElementById('cards-resumo-corretores');
             if (containerCards) {
                 const mapaGanhosCorretor = {};
 
                 cacheOperacoesFinanceirasCorretores.forEach(op => {
-                    const chave = op.corretor_id || op.corretor_nome;
+                    const chave = String(op.corretor_id || op.corretor_nome);
                     if (!mapaGanhosCorretor[chave]) {
                         mapaGanhosCorretor[chave] = {
                             corretor_id: op.corretor_id,
@@ -3500,6 +3585,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                             totalVenda: 0,
                             totalLocacao: 0,
                             totalGeral: 0,
+                            totalPago: 0,
                             qtdVendas: 0,
                             qtdLocacoes: 0
                         };
@@ -3514,43 +3600,53 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                     mapaGanhosCorretor[chave].totalGeral += op.valor_comissao;
                 });
 
+                // Abate os pagamentos já feitos a partir do cache de pagamentos
+                if (window.cachePagamentosCorretoresMes) {
+                    window.cachePagamentosCorretoresMes.forEach(pg => {
+                        const chave = String(pg.corretor_id);
+                        if (mapaGanhosCorretor[chave]) {
+                            mapaGanhosCorretor[chave].totalPago += Number(pg.valor_pago || 0);
+                        }
+                    });
+                }
+
                 const corretoresArray = Object.values(mapaGanhosCorretor);
 
                 if (corretoresArray.length === 0) {
                     containerCards.innerHTML = '<p class="text-slate-500 text-xs py-2 col-span-full italic">Nenhum repasse a corretores registrado para o mês selecionado.</p>';
                 } else {
-                    containerCards.innerHTML = corretoresArray.map(c => `
-                        <div class="bg-slate-950 p-3.5 rounded-xl border border-blue-900/40 hover:border-blue-400 transition space-y-2 group shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div class="min-w-0">
-                                    <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="font-bold text-white text-xs block truncate uppercase hover:text-blue-300 transition text-left">
-                                        ${c.nome}
+                    containerCards.innerHTML = corretoresArray.map(c => {
+                        const saldoPendente = Math.max(0, c.totalGeral - c.totalPago);
+                        const quitado = (c.totalGeral > 0 && saldoPendente === 0);
+
+                        return `
+                            <div class="bg-slate-950 p-3.5 rounded-xl border ${quitado ? 'border-emerald-500/50' : 'border-blue-900/40'} hover:border-blue-400 transition space-y-2 group shadow-sm">
+                                <div class="flex items-start justify-between">
+                                    <div class="min-w-0">
+                                        <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="font-bold text-white text-xs block truncate uppercase hover:text-blue-300 transition text-left">
+                                            ${c.nome}
+                                        </button>
+                                        <span class="text-[10px] text-slate-400 font-mono block">Equipe de Vendas & Locações</span>
+                                    </div>
+                                    <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="w-6 h-6 rounded-lg bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center text-[10px] group-hover:scale-110 transition cursor-pointer" title="Ver Dossiê e Realizar Pagamento">
+                                        <i class="fa-solid fa-eye"></i>
                                     </button>
-                                    <span class="text-[10px] text-slate-400 font-mono block">Equipe de Vendas & Locações</span>
                                 </div>
-                                <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="w-6 h-6 rounded-lg bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center text-[10px] group-hover:scale-110 transition" title="Ver Dossiê">
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
-                            </div>
 
-                            <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[11px] flex items-center justify-between font-mono">
-                                <span class="text-slate-400 text-[10px]">Total a Receber:</span>
-                                <strong class="text-cyan-300 font-black">R$ ${c.totalGeral.toLocaleString('pt-BR')}</strong>
-                            </div>
+                                <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[11px] flex items-center justify-between font-mono">
+                                    <span class="text-slate-400 text-[10px]">Saldo a Pagar:</span>
+                                    <strong class="${saldoPendente > 0 ? 'text-amber-300' : 'text-emerald-400'} font-black">R$ ${saldoPendente.toLocaleString('pt-BR')}</strong>
+                                </div>
 
-                            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
-                                <span class="text-amber-300 font-mono">${c.qtdVendas} Venda(s): R$ ${c.totalVenda.toLocaleString('pt-BR')}</span>
-                                <span class="text-purple-300 font-mono">${c.qtdLocacoes} Locação(ões): R$ ${c.totalLocacao.toLocaleString('pt-BR')}</span>
+                                <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
+                                    <span class="text-slate-400 font-mono">Gerado: R$ ${c.totalGeral.toLocaleString('pt-BR')}</span>
+                                    <span class="text-emerald-400 font-mono font-bold">Pago: R$ ${c.totalPago.toLocaleString('pt-BR')}</span>
+                                </div>
                             </div>
-                        </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 }
             }
-
-            // 2. TABELA DE ITENS COM FILTRO ATIVO
-            const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
-            if (!tbodyCorretores) return;
-
             let itensFiltrados = cacheOperacoesFinanceirasCorretores;
             if (filtroOperacaoAtiva === 'venda') {
                 itensFiltrados = cacheOperacoesFinanceirasCorretores.filter(op => op.tipo_operacao === 'venda');
@@ -3601,8 +3697,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                 `;
             }).join('');
         }
-
-        // =========================================================================
+// =========================================================================
         // MOTOR DO DOSSIÊ DO CORRETOR / FUNCIONÁRIO (FICHA COMERCIAL & HISTÓRICO)
         // =========================================================================
         async function abrirDossieCorretor(corretorId, corretorNome) {
@@ -3648,7 +3743,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                     };
                 }
 
-                titulo.innerText = `Dossiê Comercial • ${corretor.nome_completo.toUpperCase()}`;
+                titulo.innerText = `Dossiê Comercial • ${(corretor.nome_completo || '').toUpperCase()}`;
 
                 const zapLimpo = ('' + (corretor.whatsapp || '')).replace(/\D/g, '');
                 btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${corretor.nome_completo}! Gostaria de falar sobre o fechamento das suas comissões.`)}` : '#';
@@ -3663,6 +3758,23 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                 const totalVendasGanhos = minhasOps.filter(o => o.tipo_operacao === 'venda').reduce((acc, o) => acc + o.valor_comissao, 0);
                 const totalLocacaoGanhos = minhasOps.filter(o => o.tipo_operacao === 'locacao').reduce((acc, o) => acc + o.valor_comissao, 0);
                 const totalGeralGanhos = totalVendasGanhos + totalLocacaoGanhos;
+
+                // Histórico de pagamentos já efetuados a este corretor nesta competência
+                const mesRefAtual = document.getElementById('filtro-mes-financeiro')?.value || '';
+                let pagamentosFeitos = [];
+                if (corretor.id) {
+                    const { data: pgsData } = await supabaseClient
+                        .from('corretores_pagamentos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('corretor_id', corretor.id)
+                        .eq('mes_referencia', mesRefAtual)
+                        .order('data_pagamento', { ascending: false });
+                    pagamentosFeitos = pgsData || [];
+                }
+
+                const totalJaPago = pagamentosFeitos.reduce((acc, p) => acc + Number(p.valor_pago || 0), 0);
+                const saldoPendentePagar = Math.max(0, totalGeralGanhos - totalJaPago);
 
                 corpo.innerHTML = `
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
@@ -3681,54 +3793,81 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                             <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-cyan-300 font-mono">${corretor.whatsapp || 'Não informado'}</strong></div>
                             <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${corretor.email || 'Não informado'}</strong></div>
                         </div>
+                    </div>
 
-                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 bg-slate-900/60 p-2.5 rounded-lg text-center font-mono">
+                    <!-- CONCILIAÇÃO FINANCEIRA COM BOTÃO DE PAGAMENTO INTEGRADO -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-blue-500/30 space-y-3">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-800 pb-2">
                             <div>
-                                <span class="text-slate-400 text-[10px] block">Comissão Padrão (Venda)</span>
-                                <strong class="text-amber-300 text-sm">${corretor.comissao_venda_pct || 0}%</strong>
+                                <span class="text-[10px] uppercase font-black tracking-wider text-blue-400 block">Conciliação Financeira (${mesRefAtual})</span>
+                                <h4 class="text-sm font-bold text-white">Saldo de Comissões & Repasses</h4>
                             </div>
-                            <div>
-                                <span class="text-slate-400 text-[10px] block">Comissão Padrão (Locação)</span>
-                                <strong class="text-purple-300 text-sm">${corretor.comissao_locacao_pct || 0}%</strong>
+                            <button type="button" onclick="abrirModalPagarCorretor(${corretor.id || 'null'}, '${(corretor.nome_completo || '').replace(/'/g, "\\'")}', '${mesRefAtual}', ${saldoPendentePagar})"
+                                    class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow transition cursor-pointer">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                                <span>Efetivar Pagamento / Adiantamento</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-[10px] block">Total Gerado</span>
+                                <strong class="text-cyan-300 font-bold text-xs">R$ ${totalGeralGanhos.toLocaleString('pt-BR')}</strong>
+                            </div>
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-[10px] block">Total Já Pago</span>
+                                <strong class="text-emerald-400 font-bold text-xs">R$ ${totalJaPago.toLocaleString('pt-BR')}</strong>
+                            </div>
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-[10px] block">Saldo Restante</span>
+                                <strong class="${saldoPendentePagar > 0 ? 'text-amber-300' : 'text-emerald-400'} font-black text-xs">R$ ${saldoPendentePagar.toLocaleString('pt-BR')}</strong>
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-3 pt-2">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-coins"></i> Total a Receber no Mês Selecionado
-                            </h4>
-                            <span class="text-cyan-300 font-mono font-bold text-sm">R$ ${totalGeralGanhos.toLocaleString('pt-BR')}</span>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2 text-center text-[11px] font-mono">
-                            <div class="bg-slate-950 p-2 rounded-lg border border-amber-900/40">
-                                <span class="text-slate-500 block text-[10px]">Ganhos de Vendas</span>
-                                <strong class="text-amber-300 font-bold">R$ ${totalVendasGanhos.toLocaleString('pt-BR')}</strong>
-                            </div>
-                            <div class="bg-slate-950 p-2 rounded-lg border border-purple-900/40">
-                                <span class="text-slate-500 block text-[10px]">Ganhos de Locações</span>
-                                <strong class="text-purple-300 font-bold">R$ ${totalLocacaoGanhos.toLocaleString('pt-BR')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2 pt-2">
-                            <span class="text-[10px] uppercase font-bold text-slate-400 block">Itens Fechados no Período:</span>
-                            ${minhasOps.length === 0 ? '<p class="text-slate-500 italic py-2">Nenhuma operação fechada por este corretor no mês selecionado.</p>' : 
-                            minhasOps.map(op => `
-                                <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-[11px]">
+                    <!-- HISTÓRICO DE PAGAMENTOS REALIZADOS A ESTE CORRETOR -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-[10px] uppercase font-bold text-emerald-400 block flex items-center gap-1">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pagamentos Realizados (${pagamentosFeitos.length}):
+                        </span>
+                        ${pagamentosFeitos.length === 0 ? '<p class="text-slate-500 italic text-[11px] py-1">Nenhum pagamento efetuado para este corretor nesta competência.</p>' : 
+                        pagamentosFeitos.map(pg => {
+                            const dtFmt = pg.data_pagamento ? new Date(pg.data_pagamento).toLocaleString('pt-BR') : '--/--/----';
+                            return `
+                                <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-900/40 flex items-center justify-between text-[11px] font-mono">
                                     <div>
-                                        <span class="font-bold text-white uppercase">${op.tipo_label} • Ref: ${op.imovel_ref}</span>
-                                        <span class="text-[10px] text-slate-400 block">Cliente: ${op.cliente_nome} (${op.data_ref})</span>
+                                        <span class="text-white font-bold block">${pg.forma_pagamento || 'PIX'} • ${dtFmt}</span>
+                                        ${pg.observacoes ? `<span class="text-[10px] text-slate-400 block font-sans">${pg.observacoes}</span>` : ''}
                                     </div>
-                                    <div class="text-right font-mono">
-                                        <strong class="text-cyan-300 block">R$ ${op.valor_comissao.toLocaleString('pt-BR')}</strong>
-                                        <span class="text-[9px] text-slate-400">${op.pct_corretor}% comissão</span>
+                                    <div class="flex items-center gap-2">
+                                        <strong class="text-emerald-400 text-xs">R$ ${Number(pg.valor_pago).toLocaleString('pt-BR')}</strong>
+                                        ${pg.comprovante_url ? `
+                                            <a href="${pg.comprovante_url}" target="_blank" class="text-cyan-400 hover:underline text-[10px] flex items-center gap-0.5">
+                                                <i class="fa-solid fa-paperclip"></i> Recibo
+                                            </a>
+                                        ` : ''}
                                     </div>
                                 </div>
-                            `).join('')}
-                        </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- LISTAGEM DE FECHAMENTOS QUE GERARAM A COMISSÃO -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Operações Fechadas no Período:</span>
+                        ${minhasOps.length === 0 ? '<p class="text-slate-500 italic py-2">Nenhuma operação fechada por este corretor no mês selecionado.</p>' : 
+                        minhasOps.map(op => `
+                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-[11px]">
+                                <div>
+                                    <span class="font-bold text-white uppercase">${op.tipo_label} • Ref: ${op.imovel_ref}</span>
+                                    <span class="text-[10px] text-slate-400 block">Cliente: ${op.cliente_nome} (${op.data_ref})</span>
+                                </div>
+                                <div class="text-right font-mono">
+                                    <strong class="text-cyan-300 block">R$ ${op.valor_comissao.toLocaleString('pt-BR')}</strong>
+                                    <span class="text-[9px] text-slate-400">${op.pct_corretor}% comissão</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 `;
 
@@ -3737,7 +3876,6 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                 corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar dossiê do corretor.</p>';
             }
         }
-
         function fecharModalDossieCorretor() {
             const modal = document.getElementById('modal-dossie-corretor');
             if (modal) modal.classList.add('hidden');
@@ -4754,12 +4892,122 @@ window.abrirModalBaixaAluguel = abrirModalBaixaAluguel;
                 btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Repasse';
             }
         }
-
-        window.abrirModalConfirmarRepasse = abrirModalConfirmarRepasse;
+window.abrirModalConfirmarRepasse = abrirModalConfirmarRepasse;
         window.fecharModalRepasse = fecharModalRepasse;
         window.salvarConfirmacaoRepasse = salvarConfirmacaoRepasse;
 
+        // =========================================================================
+        // MOTOR DE EFETIVAÇÃO DE PAGAMENTOS / ADIANTAMENTOS A CORRETORES
+        // =========================================================================
+        function abrirModalPagarCorretor(corretorId, corretorNome, mesRef, saldoSugerido) {
+            const modal = document.getElementById('modal-pagar-corretor');
+            if (!modal) return;
+
+            document.getElementById('pgto-corretor-id').value = corretorId;
+            document.getElementById('pgto-corretor-nome').innerText = corretorNome;
+            document.getElementById('pgto-corretor-mes').innerText = mesRef;
+            document.getElementById('pgto-corretor-saldo-pendente').innerText = Number(saldoSugerido || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            // Sugere o saldo pendente, mas é 100% editável para valores parciais/adiantamentos
+            document.getElementById('pgto-corretor-valor').value = saldoSugerido > 0 ? Number(saldoSugerido).toFixed(2) : '';
+            
+            const hoje = new Date();
+            const dtHojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+            document.getElementById('pgto-corretor-data').value = dtHojeStr;
+            document.getElementById('pgto-corretor-obs').value = '';
+            document.getElementById('pgto-corretor-arquivo').value = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalPagarCorretor() {
+            const modal = document.getElementById('modal-pagar-corretor');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function salvarPagamentoCorretor(e) {
+            e.preventDefault();
+            const corretorId = document.getElementById('pgto-corretor-id').value;
+            const corretorNome = document.getElementById('pgto-corretor-nome').innerText;
+            const mesRef = document.getElementById('pgto-corretor-mes').innerText;
+            const valorPago = Number(document.getElementById('pgto-corretor-valor').value);
+            const dataPgto = document.getElementById('pgto-corretor-data').value;
+            const formaPgto = document.getElementById('pgto-corretor-forma').value;
+            const obs = document.getElementById('pgto-corretor-obs').value.trim();
+            const arquivoInput = document.getElementById('pgto-corretor-arquivo');
+            const btnSalvar = document.getElementById('btn-salvar-pgto-corretor');
+
+            if (!corretorId || !valorPago || valorPago <= 0) {
+                exibirToast('aviso', 'Informe um valor de pagamento válido.');
+                return;
+            }
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando Pagamento...';
+
+            try {
+                let comprovanteUrlFinal = null;
+
+                // Upload seguro no Storage particionado por imobiliária
+                if (arquivoInput.files && arquivoInput.files[0]) {
+                    const file = arquivoInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `pgto_corretor_${corretorId}_${Date.now()}.${fileExt}`;
+                    const filePath = `comprovantes/${dadosImobiliaria.id}/${fileName}`;
+
+                    const { error: errUpload } = await supabaseClient.storage
+                        .from('documentos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (!errUpload) {
+                        const { data: pUrl } = supabaseClient.storage.from('documentos').getPublicUrl(filePath);
+                        comprovanteUrlFinal = pUrl.publicUrl;
+                    }
+                }
+
+                // Gravação auditada na tabela corretores_pagamentos
+                const { error: errInsert } = await supabaseClient
+                    .from('corretores_pagamentos')
+                    .insert([{
+                        imobiliaria_id: dadosImobiliaria.id,
+                        corretor_id: corretorId,
+                        mes_referencia: mesRef,
+                        valor_pago: valorPago,
+                        data_pagamento: dataPgto,
+                        forma_pagamento: formaPgto,
+                        comprovante_url: comprovanteUrlFinal,
+                        observacoes: obs || null
+                    }]);
+
+                if (errInsert) throw errInsert;
+
+                exibirToast('sucesso', `Pagamento de R$ ${valorPago.toLocaleString('pt-BR')} registrado para ${corretorNome}!`);
+                fecharModalPagarCorretor();
+
+                // Recarrega dashboard financeiro e reabre o dossiê atualizado com o novo saldo
+                await carregarDashboardFinanceiro();
+                abrirDossieCorretor(corretorId, corretorNome);
+
+            } catch (err) {
+                console.error('[PAGAMENTO CORRETOR] Erro:', err);
+                exibirToast('erro', 'Erro ao registrar pagamento: ' + (err.message || 'Falha no banco'));
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Pagamento';
+            }
+        }
+
+        window.abrirModalPagarCorretor = abrirModalPagarCorretor;
+        window.fecharModalPagarCorretor = fecharModalPagarCorretor;
+        window.salvarPagamentoCorretor = salvarPagamentoCorretor;
+
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
-</body>
+// 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA
+                const { data: usuariosEquipe } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId);
+                
+                cacheUsuariosCorretores = usuariosEquipe || [];</body>
 </html>
