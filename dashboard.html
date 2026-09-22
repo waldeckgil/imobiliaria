@@ -1031,6 +1031,52 @@
         </div>
     </div>
 
+<!-- MODAL DE CONFIRMAÇÃO DE REPASSE AO PROPRIETÁRIO -->
+    <div id="modal-confirmar-repasse" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[80] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 border border-cyan-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-cyan-400 font-black text-sm uppercase">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/40">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <span>Confirmar Repasse ao Proprietário</span>
+                </div>
+                <button type="button" onclick="fecharModalRepasse()" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                <div class="flex justify-between"><span class="text-slate-500">Imóvel:</span><strong id="repasse-imovel-ref" class="text-cyan-300 font-mono">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Competência:</span><strong id="repasse-competencia" class="text-white font-mono">---</strong></div>
+                <div class="flex justify-between pt-1 border-t border-slate-800">
+                    <span class="text-slate-400">Valor Líquido do Dono:</span>
+                    <strong id="repasse-valor-liquido" class="text-emerald-400 font-black font-mono text-base">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <form id="form-confirmar-repasse" onsubmit="salvarConfirmacaoRepasse(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="repasse-mensalidade-id">
+                
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Data da Transferência / PIX:</label>
+                    <input type="date" id="repasse-data-efetiva" required
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalRepasse()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-repasse" class="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-cyan-950/40 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Repasse</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Sessão Criptografada via JWT
@@ -3173,24 +3219,27 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                                 badgeStatusInquilino = `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400">PENDENTE</span>`;
                             }
 
-                            // STATUS SEMÂNTICO INTELIGENTE DO REPASSE AO DONO
+// STATUS SEMÂNTICO DO REPASSE AO DONO COM AÇÃO INTERATIVA
                             let badgeRepasseHtml = '';
                             if (!ehPago) {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 w-fit" title="O repasse aguarda a quitação do aluguel pelo inquilino">
                                         <i class="fa-solid fa-hourglass-half text-[8px]"></i> Aguardando Pgto Inquilino
                                     </span>
                                 `;
                             } else if (m.status_repasse !== 'Repassado') {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1">
-                                        <i class="fa-solid fa-hand-holding-dollar text-[8px]"></i> Disponível p/ Repasse
-                                    </span>
+                                    <button type="button" onclick="abrirModalConfirmarRepasse('${m.id}', '${refImob}', '${m.mes_referencia}', ${Number(m.valor_repasse_proprietario || 0)})"
+                                            class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-950 flex items-center gap-1.5 transition cursor-pointer" title="Clique para registrar a transferência ao proprietário">
+                                        <i class="fa-solid fa-hand-holding-dollar text-[10px]"></i>
+                                        <span>Efetivar Repasse</span>
+                                    </button>
                                 `;
                             } else {
+                                const dtRepasseFmt = m.data_repasse ? m.data_repasse.split('-').reverse().join('/') : '';
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
-                                        <i class="fa-solid fa-circle-check text-[8px]"></i> Repassado ao Dono
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 w-fit" title="Repasse concluído">
+                                        <i class="fa-solid fa-circle-check text-[8px]"></i> Repassado ao Dono ${dtRepasseFmt ? `(${dtRepasseFmt})` : ''}
                                     </span>
                                 `;
                             }
@@ -4642,10 +4691,73 @@ function cancelarCompromissoAgenda() {
                 btnSalvar.innerHTML = modoApenasAnexo ? '<i class="fa-solid fa-paperclip"></i> Salvar Comprovante' : '<i class="fa-solid fa-check"></i> Confirmar Recebimento';
             }
         }
-
-        window.abrirModalBaixaAluguel = abrirModalBaixaAluguel;
+window.abrirModalBaixaAluguel = abrirModalBaixaAluguel;
         window.fecharModalBaixaAluguel = fecharModalBaixaAluguel;
         window.confirmarBaixaAluguel = confirmarBaixaAluguel;
+
+        // =========================================================================
+        // MOTOR DE CONFIRMAÇÃO DE REPASSE AO PROPRIETÁRIO
+        // =========================================================================
+        function abrirModalConfirmarRepasse(mensalidadeId, imovelRef, competencia, valorRepasse) {
+            const modal = document.getElementById('modal-confirmar-repasse');
+            if (!modal) return;
+
+            document.getElementById('repasse-mensalidade-id').value = mensalidadeId;
+            document.getElementById('repasse-imovel-ref').innerText = `Ref: ${imovelRef}`;
+            document.getElementById('repasse-competencia').innerText = competencia;
+            document.getElementById('repasse-valor-liquido').innerText = valorRepasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            const hoje = new Date();
+            const dataHojeFmt = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+            document.getElementById('repasse-data-efetiva').value = dataHojeFmt;
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalRepasse() {
+            const modal = document.getElementById('modal-confirmar-repasse');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function salvarConfirmacaoRepasse(e) {
+            e.preventDefault();
+            const mensalidadeId = document.getElementById('repasse-mensalidade-id').value;
+            const dataRepasse = document.getElementById('repasse-data-efetiva').value;
+            const btnSalvar = document.getElementById('btn-salvar-repasse');
+
+            if (!mensalidadeId || !dataRepasse) return;
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
+
+            try {
+                const { error } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .update({
+                        status_repasse: 'Repassado',
+                        data_repasse: dataRepasse
+                    })
+                    .eq('id', mensalidadeId)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (error) throw error;
+
+                exibirToast('sucesso', 'Repasse ao proprietário confirmado com sucesso!');
+                fecharModalRepasse();
+
+                await carregarDashboardFinanceiro();
+            } catch (err) {
+                console.error('[ERRO REPASSE]:', err);
+                exibirToast('erro', 'Falha ao confirmar repasse: ' + (err.message || 'Erro no banco'));
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Repasse';
+            }
+        }
+
+        window.abrirModalConfirmarRepasse = abrirModalConfirmarRepasse;
+        window.fecharModalRepasse = fecharModalRepasse;
+        window.salvarConfirmacaoRepasse = salvarConfirmacaoRepasse;
 
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
