@@ -420,6 +420,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300 font-mono">
                             <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+      <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
                                 <tr>
                                     <th class="py-2.5 px-3">Imóvel (Ref)</th>
                                     <th class="py-2.5 px-3">Vencimento</th>
@@ -429,11 +430,12 @@
                                     <th class="py-2.5 px-3">Retenção Imob</th>
                                     <th class="py-2.5 px-3">Locatário / Inquilino</th>
                                     <th class="py-2.5 px-3">Status Inquilino</th>
-                                    <th class="py-2.5 px-3 text-right">Status Repasse Dono</th>
+                                    <th class="py-2.5 px-3">Status Repasse Dono</th>
+                                    <th class="py-2.5 px-3 text-center">Ações / Recibo</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-fin-locacoes-corpo" class="divide-y divide-slate-800/60 text-[11px]">
-                                <tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
+                                <tr><td colspan="10" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -973,6 +975,59 @@
                     <span>Confirmar Pausa</span>
                 </button>
             </div>
+        </div>
+    </div>
+
+<!-- MODAL DE BAIXA DE PAGAMENTO DE ALUGUEL COM COMPROVANTE -->
+    <div id="modal-baixa-aluguel" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[80] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 border border-emerald-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-emerald-400 font-black text-sm uppercase">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/40">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <span>Registrar Baixa de Aluguel</span>
+                </div>
+                <button type="button" onclick="fecharModalBaixaAluguel()" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 text-xs">
+                <div class="flex justify-between"><span class="text-slate-500">Locatário:</span><strong id="baixa-aluguel-inquilino" class="text-white uppercase font-bold">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Imóvel:</span><strong id="baixa-aluguel-imovel" class="text-cyan-300 font-mono">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Competência / Vencimento:</span><strong id="baixa-aluguel-competencia" class="text-amber-300 font-mono">---</strong></div>
+                <div class="flex justify-between pt-1 border-t border-slate-800"><span class="text-slate-400">Valor do Aluguel:</span><strong id="baixa-aluguel-valor" class="text-emerald-400 font-black font-mono text-sm">R$ 0,00</strong></div>
+            </div>
+
+            <form id="form-baixa-aluguel" onsubmit="confirmarBaixaAluguel(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="baixa-mensalidade-id">
+                
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Data Efetiva do Pagamento:</label>
+                    <input type="date" id="baixa-data-pagamento" required
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-emerald-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante Bancário (PDF ou Imagem):</label>
+                    <input type="file" id="baixa-arquivo-comprovante" accept=".pdf,.png,.jpg,.jpeg,.webp"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-cyan-300 hover:file:bg-slate-700 cursor-pointer">
+                    <span class="text-[10px] text-slate-500 mt-1 block">Ou cole o link/URL direta do comprovante caso já esteja hospedado:</span>
+                    <input type="url" id="baixa-url-comprovante" placeholder="https://..."
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl py-1.5 px-3 text-slate-300 text-xs mt-1 outline-none focus:border-emerald-400">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalBaixaAluguel()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-baixa-aluguel" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-emerald-950/40 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Recebimento</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -3064,39 +3119,105 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                 document.getElementById('fin-kpi-repasse-proprietarios').innerText = repasseProprietariosTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('fin-kpi-repasse-realizado').innerText = `Repassado: ${repasseProprietariosFeito.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                 document.getElementById('fin-kpi-repasse-pendente').innerText = `Disponível/Aguard: ${repasseProprietariosPendente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-
-                // TABELA 1: LOCAÇÕES COM DATA DE VENCIMENTO E STATUS SEMÂNTICO
+// TABELA 1: LOCAÇÕES COM DATA DE VENCIMENTO, ALERTA DE ATRASO E BAIXA
                 const tbodyLoc = document.getElementById('tabela-fin-locacoes-corpo');
                 if (tbodyLoc) {
                     if (!mensalidades || mensalidades.length === 0) {
-                        tbodyLoc.innerHTML = '<tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês de referência.</td></tr>';
+                        tbodyLoc.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês de referência.</td></tr>';
                     } else {
+                        const hojeBase = new Date();
+                        hojeBase.setHours(0, 0, 0, 0);
+
                         tbodyLoc.innerHTML = mensalidades.map(m => {
                             const refImob = m.imoveis?.codigo_ref || '---';
                             const vencFmt = m.data_vencimento ? m.data_vencimento.split('-').reverse().join('/') : '--/--/----';
                             const inquilinoNome = m.contratos_locacao?.cliente_nome || 'Inquilino em Contrato';
                             const cliId = m.contratos_locacao?.cliente_id || '';
                             const cliCpf = m.contratos_locacao?.cliente_cpf_cnpj || '';
+                            const ehPago = (m.status_inquilino === 'Pago');
+
+                            // CÁLCULO PRECISO DE ATRASO / DIAS RESTANTES
+                            let badgeStatusInquilino = '';
+                            if (ehPago) {
+                                const dtPgtoFmt = m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : '';
+                                badgeStatusInquilino = `
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-check text-[8px]"></i> PAGO ${dtPgtoFmt ? `(${dtPgtoFmt})` : ''}
+                                    </span>
+                                `;
+                            } else if (m.data_vencimento) {
+                                const [aV, mV, dV] = m.data_vencimento.split('-').map(Number);
+                                const dtVenc = new Date(aV, mV - 1, dV);
+                                const diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+
+                                if (diffDias > 0) {
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-rose-950 text-rose-300 border border-rose-600 animate-pulse flex items-center gap-1">
+                                            <i class="fa-solid fa-triangle-exclamation text-[8px] text-rose-400"></i> ATRASADO (${diffDias}d)
+                                        </span>
+                                    `;
+                                } else if (diffDias === 0) {
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-600 flex items-center gap-1">
+                                            <i class="fa-solid fa-clock text-[8px]"></i> VENCE HOJE
+                                        </span>
+                                    `;
+                                } else {
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-900 text-slate-400 border border-slate-700">
+                                            A VENCER (${Math.abs(diffDias)}d)
+                                        </span>
+                                    `;
+                                }
+                            } else {
+                                badgeStatusInquilino = `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400">PENDENTE</span>`;
+                            }
 
                             // STATUS SEMÂNTICO INTELIGENTE DO REPASSE AO DONO
                             let badgeRepasseHtml = '';
-                            if (m.status_inquilino !== 'Pago') {
+                            if (!ehPago) {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 justify-end ml-auto w-fit" title="O repasse aguarda o pagamento do inquilino">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1">
                                         <i class="fa-solid fa-hourglass-half text-[8px]"></i> Aguardando Pgto Inquilino
                                     </span>
                                 `;
-                            } else if (m.status_inquilino === 'Pago' && m.status_repasse !== 'Repassado') {
+                            } else if (m.status_repasse !== 'Repassado') {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1 justify-end ml-auto w-fit" title="Inquilino pagou! Liberado para repasse ao proprietário">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1">
                                         <i class="fa-solid fa-hand-holding-dollar text-[8px]"></i> Disponível p/ Repasse
                                     </span>
                                 `;
                             } else {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 justify-end ml-auto w-fit">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
                                         <i class="fa-solid fa-circle-check text-[8px]"></i> Repassado ao Dono
                                     </span>
+                                `;
+                            }
+
+                            // COLUNA DE AÇÕES: BOTÃO DE BAIXA OU BOTÃO DE COMPROVANTE
+                            let acoesHtml = '';
+                            if (!ehPago) {
+                                acoesHtml = `
+                                    <button type="button" onclick="abrirModalBaixaAluguel('${m.id}', '${(inquilinoNome).replace(/'/g, "\\'")}', '${refImob}', '${m.mes_referencia}', '${vencFmt}', ${Number(m.valor_aluguel || 0)})"
+                                            class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition shadow cursor-pointer whitespace-nowrap mx-auto">
+                                        <i class="fa-solid fa-check text-[9px]"></i> Dar Baixa
+                                    </button>
+                                `;
+                            } else {
+                                acoesHtml = `
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        ${m.comprovante_url ? `
+                                            <a href="${m.comprovante_url}" target="_blank" class="bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-700 px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition" title="Ver Comprovante Anexo">
+                                                <i class="fa-solid fa-eye text-xs"></i> <span>Recibo</span>
+                                            </a>
+                                        ` : `
+                                            <button type="button" onclick="abrirModalBaixaAluguel('${m.id}', '${(inquilinoNome).replace(/'/g, "\\'")}', '${refImob}', '${m.mes_referencia}', '${vencFmt}', ${Number(m.valor_aluguel || 0)})"
+                                                    class="text-slate-500 hover:text-cyan-300 text-[10px] underline cursor-pointer" title="Anexar comprovante agora">
+                                                + Anexar Recibo
+                                            </button>
+                                        `}
+                                    </div>
                                 `;
                             }
 
@@ -3118,12 +3239,9 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
                                             ${inquilinoNome}
                                         </button>
                                     </td>
-                                    <td class="py-2.5 px-3">
-                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'}">
-                                            ${m.status_inquilino || 'Pendente'}
-                                        </span>
-                                    </td>
-                                    <td class="py-2.5 px-3 text-right">${badgeRepasseHtml}</td>
+                                    <td class="py-2.5 px-3">${badgeStatusInquilino}</td>
+                                    <td class="py-2.5 px-3">${badgeRepasseHtml}</td>
+                                    <td class="py-2.5 px-3 text-center">${acoesHtml}</td>
                                 </tr>
                             `;
                         }).join('');
@@ -4370,6 +4488,7 @@ function cancelarCompromissoAgenda() {
 
         setTimeout(carregarAvisosGestor, 800);
 
+
         async function executarLogout() {
             if (isMasterSuporte) {
                 window.close();
@@ -4381,6 +4500,104 @@ function cancelarCompromissoAgenda() {
                 window.location.href = 'login.html';
             }
         }
+
+        // =========================================================================
+        // MOTOR DE BAIXA DE PAGAMENTO DE ALUGUEL COM ANEXO DE RECIBO
+        // =========================================================================
+        function abrirModalBaixaAluguel(mensalidadeId, inquilino, imovelRef, competencia, vencimento, valorAluguel) {
+            const modal = document.getElementById('modal-baixa-aluguel');
+            if (!modal) return;
+
+            document.getElementById('baixa-mensalidade-id').value = mensalidadeId;
+            document.getElementById('baixa-aluguel-inquilino').innerText = inquilino;
+            document.getElementById('baixa-aluguel-imovel').innerText = `Ref: ${imovelRef}`;
+            document.getElementById('baixa-aluguel-competencia').innerText = `${competencia} (Venc: ${vencimento})`;
+            document.getElementById('baixa-aluguel-valor').innerText = valorAluguel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            // Define por padrão a data de hoje para o pagamento
+            const hoje = new Date();
+            const dataHojeFmt = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+            document.getElementById('baixa-data-pagamento').value = dataHojeFmt;
+            document.getElementById('baixa-url-comprovante').value = '';
+            document.getElementById('baixa-arquivo-comprovante').value = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalBaixaAluguel() {
+            const modal = document.getElementById('modal-baixa-aluguel');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function confirmarBaixaAluguel(e) {
+            e.preventDefault();
+            const mensalidadeId = document.getElementById('baixa-mensalidade-id').value;
+            const dataPagamento = document.getElementById('baixa-data-pagamento').value;
+            const arquivoInput = document.getElementById('baixa-arquivo-comprovante');
+            const urlInput = document.getElementById('baixa-url-comprovante').value.trim();
+            const btnSalvar = document.getElementById('btn-salvar-baixa-aluguel');
+
+            if (!mensalidadeId || !dataPagamento) {
+                exibirToast('aviso', 'Informe a data do pagamento.');
+                return;
+            }
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando Baixa...';
+
+            try {
+                let comprovanteUrlFinal = urlInput || null;
+
+                // Upload automático caso o usuário selecione um arquivo local
+                if (arquivoInput.files && arquivoInput.files[0]) {
+                    const file = arquivoInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `recibo_${mensalidadeId}_${Date.now()}.${fileExt}`;
+                    const filePath = `comprovantes/${dadosImobiliaria.id}/${fileName}`;
+
+                    const { error: errUpload } = await supabaseClient.storage
+                        .from('documentos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (!errUpload) {
+                        const { data: publicUrlData } = supabaseClient.storage
+                            .from('documentos')
+                            .getPublicUrl(filePath);
+                        comprovanteUrlFinal = publicUrlData.publicUrl;
+                    }
+                }
+
+                const { error: errUpdate } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .update({
+                        status_inquilino: 'Pago',
+                        data_pagamento_inquilino: dataPagamento,
+                        comprovante_url: comprovanteUrlFinal
+                    })
+                    .eq('id', mensalidadeId)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (errUpdate) throw errUpdate;
+
+                exibirToast('sucesso', 'Pagamento registrado com sucesso! Repasse liberado.');
+                fecharModalBaixaAluguel();
+
+                // Recarrega extrato e KPIs em tempo real
+                await carregarDashboardFinanceiro();
+                await carregarMetricas(dadosImobiliaria.id);
+
+            } catch (err) {
+                console.error('[BAIXA ALUGUEL] Erro:', err);
+                exibirToast('erro', 'Erro ao registrar pagamento: ' + (err.message || 'Falha no banco'));
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Recebimento';
+            }
+        }
+
+        window.abrirModalBaixaAluguel = abrirModalBaixaAluguel;
+        window.fecharModalBaixaAluguel = fecharModalBaixaAluguel;
+        window.confirmarBaixaAluguel = confirmarBaixaAluguel;
 
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>

@@ -237,7 +237,7 @@
 
     </main>
 
-    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE -->
+    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE & DOCUMENTOS ANEXOS (OLHINHO 👁️) -->
     <div id="modal-proprietario-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/40 space-y-4 max-h-[90vh] flex flex-col">
             <button type="button" onclick="fecharModalProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -609,7 +609,7 @@
         </div>
     </div>
 
-    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE TOTAL) -->
+    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE TOTAL & DOCUMENTOS OLHINHO 👁️) -->
     <div id="modal-dash-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -642,7 +642,7 @@
         </div>
     </div>
 
-    <!-- MODAL 2: DOSSIÊ 360° DO CLIENTE (PROPRIETÁRIO / INQUILINO) -->
+    <!-- MODAL 2: DOSSIÊ 360° DO CLIENTE (PROPRIETÁRIO / INQUILINO COM DOCUMENTOS OLHINHO 👁️) -->
     <div id="modal-dossie-cliente" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-4xl w-full p-6 border border-sky-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -703,6 +703,81 @@
 
         // ESTADO DA GAVETA DE DOCUMENTOS DO COMPRADOR NA VENDA
         let listaDocsVendaEstado = [];
+
+        // =========================================================================
+        // MOTOR INTELIGENTE: RENDERIZADOR DE BOTÕES COM "OLHINHO" 👁️ PARA DOCUMENTOS
+        // =========================================================================
+        function renderizarBotoesDocumentos(documentosAnexos, rotuloSecao = 'Documentos Anexos') {
+            let lista = [];
+            if (Array.isArray(documentosAnexos)) {
+                lista = documentosAnexos;
+            } else if (typeof documentosAnexos === 'string' && documentosAnexos.trim() !== '') {
+                lista = documentosAnexos.split(',').map(s => s.trim());
+            }
+
+            lista = lista.filter(u => u && typeof u === 'string' && (u.startsWith('http') || u.startsWith('blob:')));
+
+            if (lista.length === 0) {
+                return `
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-[10px] uppercase font-black tracking-wider text-slate-500 block flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder-closed"></i> ${rotuloSecao}
+                        </span>
+                        <p class="text-[11px] text-slate-500 italic py-0.5">Nenhum documento anexado.</p>
+                    </div>
+                `;
+            }
+
+            const botoesHtml = lista.map((url, idx) => {
+                const urlLower = url.toLowerCase();
+                const ehPdf = urlLower.includes('.pdf');
+                const ehImagem = urlLower.includes('.jpg') || urlLower.includes('.jpeg') || urlLower.includes('.png') || urlLower.includes('.webp');
+
+                let badgeFormato = 'DOC';
+                let corBadge = 'bg-slate-800 text-slate-300 border-slate-700';
+
+                if (ehPdf) {
+                    badgeFormato = 'PDF';
+                    corBadge = 'bg-rose-950 text-rose-300 border-rose-800';
+                } else if (ehImagem) {
+                    badgeFormato = 'IMG';
+                    corBadge = 'bg-cyan-950 text-cyan-300 border-cyan-800';
+                }
+
+                let nomeAmigavel = `Documento ${idx + 1}`;
+                if (url.includes('#nome=')) {
+                    nomeAmigavel = decodeURIComponent(url.split('#nome=')[1]);
+                } else {
+                    const partes = url.split('/');
+                    const ultimaParte = partes[partes.length - 1].split('?')[0];
+                    if (ultimaParte && ultimaParte.length > 3) {
+                        nomeAmigavel = decodeURIComponent(ultimaParte.replace(/^\d+_/, '').replace(/^doc_[a-z]+_\d+_\d+_/, ''));
+                    }
+                }
+
+                return `
+                    <a href="${url}" target="_blank" rel="noopener noreferrer" 
+                       class="bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-cyan-400 px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-2 transition group shadow-sm">
+                        <i class="fa-solid fa-eye text-cyan-400 group-hover:scale-110 transition"></i>
+                        <span class="truncate max-w-[150px]" title="${nomeAmigavel}">${nomeAmigavel}</span>
+                        <span class="text-[9px] font-mono font-black uppercase px-1.5 py-0.2 rounded border ${corBadge}">
+                            ${badgeFormato}
+                        </span>
+                    </a>
+                `;
+            }).join('');
+
+            return `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <span class="text-[10px] uppercase font-black tracking-wider text-cyan-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-open"></i> ${rotuloSecao} (${lista.length})
+                    </span>
+                    <div class="flex items-center flex-wrap gap-2">
+                        ${botoesHtml}
+                    </div>
+                </div>
+            `;
+        }
 
         // =========================================================================
         // SISTEMA DE NOTIFICAÇÕES CORPORATIVAS (TOAST SYSTEM PROFISSIONAL)
@@ -1070,7 +1145,7 @@
                 const nomeProprietarioHtml = propObj 
                     ? `<button type="button" onclick="abrirDossieUniversal('${propObj.id}', '${(propObj.nome || '').replace(/'/g, "\\'")}', '${propObj.cpf_cnpj || ''}', 'proprietario')" 
                                class="text-white hover:text-amber-300 hover:underline font-bold text-xs cursor-pointer inline-flex items-center gap-1 group text-left transition" 
-                               title="Clique para abrir o Dossiê 360° do Proprietário">
+                               title="Clique para abrir o Dossiê 360° do Proprietário & Documentos">
                             <span>${propObj.nome}</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-0 group-hover:opacity-100 text-amber-400 transition"></i>
                        </button>`
@@ -1083,7 +1158,7 @@
                             <i class="fa-solid fa-key text-purple-400 text-xs"></i>
                             <button type="button" onclick="abrirDossieUniversal('${contratoInq ? (contratoInq.cliente_id || '') : ''}', '${(nomeInquilino || '').replace(/'/g, "\\'")}', '${contratoInq ? (contratoInq.cliente_cpf_cnpj || '') : ''}', 'inquilino')" 
                                     class="text-purple-300 hover:text-purple-200 hover:underline font-bold cursor-pointer inline-flex items-center gap-1 group transition" 
-                                    title="Clique para abrir o Dossiê 360° do Inquilino">
+                                    title="Clique para abrir o Dossiê 360° do Inquilino & Contrato Assinado">
                                 <span>Inquilino: ${nomeInquilino}</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-0 group-hover:opacity-100 text-purple-300 transition"></i>
                             </button>
@@ -1120,7 +1195,7 @@
                 if (im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-300 border-purple-800';
                 if (im.status === 'Vendido') statusBadge = 'bg-rose-950 text-rose-300 border-rose-800 font-black';
 
-                // BLINDAGEM DA VITRINE: APENAS DISPONÍVEL PODE FICAR "NO AR"
+                // BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" PODE IR AO AR
                 const estaDisponivel = (im.status === 'Disponível');
                 const toggleClass = (estaDisponivel && im.ativa) 
                     ? 'bg-emerald-500 text-slate-950 hover:bg-emerald-400' 
@@ -1240,9 +1315,10 @@
                                 <i class="fa-solid fa-file-pdf text-xs"></i>
                             </button>
 
+                            <!-- BOTÃO BONEQUINHO DO PROPRIETÁRIO COM DOCUMENTOS E PRETENSÃO -->
                             <button onclick="abrirModalProprietario('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-700/80 transition cursor-pointer" 
-                                    title="Ficha do Proprietário & Pretensão Líquida">
+                                    title="Ficha do Proprietário, Documentos (👁️) & Pretensão Líquida">
                                 <i class="fa-solid fa-user-tie text-xs"></i>
                             </button>
 
@@ -1505,7 +1581,7 @@
         }
 
         // =========================================================================
-        // FICHA DO PROPRIETÁRIO & PRETENSÃO LÍQUIDA
+        // FICHA DO PROPRIETÁRIO COM PRETENSÃO & DOCUMENTOS COM "OLHINHO" (👁️)
         // =========================================================================
         async function abrirModalProprietario(imovelId) {
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
@@ -1518,7 +1594,7 @@
             document.getElementById('prop-valor-pretendido-input').value = formatarValorBRL(imovel.valor_pretendido_proprietario);
 
             const container = document.getElementById('prop-modal-conteudo');
-            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados...</p></div>';
+            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados e documentação...</p></div>';
             document.getElementById('modal-proprietario-imovel').classList.remove('hidden');
 
             try {
@@ -1538,7 +1614,10 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <span class="text-[10px] uppercase font-bold text-amber-400 block">Proprietário Vinculado</span>
-                                        <h3 class="text-base font-black text-white">${prop.nome || 'Proprietário'}</h3>
+                                        <button type="button" onclick="fecharModalProprietario(); abrirDossieUniversal('${prop.id}', '${(prop.nome || '').replace(/'/g, "\\'")}', '${prop.cpf_cnpj || ''}', 'proprietario')" class="text-base font-black text-white hover:text-amber-300 hover:underline flex items-center gap-1.5 transition text-left cursor-pointer">
+                                            <span>${prop.nome || 'Proprietário'}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-amber-400"></i>
+                                        </button>
                                     </div>
                                     ${podeVerProprietarios && zapLimpo ? `
                                         <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
@@ -1567,7 +1646,13 @@
                     `;
                 }
 
-                container.innerHTML = blocoProprietarioHtml;
+                // GAVETA DE DOCUMENTOS DO IMÓVEL COM O OLHINHO 👁️
+                const docsHtml = renderizarBotoesDocumentos(imovel.documentos_anexos, 'Documentos do Imóvel, Escrituras & Certidões');
+
+                container.innerHTML = `
+                    ${blocoProprietarioHtml}
+                    ${docsHtml}
+                `;
 
             } catch (err) {
                 console.error(err);
@@ -2077,7 +2162,7 @@
         }
 
         // =========================================================================
-        // MOTOR DO RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE TOTAL)
+        // MOTOR DO RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE & DOCUMENTOS 👁️)
         // =========================================================================
         async function abrirModalDetalhesImovel(imovelId) {
             if (!imovelId) return;
@@ -2124,6 +2209,9 @@
 
                 const prop = imovel.clientes || {};
                 const zapProp = ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '');
+
+                // GAVETA DE DOCUMENTOS DO IMÓVEL COM "OLHINHO" 👁️
+                const docsHtml = renderizarBotoesDocumentos(imovel.documentos_anexos, 'Documentos Técnicos, Escrituras & Fotos Extras');
 
                 if (corpo) {
                     corpo.innerHTML = `
@@ -2173,6 +2261,8 @@
                                 ` : ''}
                             </div>
                         </div>
+
+                        ${docsHtml}
                     `;
                 }
 
@@ -2190,7 +2280,7 @@
         window.fecharModalDashImovel = fecharModalDashImovel;
 
         // =========================================================================
-        // MOTOR DO DOSSIÊ 360° DO CLIENTE: MULTI-PERFIL (PROPRIETÁRIO / INQUILINO)
+        // MOTOR DO DOSSIÊ 360° DO CLIENTE: COM VISUALIZADOR DE DOCUMENTOS (OLHINHO 👁️)
         // =========================================================================
         async function abrirDossieUniversal(clienteId, nomeFallback, cpfFallback, tipoAcesso) {
             const modal = document.getElementById('modal-dossie-cliente');
@@ -2203,7 +2293,7 @@
             corpo.innerHTML = `
                 <div class="py-12 text-center text-slate-500">
                     <i class="fa-solid fa-spinner fa-spin text-sky-400 text-2xl mb-2"></i>
-                    <p>Localizando cadastro e histórico completo...</p>
+                    <p>Localizando cadastro, histórico e documentos em nuvem...</p>
                 </div>
             `;
             modal.classList.remove('hidden');
@@ -2265,27 +2355,33 @@
                 if (tipoAcesso === 'proprietario') {
                     const { data: imoveisProp } = await supabaseClient
                         .from('imoveis')
-                        .select('id, codigo_ref, titulo, status, valor_venda, valor_locacao')
+                        .select('id, codigo_ref, titulo, status, valor_venda, valor_locacao, documentos_anexos')
                         .eq('proprietario_id', cliente.id || 'none');
 
                     blocoExtraHtml = `
-                        <div class="space-y-3 pt-2">
+                        <div class="space-y-4 pt-2">
                             <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-house-user"></i> Imóveis Deste Proprietário (${(imoveisProp || []).length})
+                                <i class="fa-solid fa-house-user"></i> Imóveis Deste Proprietário & Documentação (${(imoveisProp || []).length})
                             </h4>
-                            <div class="space-y-2">
-                                ${(imoveisProp || []).length === 0 ? '<p class="text-slate-500 italic py-2">Nenhum imóvel adicional listado.</p>' : 
-                                imoveisProp.map(im => `
-                                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
-                                        <div>
-                                            <span class="font-bold text-white uppercase">${im.titulo}</span>
-                                            <span class="text-[10px] text-cyan-400 font-mono block">Ref: ${im.codigo_ref}</span>
+                            <div class="space-y-3">
+                                ${(imoveisProp || []).length === 0 ? '<p class="text-slate-500 italic py-2">Nenhum imóvel adicional listado sob este titular.</p>' : 
+                                imoveisProp.map(im => {
+                                    const docsImovelHtml = renderizarBotoesDocumentos(im.documentos_anexos, `Documentos • Ref: ${im.codigo_ref}`);
+                                    return `
+                                        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <span class="font-bold text-white uppercase text-xs">${im.titulo}</span>
+                                                    <span class="text-[10px] text-cyan-400 font-mono block">Ref: ${im.codigo_ref} • Status: ${im.status}</span>
+                                                </div>
+                                                <button type="button" onclick="fecharModalDossieCliente(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-[11px] transition cursor-pointer">
+                                                    Ver Raio-X
+                                                </button>
+                                            </div>
+                                            ${docsImovelHtml}
                                         </div>
-                                        <button type="button" onclick="fecharModalDossieCliente(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1 rounded-lg text-[11px] transition cursor-pointer">
-                                            Ver Imóvel
-                                        </button>
-                                    </div>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     `;
@@ -2298,12 +2394,17 @@
 
                     const ct = (contratosInq && contratosInq.length > 0) ? contratosInq[0] : null;
 
+                    let docsContratoHtml = '';
+                    if (ct && ct.documentos_anexos) {
+                        docsContratoHtml = renderizarBotoesDocumentos(ct.documentos_anexos, 'Contrato Assinado & Documentos Pessoais do Inquilino');
+                    }
+
                     blocoExtraHtml = ct ? `
                         <div class="space-y-3 pt-2">
                             <h4 class="text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
                                 <i class="fa-solid fa-file-contract"></i> Contrato de Locação Ativo
                             </h4>
-                            <div class="bg-slate-950 p-3.5 rounded-xl border border-purple-500/40 space-y-2">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-purple-500/40 space-y-3">
                                 <div class="flex items-center justify-between">
                                     <span class="font-bold text-white uppercase">${ct.imoveis ? ct.imoveis.titulo : 'Imóvel Locado'} (Ref: ${ct.imoveis ? ct.imoveis.codigo_ref : '---'})</span>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800">Todo dia ${ct.dia_vencimento_aluguel || '10'}</span>
@@ -2312,6 +2413,7 @@
                                     <div><span class="text-slate-500">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(ct.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong></div>
                                     <div><span class="text-slate-500">Vigência:</span> <strong class="text-white">${ct.data_inicio ? ct.data_inicio.split('-').reverse().join('/') : ''} até ${ct.data_fim ? ct.data_fim.split('-').reverse().join('/') : ''}</strong></div>
                                 </div>
+                                ${docsContratoHtml}
                             </div>
                         </div>
                     ` : '<p class="text-slate-500 italic py-2">Nenhum contrato ativo vinculado localizado.</p>';
@@ -2324,6 +2426,9 @@
                                 <span class="text-[10px] uppercase font-bold text-sky-400 block">Ficha Cadastral</span>
                                 <h4 class="text-base font-black text-white uppercase">${cliente.nome}</h4>
                             </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-800 font-mono">
+                                ${cliente.id ? 'ID: ' + cliente.id.substring(0, 8) + '...' : 'Registro Ativo'}
+                            </span>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
@@ -2331,6 +2436,12 @@
                             <div><span class="text-slate-500 block">WhatsApp / Fone:</span> <strong class="text-cyan-300 font-mono">${cliente.whatsapp || cliente.telefone || 'Não informado'}</strong></div>
                             <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${cliente.email || 'Não informado'}</strong></div>
                         </div>
+
+                        ${cliente.endereco_completo ? `
+                            <p class="text-[11px] text-slate-400 pt-1 border-t border-slate-900">
+                                <i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Endereço: <strong>${cliente.endereco_completo}</strong>
+                            </p>
+                        ` : ''}
                     </div>
 
                     ${blocoExtraHtml}

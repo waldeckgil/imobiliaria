@@ -326,38 +326,76 @@
                 </div>
             </div>
 
-            <!-- SEÇÃO 4: POLÍTICAS DE COMISSÕES & TAXAS PADRÃO DA IMOBILIÁRIA -->
-            <div class="box-tech p-6 space-y-4 border border-cyan-500/30 bg-cyan-950/10">
+            <!-- SEÇÃO 4: POLÍTICAS DE COMISSÕES & TAXAS PADRÃO (DIVIDIDAS EM EMPRESA VS EQUIPE) -->
+            <div class="box-tech p-6 space-y-5 border border-cyan-500/30 bg-cyan-950/10">
                 <div class="border-b border-slate-800 pb-3">
                     <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-hand-holding-dollar text-base"></i> 4. Políticas de Comissões & Honorários Padrão
+                        <i class="fa-solid fa-hand-holding-dollar text-base"></i> 4. Políticas de Comissões, Honorários & Repasses Padrão
                     </h3>
-                    <p class="text-xs text-slate-400 mt-1">
-                        Defina as alíquotas padrão que a imobiliária retém nas operações. Esses valores servirão de base automática no cálculo de fechamento de vendas, contratos de aluguel e apuração da receita líquida da empresa.
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Configure abaixo os percentuais da empresa e a política padrão de repasse para novos corretores. A comissão de locação para a equipe é <strong>opcional</strong>.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-1.5">
-                        <label class="block font-bold text-slate-200">Comissão Padrão de Vendas da Imobiliária (%) *</label>
-                        <div class="relative">
-                            <input type="number" step="0.1" min="0" max="100" id="conf-comissao-venda" required placeholder="Ex: 6.0" 
-                                   class="w-full bg-slate-950 border border-cyan-500/50 rounded-xl py-2.5 pl-3 pr-10 text-cyan-300 font-mono font-black text-sm outline-none focus:border-cyan-400">
-                            <span class="absolute right-3.5 top-2.5 text-cyan-400 font-black text-xs">%</span>
+                <!-- BLOCO A: HONORÁRIOS DA IMOBILIÁRIA (COBRADOS DOS CLIENTES) -->
+                <div class="space-y-3">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-amber-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-building-columns text-xs"></i> A. Honorários da Imobiliária (Cobrados dos Clientes)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/80 p-4 rounded-xl border border-slate-800">
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-200">Comissão de Vendas da Imobiliária (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.1" min="0" max="100" id="conf-comissao-venda" required placeholder="Ex: 6.0" 
+                                       class="w-full bg-slate-900 border border-cyan-500/50 rounded-xl py-2 pl-3 pr-9 text-cyan-300 font-mono font-black text-xs outline-none focus:border-cyan-400">
+                                <span class="absolute right-3 top-2 text-cyan-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Cobrado do proprietário no fechamento da venda (mercado: 5% a 6%).</p>
                         </div>
-                        <p class="text-[10px] text-slate-500">Percentual total cobrado sobre o VGV na venda do imóvel (Prática de mercado: 5.0% a 6.0%).</p>
-                    </div>
 
-                    <div class="space-y-1.5">
-                        <label class="block font-bold text-slate-200">Taxa de Administração de Locação da Imobiliária (%) *</label>
-                        <div class="relative">
-                            <input type="number" step="0.1" min="0" max="100" id="conf-taxa-locacao" required placeholder="Ex: 10.0" 
-                                   class="w-full bg-slate-950 border border-amber-500/50 rounded-xl py-2.5 pl-3 pr-10 text-amber-300 font-mono font-black text-sm outline-none focus:border-amber-400">
-                            <span class="absolute right-3.5 top-2.5 text-amber-400 font-black text-xs">%</span>
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-200">Taxa de Administração de Locação (%) *</label>
+                            <div class="relative">
+                                <input type="number" step="0.1" min="0" max="100" id="conf-taxa-locacao" required placeholder="Ex: 10.0" 
+                                       class="w-full bg-slate-900 border border-amber-500/50 rounded-xl py-2 pl-3 pr-9 text-amber-300 font-mono font-black text-xs outline-none focus:border-amber-400">
+                                <span class="absolute right-3 top-2 text-amber-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Retido mensalmente pela imobiliária do aluguel bruto (padrão: 8% a 10%).</p>
                         </div>
-                        <p class="text-[10px] text-slate-500">Percentual mensal retido pela imobiliária sobre o aluguel bruto pago pelo inquilino (Padrão: 8.0% a 10.0%).</p>
                     </div>
                 </div>
+
+                <!-- BLOCO B: POLÍTICA PADRÃO DE REPASSE À EQUIPE / CORRETORES (OPCIONAL) -->
+                <div class="space-y-3 pt-2">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-blue-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-xs"></i> B. Repasse Padrão aos Corretores (Política Sugerida para Novos Cadastros)
+                    </span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/80 p-4 rounded-xl border border-blue-900/40">
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-200">Repasse Padrão de Vendas ao Corretor (%)</label>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="conf-repasse-venda-corretor" placeholder="Ex: 30.0" 
+                                       class="w-full bg-slate-900 border border-blue-500/40 rounded-xl py-2 pl-3 pr-9 text-blue-300 font-mono font-bold text-xs outline-none focus:border-blue-400">
+                                <span class="absolute right-3 top-2 text-blue-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">% da fatia sobre a comissão que a imobiliária recebeu na venda.</p>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-200">Repasse Padrão de Locações ao Corretor (%)</label>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase bg-slate-900 px-1.5 py-0.2 rounded border border-slate-800">Opcional</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" step="0.5" min="0" max="100" id="conf-repasse-locacao-corretor" placeholder="0.0" 
+                                       class="w-full bg-slate-900 border border-purple-500/40 rounded-xl py-2 pl-3 pr-9 text-purple-300 font-mono font-bold text-xs outline-none focus:border-purple-400">
+                                <span class="absolute right-3 top-2 text-purple-400 font-bold text-xs">%</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Deixe em branco ou 0% se a receita de aluguel for 100% da imobiliária.</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- BOTÃO SALVAR COM BLOQUEIO RIGOROSO -->
@@ -401,7 +439,6 @@
                 return;
             }
 
-            // Lê dias de aviso configurados pelo Administrador Master
             try {
                 const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
                 if (cfg && cfg.dias_aviso_vencimento) diasAvisoGlobal = Number(cfg.dias_aviso_vencimento);
@@ -415,7 +452,7 @@
             // 1. SUPORTE MASTER SOBERANO
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
-                modoLeitura = false; // Master tem poder total para editar
+                modoLeitura = false;
 
                 let targetId = impersonateId;
                 let imobAlvo = null;
@@ -432,7 +469,6 @@
                     imobiliariaId = imobAlvo.id;
                     dadosImobAtual = imobAlvo;
 
-                    // Exibe a barra de suporte
                     document.getElementById('faixa-modo-suporte').classList.remove('hidden');
                     document.getElementById('txt-suporte-imob').innerText = `${imobAlvo.nome_fantasia || 'Imobiliária'} (/${imobAlvo.slug || ''})`;
 
@@ -481,7 +517,6 @@
             }
         }
 
-        // AVALIAÇÃO DA RÉGUA DE COBRANÇA (3 ESTADOS DINÂMICOS COM BLINDAGEM DE DATAS)
         function avaliarVencimento(imob) {
             const hoje = new Date();
             hoje.setHours(0,0,0,0);
@@ -491,7 +526,6 @@
                 return;
             }
 
-            // Parsing blindado contra datas parciais ou ISO completa
             const dataPura = String(imob.data_vencimento).split('T')[0];
             const partes = dataPura.split('-');
             if (partes.length < 3) {
@@ -517,7 +551,6 @@
             const txtDesc = document.getElementById('txt-status-desc');
             const txtCiclo = document.getElementById('txt-dias-restantes');
 
-            // 1. ESTADO: VENCIDO (BLOQUEIO / MODO LEITURA)
             if (diffDias < 0 || imob.status === 'blocked') {
                 if (!isMasterSuporte) {
                     modoLeitura = true;
@@ -533,7 +566,6 @@
                 txtCiclo.innerText = `Vencido há ${Math.abs(diffDias)} dias`;
                 txtCiclo.className = 'text-xs font-bold text-rose-400';
             } 
-            // 2. ESTADO: AVISO PRÉVIO (DENTRO DOS DIAS CONFIGURADOS)
             else if (diffDias <= diasAvisoGlobal) {
                 modoLeitura = false;
                 document.getElementById('faixa-alerta-vencimento').classList.remove('hidden');
@@ -545,7 +577,6 @@
                 txtCiclo.innerText = `Faltam ${diffDias} dias`;
                 txtCiclo.className = 'text-xs font-bold text-amber-400';
             } 
-            // 3. ESTADO: EM DIA (REGULAR OU CORTESIA DOURADA)
             else {
                 modoLeitura = false;
                 const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
@@ -567,7 +598,6 @@
             }
         }
 
-        // CARREGA RECIBOS HISTÓRICOS APROVADOS PELO ADMINISTRADOR
         async function carregarHistoricoFaturasGestor(imobId) {
             const tbody = document.getElementById('tabela-faturas-gestor');
             try {
@@ -611,7 +641,6 @@
             }
         }
 
-        // PREENCHE FORMULÁRIO COM PROTEÇÃO DEFENSIVA
         function preencherFormulario(imob) {
             if (!imob) return;
             document.getElementById('conf-nome-fantasia').value = imob.nome_fantasia || '';
@@ -632,14 +661,17 @@
             document.getElementById('conf-linkedin').value = imob.linkedin || '';
             document.getElementById('conf-sobre').value = imob.sobre_corretor || '';
 
-            // Políticas de Comissões e Taxas Padrão da Empresa
+            // Bloco A: Honorários da Empresa
             document.getElementById('conf-comissao-venda').value = (imob.comissao_venda_padrao_pct !== null && imob.comissao_venda_padrao_pct !== undefined) ? imob.comissao_venda_padrao_pct : 6.0;
             document.getElementById('conf-taxa-locacao').value = (imob.taxa_locacao_padrao_pct !== null && imob.taxa_locacao_padrao_pct !== undefined) ? imob.taxa_locacao_padrao_pct : 10.0;
+
+            // Bloco B: Repasse Padrão aos Corretores
+            document.getElementById('conf-repasse-venda-corretor').value = (imob.repasse_corretor_venda_padrao_pct !== null && imob.repasse_corretor_venda_padrao_pct !== undefined) ? imob.repasse_corretor_venda_padrao_pct : 30.0;
+            document.getElementById('conf-repasse-locacao-corretor').value = (imob.repasse_corretor_locacao_padrao_pct !== null && imob.repasse_corretor_locacao_padrao_pct !== undefined) ? imob.repasse_corretor_locacao_padrao_pct : 0.0;
 
             if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
             if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
 
-            // TRATAMENTO DA GRATUIDADE / CORTESIA
             const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
 
@@ -666,7 +698,6 @@
             }
         }
 
-        // SALVAR CONFIGURAÇÕES COM TRAVA RIGOROSA CONTRA DUPLO CLIQUE
         async function salvarConfiguracoes(event) {
             event.preventDefault();
             if (modoLeitura && !isMasterSuporte) return;
@@ -706,6 +737,9 @@
                     }
                 }
 
+                const repasseVendaVal = document.getElementById('conf-repasse-venda-corretor').value;
+                const repasseLocacaoVal = document.getElementById('conf-repasse-locacao-corretor').value;
+
                 const payload = {
                     nome_fantasia: document.getElementById('conf-nome-fantasia').value.trim(),
                     razao_social: document.getElementById('conf-razao-social').value.trim(),
@@ -723,8 +757,15 @@
                     youtube: document.getElementById('conf-youtube').value.trim(),
                     linkedin: document.getElementById('conf-linkedin').value.trim(),
                     sobre_corretor: document.getElementById('conf-sobre').value.trim(),
+                    
+                    // Honorários da Imobiliária
                     comissao_venda_padrao_pct: Number(document.getElementById('conf-comissao-venda').value) || 6.0,
                     taxa_locacao_padrao_pct: Number(document.getElementById('conf-taxa-locacao').value) || 10.0,
+
+                    // Repasses Padrão à Equipe
+                    repasse_corretor_venda_padrao_pct: (repasseVendaVal !== '') ? Number(repasseVendaVal) : 30.0,
+                    repasse_corretor_locacao_padrao_pct: (repasseLocacaoVal !== '') ? Number(repasseLocacaoVal) : 0.0,
+
                     logo_url: novaLogoUrl,
                     banner_url: novaBannerUrl
                 };
@@ -732,15 +773,13 @@
                 const { error } = await supabaseClient.from('imobiliarias').update(payload).eq('id', imobiliariaId);
                 if (error) throw error;
 
-                // Atualiza cache em memória
                 dadosImobAtual = { ...dadosImobAtual, ...payload };
 
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = 'Configurações corporativas, taxas padrão e dados visuais salvos com sucesso!';
+                alertaTexto.innerText = 'Configurações corporativas, taxas da imobiliária e regras da equipe salvas com sucesso!';
                 alerta.classList.remove('hidden');
 
-                // Rolagem suave até o feedback visual
                 alerta.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             } catch (err) {
@@ -756,9 +795,8 @@
             }
         }
 
- async function carregarCatalogoParaPDF() {
+        async function carregarCatalogoParaPDF() {
             try {
-                // Carrega TODOS os imóveis da imobiliária (sem filtrar apenas os ativos)
                 const { data: imoveis, error } = await supabaseClient
                     .from('imoveis')
                     .select('*')
@@ -788,9 +826,6 @@
             }
         }
       
-// =========================================================================
-        // MOTOR JSPDF MASTER: CONVERSÃO DE IMAGENS CANVAS & SANITIZAÇÃO DE TEXTO
-        // =========================================================================
         function sanitizarTextoPdf(texto) {
             if (!texto) return '';
             return texto
@@ -799,7 +834,6 @@
                 .trim();
         }
 
-        // Converte qualquer formato (WebP, PNG, JPG) para JPEG puro compatível com jsPDF via Canvas
         async function converterImgParaJpegSeguro(url) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -812,12 +846,10 @@
                         canvas.height = img.naturalHeight || img.height || 600;
                         const ctx = canvas.getContext('2d');
                         
-                        // Fundo branco sólido (evita transparência preta de WebP/PNG)
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
-                        // Exporta garantidamente como JPEG real
                         resolve(canvas.toDataURL('image/jpeg', 0.85));
                     } catch (err) {
                         reject(err);
@@ -825,7 +857,6 @@
                 };
 
                 img.onerror = () => {
-                    // Fallback se crossOrigin for bloqueado: tenta via blob
                     fetch(url)
                         .then(r => r.blob())
                         .then(blob => {
@@ -852,7 +883,6 @@
             });
         }
 
-        // MOTOR JSPDF: GERAÇÃO DA FICHA COMERCIAL COM CANVAS JPEG & SANITIZAÇÃO
         async function gerarFichaPDF() {
             const imovelId = document.getElementById('seletor-imovel-pdf').value;
             if (!imovelId) {
@@ -874,7 +904,6 @@
                 const pageHeight = doc.internal.pageSize.getHeight();
                 const nomeFantasia = dadosImobAtual ? (dadosImobAtual.nome_fantasia || 'SGI IMOBILIÁRIA') : 'SGI IMOBILIÁRIA';
 
-                // 1. CABEÇALHO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, 0, pageWidth, 28, 'F');
 
@@ -890,7 +919,6 @@
                 const fone = dadosImobAtual ? (dadosImobAtual.whatsapp_contato || dadosImobAtual.telefone_contato || '') : '';
                 doc.text(`${sanitizarTextoPdf(creci)} ${fone ? '• Contato: ' + fone : ''}`, 15, 21);
 
-                // Tarja Ref
                 doc.setFillColor(28, 107, 160);
                 doc.roundedRect(pageWidth - 48, 8, 33, 11, 2, 2, 'F');
                 doc.setTextColor(255, 255, 255);
@@ -898,7 +926,6 @@
                 doc.setFont('helvetica', 'bold');
                 doc.text(`Ref: ${imovel.codigo_ref || 'SGI'}`, pageWidth - 31.5, 15, { align: 'center' });
 
-                // 2. TÍTULO & LOCALIZAÇÃO
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(13);
                 doc.setFont('helvetica', 'bold');
@@ -912,11 +939,9 @@
                 const localStr = sanitizarTextoPdf(`${imovel.bairro || 'Localização'} ${imovel.cidade ? ' - ' + imovel.cidade : ''}${imovel.uf ? '/' + imovel.uf : ''}`);
                 doc.text(`${sanitizarTextoPdf(imovel.tipo || 'Padrão')} • ${localStr}`, 15, 45);
 
-         // 3. FOTO DE CAPA INTELIGENTE (Busca Capa -> Galeria -> ou imagem em Documentos)
                 let posY = 51;
                 let urlFoto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
 
-                // Fallback de resgate: se a foto foi colocada em documentos por engano
                 if (!urlFoto && Array.isArray(imovel.documentos_anexos) && imovel.documentos_anexos.length > 0) {
                     const imgDoc = imovel.documentos_anexos.find(url => {
                         const u = url.toLowerCase();
@@ -940,7 +965,6 @@
                     }
                 }
 
-                // 4. QUADRO DE ESPECIFICAÇÕES
                 doc.setFillColor(245, 247, 250);
                 doc.roundedRect(15, posY, pageWidth - 30, 22, 2, 2, 'F');
 
@@ -964,7 +988,6 @@
 
                 posY += 28;
 
-                // 5. VALORES
                 doc.setTextColor(20, 25, 40);
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
@@ -986,7 +1009,6 @@
 
                 posY += 20;
 
-                // 6. DESCRIÇÃO (COM SANITIZAÇÃO DE EMOJIS)
                 doc.setFontSize(9.5);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(20, 25, 40);
@@ -999,7 +1021,6 @@
                 const splitDesc = doc.splitTextToSize(descTexto, pageWidth - 30);
                 doc.text(splitDesc.slice(0, 5), 15, posY + 6);
 
-                // 7. RODAPÉ DE CONTATO
                 doc.setFillColor(13, 14, 17);
                 doc.rect(0, pageHeight - 20, pageWidth, 20, 'F');
 
@@ -1022,7 +1043,6 @@
                 boxStatus.classList.add('hidden');
             }
         }
-
 
         function sanitizarZap(num) {
             let limpo = ('' + num).replace(/\D/g, '');

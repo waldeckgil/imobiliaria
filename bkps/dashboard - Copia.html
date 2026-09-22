@@ -189,14 +189,8 @@
             </div>
         </div>
 
-
-        <!-- FAIXA DE ALERTAS INTELIGENTES: VISITAS DE HOJE E AMANHÃ -->
-    <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
-
-    <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
-
-        <!-- CARD 1: DISPONÍVEIS -->
+        <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
             
             <!-- CARD 1: DISPONÍVEIS -->
             <div onclick="abrirDrilldown('disponiveis')" class="box-tech p-4 border-l-4 border-l-blue-500 cursor-pointer hover:scale-[1.02] hover:border-blue-400 hover:shadow-xl transition group bg-gradient-to-r from-blue-950/15 to-transparent">
@@ -862,24 +856,15 @@
                     <p>Carregando dados do agendamento...</p>
                 </div>
             </div>
-<div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs gap-2 flex-wrap">
-                <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>Conversar no WhatsApp</span>
                 </a>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button type="button" onclick="cancelarCompromissoAgenda()" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 hover:text-white border border-rose-800/80 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow" title="Cancelar este compromisso e auditar">
-                        <i class="fa-solid fa-calendar-xmark text-xs"></i>
-                        <span>Cancelar Visita</span>
-                    </button>
-                    <button type="button" onclick="alternarBoxReagendamento()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow cursor-pointer">
-                        <i class="fa-solid fa-calendar-days text-xs"></i>
-                        <span>Reagendar Visita</span>
-                    </button>
-                    <button onclick="fecharModalAgendamento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-3.5 rounded-xl transition cursor-pointer">
-                        Fechar Dossiê
-                    </button>
-                </div>
+                <button onclick="fecharModalAgendamento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Fechar Dossiê
+                </button>
             </div>
         </div>
     </div>
@@ -942,35 +927,6 @@
                 <span id="drilldown-contador" class="text-slate-400 font-mono font-bold">0 itens listados</span>
                 <button onclick="fecharDrilldown()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
                     Fechar
-                </button>
-            </div>
-        </div>
-    </div>
-
-<!-- MODAL DE CONFIRMAÇÃO DO SISTEMA (CUSTOMIZADO DARK TECH) -->
-    <div id="modal-confirmacao-acao" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[90] flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 border border-amber-500/50 shadow-2xl space-y-4 text-center toast-ativo">
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl mx-auto shadow-inner">
-                <i class="fa-solid fa-pause"></i>
-            </div>
-            <div class="space-y-1.5">
-                <h3 id="modal-confirma-titulo" class="text-base font-black text-white uppercase tracking-wide">Pausar Publicação</h3>
-                <p id="modal-confirma-msg" class="text-xs text-slate-200">Deseja realmente pausar a publicação deste imóvel na vitrine?</p>
-                <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-950 p-2.5 rounded-lg border border-slate-800 mt-2 space-y-1.5 text-left">
-                    <p>Ele sairá do site público imediatamente, mas continuará disponível no seu estoque interno.</p>
-                    <p class="text-cyan-300 font-medium flex items-center gap-1.5 pt-1 border-t border-slate-900">
-                        <i class="fa-solid fa-circle-info text-cyan-400 flex-shrink-0"></i>
-                        <span>Para voltar a ativar este imóvel no site, acesse o <strong>Catálogo de Imóveis</strong>.</span>
-                    </p>
-                </div>
-            </div>
-            <div class="flex items-center justify-center gap-3 pt-2">
-                <button id="btn-cancelar-confirma" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
-                    Cancelar
-                </button>
-                <button id="btn-executar-confirma" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-amber-950/40 flex items-center gap-1.5">
-                    <i class="fa-solid fa-pause text-[10px]"></i>
-                    <span>Confirmar Pausa</span>
                 </button>
             </div>
         </div>
@@ -2698,8 +2654,8 @@
                         corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel ativo na vitrine no momento.</p>';
                         return;
                     }
-    
-corpo.innerHTML = imoveis.map(im => `
+
+                    corpo.innerHTML = imoveis.map(im => `
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-cyan-500/40 transition">
                             <div class="flex items-center gap-3">
                                 <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
@@ -2709,15 +2665,9 @@ corpo.innerHTML = imoveis.map(im => `
                                     <span class="text-[11px] font-black text-cyan-300 block mt-0.5">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2 flex-shrink-0">
-                                <button onclick="pausarPublicacaoImovel('${im.id}', '${im.codigo_ref}')" class="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-800/80 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer flex items-center gap-1.5 shadow-sm" title="Pausar exibição na vitrine pública">
-                                    <i class="fa-solid fa-pause text-[10px]"></i>
-                                    <span>Pausar</span>
-                                </button>
-                                <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
-                                    Ver Raio-X
-                                </button>
-                            </div>
+                            <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
+                                Ver Raio-X
+                            </button>
                         </div>
                     `).join('');
 
@@ -2935,58 +2885,6 @@ corpo.innerHTML = imoveis.map(im => `
                 boxModal.classList.add('max-w-3xl');
             }
         }
-
-
-function pausarPublicacaoImovel(imovelId, codigoRef) {
-            if (!imovelId || !dadosImobiliaria) return;
-
-            const modal = document.getElementById('modal-confirmacao-acao');
-            const msgEl = document.getElementById('modal-confirma-msg');
-            const btnConfirmar = document.getElementById('btn-executar-confirma');
-            const btnCancelar = document.getElementById('btn-cancelar-confirma');
-
-            if (!modal) return;
-
-            if (msgEl) {
-                msgEl.innerHTML = `Deseja realmente pausar a publicação do imóvel <strong class="text-cyan-300 font-mono">Ref: ${codigoRef || ''}</strong> na vitrine?`;
-            }
-
-            modal.classList.remove('hidden');
-
-            // Recria os botões para limpar eventos de cliques antigos
-            const novoBtnConfirmar = btnConfirmar.cloneNode(true);
-            const novoBtnCancelar = btnCancelar.cloneNode(true);
-            btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
-            btnCancelar.parentNode.replaceChild(novoBtnCancelar, btnCancelar);
-
-            novoBtnCancelar.onclick = () => {
-                modal.classList.add('hidden');
-            };
-
-            novoBtnConfirmar.onclick = async () => {
-                modal.classList.add('hidden');
-                try {
-                    const { error } = await supabaseClient
-                        .from('imoveis')
-                        .update({ ativa: false })
-                        .eq('id', imovelId)
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                    if (error) throw error;
-
-                    exibirToast('sucesso', `Imóvel Ref: ${codigoRef || ''} pausado! Para reativar no site, acesse o Catálogo de Imóveis.`);
-
-                    // Recarrega contadores do Dashboard e a lista do modal em tempo real
-                    await carregarMetricas(dadosImobiliaria.id);
-                    await abrirDrilldown('imoveis-ativos');
-
-                } catch (err) {
-                    console.error('[PAUSAR IMÓVEL] Erro:', err);
-                    exibirToast('erro', 'Não foi possível pausar o imóvel. Tente novamente.');
-                }
-            };
-        }
-        window.pausarPublicacaoImovel = pausarPublicacaoImovel;
 
         function atalhoAbaFinanceira() {
             if (!temPermissaoFinanceira) return;
@@ -3576,9 +3474,7 @@ function pausarPublicacaoImovel(imovelId, codigoRef) {
         // =========================================================================
         // MOTOR DA AGENDA DE VISITAS & ATENDIMENTOS
         // =========================================================================
-
-
-async function carregarAgendaMes() {
+        async function carregarAgendaMes() {
             if (!dadosImobiliaria) return;
 
             const labelMesAno = document.getElementById('label-mes-ano-agenda');
@@ -3628,112 +3524,12 @@ async function carregarAgendaMes() {
                     selecionarDiaAgenda(dataIsoSelecionadaAgenda);
                 }
 
-                // Dispara os alertas inteligentes no topo do painel
-                await verificarAlertasTopoVisitas(dadosImobiliaria.id);
-
             } catch (err) {
                 console.error('[AGENDA] Erro ao carregar agendamentos:', err);
             }
         }
 
-        async function verificarAlertasTopoVisitas(imobId) {
-            const container = document.getElementById('container-alertas-agendamentos');
-            if (!container) return;
-
-            const agora = new Date();
-            const hojeStr = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
-            
-            const amanha = new Date(agora);
-            amanha.setDate(agora.getDate() + 1);
-            const amanhaStr = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
-
-            try {
-                const { data: visitas, error } = await supabaseClient
-                    .from('leads_contatos')
-                    .select('id, nome, whatsapp, data_agendamento, imovel_id, notas_agendamento')
-                    .eq('imobiliaria_id', imobId)
-                    .gte('data_agendamento', `${hojeStr}T00:00:00`)
-                    .lte('data_agendamento', `${amanhaStr}T23:59:59`)
-                    .order('data_agendamento', { ascending: true });
-
-                if (error || !visitas || visitas.length === 0) {
-                    container.classList.add('hidden');
-                    container.innerHTML = '';
-                    return;
-                }
-
-                // Busca dados dos imóveis para os alertas
-                const imovelIds = visitas.map(v => v.imovel_id).filter(Boolean);
-                let mapaImoveis = {};
-                if (imovelIds.length > 0) {
-                    const { data: ims } = await supabaseClient
-                        .from('imoveis')
-                        .select('id, codigo_ref, titulo')
-                        .in('id', imovelIds);
-                    (ims || []).forEach(im => { mapaImoveis[im.id] = im; });
-                }
-
-                container.innerHTML = visitas.map(v => {
-                    const dataChave = v.data_agendamento ? v.data_agendamento.split('T')[0] : '';
-                    const ehHoje = (dataChave === hojeStr);
-                    const horaFmt = v.data_agendamento ? new Date(v.data_agendamento).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
-                    const zapLimpo = ('' + (v.whatsapp || '')).replace(/\D/g, '');
-                    const imovel = v.imovel_id ? mapaImoveis[v.imovel_id] : null;
-
-let estiloCard = ehHoje 
-                        ? 'border-amber-400 bg-gradient-to-r from-amber-950/50 via-slate-900 to-slate-950 shadow-amber-950/50 border-l-4' 
-                        : 'border-cyan-500/80 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 shadow-cyan-950/30 border-l-4';
-                    
-                    let badgeTopo = ehHoje 
-                        ? '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-400 text-slate-950 shadow-md shadow-amber-950 animate-pulse flex items-center gap-1"><i class="fa-solid fa-bell text-slate-950"></i> VISITA MARCADA PARA HOJE</span>'
-                        : '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1"><i class="fa-solid fa-clock"></i> VISITA AGENDADA PARA AMANHÃ</span>';
-
-                    return `
-                        <div class="box-tech p-3.5 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl transition ${estiloCard}">
-                            <div class="flex items-start sm:items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl ${ehHoje ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-inner' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'} flex items-center justify-center text-base flex-shrink-0">
-                                    <i class="fa-solid fa-calendar-check"></i>
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        ${badgeTopo}
-                                        <span class="text-amber-300 font-mono font-black text-xs bg-slate-950 px-2 py-0.5 rounded border border-amber-500/40">
-                                            ${horaFmt}
-                                        </span>
-                                        <strong class="text-white uppercase font-black tracking-wide">${v.nome}</strong>
-                                    </div>
-                                    <div class="text-[11px] text-slate-400 flex items-center gap-1.5 flex-wrap">
-                                        ${imovel ? `
-                                            <span class="text-cyan-300 font-mono font-bold">Ref: ${imovel.codigo_ref}</span>
-                                            <span>• ${imovel.titulo}</span>
-                                        ` : '<span>Visita geral com cliente</span>'}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
-                                ${zapLimpo ? `
-                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
-                                        <i class="fa-brands fa-whatsapp text-sm"></i> Chamar
-                                    </a>
-                                ` : ''}
-                                <button type="button" onclick="abrirDossieAgendamento('${v.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer flex items-center gap-1 border border-slate-700">
-                                    <i class="fa-solid fa-file-lines text-xs"></i>
-                                    <span>Ver Ficha</span>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                container.classList.remove('hidden');
-
-            } catch (err) {
-                console.error('[ALERTAS TOPO] Erro:', err);
-            }
-        }
-
-  function renderizarGradeCalendario() {
+        function renderizarGradeCalendario() {
             const grid = document.getElementById('grid-calendario-dias');
             if (!grid) return;
             grid.innerHTML = '';
@@ -3746,7 +3542,7 @@ let estiloCard = ehHoje
 
             for (let i = 0; i < primeiroDiaSemana; i++) {
                 const cellVazia = document.createElement('div');
-                cellVazia.className = 'h-12 rounded-xl bg-slate-950/30 border border-slate-900/40 opacity-20';
+                cellVazia.className = 'h-11 rounded-lg bg-slate-950/30 border border-slate-900/50 opacity-20';
                 grid.appendChild(cellVazia);
             }
 
@@ -3761,47 +3557,30 @@ let estiloCard = ehHoje
                 cell.type = 'button';
                 cell.onclick = () => selecionarDiaAgenda(dataChave);
 
-                // HIERARQUIA VISUAL DE ESTILOS DO BOX
-                let estiloBox = 'border border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-400';
+                let estiloBorda = 'border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-300';
 
                 if (ehSelecionado) {
-                    estiloBox = 'border-2 border-blue-400 bg-blue-600 text-white font-black shadow-xl shadow-blue-950 scale-[1.03] z-10';
-                } else if (ehHoje && temVisitas) {
-                    estiloBox = 'border-2 border-amber-400 bg-gradient-to-b from-amber-950/60 to-cyan-950/70 text-amber-300 font-black shadow-lg shadow-amber-950/60 ring-2 ring-cyan-500/40';
+                    estiloBorda = 'border-blue-500 bg-blue-600 text-white font-black shadow-lg shadow-blue-950';
                 } else if (ehHoje) {
-                    estiloBox = 'border-2 border-amber-400 bg-amber-950/30 text-amber-300 font-bold';
-                } else if (temVisitas) {
-                    // BOX TOTALMENTE DESTACADO PARA DIAS COM VISITAS
-                    estiloBox = 'border-2 border-cyan-400/90 bg-cyan-950/60 hover:bg-cyan-900/70 text-cyan-200 font-black shadow-lg shadow-cyan-950/80 ring-1 ring-cyan-400/30';
+                    estiloBorda = 'border-amber-400 bg-amber-950/30 text-amber-300 font-bold';
                 }
 
-                // INDICADOR DE VISITAS CHAMATIVO (PÍLULA COM CONTADOR)
-                let indicadorVisitasHtml = '<span class="h-3"></span>';
-                if (temVisitas) {
-                    if (ehSelecionado) {
-                        indicadorVisitasHtml = `
-                            <span class="px-1.5 py-0.5 rounded-full bg-white text-blue-700 text-[9px] font-black font-mono shadow flex items-center gap-0.5">
-                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
-                            </span>
-                        `;
-                    } else {
-                        indicadorVisitasHtml = `
-                            <span class="px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black font-mono shadow-md shadow-cyan-400/50 flex items-center gap-0.5 animate-pulse">
-                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
-                            </span>
-                        `;
-                    }
-                }
-
-                cell.className = `h-12 rounded-xl p-1 flex flex-col justify-between items-center transition-all duration-200 cursor-pointer relative ${estiloBox}`;
+                cell.className = `h-11 rounded-lg border p-1 flex flex-col justify-between items-center transition cursor-pointer relative ${estiloBorda}`;
                 cell.innerHTML = `
-                    <span class="text-xs ${ehSelecionado ? 'text-white' : (temVisitas ? 'text-cyan-300 font-black' : '')}">${dia}</span>
-                    ${indicadorVisitasHtml}
+                    <span class="text-xs ${ehSelecionado ? 'text-white' : ''}">${dia}</span>
+                    
+                    ${temVisitas ? `
+                        <div class="flex items-center gap-0.5">
+                            <span class="w-2 h-2 rounded-full ${ehSelecionado ? 'bg-white' : 'bg-cyan-400 shadow shadow-cyan-400/80'}"></span>
+                            ${qtdVisitas > 1 ? `<span class="text-[9px] font-bold ${ehSelecionado ? 'text-white' : 'text-cyan-300'} font-mono">${qtdVisitas}</span>` : ''}
+                        </div>
+                    ` : '<span class="h-2"></span>'}
                 `;
 
                 grid.appendChild(cell);
             }
         }
+
         function selecionarDiaAgenda(dataIso) {
             dataIsoSelecionadaAgenda = dataIso;
             renderizarGradeCalendario();
@@ -3895,8 +3674,6 @@ let estiloCard = ehHoje
             if (modal) modal.classList.add('hidden');
         }
 
-let leadAtualEmEdicao = null;
-
         async function abrirDossieAgendamento(leadId) {
             const modal = document.getElementById('modal-dash-agendamento');
             const corpo = document.getElementById('agendamento-modal-conteudo');
@@ -3913,58 +3690,23 @@ let leadAtualEmEdicao = null;
             if (modal) modal.classList.remove('hidden');
 
             try {
-                // 1. Busca direta no banco sem joins rígidos (elimina o erro de PGRST200)
                 const { data: lead, error } = await supabaseClient
                     .from('leads_contatos')
-                    .select('*')
+                    .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro, valor_venda, valor_locacao), usuarios(nome_completo)')
                     .eq('id', leadId)
                     .single();
 
                 if (error || !lead) throw new Error('Agendamento não localizado.');
-                leadAtualEmEdicao = lead;
-
-                // 2. Busca segura do imóvel vinculado (se houver)
-                let imovel = null;
-                if (lead.imovel_id) {
-                    const { data: im } = await supabaseClient
-                        .from('imoveis')
-                        .select('id, codigo_ref, titulo, foto_capa, bairro, valor_venda, valor_locacao')
-                        .eq('id', lead.imovel_id)
-                        .maybeSingle();
-                    imovel = im;
-                }
-
-                // 3. Busca segura do corretor responsável (se houver)
-                let corretorNome = 'Não atribuído';
-                if (lead.corretor_atribuido_id) {
-                    const { data: us } = await supabaseClient
-                        .from('usuarios')
-                        .select('nome_completo')
-                        .eq('id', lead.corretor_atribuido_id)
-                        .maybeSingle();
-                    if (us && us.nome_completo) corretorNome = us.nome_completo;
-                }
 
                 const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '');
                 if (btnZap) {
-                    btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${lead.nome}! Sou da imobiliária e estou entrando em contato para confirmar sua visita.`)}` : '#';
+                    btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}` : '#';
                     btnZap.style.display = zapLimpo ? 'inline-flex' : 'none';
                 }
 
                 const dataFormatada = lead.data_agendamento ? new Date(lead.data_agendamento).toLocaleString('pt-BR') : 'Data não definida';
-// Prepara data (YYYY-MM-DD) e hora (HH:mm) para os inputs visuais
-                let valorInputData = '';
-                let valorInputHora = '10:00';
-                if (lead.data_agendamento) {
-                    const dt = new Date(lead.data_agendamento);
-                    const ano = dt.getFullYear();
-                    const mes = String(dt.getMonth() + 1).padStart(2, '0');
-                    const dia = String(dt.getDate()).padStart(2, '0');
-                    valorInputData = `${ano}-${mes}-${dia}`;
-                    const h = String(dt.getHours()).padStart(2, '0');
-                    const m = String(dt.getMinutes()).padStart(2, '0');
-                    valorInputHora = `${h}:${m}`;
-                }
+                const imovel = lead.imoveis || null;
+                const corretorNome = lead.usuarios ? lead.usuarios.nome_completo : 'Não atribuído';
 
                 if (corpo) {
                     corpo.innerHTML = `
@@ -3980,59 +3722,10 @@ let leadAtualEmEdicao = null;
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800">
-                                <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white font-mono">${lead.whatsapp || 'Não informado'}</strong></div>
+                                <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white">${lead.whatsapp || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-white">${lead.email || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">Corretor Responsável:</span> <strong class="text-cyan-300">${corretorNome}</strong></div>
-                                <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono" id="rotulo-horario-visita-modal">${dataFormatada}</strong></div>
-                            </div>
-                        </div>
-
-                        <!-- GAVETA EXPANSÍVEL DE REAGENDAMENTO (COM CLIQUE VISUAL DE CALENDÁRIO & HORAS) -->
-                        <div id="box-reagendamento-inline" class="hidden bg-slate-900/95 border border-amber-500/50 p-3.5 rounded-xl space-y-3 shadow-2xl">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                                <span class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
-                                    <i class="fa-solid fa-calendar-days text-amber-400"></i> Selecionar Nova Data & Horário no Calendário
-                                </span>
-                                <button type="button" onclick="alternarBoxReagendamento()" class="text-slate-400 hover:text-white cursor-pointer text-xs">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
-                                <div>
-                                    <label class="block font-bold text-slate-300 mb-1 text-[11px] flex items-center gap-1">
-                                        <i class="fa-regular fa-calendar text-amber-400"></i> Nova Data:
-                                    </label>
-                                    <input type="date" id="input-novo-agendamento-data" value="${valorInputData}" 
-                                           onclick="try{this.showPicker()}catch(e){}"
-                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert" 
-                                           title="Clique para abrir o calendário">
-                                </div>
-                                <div>
-                                    <label class="block font-bold text-slate-300 mb-1 text-[11px] flex items-center gap-1">
-                                        <i class="fa-regular fa-clock text-amber-400"></i> Novo Horário:
-                                    </label>
-                                    <input type="time" id="input-novo-agendamento-hora" value="${valorInputHora}" 
-                                           onclick="try{this.showPicker()}catch(e){}"
-                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert" 
-                                           title="Clique para escolher o horário">
-                                </div>
-                                <div>
-                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Motivo (Opcional):</label>
-                                    <input type="text" id="input-novo-agendamento-nota" placeholder="Ex: Cliente pediu para a tarde" 
-                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-amber-400">
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-800/80">
-                                <button type="button" onclick="alternarBoxReagendamento()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition cursor-pointer">
-                                    Cancelar
-                                </button>
-                                <button type="button" onclick="confirmarReagendamentoLead()" id="btn-salvar-reagendamento" 
-                                        class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow cursor-pointer">
-                                    <i class="fa-solid fa-check text-[10px]"></i>
-                                    <span>Salvar Novo Horário</span>
-                                </button>
+                                <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono">${dataFormatada}</strong></div>
                             </div>
                         </div>
 
@@ -4067,236 +3760,9 @@ let leadAtualEmEdicao = null;
             }
         }
 
-        function alternarBoxReagendamento() {
-            const box = document.getElementById('box-reagendamento-inline');
-            if (!box) return;
-            box.classList.toggle('hidden');
-            if (!box.classList.contains('hidden')) {
-                box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-
-async function confirmarReagendamentoLead() {
-            if (!leadAtualEmEdicao || !dadosImobiliaria) return;
-
-            const inputData = document.getElementById('input-novo-agendamento-data')?.value;
-            const inputHora = document.getElementById('input-novo-agendamento-hora')?.value || '10:00';
-            const inputNota = document.getElementById('input-novo-agendamento-nota')?.value.trim();
-            const btn = document.getElementById('btn-salvar-reagendamento');
-
-            if (!inputData) {
-                exibirToast('aviso', 'Selecione a data da visita no calendário.');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando & Preparando WhatsApp...';
-
-            try {
-                // 1. Monta data local precisa
-                const [ano, mes, dia] = inputData.split('-').map(Number);
-                const [hora, min] = inputHora.split(':').map(Number);
-                const dataObj = new Date(ano, mes - 1, dia, hora || 0, min || 0, 0);
-                const novaDataIso = dataObj.toISOString();
-
-                const dataFmt = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
-                const horaFmt = `${String(hora).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
-
-                const timestampNota = new Date().toLocaleDateString('pt-BR');
-                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
-                if (inputNota) {
-                    notasAtualizadas = notasAtualizadas 
-                        ? `${notasAtualizadas} | [Reagendado em ${timestampNota} para ${dataFmt} às ${horaFmt}]: ${inputNota}`
-                        : `[Reagendado em ${timestampNota} para ${dataFmt} às ${horaFmt}]: ${inputNota}`;
-                }
-
-                // 2. Atualiza no Supabase
-                const { error } = await supabaseClient
-                    .from('leads_contatos')
-                    .update({
-                        data_agendamento: novaDataIso,
-                        notas_agendamento: notasAtualizadas || null
-                    })
-                    .eq('id', leadAtualEmEdicao.id)
-                    .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                if (error) throw error;
-
-                // 3. Busca dados do imóvel para a mensagem do WhatsApp (se houver)
-                let dadosImovelTexto = 'Visita a imóvel';
-                if (leadAtualEmEdicao.imovel_id) {
-                    const { data: im } = await supabaseClient
-                        .from('imoveis')
-                        .select('codigo_ref, titulo, bairro, cidade')
-                        .eq('id', leadAtualEmEdicao.imovel_id)
-                        .maybeSingle();
-                    if (im) {
-                        dadosImovelTexto = `*${im.titulo}*\n📌 *Ref:* ${im.codigo_ref}${im.bairro ? ` • *Bairro:* ${im.bairro}` : ''}`;
-                    }
-                }
-
-                // 4. Monta e dispara a mensagem no WhatsApp do cliente
-                const zapLimpo = ('' + (leadAtualEmEdicao.whatsapp || '')).replace(/\D/g, '');
-                if (zapLimpo) {
-                    const nomeImob = dadosImobiliaria.nome_fantasia || 'Nossa Imobiliária';
-                    const mensagemZap = 
-`Olá *${leadAtualEmEdicao.nome}*, tudo bem?
-
-Passando para confirmar o *reagendamento da sua visita* com a *${nomeImob}*:
-
-📅 *Nova Data:* ${dataFmt}
-⏰ *Novo Horário:* ${horaFmt}
-🏠 *Imóvel:*
-${dadosImovelTexto}
-
-Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposição!`;
-
-                    const urlZap = `https://wa.me/${zapLimpo}?text=${encodeURIComponent(mensagemZap)}`;
-                    window.open(urlZap, '_blank');
-                }
-
-                exibirToast('sucesso', 'Visita reagendada e WhatsApp aberto para notificar o cliente!');
-
-                // 5. Atualiza calendário, contadores e recarrega a ficha do modal
-                await carregarAgendaMes();
-                await abrirDossieAgendamento(leadAtualEmEdicao.id);
-
-            } catch (err) {
-                console.error('[REAGENDAMENTO] Erro:', err);
-                exibirToast('erro', 'Erro ao reagendar visita. Tente novamente.');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> Salvar Novo Horário';
-            }
-        }
-
-function cancelarCompromissoAgenda() {
-            if (!leadAtualEmEdicao || !dadosImobiliaria) return;
-
-            const modalConfirma = document.getElementById('modal-confirmacao-acao');
-            const tituloEl = document.getElementById('modal-confirma-titulo');
-            const msgEl = document.getElementById('modal-confirma-msg');
-            const btnConfirmar = document.getElementById('btn-executar-confirma');
-            const btnCancelar = document.getElementById('btn-cancelar-confirma');
-
-            if (!modalConfirma) return;
-
-            const nomeCliente = leadAtualEmEdicao.nome || 'o cliente';
-            const dataAnteriorFmt = leadAtualEmEdicao.data_agendamento 
-                ? new Date(leadAtualEmEdicao.data_agendamento).toLocaleString('pt-BR') 
-                : 'Data não definida';
-
-            // Configura o visual do modal do sistema para alerta de cancelamento
-            if (tituloEl) tituloEl.innerHTML = '<span class="text-rose-400 flex items-center justify-center gap-2"><i class="fa-solid fa-calendar-xmark"></i> Cancelar Visita da Agenda</span>';
-            if (msgEl) {
-                msgEl.innerHTML = `Deseja realmente cancelar a visita agendada com <strong class="text-white uppercase font-bold">${nomeCliente}</strong>?<br><span class="text-[11px] text-slate-400 block mt-1">Horário marcado: ${dataAnteriorFmt}</span>`;
-            }
-
-            modalConfirma.classList.remove('hidden');
-
-            // Clona botões para limpar cliques anteriores
-            const novoBtnConfirmar = btnConfirmar.cloneNode(true);
-            const novoBtnCancelar = btnCancelar.cloneNode(true);
-
-            novoBtnConfirmar.className = 'bg-rose-600 hover:bg-rose-500 text-white font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-rose-950/40 flex items-center gap-1.5';
-            novoBtnConfirmar.innerHTML = '<i class="fa-solid fa-trash-can text-[10px]"></i><span>Sim, Cancelar Visita</span>';
-
-            novoBtnCancelar.innerHTML = 'Voltar';
-
-            btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
-            btnCancelar.parentNode.replaceChild(novoBtnCancelar, btnCancelar);
-
-            novoBtnCancelar.onclick = () => {
-                modalConfirma.classList.add('hidden');
-            };
-
-            novoBtnConfirmar.onclick = async () => {
-                modalConfirma.classList.add('hidden');
-                novoBtnConfirmar.disabled = true;
-
-                try {
-                    // 1. Identifica o autor para auditoria
-                    let autorNome = 'Super Administrador';
-                    if (!isMasterSuporte && dadosUsuario && dadosUsuario.nome_completo) {
-                        autorNome = dadosUsuario.nome_completo;
-                    }
-
-                    const agoraIso = new Date().toISOString();
-                    const timestampHoje = new Date().toLocaleDateString('pt-BR');
-
-                    // 2. Busca dados do imóvel para a auditoria
-                    let refImovel = 'Não vinculado';
-                    let tituloImovel = '';
-                    if (leadAtualEmEdicao.imovel_id) {
-                        const { data: im } = await supabaseClient
-                            .from('imoveis')
-                            .select('codigo_ref, titulo')
-                            .eq('id', leadAtualEmEdicao.imovel_id)
-                            .maybeSingle();
-                        if (im) {
-                            refImovel = im.codigo_ref;
-                            tituloImovel = im.titulo;
-                        }
-                    }
-
-                    // 3. REGISTRO OFICIAL DE AUDITORIA NA TABELA leads_historico
-                    await supabaseClient
-                        .from('leads_historico')
-                        .insert([{
-                            lead_id: leadAtualEmEdicao.id,
-                            imobiliaria_id: dadosImobiliaria.id,
-                            autor_nome: autorNome,
-                            tipo_evento: 'cancelamento_visita',
-                            descricao: `Visita cancelada na agenda por ${autorNome}. Imóvel Ref: ${refImovel}. Data anterior agendada: ${dataAnteriorFmt}`,
-                            detalhes: {
-                                acao: 'Cancelamento de visita',
-                                autor: autorNome,
-                                cliente_nome: leadAtualEmEdicao.nome,
-                                cliente_whatsapp: leadAtualEmEdicao.whatsapp,
-                                imovel_id: leadAtualEmEdicao.imovel_id,
-                                imovel_ref: refImovel,
-                                imovel_titulo: tituloImovel,
-                                data_agendamento_cancelada: leadAtualEmEdicao.data_agendamento,
-                                data_cancelamento: agoraIso
-                            },
-                            criado_em: agoraIso
-                        }]);
-
-                    // 4. Atualiza leads_contatos removendo da agenda e carimbando nas notas
-                    let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
-                    notasAtualizadas = notasAtualizadas 
-                        ? `${notasAtualizadas} | [Visita cancelada por ${autorNome} em ${timestampHoje}]`
-                        : `[Visita cancelada por ${autorNome} em ${timestampHoje}]`;
-
-                    const { error: errUpdate } = await supabaseClient
-                        .from('leads_contatos')
-                        .update({
-                            data_agendamento: null,
-                            status: 'Cancelado',
-                            notas_agendamento: notasAtualizadas
-                        })
-                        .eq('id', leadAtualEmEdicao.id)
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-
-                    if (errUpdate) throw errUpdate;
-
-                    fecharModalAgendamento();
-                    exibirToast('aviso', `Compromisso com ${nomeCliente} cancelado e auditado com sucesso!`);
-
-                    // 5. Atualiza calendário, contadores e faixa de alertas do topo
-                    await carregarAgendaMes();
-                    await carregarMetricas(dadosImobiliaria.id);
-
-                } catch (err) {
-                    console.error('[CANCELAR VISITA / AUDITORIA] Erro:', err);
-                    exibirToast('erro', 'Erro ao cancelar compromisso. Tente novamente.');
-                }
-            };
-        }
-
         function fecharModalAgendamento() {
             const modal = document.getElementById('modal-dash-agendamento');
             if (modal) modal.classList.add('hidden');
-            leadAtualEmEdicao = null;
         }
 
         // =========================================================================

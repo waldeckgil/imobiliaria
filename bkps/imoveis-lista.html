@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- jsPDF Biblioteca Oficial CDN (Para Geração de Fichas Comerciais) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
- <style>
+    <style>
         /* PADRÃO IDÊNTICO AO SUPABASE: BARRA FÍSICA PERMANENTE */
         html {
             overflow-y: scroll !important;
@@ -50,7 +50,6 @@
         }
         .toast-anim { animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
-
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
@@ -238,7 +237,7 @@
 
     </main>
 
-    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE -->
+    <!-- MODAL DE FICHA DO PROPRIETÁRIO COM VALOR DE INTERESSE & DOCUMENTOS ANEXOS (OLHINHO 👁️) -->
     <div id="modal-proprietario-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/40 space-y-4 max-h-[90vh] flex flex-col">
             <button type="button" onclick="fecharModalProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -610,6 +609,71 @@
         </div>
     </div>
 
+    <!-- MODAL 1: RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE TOTAL & DOCUMENTOS OLHINHO 👁️) -->
+    <div id="modal-dash-imovel" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-2xl w-full p-6 border border-cyan-500/40 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-house-chimney text-cyan-400 text-lg"></i>
+                    <h3 class="text-sm font-black text-white uppercase tracking-wider" id="imob-modal-titulo-topo">Detalhes do Imóvel</h3>
+                    <span id="imob-modal-status-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">Status</span>
+                </div>
+                <button type="button" onclick="fecharModalDashImovel()" class="text-slate-400 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="imob-modal-conteudo">
+                <div class="py-8 text-center text-slate-500">
+                    <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
+                    <p>Consultando raio-x do imóvel...</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <a id="imob-modal-link-editar" href="#" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>Editar Imóvel</span>
+                </a>
+                <button type="button" onclick="fecharModalDashImovel()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: DOSSIÊ 360° DO CLIENTE (PROPRIETÁRIO / INQUILINO COM DOCUMENTOS OLHINHO 👁️) -->
+    <div id="modal-dossie-cliente" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-4xl w-full p-6 border border-sky-500/50 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2 text-sky-300 font-black text-sm uppercase tracking-wide">
+                    <i class="fa-solid fa-circle-user text-sky-400 text-lg"></i>
+                    <span id="dossie-cliente-titulo-topo">Dossiê 360° do Cliente</span>
+                </div>
+                <button type="button" onclick="fecharModalDossieCliente()" class="text-slate-400 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1 text-xs" id="dossie-cliente-conteudo">
+                <div class="py-12 text-center text-slate-500">
+                    <i class="fa-solid fa-spinner fa-spin text-sky-400 text-2xl mb-2"></i>
+                    <p>Consultando histórico completo e vínculos contratuais...</p>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <a id="dossie-cliente-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Conversar no WhatsApp</span>
+                </a>
+                <button type="button" onclick="fecharModalDossieCliente()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Fechar Dossiê
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Gestão Operacional de Catálogo
@@ -639,6 +703,81 @@
 
         // ESTADO DA GAVETA DE DOCUMENTOS DO COMPRADOR NA VENDA
         let listaDocsVendaEstado = [];
+
+        // =========================================================================
+        // MOTOR INTELIGENTE: RENDERIZADOR DE BOTÕES COM "OLHINHO" 👁️ PARA DOCUMENTOS
+        // =========================================================================
+        function renderizarBotoesDocumentos(documentosAnexos, rotuloSecao = 'Documentos Anexos') {
+            let lista = [];
+            if (Array.isArray(documentosAnexos)) {
+                lista = documentosAnexos;
+            } else if (typeof documentosAnexos === 'string' && documentosAnexos.trim() !== '') {
+                lista = documentosAnexos.split(',').map(s => s.trim());
+            }
+
+            lista = lista.filter(u => u && typeof u === 'string' && (u.startsWith('http') || u.startsWith('blob:')));
+
+            if (lista.length === 0) {
+                return `
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-[10px] uppercase font-black tracking-wider text-slate-500 block flex items-center gap-1.5">
+                            <i class="fa-solid fa-folder-closed"></i> ${rotuloSecao}
+                        </span>
+                        <p class="text-[11px] text-slate-500 italic py-0.5">Nenhum documento anexado.</p>
+                    </div>
+                `;
+            }
+
+            const botoesHtml = lista.map((url, idx) => {
+                const urlLower = url.toLowerCase();
+                const ehPdf = urlLower.includes('.pdf');
+                const ehImagem = urlLower.includes('.jpg') || urlLower.includes('.jpeg') || urlLower.includes('.png') || urlLower.includes('.webp');
+
+                let badgeFormato = 'DOC';
+                let corBadge = 'bg-slate-800 text-slate-300 border-slate-700';
+
+                if (ehPdf) {
+                    badgeFormato = 'PDF';
+                    corBadge = 'bg-rose-950 text-rose-300 border-rose-800';
+                } else if (ehImagem) {
+                    badgeFormato = 'IMG';
+                    corBadge = 'bg-cyan-950 text-cyan-300 border-cyan-800';
+                }
+
+                let nomeAmigavel = `Documento ${idx + 1}`;
+                if (url.includes('#nome=')) {
+                    nomeAmigavel = decodeURIComponent(url.split('#nome=')[1]);
+                } else {
+                    const partes = url.split('/');
+                    const ultimaParte = partes[partes.length - 1].split('?')[0];
+                    if (ultimaParte && ultimaParte.length > 3) {
+                        nomeAmigavel = decodeURIComponent(ultimaParte.replace(/^\d+_/, '').replace(/^doc_[a-z]+_\d+_\d+_/, ''));
+                    }
+                }
+
+                return `
+                    <a href="${url}" target="_blank" rel="noopener noreferrer" 
+                       class="bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-cyan-400 px-3 py-1.5 rounded-xl text-xs font-bold inline-flex items-center gap-2 transition group shadow-sm">
+                        <i class="fa-solid fa-eye text-cyan-400 group-hover:scale-110 transition"></i>
+                        <span class="truncate max-w-[150px]" title="${nomeAmigavel}">${nomeAmigavel}</span>
+                        <span class="text-[9px] font-mono font-black uppercase px-1.5 py-0.2 rounded border ${corBadge}">
+                            ${badgeFormato}
+                        </span>
+                    </a>
+                `;
+            }).join('');
+
+            return `
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <span class="text-[10px] uppercase font-black tracking-wider text-cyan-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-open"></i> ${rotuloSecao} (${lista.length})
+                    </span>
+                    <div class="flex items-center flex-wrap gap-2">
+                        ${botoesHtml}
+                    </div>
+                </div>
+            `;
+        }
 
         // =========================================================================
         // SISTEMA DE NOTIFICAÇÕES CORPORATIVAS (TOAST SYSTEM PROFISSIONAL)
@@ -743,7 +882,6 @@
                 });
             });
 
-            // Reseta o input nativo para permitir selecionar novos arquivos sequencialmente
             event.target.value = '';
             renderizarDocsVendaPreview();
         }
@@ -904,13 +1042,13 @@
 
                 const { data: contratos } = await supabaseClient
                     .from('contratos_locacao')
-                    .select('imovel_id, cliente_nome, status, documentos_anexos')
+                    .select('imovel_id, cliente_id, cliente_nome, cliente_cpf_cnpj, status, documentos_anexos')
                     .eq('imobiliaria_id', imobiliariaId)
                     .eq('status', 'Ativo');
 
                 mapaInquilinosPorImovel = {};
                 (contratos || []).forEach(ct => {
-                    if (ct && ct.imovel_id) mapaInquilinosPorImovel[ct.imovel_id] = ct.cliente_nome;
+                    if (ct && ct.imovel_id) mapaInquilinosPorImovel[ct.imovel_id] = ct;
                 });
 
                 const { data: corretores } = await supabaseClient
@@ -1004,11 +1142,27 @@
                 }
 
                 const propObj = (im.proprietario_id && mapaClientes[im.proprietario_id]) ? mapaClientes[im.proprietario_id] : null;
-                const nomeProprietario = propObj ? (propObj.nome || 'Proprietário Cadastrado') : '<span class="text-slate-500 italic">Sem proprietário</span>';
+                const nomeProprietarioHtml = propObj 
+                    ? `<button type="button" onclick="abrirDossieUniversal('${propObj.id}', '${(propObj.nome || '').replace(/'/g, "\\'")}', '${propObj.cpf_cnpj || ''}', 'proprietario')" 
+                               class="text-white hover:text-amber-300 hover:underline font-bold text-xs cursor-pointer inline-flex items-center gap-1 group text-left transition" 
+                               title="Clique para abrir o Dossiê 360° do Proprietário & Documentos">
+                            <span>${propObj.nome}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-0 group-hover:opacity-100 text-amber-400 transition"></i>
+                       </button>`
+                    : '<span class="text-slate-500 italic">Sem proprietário</span>';
                 
-                const nomeInquilino = mapaInquilinosPorImovel[im.id] || null;
+                const contratoInq = mapaInquilinosPorImovel[im.id] || null;
+                const nomeInquilino = contratoInq ? (contratoInq.cliente_nome || 'Contrato Ativo') : null;
                 const blocoInquilino = (im.status === 'Alugado' || nomeInquilino) 
-                    ? `<div class="flex items-center gap-1.5 mt-1 text-[11px] text-purple-300 font-bold"><i class="fa-solid fa-key text-purple-400 text-xs"></i> <span>Inquilino: ${nomeInquilino || 'Contrato Ativo'}</span></div>`
+                    ? `<div class="flex items-center gap-1.5 mt-1 text-[11px]">
+                            <i class="fa-solid fa-key text-purple-400 text-xs"></i>
+                            <button type="button" onclick="abrirDossieUniversal('${contratoInq ? (contratoInq.cliente_id || '') : ''}', '${(nomeInquilino || '').replace(/'/g, "\\'")}', '${contratoInq ? (contratoInq.cliente_cpf_cnpj || '') : ''}', 'inquilino')" 
+                                    class="text-purple-300 hover:text-purple-200 hover:underline font-bold cursor-pointer inline-flex items-center gap-1 group transition" 
+                                    title="Clique para abrir o Dossiê 360° do Inquilino & Contrato Assinado">
+                                <span>Inquilino: ${nomeInquilino}</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-0 group-hover:opacity-100 text-purple-300 transition"></i>
+                            </button>
+                       </div>`
                     : '';
 
                 let blocoValores = '';
@@ -1041,8 +1195,17 @@
                 if (im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-300 border-purple-800';
                 if (im.status === 'Vendido') statusBadge = 'bg-rose-950 text-rose-300 border-rose-800 font-black';
 
-                const toggleClass = im.ativa ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
-                const toggleTexto = im.ativa ? 'No Ar' : 'Pausado';
+                // BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" PODE IR AO AR
+                const estaDisponivel = (im.status === 'Disponível');
+                const toggleClass = (estaDisponivel && im.ativa) 
+                    ? 'bg-emerald-500 text-slate-950 hover:bg-emerald-400' 
+                    : (estaDisponivel ? 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700' : 'bg-slate-900 text-slate-600 border border-slate-800/80 opacity-40 cursor-not-allowed');
+                
+                const toggleTexto = (estaDisponivel && im.ativa) ? 'No Ar' : 'Pausado';
+                const toggleIcone = estaDisponivel ? 'fa-solid fa-circle text-[7px]' : 'fa-solid fa-lock text-[8px]';
+                const toggleTitle = estaDisponivel 
+                    ? 'Clique para alternar presença na vitrine' 
+                    : `Imóvel com status "${im.status}". Apenas imóveis Disponíveis podem ser publicados na vitrine.`;
 
                 let botoesFechamento = '';
                 if (im.status === 'Disponível' || im.status === 'Em Proposta') {
@@ -1085,14 +1248,27 @@
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 flex items-center gap-3">
-                        <img src="${foto}" alt="Capa" onerror="this.src='https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
-                        <div>
-                            <span class="font-bold text-white block truncate max-w-xs leading-snug">${im.titulo || 'Imóvel sem título'}</span>
+                        <button type="button" onclick="abrirModalDetalhesImovel('${im.id}')" class="flex-shrink-0 group cursor-pointer" title="Clique para abrir o Raio-X do imóvel">
+                            <img src="${foto}" alt="Capa" onerror="this.src='https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'" 
+                                 class="w-12 h-12 rounded-lg object-cover border border-slate-700 group-hover:border-cyan-400 group-hover:scale-105 transition shadow-sm">
+                        </button>
+                        <div class="min-w-0">
+                            <button type="button" onclick="abrirModalDetalhesImovel('${im.id}')" 
+                                    class="font-bold text-white hover:text-cyan-300 hover:underline block truncate max-w-xs leading-snug text-left cursor-pointer transition" 
+                                    title="Clique para abrir o Raio-X do imóvel">
+                                ${im.titulo || 'Imóvel sem título'}
+                            </button>
                             <span class="text-[10px] text-slate-500">${im.area_util || 0} m² • ${im.quartos || 0} Quartos • ${im.vagas || 0} Vagas</span>
                         </div>
                     </td>
 
-                    <td class="py-3 px-3 font-mono font-bold text-cyan-400">Ref: ${im.codigo_ref || '---'}</td>
+                    <td class="py-3 px-3 font-mono font-bold text-cyan-400">
+                        <button type="button" onclick="abrirModalDetalhesImovel('${im.id}')" 
+                                class="hover:text-cyan-200 hover:underline cursor-pointer transition" 
+                                title="Clique para abrir o Raio-X do imóvel">
+                            Ref: ${im.codigo_ref || '---'}
+                        </button>
+                    </td>
 
                     <td class="py-3 px-3 text-slate-300">
                         <span class="font-semibold text-white block">${im.tipo || 'Padrão'}</span>
@@ -1103,7 +1279,7 @@
                     <td class="py-3 px-3">
                         <div class="flex items-center gap-1.5">
                             <i class="fa-solid fa-user-tie text-amber-400 text-xs"></i>
-                            <span class="font-bold text-white text-xs">${nomeProprietario}</span>
+                            ${nomeProprietarioHtml}
                         </div>
                         ${blocoInquilino}
                     </td>
@@ -1119,11 +1295,11 @@
                     </td>
 
                     <td class="py-3 px-3 text-center">
-                        <button onclick="alternarVisibilidadeVitrine('${im.id}', ${Boolean(im.ativa)})" 
+                        <button onclick="alternarVisibilidadeVitrine('${im.id}', ${Boolean(im.ativa)}, '${im.status}')" 
                                 ${modoLeitura ? 'disabled' : ''}
-                                title="Clique para alternar presença na vitrine"
+                                title="${toggleTitle}"
                                 class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider transition ${toggleClass} cursor-pointer ${modoLeitura ? 'opacity-40 cursor-not-allowed' : ''}">
-                            <i class="fa-solid fa-circle text-[7px] mr-1"></i> ${toggleTexto}
+                            <i class="${toggleIcone} mr-1"></i> ${toggleTexto}
                         </button>
                     </td>
 
@@ -1139,9 +1315,10 @@
                                 <i class="fa-solid fa-file-pdf text-xs"></i>
                             </button>
 
+                            <!-- BOTÃO BONEQUINHO DO PROPRIETÁRIO COM DOCUMENTOS E PRETENSÃO -->
                             <button onclick="abrirModalProprietario('${im.id}')" 
                                     class="p-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-700/80 transition cursor-pointer" 
-                                    title="Ficha do Proprietário & Pretensão Líquida">
+                                    title="Ficha do Proprietário, Documentos (👁️) & Pretensão Líquida">
                                 <i class="fa-solid fa-user-tie text-xs"></i>
                             </button>
 
@@ -1404,7 +1581,7 @@
         }
 
         // =========================================================================
-        // FICHA DO PROPRIETÁRIO & PRETENSÃO LÍQUIDA
+        // FICHA DO PROPRIETÁRIO COM PRETENSÃO & DOCUMENTOS COM "OLHINHO" (👁️)
         // =========================================================================
         async function abrirModalProprietario(imovelId) {
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
@@ -1417,7 +1594,7 @@
             document.getElementById('prop-valor-pretendido-input').value = formatarValorBRL(imovel.valor_pretendido_proprietario);
 
             const container = document.getElementById('prop-modal-conteudo');
-            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados...</p></div>';
+            container.innerHTML = '<div class="py-8 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i><p>Consultando dados e documentação...</p></div>';
             document.getElementById('modal-proprietario-imovel').classList.remove('hidden');
 
             try {
@@ -1437,7 +1614,10 @@
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <span class="text-[10px] uppercase font-bold text-amber-400 block">Proprietário Vinculado</span>
-                                        <h3 class="text-base font-black text-white">${prop.nome || 'Proprietário'}</h3>
+                                        <button type="button" onclick="fecharModalProprietario(); abrirDossieUniversal('${prop.id}', '${(prop.nome || '').replace(/'/g, "\\'")}', '${prop.cpf_cnpj || ''}', 'proprietario')" class="text-base font-black text-white hover:text-amber-300 hover:underline flex items-center gap-1.5 transition text-left cursor-pointer">
+                                            <span>${prop.nome || 'Proprietário'}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-amber-400"></i>
+                                        </button>
                                     </div>
                                     ${podeVerProprietarios && zapLimpo ? `
                                         <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
@@ -1466,7 +1646,13 @@
                     `;
                 }
 
-                container.innerHTML = blocoProprietarioHtml;
+                // GAVETA DE DOCUMENTOS DO IMÓVEL COM O OLHINHO 👁️
+                const docsHtml = renderizarBotoesDocumentos(imovel.documentos_anexos, 'Documentos do Imóvel, Escrituras & Certidões');
+
+                container.innerHTML = `
+                    ${blocoProprietarioHtml}
+                    ${docsHtml}
+                `;
 
             } catch (err) {
                 console.error(err);
@@ -1530,7 +1716,6 @@
             document.getElementById('venda-valor-sinal').value = '';
             document.getElementById('venda-observacoes').value = '';
 
-            // Reinicia a gaveta acumulativa de documentos da venda
             listaDocsVendaEstado = [];
             renderizarDocsVendaPreview();
 
@@ -1587,7 +1772,6 @@
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando comprador & venda...';
 
             const imovelId = document.getElementById('venda-imovel-id').value;
-            // GARANTIA DE PADRÃO MAIÚSCULO NO BANCO
             const compradorNome = document.getElementById('venda-comprador-nome').value.trim().toUpperCase();
             const compradorZap = document.getElementById('venda-comprador-zap').value.trim();
             const compradorEmail = document.getElementById('venda-comprador-email').value.trim();
@@ -1611,7 +1795,6 @@
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
-                // 1. UPLOAD DOS DOCUMENTOS CUMULATIVOS DA GAVETA
                 let docsUrls = [];
 
                 if (listaDocsVendaEstado.length > 0) {
@@ -1632,7 +1815,6 @@
                     }
                 }
 
-                // 2. CADASTRO COMPLETO DO COMPRADOR NA TABELA CLIENTES (NOME EM MAIÚSCULO)
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando comprador oficial...';
                 let clienteCompradorId = null;
 
@@ -1656,7 +1838,6 @@
                     clienteCompradorId = novoCliente.id;
                 }
 
-                // 3. COMPILAÇÃO DE NOTAS E LINKS DE ANEXOS PARA OBSERVAÇÕES
                 let notasCompletas = [];
                 if (valorSinal > 0) {
                     notasCompletas.push(`[ENTRADA/SINAL]: R$ ${valorSinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`);
@@ -1669,7 +1850,6 @@
                 }
                 const observacoesFinalTexto = notasCompletas.join(' | ');
 
-                // 4. GRAVAÇÃO EM VENDAS_FECHADAS COM VÍNCULO REAL DO COMPRADOR
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Formalizando venda e comissões...';
                 const { error: errVenda } = await supabaseClient
                     .from('vendas_fechadas')
@@ -1694,7 +1874,6 @@
 
                 if (errVenda) throw errVenda;
 
-                // 5. ATUALIZAÇÃO DO STATUS DO IMÓVEL
                 const { error: errImovel } = await supabaseClient
                     .from('imoveis')
                     .update({ status: 'Vendido', ativa: false })
@@ -1873,16 +2052,27 @@
             }
         }
 
-        async function alternarVisibilidadeVitrine(imovelId, estadoAtual) {
+        // =========================================================================
+        // BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" PODE IR AO AR
+        // =========================================================================
+        async function alternarVisibilidadeVitrine(imovelId, estadoAtual, statusImovel) {
             if (modoLeitura) return;
+
+            if (statusImovel && statusImovel !== 'Disponível') {
+                mostrarToast('aviso', 'Ação Não Permitida', `Imóvel com status "${statusImovel}". Somente imóveis com status "Disponível" podem ser colocados no ar.`);
+                return;
+            }
+
             try {
                 const { error } = await supabaseClient
                     .from('imoveis')
                     .update({ ativa: !estadoAtual })
-                    .eq('id', imovelId);
+                    .eq('id', imovelId)
+                    .eq('imobiliaria_id', imobiliariaId);
 
                 if (error) throw error;
-                mostrarToast('aviso', 'Vitrine Atualizada', !estadoAtual ? 'O anúncio foi publicado na vitrine.' : 'O anúncio foi pausado da vitrine.');
+
+                mostrarToast('sucesso', 'Vitrine Atualizada', !estadoAtual ? 'O anúncio foi publicado na vitrine com sucesso.' : 'O anúncio foi pausado da vitrine.');
                 await carregarImoveis();
             } catch (err) {
                 console.error(err);
@@ -1897,7 +2087,8 @@
 
             listaImoveisFiltrados = listaImoveisCompleta.filter(im => {
                 const prop = (im.proprietario_id && mapaClientes[im.proprietario_id]) ? (mapaClientes[im.proprietario_id].nome || '') : '';
-                const inq = mapaInquilinosPorImovel[im.id] || '';
+                const contratoInq = mapaInquilinosPorImovel[im.id] || null;
+                const inq = contratoInq ? (contratoInq.cliente_nome || '') : '';
 
                 const matchBusca = !busca || 
                     (im.codigo_ref && im.codigo_ref.toLowerCase().includes(busca)) ||
@@ -1969,6 +2160,305 @@
                 btn.disabled = false;
             }
         }
+
+        // =========================================================================
+        // MOTOR DO RAIO-X COMPLETO DO IMÓVEL (COM INTERATIVIDADE & DOCUMENTOS 👁️)
+        // =========================================================================
+        async function abrirModalDetalhesImovel(imovelId) {
+            if (!imovelId) return;
+
+            const modal = document.getElementById('modal-dash-imovel');
+            const corpo = document.getElementById('imob-modal-conteudo');
+            const tituloTopo = document.getElementById('imob-modal-titulo-topo');
+            const badgeStatus = document.getElementById('imob-modal-status-badge');
+            const linkEditar = document.getElementById('imob-modal-link-editar');
+
+            if (corpo) {
+                corpo.innerHTML = `
+                    <div class="py-12 text-center text-slate-500">
+                        <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
+                        <p>Consultando raio-x do imóvel...</p>
+                    </div>
+                `;
+            }
+            if (modal) modal.classList.remove('hidden');
+
+            try {
+                const { data: imovel, error } = await supabaseClient
+                    .from('imoveis')
+                    .select('*, clientes(nome, whatsapp, telefone, cpf_cnpj)')
+                    .eq('id', imovelId)
+                    .single();
+
+                if (error || !imovel) throw new Error('Dados do imóvel não localizados.');
+
+                if (tituloTopo) tituloTopo.innerText = `Ref: ${imovel.codigo_ref} • ${imovel.tipo}`;
+                if (badgeStatus) {
+                    badgeStatus.innerText = imovel.status;
+                    badgeStatus.className = `px-2 py-0.5 rounded text-[10px] font-bold ${
+                        imovel.status === 'Disponível' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' :
+                        (imovel.status === 'Alugado' ? 'bg-purple-950 text-purple-300 border border-purple-800' :
+                        (imovel.status === 'Vendido' ? 'bg-amber-950 text-amber-300 border border-amber-800' : 'bg-slate-800 text-slate-300'))
+                    }`;
+                }
+
+                if (linkEditar) linkEditar.href = `imovel-form.html?id=${imovel.id}`;
+
+                let foto = imovel.foto_capa || (Array.isArray(imovel.fotos) && imovel.fotos.length > 0 ? imovel.fotos[0] : null);
+                if (!foto) foto = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80';
+
+                const prop = imovel.clientes || {};
+                const zapProp = ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '');
+
+                // GAVETA DE DOCUMENTOS DO IMÓVEL COM "OLHINHO" 👁️
+                const docsHtml = renderizarBotoesDocumentos(imovel.documentos_anexos, 'Documentos Técnicos, Escrituras & Fotos Extras');
+
+                if (corpo) {
+                    corpo.innerHTML = `
+                        <div class="flex flex-col sm:flex-row gap-4 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                            <img src="${foto}" alt="Capa" class="w-full sm:w-44 h-32 object-cover rounded-xl border border-slate-700 flex-shrink-0">
+                            <div class="space-y-1.5 flex-1 min-w-0">
+                                <span class="text-[10px] uppercase font-bold text-cyan-400 block">${imovel.finalidade || 'Venda'}</span>
+                                <h4 class="text-sm font-bold text-white leading-snug">${imovel.titulo}</h4>
+                                <p class="text-[11px] text-slate-400">${imovel.bairro || 'Bairro'} - ${imovel.cidade || ''}/${imovel.uf || ''}</p>
+                                ${imovel.logradouro ? `<p class="text-[10px] text-slate-500">${imovel.logradouro}, ${imovel.numero || 'S/N'}</p>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center font-mono">
+                            <div><span class="text-slate-500 block text-[10px]">Quartos</span><strong class="text-white text-xs">${imovel.quartos || 0} (${imovel.suites || 0} suítes)</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">Banheiros</span><strong class="text-white text-xs">${imovel.banheiros || 1}</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">Vagas</span><strong class="text-white text-xs">${imovel.vagas || 0}</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">Área Útil</span><strong class="text-cyan-300 text-xs">${imovel.area_util || 0} m²</strong></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800 text-center font-mono">
+                            <div><span class="text-slate-500 block text-[10px]">Venda</span><strong class="text-emerald-400 text-xs">R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')}</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">Locação</span><strong class="text-amber-300 text-xs">R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">Condomínio</span><strong class="text-white text-xs">R$ ${Number(imovel.valor_condominio || 0).toLocaleString('pt-BR')}</strong></div>
+                            <div><span class="text-slate-500 block text-[10px]">IPTU</span><strong class="text-white text-xs">R$ ${Number(imovel.valor_iptu || 0).toLocaleString('pt-BR')}</strong></div>
+                        </div>
+
+                        <div class="bg-amber-950/20 p-4 rounded-xl border border-amber-500/30 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-black tracking-wider text-amber-400 block flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-tie"></i> Proprietário Titular do Imóvel
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between flex-wrap gap-2">
+                                <div>
+                                    <button type="button" onclick="fecharModalDashImovel(); abrirDossieUniversal('${imovel.proprietario_id || ''}', '${(prop.nome || '').replace(/'/g, "\\'")}', '${prop.cpf_cnpj || ''}', 'proprietario')" 
+                                            class="font-black text-white hover:text-amber-400 underline decoration-amber-500/60 transition cursor-pointer text-left text-sm flex items-center gap-1.5">
+                                        <span>${prop.nome || 'Proprietário Titular'}</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-amber-400"></i>
+                                    </button>
+                                    <span class="text-[10px] text-slate-400 font-mono block mt-0.5">CPF: ${prop.cpf_cnpj || 'Não informado'} • Tel: ${prop.whatsapp || prop.telefone || 'Não informado'}</span>
+                                </div>
+                                ${zapProp ? `
+                                    <a href="https://wa.me/${zapProp}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                        <i class="fa-brands fa-whatsapp"></i> Chamar Dono
+                                    </a>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        ${docsHtml}
+                    `;
+                }
+
+            } catch (err) {
+                console.error(err);
+                if (corpo) corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar detalhes do imóvel.</p>';
+            }
+        }
+
+        function fecharModalDashImovel() {
+            const modal = document.getElementById('modal-dash-imovel');
+            if (modal) modal.classList.add('hidden');
+        }
+        window.abrirModalDetalhesImovel = abrirModalDetalhesImovel;
+        window.fecharModalDashImovel = fecharModalDashImovel;
+
+        // =========================================================================
+        // MOTOR DO DOSSIÊ 360° DO CLIENTE: COM VISUALIZADOR DE DOCUMENTOS (OLHINHO 👁️)
+        // =========================================================================
+        async function abrirDossieUniversal(clienteId, nomeFallback, cpfFallback, tipoAcesso) {
+            const modal = document.getElementById('modal-dossie-cliente');
+            const corpo = document.getElementById('dossie-cliente-conteudo');
+            const btnZap = document.getElementById('dossie-cliente-btn-zap');
+            const tituloTopo = document.getElementById('dossie-cliente-titulo-topo');
+
+            if (!modal || !corpo) return;
+
+            corpo.innerHTML = `
+                <div class="py-12 text-center text-slate-500">
+                    <i class="fa-solid fa-spinner fa-spin text-sky-400 text-2xl mb-2"></i>
+                    <p>Localizando cadastro, histórico e documentos em nuvem...</p>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+
+            try {
+                let cliente = null;
+
+                if (clienteId && clienteId !== 'null' && clienteId !== 'undefined' && clienteId !== '') {
+                    const { data, error } = await supabaseClient
+                        .from('clientes')
+                        .select('*')
+                        .eq('id', clienteId)
+                        .maybeSingle();
+                    if (!error && data) cliente = data;
+                }
+
+                if (!cliente && cpfFallback && cpfFallback.trim() !== '') {
+                    const docLimpo = cpfFallback.replace(/\D/g, '');
+                    if (docLimpo.length >= 6) {
+                        const { data } = await supabaseClient
+                            .from('clientes')
+                            .select('*')
+                            .ilike('cpf_cnpj', `%${docLimpo}%`)
+                            .limit(1);
+                        if (data && data.length > 0) cliente = data[0];
+                    }
+                }
+
+                if (!cliente && nomeFallback && nomeFallback.trim() !== '' && nomeFallback !== 'Proprietário') {
+                    const { data } = await supabaseClient
+                        .from('clientes')
+                        .select('*')
+                        .ilike('nome', `%${nomeFallback.trim()}%`)
+                        .limit(1);
+                    if (data && data.length > 0) cliente = data[0];
+                }
+
+                if (!cliente) {
+                    cliente = {
+                        id: clienteId || '',
+                        nome: (nomeFallback || 'Cliente').toUpperCase(),
+                        cpf_cnpj: cpfFallback || 'Não informado',
+                        whatsapp: '',
+                        telefone: '',
+                        email: '',
+                        tipo: tipoAcesso === 'inquilino' ? 'Inquilino' : 'Proprietário'
+                    };
+                }
+
+                const tipoRotulo = (cliente.tipo || tipoAcesso || 'Cliente').toUpperCase();
+                tituloTopo.innerText = `Dossiê 360° • ${cliente.nome.toUpperCase()} (${tipoRotulo})`;
+
+                const zapLimpo = ('' + (cliente.whatsapp || cliente.telefone || '')).replace(/\D/g, '');
+                btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${cliente.nome}! Sou da imobiliária e estou à sua disposição.`)}` : '#';
+                btnZap.style.display = zapLimpo ? 'inline-flex' : 'none';
+
+                let blocoExtraHtml = '';
+
+                if (tipoAcesso === 'proprietario') {
+                    const { data: imoveisProp } = await supabaseClient
+                        .from('imoveis')
+                        .select('id, codigo_ref, titulo, status, valor_venda, valor_locacao, documentos_anexos')
+                        .eq('proprietario_id', cliente.id || 'none');
+
+                    blocoExtraHtml = `
+                        <div class="space-y-4 pt-2">
+                            <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
+                                <i class="fa-solid fa-house-user"></i> Imóveis Deste Proprietário & Documentação (${(imoveisProp || []).length})
+                            </h4>
+                            <div class="space-y-3">
+                                ${(imoveisProp || []).length === 0 ? '<p class="text-slate-500 italic py-2">Nenhum imóvel adicional listado sob este titular.</p>' : 
+                                imoveisProp.map(im => {
+                                    const docsImovelHtml = renderizarBotoesDocumentos(im.documentos_anexos, `Documentos • Ref: ${im.codigo_ref}`);
+                                    return `
+                                        <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <span class="font-bold text-white uppercase text-xs">${im.titulo}</span>
+                                                    <span class="text-[10px] text-cyan-400 font-mono block">Ref: ${im.codigo_ref} • Status: ${im.status}</span>
+                                                </div>
+                                                <button type="button" onclick="fecharModalDossieCliente(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-[11px] transition cursor-pointer">
+                                                    Ver Raio-X
+                                                </button>
+                                            </div>
+                                            ${docsImovelHtml}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const { data: contratosInq } = await supabaseClient
+                        .from('contratos_locacao')
+                        .select('*, imoveis(id, codigo_ref, titulo)')
+                        .or(`cliente_id.eq.${cliente.id},cliente_cpf_cnpj.eq.${cliente.cpf_cnpj}`)
+                        .limit(1);
+
+                    const ct = (contratosInq && contratosInq.length > 0) ? contratosInq[0] : null;
+
+                    let docsContratoHtml = '';
+                    if (ct && ct.documentos_anexos) {
+                        docsContratoHtml = renderizarBotoesDocumentos(ct.documentos_anexos, 'Contrato Assinado & Documentos Pessoais do Inquilino');
+                    }
+
+                    blocoExtraHtml = ct ? `
+                        <div class="space-y-3 pt-2">
+                            <h4 class="text-xs font-black uppercase text-purple-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-contract"></i> Contrato de Locação Ativo
+                            </h4>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-purple-500/40 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-white uppercase">${ct.imoveis ? ct.imoveis.titulo : 'Imóvel Locado'} (Ref: ${ct.imoveis ? ct.imoveis.codigo_ref : '---'})</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800">Todo dia ${ct.dia_vencimento_aluguel || '10'}</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-800">
+                                    <div><span class="text-slate-500">Aluguel Bruto:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(ct.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong></div>
+                                    <div><span class="text-slate-500">Vigência:</span> <strong class="text-white">${ct.data_inicio ? ct.data_inicio.split('-').reverse().join('/') : ''} até ${ct.data_fim ? ct.data_fim.split('-').reverse().join('/') : ''}</strong></div>
+                                </div>
+                                ${docsContratoHtml}
+                            </div>
+                        </div>
+                    ` : '<p class="text-slate-500 italic py-2">Nenhum contrato ativo vinculado localizado.</p>';
+                }
+
+                corpo.innerHTML = `
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between flex-wrap gap-2">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-sky-400 block">Ficha Cadastral</span>
+                                <h4 class="text-base font-black text-white uppercase">${cliente.nome}</h4>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-950 text-sky-300 border border-sky-800 font-mono">
+                                ${cliente.id ? 'ID: ' + cliente.id.substring(0, 8) + '...' : 'Registro Ativo'}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                            <div><span class="text-slate-500 block">CPF / CNPJ:</span> <strong class="text-white font-mono">${cliente.cpf_cnpj || 'Não informado'}</strong></div>
+                            <div><span class="text-slate-500 block">WhatsApp / Fone:</span> <strong class="text-cyan-300 font-mono">${cliente.whatsapp || cliente.telefone || 'Não informado'}</strong></div>
+                            <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${cliente.email || 'Não informado'}</strong></div>
+                        </div>
+
+                        ${cliente.endereco_completo ? `
+                            <p class="text-[11px] text-slate-400 pt-1 border-t border-slate-900">
+                                <i class="fa-solid fa-location-dot text-rose-400 mr-1"></i> Endereço: <strong>${cliente.endereco_completo}</strong>
+                            </p>
+                        ` : ''}
+                    </div>
+
+                    ${blocoExtraHtml}
+                `;
+
+            } catch (err) {
+                console.error(err);
+                corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar dossiê.</p>';
+            }
+        }
+
+        function fecharModalDossieCliente() {
+            const modal = document.getElementById('modal-dossie-cliente');
+            if (modal) modal.classList.add('hidden');
+        }
+        window.abrirDossieUniversal = abrirDossieUniversal;
+        window.fecharModalDossieCliente = fecharModalDossieCliente;
 
         async function executarLogout() {
             if (isMasterSuporte) {
