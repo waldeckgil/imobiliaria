@@ -69,6 +69,9 @@
                 <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
                     <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
                     <a href="#comparativo" class="hover:text-cyan-400 transition">Vantagens</a>
+                    <a href="#precos" class="hover:text-amber-300 transition flex items-center gap-1">
+                        <i class="fa-solid fa-tag text-amber-400"></i> Planos & Preço
+                    </a>
                     <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
                     <a href="https://wa.me/5521964120231" target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
                         <i class="fa-brands fa-whatsapp text-sm text-emerald-400"></i> WhatsApp
@@ -90,7 +93,7 @@
             <!-- 1. HERO BANNER PRINCIPAL COM 30 DIAS GRÁTIS -->
             <section class="max-w-5xl mx-auto text-center space-y-6">
                 <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-inner">
-                    <i class="fa-solid fa-rocket"></i> Inicie seu Teste Grátis de 30 Dias Sem Compromisso
+                    <i class="fa-solid fa-rocket"></i> Teste Grátis de 30 Dias • Sem Cartão de Crédito
                 </div>
                 
                 <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
@@ -100,6 +103,19 @@
                 <p class="text-sm sm:text-base text-slate-300 max-w-3xl mx-auto leading-relaxed">
                     A plataforma completa para gestão comercial imobiliária: catálogo online moderno, funil de captação de leads integrado ao WhatsApp, gestão de corretores e geração instantânea de fichas comerciais em PDF.
                 </p>
+
+                <!-- CONDIÇÃO COMERCIAL CLARA NO HERO -->
+                <div class="inline-flex flex-wrap items-center justify-center gap-3 bg-slate-950/80 border border-amber-500/40 px-4 py-2 rounded-2xl text-xs">
+                    <span class="text-amber-400 font-black flex items-center gap-1.5">
+                        <i class="fa-solid fa-check-circle"></i> 30 Dias Grátis
+                    </span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-slate-300">Após o teste: apenas <strong class="text-cyan-300 font-mono text-sm">R$ 69,90/mês</strong></span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-emerald-400 font-bold">Pague somente após usar</span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-slate-400">Sem fidelidade</span>
+                </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                     <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+conhecer+mais+sobre+o+SGI+e+iniciar+o+teste+gr%C3%A1tis+de+30+dias." 
@@ -273,7 +289,86 @@
                 </div>
             </section>
 
-            <!-- 4. PASSO A PASSO DE IMPLANTAÇÃO -->
+            <!-- 4. SEÇÃO EXCLUSIVA DE PREÇO & CONDIÇÕES COMERCIAIS (R$ 69,90/MÊS) -->
+            <section id="precos" class="space-y-6 text-center max-w-4xl mx-auto">
+                <div class="space-y-2">
+                    <span class="text-xs font-black uppercase text-amber-400 tracking-widest block">Transparência Total</span>
+                    <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                        Quanto Custa? Simples, Justo e Sem Pegadinhas
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-400">
+                        Você testa primeiro, valida na prática e só paga se realmente fizer sentido para o seu negócio.
+                    </p>
+                </div>
+
+                <!-- CARD DE PREÇO -->
+                <div class="box-destaque p-8 sm:p-10 border-2 border-cyan-500/50 relative overflow-hidden text-left max-w-2xl mx-auto space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                        <div>
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                                Plano Profissional Completo
+                            </span>
+                            <h4 class="text-xl sm:text-2xl font-black text-white mt-2">Acesso Ilimitado</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Todos os módulos e recursos liberados.</p>
+                        </div>
+
+                        <div class="text-left sm:text-right">
+                            <span class="text-xs text-slate-400 block line-through">De R$ 149,00</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-sm font-bold text-slate-300">R$</span>
+                                <span class="text-4xl sm:text-5xl font-black text-cyan-300 font-mono">69,90</span>
+                                <span class="text-xs text-slate-400 font-bold">/mês</span>
+                            </div>
+                            <span class="text-[10px] text-amber-400 font-bold block mt-0.5">Após os primeiros 30 dias</span>
+                        </div>
+                    </div>
+
+                    <!-- PILARES DE SEGURANÇA COMERCIAL -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Pague somente após usar:</strong>
+                                <span class="text-slate-400 text-[11px]">Você tem 30 dias 100% grátis para testar com sua equipe. O primeiro pagamento só acontece após esse período.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Sem contrato de fidelidade:</strong>
+                                <span class="text-slate-400 text-[11px]">Cancele quando quiser com um clique. Não prendemos sua imobiliária com multas rescisórias ou carência.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Zero taxa de implantação:</strong>
+                                <span class="text-slate-400 text-[11px]">Sem taxas ocultas de configuração, suporte ou adesão. Seu sistema sai funcionando na hora.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Sem cartão no cadastro:</strong>
+                                <span class="text-slate-400 text-[11px]">Inicie seu teste direto sem precisar cadastrar cartão de crédito ou comprometer seu limite.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOTÃO NO CARD DE PREÇO -->
+                    <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <span class="text-xs text-slate-400">Gostou? Comece hoje mesmo sem custos:</span>
+                        <a href="cadastro-imobiliaria.html" class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-6 py-3 rounded-xl text-xs uppercase tracking-wider text-center transition shadow-lg">
+                            Testar 30 Dias Grátis
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. PASSO A PASSO DE IMPLANTAÇÃO -->
             <section id="como-funciona" class="box-destaque p-8 sm:p-12 text-center space-y-8">
                 <div class="max-w-2xl mx-auto space-y-2">
                     <span class="text-xs font-black uppercase text-cyan-400 tracking-widest block">Implantação Rápida</span>
@@ -303,7 +398,7 @@
                 </div>
             </section>
 
-            <!-- 5. CTA FINAL -->
+            <!-- 6. CTA FINAL COM WHATSAPP -->
             <section class="bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 border border-cyan-500/40 p-8 sm:p-12 rounded-3xl text-center space-y-6 shadow-2xl">
                 <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto border border-emerald-500/30">
                     <i class="fa-brands fa-whatsapp"></i>
@@ -314,7 +409,7 @@
                         Pronto para Modernizar a Gestão da sua Imobiliária?
                     </h3>
                     <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Fale diretamente com nossa equipe. Liberamos seu ambiente de demonstração completo para você e sua equipe testarem por <strong>30 dias grátis</strong>, sem compromisso.
+                        Fale diretamente com nossa equipe. Liberamos seu ambiente de demonstração completo para você e sua equipe testarem por <strong>30 dias grátis</strong>, sem compromisso e sem fidelidade.
                     </p>
                 </div>
 
@@ -1005,7 +1100,7 @@
                         rotuloFinalidade = 'Venda ou Aluguel';
                         precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
                         modalidadeNegocioZap = 'VENDA ou LOCAÇÃO';
-                        valorTextoZap = `(Venda: ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} | Aluguel: ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês)`;
+                        valorTextoZap = `(Venda: ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês)`;
                     } else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') {
                         rotuloFinalidade = 'Aluguel (Locação)';
                         precoExibido = imovel.valor_locacao || 0;
