@@ -300,25 +300,21 @@
                 </div>
             </div>
 
- <!-- CARD 7: AGENDAMENTOS & ESCALA DE CORRETORES -->
-            <div onclick="abrirModalAgendaVisitas()" class="box-tech p-4 border-l-4 border-l-cyan-500 cursor-pointer hover:scale-[1.02] hover:border-cyan-400 hover:shadow-xl transition group bg-gradient-to-r from-cyan-950/20 to-transparent flex flex-col justify-between min-h-[92px]">
+            <!-- CARD 7: AGENDAMENTOS & VISITAS -->
+            <div onclick="abrirModalAgendaVisitas()" class="box-tech p-4 border-l-4 border-l-cyan-500 cursor-pointer hover:scale-[1.02] hover:border-cyan-400 hover:shadow-xl transition group bg-gradient-to-r from-cyan-950/20 to-transparent">
                 <div class="flex items-center justify-between text-slate-400 text-xs font-bold uppercase tracking-wider">
-                    <span class="text-cyan-400 font-black transition text-[11px] flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-days text-cyan-400"></i> Agendamentos
+                    <span class="group-hover:text-cyan-300 transition text-[11px] flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-cyan-400"></i> Agendamentos de Clientes
                     </span>
-                    <span class="text-[10px] text-cyan-400 font-bold flex items-center gap-1 opacity-80 group-hover:opacity-100 transition">
-                        <span>Abrir</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-cyan-400 text-xs group-hover:scale-110 transition"></i>
                 </div>
-                
-                <!-- LISTA AGRUPADA DINÂMICA: 1 • CORRETOR -->
-                <div id="card-agendamentos-lista" class="mt-2 space-y-1 max-h-[82px] overflow-y-auto pr-1 text-xs">
-                    <span class="text-[11px] text-slate-400 italic">Carregando agendamentos...</span>
+                <div class="mt-2 flex items-baseline justify-between">
+                    <div>
+                        <span id="kpi-visitas-hoje" class="text-2xl font-black text-white font-mono">0</span>
+                        <span class="text-[10px] text-cyan-400 font-bold block" id="kpi-rotulo-visitas-mes">Visitas no mês</span>
+                    </div>
+                    <span class="text-[9px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition">Abrir &rarr;</span>
                 </div>
-
-                <span id="kpi-visitas-hoje" class="hidden">0</span>
-                <span id="kpi-rotulo-visitas-mes" class="hidden">Visitas no mês</span>
             </div>
 
             <!-- CARD 8: PROPOSTAS -->
@@ -3997,21 +3993,8 @@ function alternarVisaoFinanceira(abrir) {
 
             const primeiroDiaMes = new Date(anoAtualAgenda, mesAtualAgenda, 1).toISOString();
             const ultimoDiaMes = new Date(anoAtualAgenda, mesAtualAgenda + 1, 0, 23, 59, 59).toISOString();
-try {
-                // 1. Garante que os nomes dos corretores estão disponíveis
-                if (!cacheUsuariosCorretores || cacheUsuariosCorretores.length === 0) {
-                    const { data: users } = await supabaseClient
-                        .from('usuarios')
-                        .select('id, nome_completo')
-                        .eq('imobiliaria_id', dadosImobiliaria.id);
-                    cacheUsuariosCorretores = users || [];
-                }
 
-                const mapaNomesCorretores = {};
-                (cacheUsuariosCorretores || []).forEach(u => {
-                    mapaNomesCorretores[u.id] = u.nome_completo || 'Corretor';
-                });
-
+            try {
                 const { data: agendamentos, error } = await supabaseClient
                     .from('leads_contatos')
                     .select('id, nome, whatsapp, email, data_agendamento, notas_agendamento, imovel_id, corretor_atribuido_id')
@@ -4023,54 +4006,23 @@ try {
                 if (error) throw error;
 
                 mapaAgendamentosMes = {};
-                const listaTotalAgendamentos = [];
-
                 (agendamentos || []).forEach(ag => {
                     if (!ag.data_agendamento) return;
                     const dataChave = ag.data_agendamento.split('T')[0];
                     if (!mapaAgendamentosMes[dataChave]) mapaAgendamentosMes[dataChave] = [];
-
-                    const nomeCompleto = ag.corretor_atribuido_id ? (mapaNomesCorretores[ag.corretor_atribuido_id] || 'Corretor') : 'Plantão';
-                    const primeiroNome = nomeCompleto.trim().split(' ')[0];
-
-                    const itemEnriquecido = {
-                        ...ag,
-                        corretor_nome: nomeCompleto,
-                        corretor_primeiro_nome: primeiroNome
-                    };
-
-                    mapaAgendamentosMes[dataChave].push(itemEnriquecido);
-                    listaTotalAgendamentos.push(itemEnriquecido);
+                    mapaAgendamentosMes[dataChave].push(ag);
                 });
-
-                // 2. Alimenta a lista agrupada sequencial do Card 7 (1 • Corretor)
-                const containerListaCard = document.getElementById('card-agendamentos-lista');
-                if (containerListaCard) {
-                    if (listaTotalAgendamentos.length === 0) {
-                        containerListaCard.innerHTML = `
-                            <p class="text-[11px] text-slate-500 italic py-1">Nenhum agendamento neste mês.</p>
-                        `;
-                    } else {
-                        containerListaCard.innerHTML = listaTotalAgendamentos.map((item, idx) => `
-                            <div class="flex items-center gap-2 text-[11px] bg-slate-950/70 px-2 py-1 rounded-lg border border-slate-800/80">
-                                <span class="w-4 h-4 rounded-full bg-cyan-500/20 text-cyan-300 font-mono font-black text-[10px] flex items-center justify-center border border-cyan-500/40 flex-shrink-0">
-                                    ${idx + 1}
-                                </span>
-                                <span class="text-white font-bold truncate uppercase">${item.corretor_primeiro_nome}</span>
-                            </div>
-                        `).join('');
-                    }
-                }
 
                 const badgeAgenda = document.getElementById('badge-total-agenda-mes');
                 if (badgeAgenda) {
-                    badgeAgenda.innerText = `${listaTotalAgendamentos.length} no mês`;
+                    badgeAgenda.innerText = `${(agendamentos || []).length} no mês`;
                 }
 
                 const kpiVisitas = document.getElementById('kpi-visitas-hoje');
                 if (kpiVisitas) {
-                    kpiVisitas.innerText = listaTotalAgendamentos.length;
+                    kpiVisitas.innerText = (agendamentos || []).length;
                 }
+
                 renderizarGradeCalendario();
 
                 if (!dataIsoSelecionadaAgenda) {
@@ -4195,16 +4147,16 @@ try {
             const hoje = new Date();
             const hojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
 
-   for (let i = 0; i < primeiroDiaSemana; i++) {
+            for (let i = 0; i < primeiroDiaSemana; i++) {
                 const cellVazia = document.createElement('div');
-                cellVazia.className = 'min-h-[58px] rounded-xl bg-slate-950/30 border border-slate-900/40 opacity-20';
+                cellVazia.className = 'h-12 rounded-xl bg-slate-950/30 border border-slate-900/40 opacity-20';
                 grid.appendChild(cellVazia);
             }
 
             for (let dia = 1; dia <= totalDiasMes; dia++) {
                 const dataChave = `${anoAtualAgenda}-${String(mesAtualAgenda + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
                 const temVisitas = mapaAgendamentosMes[dataChave] && mapaAgendamentosMes[dataChave].length > 0;
-                const visitasDia = temVisitas ? mapaAgendamentosMes[dataChave] : [];
+                const qtdVisitas = temVisitas ? mapaAgendamentosMes[dataChave].length : 0;
                 const ehHoje = (dataChave === hojeStr);
                 const ehSelecionado = (dataChave === dataIsoSelecionadaAgenda);
 
@@ -4224,33 +4176,26 @@ try {
                     estiloBox = 'border-2 border-cyan-400/90 bg-cyan-950/60 hover:bg-cyan-900/70 text-cyan-200 font-black shadow-lg shadow-cyan-950/80 ring-1 ring-cyan-400/30';
                 }
 
-                // Exibe o primeiro nome do corretor dentro da caixinha do dia
-                let indicadorVisitasHtml = '<span class="h-3.5"></span>';
+                let indicadorVisitasHtml = '<span class="h-3"></span>';
                 if (temVisitas) {
-                    const primeiroNome = visitasDia[0]?.corretor_primeiro_nome || 'Corretor';
-                    const extras = visitasDia.length - 1;
-                    const textoCorretorTag = extras > 0 ? `${primeiroNome} (+${extras})` : primeiroNome;
-
                     if (ehSelecionado) {
                         indicadorVisitasHtml = `
-                            <span class="px-1.5 py-0.5 rounded bg-white text-blue-900 text-[9px] font-black truncate max-w-full shadow uppercase flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-user text-[7px]"></i>
-                                <span class="truncate">${textoCorretorTag}</span>
+                            <span class="px-1.5 py-0.5 rounded-full bg-white text-blue-700 text-[9px] font-black font-mono shadow flex items-center gap-0.5">
+                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
                             </span>
                         `;
                     } else {
                         indicadorVisitasHtml = `
-                            <span class="px-1.5 py-0.5 rounded bg-cyan-400 text-slate-950 text-[9px] font-black truncate max-w-full shadow-md shadow-cyan-400/40 uppercase flex items-center justify-center gap-1 animate-pulse">
-                                <i class="fa-solid fa-user text-[7px]"></i>
-                                <span class="truncate">${textoCorretorTag}</span>
+                            <span class="px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black font-mono shadow-md shadow-cyan-400/50 flex items-center gap-0.5 animate-pulse">
+                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
                             </span>
                         `;
                     }
                 }
 
-                cell.className = `min-h-[58px] rounded-xl p-1.5 flex flex-col justify-between items-center transition-all duration-200 cursor-pointer relative ${estiloBox}`;
+                cell.className = `h-12 rounded-xl p-1 flex flex-col justify-between items-center transition-all duration-200 cursor-pointer relative ${estiloBox}`;
                 cell.innerHTML = `
-                    <span class="text-xs ${ehSelecionado ? 'text-white font-black' : (temVisitas ? 'text-cyan-300 font-black' : '')}">${dia}</span>
+                    <span class="text-xs ${ehSelecionado ? 'text-white' : (temVisitas ? 'text-cyan-300 font-black' : '')}">${dia}</span>
                     ${indicadorVisitasHtml}
                 `;
 
