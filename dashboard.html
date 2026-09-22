@@ -159,12 +159,15 @@
 
         </div>
     </nav>
-
-    <!-- CONTEÚDO PRINCIPAL -->
+<!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
+        
+        <!-- VISÃO COCKPIT GERAL (CARDS & ALERTAS) -->
+        <div id="visao-cockpit-geral" class="space-y-6">
         
         <!-- CARD DE ASSINATURA SAAS -->
         <div id="card-monitor-assinatura" class="box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-emerald-500 text-xs">
+  
             <div class="flex items-center gap-3">
                 <div id="icone-status-plano" class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30">
                     <i class="fa-solid fa-shield-halved"></i>
@@ -361,14 +364,20 @@
                         <p class="text-[11px] text-slate-400">Total transparência entre caixa realizado (quitado) e faturamento a receber da competência.</p>
                     </div>
 
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <label class="text-xs font-bold text-slate-400 whitespace-nowrap">Mês de Referência:</label>
-                        <select id="filtro-mes-financeiro" onchange="carregarDashboardFinanceiro()" 
-                                class="bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-cyan-300 font-mono font-bold outline-none focus:border-cyan-400 w-full sm:w-44">
-                        </select>
+            <div class="flex items-center gap-2.5 w-full sm:w-auto flex-wrap sm:flex-nowrap justify-between sm:justify-end">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <label class="text-xs font-bold text-slate-400 whitespace-nowrap">Mês:</label>
+                            <select id="filtro-mes-financeiro" onchange="carregarDashboardFinanceiro()" 
+                                    class="bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-cyan-300 font-mono font-bold outline-none focus:border-cyan-400 w-full sm:w-40 cursor-pointer">
+                            </select>
+                        </div>
+                        <button type="button" onclick="alternarVisaoFinanceira(false)" 
+                                class="bg-slate-900 hover:bg-slate-800 text-cyan-300 hover:text-white border border-slate-700 hover:border-cyan-400 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-2 transition cursor-pointer whitespace-nowrap shadow-sm">
+                            <i class="fa-solid fa-arrow-left text-xs"></i>
+                            <span>Voltar ao Dashboard 360</span>
+                        </button>
                     </div>
                 </div>
-
                 <!-- CARDS DE METRICA DO EXTRATO (5 CARDS AUDITADOS E INTERLIGADOS) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     <!-- CARD 1 -->
@@ -3167,20 +3176,32 @@
         }
         window.pausarPublicacaoImovel = pausarPublicacaoImovel;
 
-        function atalhoAbaFinanceira() {
-            if (!temPermissaoFinanceira) return;
+function alternarVisaoFinanceira(abrir) {
+            if (abrir && !temPermissaoFinanceira) return;
+
+            const visaoCockpit = document.getElementById('visao-cockpit-geral');
             const boxFin = document.getElementById('box-dashboard-financeiro');
-            if (boxFin) {
-                const estaOculto = boxFin.classList.contains('hidden');
-                if (estaOculto) {
+
+            if (abrir) {
+                if (visaoCockpit) visaoCockpit.classList.add('hidden');
+                if (boxFin) {
                     boxFin.classList.remove('hidden');
                     carregarDashboardFinanceiro();
-                    boxFin.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    boxFin.classList.add('hidden');
                 }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                if (boxFin) boxFin.classList.add('hidden');
+                if (visaoCockpit) visaoCockpit.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
+
+        function atalhoAbaFinanceira() {
+            alternarVisaoFinanceira(true);
+        }
+
+        window.alternarVisaoFinanceira = alternarVisaoFinanceira;
+        window.atalhoAbaFinanceira = atalhoAbaFinanceira;
 
         // =========================================================================
         // MOTOR FINANCEIRO CONSOLIDADO (HARMONIZADO, COM VENCIMENTOS E CORRETORES)
