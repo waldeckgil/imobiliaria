@@ -778,11 +778,9 @@
             </div>
         </div>
     </div>
-
-    <!-- MODAL PRINCIPAL: CALENDÁRIO & GERENCIADOR DE AGENDAMENTOS -->
+<!-- MODAL PRINCIPAL: CALENDÁRIO & GERENCIADOR DE AGENDAMENTOS (EXPANSÃO EQUILIBRADA 5XL) -->
     <div id="modal-cockpit-agenda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="box-tech max-w-4xl w-full p-5 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
-            
+        <div class="box-tech max-w-5xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-base border border-cyan-500/30">
@@ -821,9 +819,12 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 overflow-y-auto pr-1">
-                <div class="lg:col-span-7 space-y-2">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 flex-1 overflow-y-auto pr-1">
+                <!-- COLUNA DO CALENDÁRIO AMPLIADA PARA 8 COLUNAS (MAIS ESPAÇO PARA O NOME) -->
+                <div class="lg:col-span-8 space-y-2">
                     <div class="flex items-center justify-between text-[10px] text-slate-400 pb-1">
+
+
                         <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow shadow-cyan-400/50 inline-block"></span> Visitas Marcadas</span>
                         <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-amber-400 inline-block"></span> Dia de Hoje</span>
                         <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-blue-600 inline-block"></span> Selecionado</span>
@@ -4224,25 +4225,26 @@ try {
                     estiloBox = 'border-2 border-cyan-400/90 bg-cyan-950/60 hover:bg-cyan-900/70 text-cyan-200 font-black shadow-lg shadow-cyan-950/80 ring-1 ring-cyan-400/30';
                 }
 
-                // Exibe o primeiro nome do corretor dentro da caixinha do dia
+
+// Exibe o nome do corretor com largura otimizada para até 7 a 9 caracteres
                 let indicadorVisitasHtml = '<span class="h-3.5"></span>';
                 if (temVisitas) {
                     const primeiroNome = visitasDia[0]?.corretor_primeiro_nome || 'Corretor';
                     const extras = visitasDia.length - 1;
-                    const textoCorretorTag = extras > 0 ? `${primeiroNome} (+${extras})` : primeiroNome;
+                    const textoCorretorTag = extras > 0 ? `${primeiroNome}+${extras}` : primeiroNome;
 
                     if (ehSelecionado) {
                         indicadorVisitasHtml = `
-                            <span class="px-1.5 py-0.5 rounded bg-white text-blue-900 text-[9px] font-black truncate max-w-full shadow uppercase flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-user text-[7px]"></i>
-                                <span class="truncate">${textoCorretorTag}</span>
+                            <span class="w-full px-1 py-0.5 rounded bg-white text-blue-900 text-[8.5px] font-black truncate shadow uppercase flex items-center justify-center gap-1 tracking-tighter leading-none" title="${textoCorretorTag}">
+                                <i class="fa-solid fa-user text-[6.5px] flex-shrink-0"></i>
+                                <span class="truncate font-bold">${textoCorretorTag}</span>
                             </span>
                         `;
                     } else {
                         indicadorVisitasHtml = `
-                            <span class="px-1.5 py-0.5 rounded bg-cyan-400 text-slate-950 text-[9px] font-black truncate max-w-full shadow-md shadow-cyan-400/40 uppercase flex items-center justify-center gap-1 animate-pulse">
-                                <i class="fa-solid fa-user text-[7px]"></i>
-                                <span class="truncate">${textoCorretorTag}</span>
+                            <span class="w-full px-1 py-0.5 rounded bg-cyan-400 text-slate-950 text-[8.5px] font-black truncate shadow-md shadow-cyan-400/40 uppercase flex items-center justify-center gap-1 tracking-tighter leading-none animate-pulse" title="${textoCorretorTag}">
+                                <i class="fa-solid fa-user text-[6.5px] flex-shrink-0"></i>
+                                <span class="truncate font-bold">${textoCorretorTag}</span>
                             </span>
                         `;
                     }
