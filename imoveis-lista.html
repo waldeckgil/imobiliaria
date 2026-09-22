@@ -61,6 +61,11 @@
         <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
+<!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
+        <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto justify-between">
+            <div class="flex items-center gap-2">
+                <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
                 <span id="txt-suporte-imob" class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded font-bold">Imobiliária</span>
                 <span class="hidden sm:inline text-[11px] font-normal text-slate-900">• Sessão Soberana com Bypass RLS e Edição Liberada</span>
@@ -74,16 +79,18 @@
 
     <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
-        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+        <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
             <span>MODO SOMENTE LEITURA: Assinatura pendente. Ações de criação, exclusão, venda, locação e alteração de vitrine estão bloqueadas.</span>
         </div>
     </div>
 
+
     <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            
+        <!-- LARGURA DO CABEÇALHO: Mantenha o mesmo valor do <main> (ex: 1560px) -->
+        <div class="w-full max-w-[1560px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
                     <i class="fa-solid fa-house-chimney"></i>
@@ -120,9 +127,10 @@
         </div>
     </header>
 
-    <!-- NAVEGAÇÃO DOS MÓDULOS -->
+ <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
-        <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
+        <div class="w-full max-w-[1560px] mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
+
             <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
             </a>
@@ -141,8 +149,13 @@
         </div>
     </nav>
 
-    <!-- ÁREA PRINCIPAL -->
-    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
+<!-- ========================================================================= -->
+    <!-- CONTROLE DE LARGURA DO CORPO DA PÁGINA (CATÁLOGO DE IMÓVEIS)             -->
+    <!-- Para diminuir a largura: troque 1560px por 1480px, 1440px ou 1400px       -->
+    <!-- Para aumentar a largura: troque 1560px por 1650px, 1750px ou 1850px       -->
+    <!-- O campo a alterar é exatamente o número dentro de: max-w-[1560px]         -->
+    <!-- ========================================================================= -->
+    <main class="w-full max-w-[1560px] mx-auto px-4 sm:px-6 py-4 flex-1 space-y-6">
 
         <!-- BARRA DE FILTROS -->
         <div class="box-tech p-4">
