@@ -174,20 +174,21 @@
     <!-- O campo a alterar é exatamente o número dentro de: max-w-[1560px]         -->
     <!-- ========================================================================= -->
     <main class="w-full max-w-[1560px] mx-auto px-4 sm:px-6 py-4 flex-1 space-y-6">
-<!-- CARDS DO FUNIL COMERCIAL (7 ESTÁGIOS OFICIAIS COM TOOLTIPS & FILTRO POR CLIQUE) -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+
+        <!-- CARDS DO FUNIL COMERCIAL (INTERATIVOS, COM TOOLTIPS E FILTRO POR CLIQUE) -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
             
             <!-- CARD 1: NOVOS -->
             <div onclick="clicarCardFunil('Novo')" 
                  id="card-funil-Novo"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-4 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Novos</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Novos (Sem Retorno)</span>
                     <i class="fa-solid fa-circle-dot text-blue-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-novos" class="text-2xl font-black text-white mt-1 block">0</span>
                 <span class="text-[10px] text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
                 </span>
 
                 <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
@@ -203,14 +204,14 @@
             <!-- CARD 2: EM ATENDIMENTO -->
             <div onclick="clicarCardFunil('Em Atendimento')" 
                  id="card-funil-Em-Atendimento"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-amber-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-amber-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-amber-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Atendimento</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Em Atendimento</span>
                     <i class="fa-solid fa-headset text-amber-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-atendimento" class="text-2xl font-black text-amber-400 mt-1 block">0</span>
                 <span class="text-[10px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
                 </span>
 
                 <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
@@ -226,14 +227,14 @@
             <!-- CARD 3: VISITAS AGENDADAS -->
             <div onclick="clicarCardFunil('Visita Agendada')" 
                  id="card-funil-Visita-Agendada"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-cyan-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Visitas</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Visitas Agendadas</span>
                     <i class="fa-solid fa-calendar-check text-cyan-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-visitas" class="text-2xl font-black text-cyan-400 mt-1 block">0</span>
                 <span class="text-[10px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
                 </span>
 
                 <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
@@ -249,14 +250,14 @@
             <!-- CARD 4: PROPOSTAS FEITAS -->
             <div onclick="clicarCardFunil('Proposta')" 
                  id="card-funil-Proposta"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-purple-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-purple-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-4 border-l-4 border-l-purple-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-purple-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Propostas</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Propostas Feitas</span>
                     <i class="fa-solid fa-hand-holding-dollar text-purple-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-propostas" class="text-2xl font-black text-purple-400 mt-1 block">0</span>
                 <span class="text-[10px] text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
                 </span>
 
                 <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
@@ -272,14 +273,14 @@
             <!-- CARD 5: VENDAS CONCLUÍDAS -->
             <div onclick="clicarCardFunil('Fechado')" 
                  id="card-funil-Fechado"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-emerald-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-4 border-l-4 border-l-emerald-400 col-span-2 sm:col-span-1 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Concluídos</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Vendas Concluídas</span>
                     <i class="fa-solid fa-handshake text-emerald-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-fechados" class="text-2xl font-black text-emerald-400 mt-1 block">0</span>
                 <span class="text-[10px] text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
                 </span>
 
                 <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
@@ -289,52 +290,6 @@
                         <span>Estágio: Venda Fechada</span>
                     </div>
                     <p class="leading-relaxed">Contrato assinado e comissões calculadas. O imóvel é retirado da vitrine pública e registrado no módulo financeiro.</p>
-                </div>
-            </div>
-
-            <!-- CARD 6: CANCELADOS (NOVO) -->
-            <div onclick="clicarCardFunil('Cancelado')" 
-                 id="card-funil-Cancelado"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-rose-500 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-rose-400/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Cancelados</span>
-                    <i class="fa-solid fa-calendar-xmark text-rose-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
-                <span id="kpi-leads-cancelados" class="text-2xl font-black text-rose-400 mt-1 block">0</span>
-                <span class="text-[10px] text-rose-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-rose-500/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-rose-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-calendar-xmark"></i>
-                        <span>Estágio: Visita Cancelada</span>
-                    </div>
-                    <p class="leading-relaxed">Visitas desmarcadas ou canceladas antes do fechamento. Permite auditar motivos e tentar novo agendamento futuramente.</p>
-                </div>
-            </div>
-
-            <!-- CARD 7: PERDIDOS (NOVO) -->
-            <div onclick="clicarCardFunil('Perdido')" 
-                 id="card-funil-Perdido"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-slate-500 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-slate-400/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Perdidos</span>
-                    <i class="fa-solid fa-ban text-slate-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
-                <span id="kpi-leads-perdidos" class="text-2xl font-black text-slate-400 mt-1 block">0</span>
-                <span class="text-[10px] text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
-                </span>
-
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
-                <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-slate-600/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-slate-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-ban"></i>
-                        <span>Estágio: Oportunidade Encerrada</span>
-                    </div>
-                    <p class="leading-relaxed">Contatos sem perfil de compra, imóveis fora do orçamento ou sem resposta após tentativas. Mantidos para registro histórico.</p>
                 </div>
             </div>
 
@@ -1098,21 +1053,15 @@
             }
         }
 
-function atualizarMetricasFunil(leads) {
+        function atualizarMetricasFunil(leads) {
             document.getElementById('kpi-leads-novos').innerText = leads.filter(l => (l.status || 'Novo') === 'Novo').length;
             document.getElementById('kpi-leads-atendimento').innerText = leads.filter(l => l.status === 'Em Atendimento').length;
             document.getElementById('kpi-leads-visitas').innerText = leads.filter(l => l.status === 'Visita Agendada').length;
             document.getElementById('kpi-leads-propostas').innerText = leads.filter(l => l.status === 'Proposta').length;
             document.getElementById('kpi-leads-fechados').innerText = leads.filter(l => l.status === 'Fechado').length;
-
-            const elCancelados = document.getElementById('kpi-leads-cancelados');
-            if (elCancelados) elCancelados.innerText = leads.filter(l => l.status === 'Cancelado').length;
-
-            const elPerdidos = document.getElementById('kpi-leads-perdidos');
-            if (elPerdidos) elPerdidos.innerText = leads.filter(l => l.status === 'Perdido').length;
-
             document.getElementById('contador-leads').innerText = leads.length;
         }
+
         function formatarDataVisita(isoString) {
             if (!isoString) return '';
             const d = new Date(isoString);
@@ -1180,15 +1129,13 @@ function atualizarMetricasFunil(leads) {
             aplicarFiltros();
         }
 
- function atualizarDestaqueCardsFunil() {
+        function atualizarDestaqueCardsFunil() {
             const cardsIds = {
                 'Novo': 'card-funil-Novo',
                 'Em Atendimento': 'card-funil-Em-Atendimento',
                 'Visita Agendada': 'card-funil-Visita-Agendada',
                 'Proposta': 'card-funil-Proposta',
-                'Fechado': 'card-funil-Fechado',
-                'Cancelado': 'card-funil-Cancelado',
-                'Perdido': 'card-funil-Perdido'
+                'Fechado': 'card-funil-Fechado'
             };
 
             Object.keys(cardsIds).forEach(st => {
@@ -1201,6 +1148,7 @@ function atualizarMetricasFunil(leads) {
                 }
             });
         }
+
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
