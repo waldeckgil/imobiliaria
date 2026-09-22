@@ -189,8 +189,14 @@
             </div>
         </div>
 
-        <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
+
+        <!-- FAIXA DE ALERTAS INTELIGENTES: VISITAS DE HOJE E AMANHÃ -->
+    <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
+
+    <!-- COCKPIT GERENCIAL: GRADE DE CARDS COMPACTOS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5">
+
+        <!-- CARD 1: DISPONÍVEIS -->
             
             <!-- CARD 1: DISPONÍVEIS -->
             <div onclick="abrirDrilldown('disponiveis')" class="box-tech p-4 border-l-4 border-l-blue-500 cursor-pointer hover:scale-[1.02] hover:border-blue-400 hover:shadow-xl transition group bg-gradient-to-r from-blue-950/15 to-transparent">
@@ -413,7 +419,7 @@
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs text-slate-300 font-mono">
-                            <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
+                 <thead class="bg-slate-950 text-slate-500 text-[10px] uppercase font-bold border-b border-slate-800">
                                 <tr>
                                     <th class="py-2.5 px-3">Imóvel (Ref)</th>
                                     <th class="py-2.5 px-3">Vencimento</th>
@@ -423,11 +429,12 @@
                                     <th class="py-2.5 px-3">Retenção Imob</th>
                                     <th class="py-2.5 px-3">Locatário / Inquilino</th>
                                     <th class="py-2.5 px-3">Status Inquilino</th>
-                                    <th class="py-2.5 px-3 text-right">Status Repasse Dono</th>
+                                    <th class="py-2.5 px-3">Status Repasse Dono</th>
+                                    <th class="py-2.5 px-3 text-center">Ações / Recibo</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela-fin-locacoes-corpo" class="divide-y divide-slate-800/60 text-[11px]">
-                                <tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
+                                <tr><td colspan="10" class="py-6 text-center text-slate-500 font-sans">Carregando extrato de aluguéis...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -856,15 +863,24 @@
                     <p>Carregando dados do agendamento...</p>
                 </div>
             </div>
-
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
+<div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs gap-2 flex-wrap">
+                <a id="agendamento-modal-btn-zap" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow">
                     <i class="fa-brands fa-whatsapp text-sm"></i>
                     <span>Conversar no WhatsApp</span>
                 </a>
-                <button onclick="fecharModalAgendamento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
-                    Fechar Dossiê
-                </button>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button type="button" onclick="cancelarCompromissoAgenda()" class="bg-rose-950/80 hover:bg-rose-900 text-rose-300 hover:text-white border border-rose-800/80 font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow" title="Cancelar este compromisso e auditar">
+                        <i class="fa-solid fa-calendar-xmark text-xs"></i>
+                        <span>Cancelar Visita</span>
+                    </button>
+                    <button type="button" onclick="alternarBoxReagendamento()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow cursor-pointer">
+                        <i class="fa-solid fa-calendar-days text-xs"></i>
+                        <span>Reagendar Visita</span>
+                    </button>
+                    <button onclick="fecharModalAgendamento()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-3.5 rounded-xl transition cursor-pointer">
+                        Fechar Dossiê
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -929,6 +945,207 @@
                     Fechar
                 </button>
             </div>
+        </div>
+    </div>
+
+<!-- MODAL DE CONFIRMAÇÃO DO SISTEMA (CUSTOMIZADO DARK TECH) -->
+    <div id="modal-confirmacao-acao" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[90] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 border border-amber-500/50 shadow-2xl space-y-4 text-center toast-ativo">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl mx-auto shadow-inner">
+                <i class="fa-solid fa-pause"></i>
+            </div>
+            <div class="space-y-1.5">
+                <h3 id="modal-confirma-titulo" class="text-base font-black text-white uppercase tracking-wide">Pausar Publicação</h3>
+                <p id="modal-confirma-msg" class="text-xs text-slate-200">Deseja realmente pausar a publicação deste imóvel na vitrine?</p>
+                <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-950 p-2.5 rounded-lg border border-slate-800 mt-2 space-y-1.5 text-left">
+                    <p>Ele sairá do site público imediatamente, mas continuará disponível no seu estoque interno.</p>
+                    <p class="text-cyan-300 font-medium flex items-center gap-1.5 pt-1 border-t border-slate-900">
+                        <i class="fa-solid fa-circle-info text-cyan-400 flex-shrink-0"></i>
+                        <span>Para voltar a ativar este imóvel no site, acesse o <strong>Catálogo de Imóveis</strong>.</span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button id="btn-cancelar-confirma" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">
+                    Cancelar
+                </button>
+                <button id="btn-executar-confirma" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-amber-950/40 flex items-center gap-1.5">
+                    <i class="fa-solid fa-pause text-[10px]"></i>
+                    <span>Confirmar Pausa</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+<!-- MODAL DE BAIXA DE PAGAMENTO DE ALUGUEL COM COMPROVANTE -->
+    <div id="modal-baixa-aluguel" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[80] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 border border-emerald-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-emerald-400 font-black text-sm uppercase">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/40">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <span>Registrar Baixa de Aluguel</span>
+                </div>
+                <button type="button" onclick="fecharModalBaixaAluguel()" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 text-xs">
+                <div class="flex justify-between"><span class="text-slate-500">Locatário:</span><strong id="baixa-aluguel-inquilino" class="text-white uppercase font-bold">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Imóvel:</span><strong id="baixa-aluguel-imovel" class="text-cyan-300 font-mono">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Competência / Vencimento:</span><strong id="baixa-aluguel-competencia" class="text-amber-300 font-mono">---</strong></div>
+                <div class="flex justify-between pt-1 border-t border-slate-800"><span class="text-slate-400">Valor do Aluguel:</span><strong id="baixa-aluguel-valor" class="text-emerald-400 font-black font-mono text-sm">R$ 0,00</strong></div>
+            </div>
+
+            <form id="form-baixa-aluguel" onsubmit="confirmarBaixaAluguel(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="baixa-mensalidade-id">
+                
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Data Efetiva do Pagamento:</label>
+                    <input type="date" id="baixa-data-pagamento" required
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-emerald-400">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante Bancário (PDF ou Imagem):</label>
+                    <input type="file" id="baixa-arquivo-comprovante" accept=".pdf,.png,.jpg,.jpeg,.webp"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-cyan-300 hover:file:bg-slate-700 cursor-pointer">
+                    <span class="text-[10px] text-slate-500 mt-1 block">Ou cole o link/URL direta do comprovante caso já esteja hospedado:</span>
+                    <input type="url" id="baixa-url-comprovante" placeholder="https://..."
+                           class="w-full bg-slate-950 border border-slate-800 rounded-xl py-1.5 px-3 text-slate-300 text-xs mt-1 outline-none focus:border-emerald-400">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalBaixaAluguel()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-baixa-aluguel" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-emerald-950/40 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Recebimento</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- MODAL DE CONFIRMAÇÃO DE REPASSE AO PROPRIETÁRIO -->
+    <div id="modal-confirmar-repasse" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[80] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 border border-cyan-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-cyan-400 font-black text-sm uppercase">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/40">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <span>Confirmar Repasse ao Proprietário</span>
+                </div>
+                <button type="button" onclick="fecharModalRepasse()" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                <div class="flex justify-between"><span class="text-slate-500">Imóvel:</span><strong id="repasse-imovel-ref" class="text-cyan-300 font-mono">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Competência:</span><strong id="repasse-competencia" class="text-white font-mono">---</strong></div>
+                <div class="flex justify-between pt-1 border-t border-slate-800">
+                    <span class="text-slate-400">Valor Líquido do Dono:</span>
+                    <strong id="repasse-valor-liquido" class="text-emerald-400 font-black font-mono text-base">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <form id="form-confirmar-repasse" onsubmit="salvarConfirmacaoRepasse(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="repasse-mensalidade-id">
+                
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Data da Transferência / PIX:</label>
+                    <input type="date" id="repasse-data-efetiva" required
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalRepasse()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-repasse" class="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-cyan-950/40 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Repasse</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+<!-- MODAL DE LANÇAMENTO DE PAGAMENTO / ADIANTAMENTO AO CORRETOR -->
+    <div id="modal-pagar-corretor" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[85] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 border border-blue-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-blue-400 font-black text-sm uppercase">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/40">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </div>
+                    <span>Efetivar Pagamento ao Corretor</span>
+                </div>
+                <button type="button" onclick="fecharModalPagarCorretor()" class="text-slate-400 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                <div class="flex justify-between"><span class="text-slate-500">Corretor:</span><strong id="pgto-corretor-nome" class="text-white uppercase font-bold">---</strong></div>
+                <div class="flex justify-between"><span class="text-slate-500">Competência:</span><strong id="pgto-corretor-mes" class="text-cyan-300 font-mono">---</strong></div>
+                <div class="flex justify-between pt-1 border-t border-slate-800"><span class="text-slate-400">Saldo Pendente a Pagar:</span><strong id="pgto-corretor-saldo-pendente" class="text-amber-300 font-mono text-sm">R$ 0,00</strong></div>
+            </div>
+
+            <form id="form-pagar-corretor" onsubmit="salvarPagamentoCorretor(event)" class="space-y-3 text-xs">
+                <input type="hidden" id="pgto-corretor-id">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Valor do Pagamento (R$):</label>
+                        <input type="number" step="0.01" min="0.01" id="pgto-corretor-valor" required
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-emerald-400 font-mono font-bold text-sm outline-none focus:border-blue-400">
+                        <span class="text-[10px] text-slate-500 mt-0.5 block">Permite valor total ou parcial.</span>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Data do Pagamento:</label>
+                        <input type="date" id="pgto-corretor-data" required
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-blue-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Forma de Pagamento:</label>
+                        <select id="pgto-corretor-forma" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-blue-400">
+                            <option value="PIX">PIX</option>
+                            <option value="Transferência / TED">Transferência / TED</option>
+                            <option value="Dinheiro">Dinheiro em Espécie</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Observação / Referência:</label>
+                        <input type="text" id="pgto-corretor-obs" placeholder="Ex: Quitação comissão venda Ref 447"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-blue-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante Bancário (Opcional):</label>
+                    <input type="file" id="pgto-corretor-arquivo" accept=".pdf,.png,.jpg,.jpeg,.webp"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-blue-300 hover:file:bg-slate-700 cursor-pointer">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalPagarCorretor()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-pgto-corretor" class="px-5 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-blue-950/40 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Confirmar Pagamento</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -2654,8 +2871,8 @@
                         corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum imóvel ativo na vitrine no momento.</p>';
                         return;
                     }
-
-                    corpo.innerHTML = imoveis.map(im => `
+    
+corpo.innerHTML = imoveis.map(im => `
                         <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 hover:border-cyan-500/40 transition">
                             <div class="flex items-center gap-3">
                                 <img src="${im.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
@@ -2665,9 +2882,15 @@
                                     <span class="text-[11px] font-black text-cyan-300 block mt-0.5">R$ ${Number(im.valor_venda || im.valor_locacao || 0).toLocaleString('pt-BR')}</span>
                                 </div>
                             </div>
-                            <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
-                                Ver Raio-X
-                            </button>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <button onclick="pausarPublicacaoImovel('${im.id}', '${im.codigo_ref}')" class="bg-amber-950/60 hover:bg-amber-900 text-amber-300 border border-amber-800/80 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer flex items-center gap-1.5 shadow-sm" title="Pausar exibição na vitrine pública">
+                                    <i class="fa-solid fa-pause text-[10px]"></i>
+                                    <span>Pausar</span>
+                                </button>
+                                <button onclick="fecharDrilldown(); abrirModalDetalhesImovel('${im.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">
+                                    Ver Raio-X
+                                </button>
+                            </div>
                         </div>
                     `).join('');
 
@@ -2886,6 +3109,58 @@
             }
         }
 
+
+function pausarPublicacaoImovel(imovelId, codigoRef) {
+            if (!imovelId || !dadosImobiliaria) return;
+
+            const modal = document.getElementById('modal-confirmacao-acao');
+            const msgEl = document.getElementById('modal-confirma-msg');
+            const btnConfirmar = document.getElementById('btn-executar-confirma');
+            const btnCancelar = document.getElementById('btn-cancelar-confirma');
+
+            if (!modal) return;
+
+            if (msgEl) {
+                msgEl.innerHTML = `Deseja realmente pausar a publicação do imóvel <strong class="text-cyan-300 font-mono">Ref: ${codigoRef || ''}</strong> na vitrine?`;
+            }
+
+            modal.classList.remove('hidden');
+
+            // Recria os botões para limpar eventos de cliques antigos
+            const novoBtnConfirmar = btnConfirmar.cloneNode(true);
+            const novoBtnCancelar = btnCancelar.cloneNode(true);
+            btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
+            btnCancelar.parentNode.replaceChild(novoBtnCancelar, btnCancelar);
+
+            novoBtnCancelar.onclick = () => {
+                modal.classList.add('hidden');
+            };
+
+            novoBtnConfirmar.onclick = async () => {
+                modal.classList.add('hidden');
+                try {
+                    const { error } = await supabaseClient
+                        .from('imoveis')
+                        .update({ ativa: false })
+                        .eq('id', imovelId)
+                        .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                    if (error) throw error;
+
+                    exibirToast('sucesso', `Imóvel Ref: ${codigoRef || ''} pausado! Para reativar no site, acesse o Catálogo de Imóveis.`);
+
+                    // Recarrega contadores do Dashboard e a lista do modal em tempo real
+                    await carregarMetricas(dadosImobiliaria.id);
+                    await abrirDrilldown('imoveis-ativos');
+
+                } catch (err) {
+                    console.error('[PAUSAR IMÓVEL] Erro:', err);
+                    exibirToast('erro', 'Não foi possível pausar o imóvel. Tente novamente.');
+                }
+            };
+        }
+        window.pausarPublicacaoImovel = pausarPublicacaoImovel;
+
         function atalhoAbaFinanceira() {
             if (!temPermissaoFinanceira) return;
             const boxFin = document.getElementById('box-dashboard-financeiro');
@@ -2910,13 +3185,21 @@
             const mesRef = document.getElementById('filtro-mes-financeiro')?.value;
 
             try {
-                // 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA
+    // 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA E PAGAMENTOS DO MÊS
                 const { data: usuariosEquipe } = await supabaseClient
                     .from('usuarios')
                     .select('*')
                     .eq('imobiliaria_id', imobId);
                 
                 cacheUsuariosCorretores = usuariosEquipe || [];
+
+                const { data: pagamentosCorretoresData } = await supabaseClient
+                    .from('corretores_pagamentos')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId)
+                    .eq('mes_referencia', mesRef);
+                
+                window.cachePagamentosCorretoresMes = pagamentosCorretoresData || [];
 
                 // 2. LOCAÇÕES (MENSALIDADES RECEBÍVEIS)
                 let queryLoc = supabaseClient
@@ -2962,42 +3245,117 @@
                 document.getElementById('fin-kpi-repasse-proprietarios').innerText = repasseProprietariosTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('fin-kpi-repasse-realizado').innerText = `Repassado: ${repasseProprietariosFeito.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                 document.getElementById('fin-kpi-repasse-pendente').innerText = `Disponível/Aguard: ${repasseProprietariosPendente.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-
-                // TABELA 1: LOCAÇÕES COM DATA DE VENCIMENTO E STATUS SEMÂNTICO
+// TABELA 1: LOCAÇÕES COM DATA DE VENCIMENTO, ALERTA DE ATRASO E BAIXA
                 const tbodyLoc = document.getElementById('tabela-fin-locacoes-corpo');
                 if (tbodyLoc) {
                     if (!mensalidades || mensalidades.length === 0) {
-                        tbodyLoc.innerHTML = '<tr><td colspan="9" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês de referência.</td></tr>';
+                        tbodyLoc.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-slate-500 font-sans">Nenhum recebível de locação para este mês de referência.</td></tr>';
                     } else {
+                        const hojeBase = new Date();
+                        hojeBase.setHours(0, 0, 0, 0);
+
                         tbodyLoc.innerHTML = mensalidades.map(m => {
                             const refImob = m.imoveis?.codigo_ref || '---';
                             const vencFmt = m.data_vencimento ? m.data_vencimento.split('-').reverse().join('/') : '--/--/----';
                             const inquilinoNome = m.contratos_locacao?.cliente_nome || 'Inquilino em Contrato';
                             const cliId = m.contratos_locacao?.cliente_id || '';
                             const cliCpf = m.contratos_locacao?.cliente_cpf_cnpj || '';
+                            const ehPago = (m.status_inquilino === 'Pago');
 
-                            // STATUS SEMÂNTICO INTELIGENTE DO REPASSE AO DONO
+                            // CÁLCULO PRECISO DE ATRASO / DIAS RESTANTES
+                            let badgeStatusInquilino = '';
+                            if (ehPago) {
+                                const dtPgtoFmt = m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : '';
+                                badgeStatusInquilino = `
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
+                                        <i class="fa-solid fa-circle-check text-[8px]"></i> PAGO ${dtPgtoFmt ? `(${dtPgtoFmt})` : ''}
+                                    </span>
+                                `;
+                            } else if (m.data_vencimento) {
+                                const [aV, mV, dV] = m.data_vencimento.split('-').map(Number);
+                                const dtVenc = new Date(aV, mV - 1, dV);
+                                const diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+
+                                if (diffDias > 0) {
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-rose-950 text-rose-300 border border-rose-600 animate-pulse flex items-center gap-1">
+                                            <i class="fa-solid fa-triangle-exclamation text-[8px] text-rose-400"></i> ATRASADO (${diffDias}d)
+                                        </span>
+                                    `;
+                                } else if (diffDias === 0) {
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-600 flex items-center gap-1">
+                                            <i class="fa-solid fa-clock text-[8px]"></i> VENCE HOJE
+                                        </span>
+                                    `;
+                                } else {
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-900 text-slate-400 border border-slate-700">
+                                            A VENCER (${Math.abs(diffDias)}d)
+                                        </span>
+                                    `;
+                                }
+                            } else {
+                                badgeStatusInquilino = `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400">PENDENTE</span>`;
+                            }
+
+// STATUS SEMÂNTICO DO REPASSE AO DONO COM AÇÃO INTERATIVA
                             let badgeRepasseHtml = '';
-                            if (m.status_inquilino !== 'Pago') {
+                            if (!ehPago) {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 justify-end ml-auto w-fit" title="O repasse aguarda o pagamento do inquilino">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 w-fit" title="O repasse aguarda a quitação do aluguel pelo inquilino">
                                         <i class="fa-solid fa-hourglass-half text-[8px]"></i> Aguardando Pgto Inquilino
                                     </span>
                                 `;
-                            } else if (m.status_inquilino === 'Pago' && m.status_repasse !== 'Repassado') {
+                            } else if (m.status_repasse !== 'Repassado') {
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1 justify-end ml-auto w-fit" title="Inquilino pagou! Liberado para repasse ao proprietário">
-                                        <i class="fa-solid fa-hand-holding-dollar text-[8px]"></i> Disponível p/ Repasse
-                                    </span>
+                                    <button type="button" onclick="abrirModalConfirmarRepasse('${m.id}', '${refImob}', '${m.mes_referencia}', ${Number(m.valor_repasse_proprietario || 0)})"
+                                            class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-md shadow-cyan-950 flex items-center gap-1.5 transition cursor-pointer" title="Clique para registrar a transferência ao proprietário">
+                                        <i class="fa-solid fa-hand-holding-dollar text-[10px]"></i>
+                                        <span>Efetivar Repasse</span>
+                                    </button>
                                 `;
                             } else {
+                                const dtRepasseFmt = m.data_repasse ? m.data_repasse.split('-').reverse().join('/') : '';
                                 badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 justify-end ml-auto w-fit">
-                                        <i class="fa-solid fa-circle-check text-[8px]"></i> Repassado ao Dono
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 w-fit" title="Repasse concluído">
+                                        <i class="fa-solid fa-circle-check text-[8px]"></i> Repassado ao Dono ${dtRepasseFmt ? `(${dtRepasseFmt})` : ''}
                                     </span>
                                 `;
                             }
 
+// COLUNA DE AÇÕES: SEPARAÇÃO REAL ENTRE BAIXA E APENAS ANEXO DE RECIBO
+                            let acoesHtml = '';
+                            const dtPgtoFormatada = m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : '';
+
+                            if (!ehPago) {
+                                acoesHtml = `
+                                    <button type="button" onclick="abrirModalBaixaAluguel('${m.id}', '${(inquilinoNome).replace(/'/g, "\\'")}', '${refImob}', '${m.mes_referencia}', '${vencFmt}', ${Number(m.valor_aluguel || 0)}, false, '')"
+                                            class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition shadow cursor-pointer whitespace-nowrap mx-auto">
+                                        <i class="fa-solid fa-check text-[9px]"></i> Dar Baixa
+                                    </button>
+                                `;
+                            } else {
+                                acoesHtml = `
+                                    <div class="flex items-center justify-center gap-1.5">
+                                        ${m.comprovante_url ? `
+                                            <a href="${m.comprovante_url}" target="_blank" class="bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-700 px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition" title="Inspecionar Comprovante">
+                                                <i class="fa-solid fa-eye text-xs"></i> <span>Ver Recibo</span>
+                                            </a>
+                                            <button type="button" onclick="abrirModalBaixaAluguel('${m.id}', '${(inquilinoNome).replace(/'/g, "\\'")}', '${refImob}', '${m.mes_referencia}', '${vencFmt}', ${Number(m.valor_aluguel || 0)}, true, '${dtPgtoFormatada}')"
+                                                    class="text-slate-500 hover:text-cyan-300 p-1 transition cursor-pointer" title="Substituir Comprovante">
+                                                <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                            </button>
+                                        ` : `
+                                            <button type="button" onclick="abrirModalBaixaAluguel('${m.id}', '${(inquilinoNome).replace(/'/g, "\\'")}', '${refImob}', '${m.mes_referencia}', '${vencFmt}', ${Number(m.valor_aluguel || 0)}, true, '${dtPgtoFormatada}')"
+                                                    class="bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 hover:border-cyan-500 px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition cursor-pointer shadow-sm">
+                                                <i class="fa-solid fa-paperclip text-[10px]"></i>
+                                                <span>+ Anexar Recibo</span>
+                                            </button>
+                                        `}
+                                    </div>
+                                `;
+                            }
                             return `
                                 <tr>
                                     <td class="py-2.5 px-3">
@@ -3016,12 +3374,9 @@
                                             ${inquilinoNome}
                                         </button>
                                     </td>
-                                    <td class="py-2.5 px-3">
-                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_inquilino === 'Pago' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'}">
-                                            ${m.status_inquilino || 'Pendente'}
-                                        </span>
-                                    </td>
-                                    <td class="py-2.5 px-3 text-right">${badgeRepasseHtml}</td>
+                                    <td class="py-2.5 px-3">${badgeStatusInquilino}</td>
+                                    <td class="py-2.5 px-3">${badgeRepasseHtml}</td>
+                                    <td class="py-2.5 px-3 text-center">${acoesHtml}</td>
                                 </tr>
                             `;
                         }).join('');
@@ -3211,13 +3566,18 @@
         }
 
         function renderizarSecaoCorretores() {
-            // 1. CARDS RESUMO POR CORRETOR (TOTAL DE GANHOS NO MÊS)
+  
+
+            // 2. TABELA DE ITENS COM FILTRO ATIVO
+            const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
+            if (!tbodyCorretores) return;
+// 1. CARDS RESUMO POR CORRETOR COM SALDO GERADO, PAGO E PENDENTE
             const containerCards = document.getElementById('cards-resumo-corretores');
             if (containerCards) {
                 const mapaGanhosCorretor = {};
 
                 cacheOperacoesFinanceirasCorretores.forEach(op => {
-                    const chave = op.corretor_id || op.corretor_nome;
+                    const chave = String(op.corretor_id || op.corretor_nome);
                     if (!mapaGanhosCorretor[chave]) {
                         mapaGanhosCorretor[chave] = {
                             corretor_id: op.corretor_id,
@@ -3225,6 +3585,7 @@
                             totalVenda: 0,
                             totalLocacao: 0,
                             totalGeral: 0,
+                            totalPago: 0,
                             qtdVendas: 0,
                             qtdLocacoes: 0
                         };
@@ -3239,43 +3600,53 @@
                     mapaGanhosCorretor[chave].totalGeral += op.valor_comissao;
                 });
 
+                // Abate os pagamentos já feitos a partir do cache de pagamentos
+                if (window.cachePagamentosCorretoresMes) {
+                    window.cachePagamentosCorretoresMes.forEach(pg => {
+                        const chave = String(pg.corretor_id);
+                        if (mapaGanhosCorretor[chave]) {
+                            mapaGanhosCorretor[chave].totalPago += Number(pg.valor_pago || 0);
+                        }
+                    });
+                }
+
                 const corretoresArray = Object.values(mapaGanhosCorretor);
 
                 if (corretoresArray.length === 0) {
                     containerCards.innerHTML = '<p class="text-slate-500 text-xs py-2 col-span-full italic">Nenhum repasse a corretores registrado para o mês selecionado.</p>';
                 } else {
-                    containerCards.innerHTML = corretoresArray.map(c => `
-                        <div class="bg-slate-950 p-3.5 rounded-xl border border-blue-900/40 hover:border-blue-400 transition space-y-2 group shadow-sm">
-                            <div class="flex items-start justify-between">
-                                <div class="min-w-0">
-                                    <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="font-bold text-white text-xs block truncate uppercase hover:text-blue-300 transition text-left">
-                                        ${c.nome}
+                    containerCards.innerHTML = corretoresArray.map(c => {
+                        const saldoPendente = Math.max(0, c.totalGeral - c.totalPago);
+                        const quitado = (c.totalGeral > 0 && saldoPendente === 0);
+
+                        return `
+                            <div class="bg-slate-950 p-3.5 rounded-xl border ${quitado ? 'border-emerald-500/50' : 'border-blue-900/40'} hover:border-blue-400 transition space-y-2 group shadow-sm">
+                                <div class="flex items-start justify-between">
+                                    <div class="min-w-0">
+                                        <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="font-bold text-white text-xs block truncate uppercase hover:text-blue-300 transition text-left">
+                                            ${c.nome}
+                                        </button>
+                                        <span class="text-[10px] text-slate-400 font-mono block">Equipe de Vendas & Locações</span>
+                                    </div>
+                                    <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="w-6 h-6 rounded-lg bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center text-[10px] group-hover:scale-110 transition cursor-pointer" title="Ver Dossiê e Realizar Pagamento">
+                                        <i class="fa-solid fa-eye"></i>
                                     </button>
-                                    <span class="text-[10px] text-slate-400 font-mono block">Equipe de Vendas & Locações</span>
                                 </div>
-                                <button type="button" onclick="window.abrirDossieCorretor('${c.corretor_id || ''}', '${c.nome.replace(/'/g, "\\'")}')" class="w-6 h-6 rounded-lg bg-blue-950 text-blue-400 border border-blue-800 flex items-center justify-center text-[10px] group-hover:scale-110 transition" title="Ver Dossiê">
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
-                            </div>
 
-                            <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[11px] flex items-center justify-between font-mono">
-                                <span class="text-slate-400 text-[10px]">Total a Receber:</span>
-                                <strong class="text-cyan-300 font-black">R$ ${c.totalGeral.toLocaleString('pt-BR')}</strong>
-                            </div>
+                                <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[11px] flex items-center justify-between font-mono">
+                                    <span class="text-slate-400 text-[10px]">Saldo a Pagar:</span>
+                                    <strong class="${saldoPendente > 0 ? 'text-amber-300' : 'text-emerald-400'} font-black">R$ ${saldoPendente.toLocaleString('pt-BR')}</strong>
+                                </div>
 
-                            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
-                                <span class="text-amber-300 font-mono">${c.qtdVendas} Venda(s): R$ ${c.totalVenda.toLocaleString('pt-BR')}</span>
-                                <span class="text-purple-300 font-mono">${c.qtdLocacoes} Locação(ões): R$ ${c.totalLocacao.toLocaleString('pt-BR')}</span>
+                                <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
+                                    <span class="text-slate-400 font-mono">Gerado: R$ ${c.totalGeral.toLocaleString('pt-BR')}</span>
+                                    <span class="text-emerald-400 font-mono font-bold">Pago: R$ ${c.totalPago.toLocaleString('pt-BR')}</span>
+                                </div>
                             </div>
-                        </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 }
             }
-
-            // 2. TABELA DE ITENS COM FILTRO ATIVO
-            const tbodyCorretores = document.getElementById('tabela-fin-corretores-corpo');
-            if (!tbodyCorretores) return;
-
             let itensFiltrados = cacheOperacoesFinanceirasCorretores;
             if (filtroOperacaoAtiva === 'venda') {
                 itensFiltrados = cacheOperacoesFinanceirasCorretores.filter(op => op.tipo_operacao === 'venda');
@@ -3326,8 +3697,7 @@
                 `;
             }).join('');
         }
-
-        // =========================================================================
+// =========================================================================
         // MOTOR DO DOSSIÊ DO CORRETOR / FUNCIONÁRIO (FICHA COMERCIAL & HISTÓRICO)
         // =========================================================================
         async function abrirDossieCorretor(corretorId, corretorNome) {
@@ -3373,7 +3743,7 @@
                     };
                 }
 
-                titulo.innerText = `Dossiê Comercial • ${corretor.nome_completo.toUpperCase()}`;
+                titulo.innerText = `Dossiê Comercial • ${(corretor.nome_completo || '').toUpperCase()}`;
 
                 const zapLimpo = ('' + (corretor.whatsapp || '')).replace(/\D/g, '');
                 btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${corretor.nome_completo}! Gostaria de falar sobre o fechamento das suas comissões.`)}` : '#';
@@ -3388,6 +3758,23 @@
                 const totalVendasGanhos = minhasOps.filter(o => o.tipo_operacao === 'venda').reduce((acc, o) => acc + o.valor_comissao, 0);
                 const totalLocacaoGanhos = minhasOps.filter(o => o.tipo_operacao === 'locacao').reduce((acc, o) => acc + o.valor_comissao, 0);
                 const totalGeralGanhos = totalVendasGanhos + totalLocacaoGanhos;
+
+                // Histórico de pagamentos já efetuados a este corretor nesta competência
+                const mesRefAtual = document.getElementById('filtro-mes-financeiro')?.value || '';
+                let pagamentosFeitos = [];
+                if (corretor.id) {
+                    const { data: pgsData } = await supabaseClient
+                        .from('corretores_pagamentos')
+                        .select('*')
+                        .eq('imobiliaria_id', dadosImobiliaria.id)
+                        .eq('corretor_id', corretor.id)
+                        .eq('mes_referencia', mesRefAtual)
+                        .order('data_pagamento', { ascending: false });
+                    pagamentosFeitos = pgsData || [];
+                }
+
+                const totalJaPago = pagamentosFeitos.reduce((acc, p) => acc + Number(p.valor_pago || 0), 0);
+                const saldoPendentePagar = Math.max(0, totalGeralGanhos - totalJaPago);
 
                 corpo.innerHTML = `
                     <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
@@ -3406,54 +3793,81 @@
                             <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-cyan-300 font-mono">${corretor.whatsapp || 'Não informado'}</strong></div>
                             <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-slate-200">${corretor.email || 'Não informado'}</strong></div>
                         </div>
+                    </div>
 
-                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 bg-slate-900/60 p-2.5 rounded-lg text-center font-mono">
+                    <!-- CONCILIAÇÃO FINANCEIRA COM BOTÃO DE PAGAMENTO INTEGRADO -->
+                    <div class="bg-slate-950 p-4 rounded-xl border border-blue-500/30 space-y-3">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-800 pb-2">
                             <div>
-                                <span class="text-slate-400 text-[10px] block">Comissão Padrão (Venda)</span>
-                                <strong class="text-amber-300 text-sm">${corretor.comissao_venda_pct || 0}%</strong>
+                                <span class="text-[10px] uppercase font-black tracking-wider text-blue-400 block">Conciliação Financeira (${mesRefAtual})</span>
+                                <h4 class="text-sm font-bold text-white">Saldo de Comissões & Repasses</h4>
                             </div>
-                            <div>
-                                <span class="text-slate-400 text-[10px] block">Comissão Padrão (Locação)</span>
-                                <strong class="text-purple-300 text-sm">${corretor.comissao_locacao_pct || 0}%</strong>
+                            <button type="button" onclick="abrirModalPagarCorretor(${corretor.id || 'null'}, '${(corretor.nome_completo || '').replace(/'/g, "\\'")}', '${mesRefAtual}', ${saldoPendentePagar})"
+                                    class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow transition cursor-pointer">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                                <span>Efetivar Pagamento / Adiantamento</span>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-[10px] block">Total Gerado</span>
+                                <strong class="text-cyan-300 font-bold text-xs">R$ ${totalGeralGanhos.toLocaleString('pt-BR')}</strong>
+                            </div>
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-[10px] block">Total Já Pago</span>
+                                <strong class="text-emerald-400 font-bold text-xs">R$ ${totalJaPago.toLocaleString('pt-BR')}</strong>
+                            </div>
+                            <div class="bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                                <span class="text-slate-400 text-[10px] block">Saldo Restante</span>
+                                <strong class="${saldoPendentePagar > 0 ? 'text-amber-300' : 'text-emerald-400'} font-black text-xs">R$ ${saldoPendentePagar.toLocaleString('pt-BR')}</strong>
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-3 pt-2">
-                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <h4 class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
-                                <i class="fa-solid fa-coins"></i> Total a Receber no Mês Selecionado
-                            </h4>
-                            <span class="text-cyan-300 font-mono font-bold text-sm">R$ ${totalGeralGanhos.toLocaleString('pt-BR')}</span>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2 text-center text-[11px] font-mono">
-                            <div class="bg-slate-950 p-2 rounded-lg border border-amber-900/40">
-                                <span class="text-slate-500 block text-[10px]">Ganhos de Vendas</span>
-                                <strong class="text-amber-300 font-bold">R$ ${totalVendasGanhos.toLocaleString('pt-BR')}</strong>
-                            </div>
-                            <div class="bg-slate-950 p-2 rounded-lg border border-purple-900/40">
-                                <span class="text-slate-500 block text-[10px]">Ganhos de Locações</span>
-                                <strong class="text-purple-300 font-bold">R$ ${totalLocacaoGanhos.toLocaleString('pt-BR')}</strong>
-                            </div>
-                        </div>
-
-                        <div class="space-y-2 pt-2">
-                            <span class="text-[10px] uppercase font-bold text-slate-400 block">Itens Fechados no Período:</span>
-                            ${minhasOps.length === 0 ? '<p class="text-slate-500 italic py-2">Nenhuma operação fechada por este corretor no mês selecionado.</p>' : 
-                            minhasOps.map(op => `
-                                <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-[11px]">
+                    <!-- HISTÓRICO DE PAGAMENTOS REALIZADOS A ESTE CORRETOR -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-[10px] uppercase font-bold text-emerald-400 block flex items-center gap-1">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pagamentos Realizados (${pagamentosFeitos.length}):
+                        </span>
+                        ${pagamentosFeitos.length === 0 ? '<p class="text-slate-500 italic text-[11px] py-1">Nenhum pagamento efetuado para este corretor nesta competência.</p>' : 
+                        pagamentosFeitos.map(pg => {
+                            const dtFmt = pg.data_pagamento ? new Date(pg.data_pagamento).toLocaleString('pt-BR') : '--/--/----';
+                            return `
+                                <div class="bg-slate-950 p-2.5 rounded-xl border border-emerald-900/40 flex items-center justify-between text-[11px] font-mono">
                                     <div>
-                                        <span class="font-bold text-white uppercase">${op.tipo_label} • Ref: ${op.imovel_ref}</span>
-                                        <span class="text-[10px] text-slate-400 block">Cliente: ${op.cliente_nome} (${op.data_ref})</span>
+                                        <span class="text-white font-bold block">${pg.forma_pagamento || 'PIX'} • ${dtFmt}</span>
+                                        ${pg.observacoes ? `<span class="text-[10px] text-slate-400 block font-sans">${pg.observacoes}</span>` : ''}
                                     </div>
-                                    <div class="text-right font-mono">
-                                        <strong class="text-cyan-300 block">R$ ${op.valor_comissao.toLocaleString('pt-BR')}</strong>
-                                        <span class="text-[9px] text-slate-400">${op.pct_corretor}% comissão</span>
+                                    <div class="flex items-center gap-2">
+                                        <strong class="text-emerald-400 text-xs">R$ ${Number(pg.valor_pago).toLocaleString('pt-BR')}</strong>
+                                        ${pg.comprovante_url ? `
+                                            <a href="${pg.comprovante_url}" target="_blank" class="text-cyan-400 hover:underline text-[10px] flex items-center gap-0.5">
+                                                <i class="fa-solid fa-paperclip"></i> Recibo
+                                            </a>
+                                        ` : ''}
                                     </div>
                                 </div>
-                            `).join('')}
-                        </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <!-- LISTAGEM DE FECHAMENTOS QUE GERARAM A COMISSÃO -->
+                    <div class="space-y-2 pt-2 border-t border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Operações Fechadas no Período:</span>
+                        ${minhasOps.length === 0 ? '<p class="text-slate-500 italic py-2">Nenhuma operação fechada por este corretor no mês selecionado.</p>' : 
+                        minhasOps.map(op => `
+                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex items-center justify-between text-[11px]">
+                                <div>
+                                    <span class="font-bold text-white uppercase">${op.tipo_label} • Ref: ${op.imovel_ref}</span>
+                                    <span class="text-[10px] text-slate-400 block">Cliente: ${op.cliente_nome} (${op.data_ref})</span>
+                                </div>
+                                <div class="text-right font-mono">
+                                    <strong class="text-cyan-300 block">R$ ${op.valor_comissao.toLocaleString('pt-BR')}</strong>
+                                    <span class="text-[9px] text-slate-400">${op.pct_corretor}% comissão</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 `;
 
@@ -3462,7 +3876,6 @@
                 corpo.innerHTML = '<p class="text-center text-red-400 text-xs py-8">Erro ao carregar dossiê do corretor.</p>';
             }
         }
-
         function fecharModalDossieCorretor() {
             const modal = document.getElementById('modal-dossie-corretor');
             if (modal) modal.classList.add('hidden');
@@ -3474,7 +3887,9 @@
         // =========================================================================
         // MOTOR DA AGENDA DE VISITAS & ATENDIMENTOS
         // =========================================================================
-        async function carregarAgendaMes() {
+
+
+async function carregarAgendaMes() {
             if (!dadosImobiliaria) return;
 
             const labelMesAno = document.getElementById('label-mes-ano-agenda');
@@ -3524,12 +3939,112 @@
                     selecionarDiaAgenda(dataIsoSelecionadaAgenda);
                 }
 
+                // Dispara os alertas inteligentes no topo do painel
+                await verificarAlertasTopoVisitas(dadosImobiliaria.id);
+
             } catch (err) {
                 console.error('[AGENDA] Erro ao carregar agendamentos:', err);
             }
         }
 
-        function renderizarGradeCalendario() {
+        async function verificarAlertasTopoVisitas(imobId) {
+            const container = document.getElementById('container-alertas-agendamentos');
+            if (!container) return;
+
+            const agora = new Date();
+            const hojeStr = `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}-${String(agora.getDate()).padStart(2, '0')}`;
+            
+            const amanha = new Date(agora);
+            amanha.setDate(agora.getDate() + 1);
+            const amanhaStr = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, '0')}-${String(amanha.getDate()).padStart(2, '0')}`;
+
+            try {
+                const { data: visitas, error } = await supabaseClient
+                    .from('leads_contatos')
+                    .select('id, nome, whatsapp, data_agendamento, imovel_id, notas_agendamento')
+                    .eq('imobiliaria_id', imobId)
+                    .gte('data_agendamento', `${hojeStr}T00:00:00`)
+                    .lte('data_agendamento', `${amanhaStr}T23:59:59`)
+                    .order('data_agendamento', { ascending: true });
+
+                if (error || !visitas || visitas.length === 0) {
+                    container.classList.add('hidden');
+                    container.innerHTML = '';
+                    return;
+                }
+
+                // Busca dados dos imóveis para os alertas
+                const imovelIds = visitas.map(v => v.imovel_id).filter(Boolean);
+                let mapaImoveis = {};
+                if (imovelIds.length > 0) {
+                    const { data: ims } = await supabaseClient
+                        .from('imoveis')
+                        .select('id, codigo_ref, titulo')
+                        .in('id', imovelIds);
+                    (ims || []).forEach(im => { mapaImoveis[im.id] = im; });
+                }
+
+                container.innerHTML = visitas.map(v => {
+                    const dataChave = v.data_agendamento ? v.data_agendamento.split('T')[0] : '';
+                    const ehHoje = (dataChave === hojeStr);
+                    const horaFmt = v.data_agendamento ? new Date(v.data_agendamento).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
+                    const zapLimpo = ('' + (v.whatsapp || '')).replace(/\D/g, '');
+                    const imovel = v.imovel_id ? mapaImoveis[v.imovel_id] : null;
+
+let estiloCard = ehHoje 
+                        ? 'border-amber-400 bg-gradient-to-r from-amber-950/50 via-slate-900 to-slate-950 shadow-amber-950/50 border-l-4' 
+                        : 'border-cyan-500/80 bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 shadow-cyan-950/30 border-l-4';
+                    
+                    let badgeTopo = ehHoje 
+                        ? '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-400 text-slate-950 shadow-md shadow-amber-950 animate-pulse flex items-center gap-1"><i class="fa-solid fa-bell text-slate-950"></i> VISITA MARCADA PARA HOJE</span>'
+                        : '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1"><i class="fa-solid fa-clock"></i> VISITA AGENDADA PARA AMANHÃ</span>';
+
+                    return `
+                        <div class="box-tech p-3.5 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl transition ${estiloCard}">
+                            <div class="flex items-start sm:items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl ${ehHoje ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-inner' : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'} flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        ${badgeTopo}
+                                        <span class="text-amber-300 font-mono font-black text-xs bg-slate-950 px-2 py-0.5 rounded border border-amber-500/40">
+                                            ${horaFmt}
+                                        </span>
+                                        <strong class="text-white uppercase font-black tracking-wide">${v.nome}</strong>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400 flex items-center gap-1.5 flex-wrap">
+                                        ${imovel ? `
+                                            <span class="text-cyan-300 font-mono font-bold">Ref: ${imovel.codigo_ref}</span>
+                                            <span>• ${imovel.titulo}</span>
+                                        ` : '<span>Visita geral com cliente</span>'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
+                                ${zapLimpo ? `
+                                    <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i> Chamar
+                                    </a>
+                                ` : ''}
+                                <button type="button" onclick="abrirDossieAgendamento('${v.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer flex items-center gap-1 border border-slate-700">
+                                    <i class="fa-solid fa-file-lines text-xs"></i>
+                                    <span>Ver Ficha</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.classList.remove('hidden');
+
+            } catch (err) {
+                console.error('[ALERTAS TOPO] Erro:', err);
+            }
+        }
+
+  function renderizarGradeCalendario() {
             const grid = document.getElementById('grid-calendario-dias');
             if (!grid) return;
             grid.innerHTML = '';
@@ -3542,7 +4057,7 @@
 
             for (let i = 0; i < primeiroDiaSemana; i++) {
                 const cellVazia = document.createElement('div');
-                cellVazia.className = 'h-11 rounded-lg bg-slate-950/30 border border-slate-900/50 opacity-20';
+                cellVazia.className = 'h-12 rounded-xl bg-slate-950/30 border border-slate-900/40 opacity-20';
                 grid.appendChild(cellVazia);
             }
 
@@ -3557,30 +4072,47 @@
                 cell.type = 'button';
                 cell.onclick = () => selecionarDiaAgenda(dataChave);
 
-                let estiloBorda = 'border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-300';
+                // HIERARQUIA VISUAL DE ESTILOS DO BOX
+                let estiloBox = 'border border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-400';
 
                 if (ehSelecionado) {
-                    estiloBorda = 'border-blue-500 bg-blue-600 text-white font-black shadow-lg shadow-blue-950';
+                    estiloBox = 'border-2 border-blue-400 bg-blue-600 text-white font-black shadow-xl shadow-blue-950 scale-[1.03] z-10';
+                } else if (ehHoje && temVisitas) {
+                    estiloBox = 'border-2 border-amber-400 bg-gradient-to-b from-amber-950/60 to-cyan-950/70 text-amber-300 font-black shadow-lg shadow-amber-950/60 ring-2 ring-cyan-500/40';
                 } else if (ehHoje) {
-                    estiloBorda = 'border-amber-400 bg-amber-950/30 text-amber-300 font-bold';
+                    estiloBox = 'border-2 border-amber-400 bg-amber-950/30 text-amber-300 font-bold';
+                } else if (temVisitas) {
+                    // BOX TOTALMENTE DESTACADO PARA DIAS COM VISITAS
+                    estiloBox = 'border-2 border-cyan-400/90 bg-cyan-950/60 hover:bg-cyan-900/70 text-cyan-200 font-black shadow-lg shadow-cyan-950/80 ring-1 ring-cyan-400/30';
                 }
 
-                cell.className = `h-11 rounded-lg border p-1 flex flex-col justify-between items-center transition cursor-pointer relative ${estiloBorda}`;
+                // INDICADOR DE VISITAS CHAMATIVO (PÍLULA COM CONTADOR)
+                let indicadorVisitasHtml = '<span class="h-3"></span>';
+                if (temVisitas) {
+                    if (ehSelecionado) {
+                        indicadorVisitasHtml = `
+                            <span class="px-1.5 py-0.5 rounded-full bg-white text-blue-700 text-[9px] font-black font-mono shadow flex items-center gap-0.5">
+                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
+                            </span>
+                        `;
+                    } else {
+                        indicadorVisitasHtml = `
+                            <span class="px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[9px] font-black font-mono shadow-md shadow-cyan-400/50 flex items-center gap-0.5 animate-pulse">
+                                <i class="fa-solid fa-check text-[7px]"></i> ${qtdVisitas}
+                            </span>
+                        `;
+                    }
+                }
+
+                cell.className = `h-12 rounded-xl p-1 flex flex-col justify-between items-center transition-all duration-200 cursor-pointer relative ${estiloBox}`;
                 cell.innerHTML = `
-                    <span class="text-xs ${ehSelecionado ? 'text-white' : ''}">${dia}</span>
-                    
-                    ${temVisitas ? `
-                        <div class="flex items-center gap-0.5">
-                            <span class="w-2 h-2 rounded-full ${ehSelecionado ? 'bg-white' : 'bg-cyan-400 shadow shadow-cyan-400/80'}"></span>
-                            ${qtdVisitas > 1 ? `<span class="text-[9px] font-bold ${ehSelecionado ? 'text-white' : 'text-cyan-300'} font-mono">${qtdVisitas}</span>` : ''}
-                        </div>
-                    ` : '<span class="h-2"></span>'}
+                    <span class="text-xs ${ehSelecionado ? 'text-white' : (temVisitas ? 'text-cyan-300 font-black' : '')}">${dia}</span>
+                    ${indicadorVisitasHtml}
                 `;
 
                 grid.appendChild(cell);
             }
         }
-
         function selecionarDiaAgenda(dataIso) {
             dataIsoSelecionadaAgenda = dataIso;
             renderizarGradeCalendario();
@@ -3674,6 +4206,8 @@
             if (modal) modal.classList.add('hidden');
         }
 
+let leadAtualEmEdicao = null;
+
         async function abrirDossieAgendamento(leadId) {
             const modal = document.getElementById('modal-dash-agendamento');
             const corpo = document.getElementById('agendamento-modal-conteudo');
@@ -3690,23 +4224,58 @@
             if (modal) modal.classList.remove('hidden');
 
             try {
+                // 1. Busca direta no banco sem joins rígidos (elimina o erro de PGRST200)
                 const { data: lead, error } = await supabaseClient
                     .from('leads_contatos')
-                    .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro, valor_venda, valor_locacao), usuarios(nome_completo)')
+                    .select('*')
                     .eq('id', leadId)
                     .single();
 
                 if (error || !lead) throw new Error('Agendamento não localizado.');
+                leadAtualEmEdicao = lead;
+
+                // 2. Busca segura do imóvel vinculado (se houver)
+                let imovel = null;
+                if (lead.imovel_id) {
+                    const { data: im } = await supabaseClient
+                        .from('imoveis')
+                        .select('id, codigo_ref, titulo, foto_capa, bairro, valor_venda, valor_locacao')
+                        .eq('id', lead.imovel_id)
+                        .maybeSingle();
+                    imovel = im;
+                }
+
+                // 3. Busca segura do corretor responsável (se houver)
+                let corretorNome = 'Não atribuído';
+                if (lead.corretor_atribuido_id) {
+                    const { data: us } = await supabaseClient
+                        .from('usuarios')
+                        .select('nome_completo')
+                        .eq('id', lead.corretor_atribuido_id)
+                        .maybeSingle();
+                    if (us && us.nome_completo) corretorNome = us.nome_completo;
+                }
 
                 const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '');
                 if (btnZap) {
-                    btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}` : '#';
+                    btnZap.href = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(`Olá ${lead.nome}! Sou da imobiliária e estou entrando em contato para confirmar sua visita.`)}` : '#';
                     btnZap.style.display = zapLimpo ? 'inline-flex' : 'none';
                 }
 
                 const dataFormatada = lead.data_agendamento ? new Date(lead.data_agendamento).toLocaleString('pt-BR') : 'Data não definida';
-                const imovel = lead.imoveis || null;
-                const corretorNome = lead.usuarios ? lead.usuarios.nome_completo : 'Não atribuído';
+// Prepara data (YYYY-MM-DD) e hora (HH:mm) para os inputs visuais
+                let valorInputData = '';
+                let valorInputHora = '10:00';
+                if (lead.data_agendamento) {
+                    const dt = new Date(lead.data_agendamento);
+                    const ano = dt.getFullYear();
+                    const mes = String(dt.getMonth() + 1).padStart(2, '0');
+                    const dia = String(dt.getDate()).padStart(2, '0');
+                    valorInputData = `${ano}-${mes}-${dia}`;
+                    const h = String(dt.getHours()).padStart(2, '0');
+                    const m = String(dt.getMinutes()).padStart(2, '0');
+                    valorInputHora = `${h}:${m}`;
+                }
 
                 if (corpo) {
                     corpo.innerHTML = `
@@ -3722,10 +4291,59 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-2 text-[11px] pt-2 border-t border-slate-800">
-                                <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white">${lead.whatsapp || 'Não informado'}</strong></div>
+                                <div><span class="text-slate-500 block">WhatsApp:</span> <strong class="text-white font-mono">${lead.whatsapp || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">E-mail:</span> <strong class="text-white">${lead.email || 'Não informado'}</strong></div>
                                 <div><span class="text-slate-500 block">Corretor Responsável:</span> <strong class="text-cyan-300">${corretorNome}</strong></div>
-                                <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono">${dataFormatada}</strong></div>
+                                <div><span class="text-slate-500 block">Horário da Visita:</span> <strong class="text-amber-300 font-mono" id="rotulo-horario-visita-modal">${dataFormatada}</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- GAVETA EXPANSÍVEL DE REAGENDAMENTO (COM CLIQUE VISUAL DE CALENDÁRIO & HORAS) -->
+                        <div id="box-reagendamento-inline" class="hidden bg-slate-900/95 border border-amber-500/50 p-3.5 rounded-xl space-y-3 shadow-2xl">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <span class="text-xs font-black uppercase text-amber-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calendar-days text-amber-400"></i> Selecionar Nova Data & Horário no Calendário
+                                </span>
+                                <button type="button" onclick="alternarBoxReagendamento()" class="text-slate-400 hover:text-white cursor-pointer text-xs">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px] flex items-center gap-1">
+                                        <i class="fa-regular fa-calendar text-amber-400"></i> Nova Data:
+                                    </label>
+                                    <input type="date" id="input-novo-agendamento-data" value="${valorInputData}" 
+                                           onclick="try{this.showPicker()}catch(e){}"
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert" 
+                                           title="Clique para abrir o calendário">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px] flex items-center gap-1">
+                                        <i class="fa-regular fa-clock text-amber-400"></i> Novo Horário:
+                                    </label>
+                                    <input type="time" id="input-novo-agendamento-hora" value="${valorInputHora}" 
+                                           onclick="try{this.showPicker()}catch(e){}"
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-amber-400 cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert" 
+                                           title="Clique para escolher o horário">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Motivo (Opcional):</label>
+                                    <input type="text" id="input-novo-agendamento-nota" placeholder="Ex: Cliente pediu para a tarde" 
+                                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-amber-400">
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-800/80">
+                                <button type="button" onclick="alternarBoxReagendamento()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition cursor-pointer">
+                                    Cancelar
+                                </button>
+                                <button type="button" onclick="confirmarReagendamentoLead()" id="btn-salvar-reagendamento" 
+                                        class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition flex items-center gap-1.5 shadow cursor-pointer">
+                                    <i class="fa-solid fa-check text-[10px]"></i>
+                                    <span>Salvar Novo Horário</span>
+                                </button>
                             </div>
                         </div>
 
@@ -3760,9 +4378,236 @@
             }
         }
 
+        function alternarBoxReagendamento() {
+            const box = document.getElementById('box-reagendamento-inline');
+            if (!box) return;
+            box.classList.toggle('hidden');
+            if (!box.classList.contains('hidden')) {
+                box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+async function confirmarReagendamentoLead() {
+            if (!leadAtualEmEdicao || !dadosImobiliaria) return;
+
+            const inputData = document.getElementById('input-novo-agendamento-data')?.value;
+            const inputHora = document.getElementById('input-novo-agendamento-hora')?.value || '10:00';
+            const inputNota = document.getElementById('input-novo-agendamento-nota')?.value.trim();
+            const btn = document.getElementById('btn-salvar-reagendamento');
+
+            if (!inputData) {
+                exibirToast('aviso', 'Selecione a data da visita no calendário.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando & Preparando WhatsApp...';
+
+            try {
+                // 1. Monta data local precisa
+                const [ano, mes, dia] = inputData.split('-').map(Number);
+                const [hora, min] = inputHora.split(':').map(Number);
+                const dataObj = new Date(ano, mes - 1, dia, hora || 0, min || 0, 0);
+                const novaDataIso = dataObj.toISOString();
+
+                const dataFmt = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
+                const horaFmt = `${String(hora).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+
+                const timestampNota = new Date().toLocaleDateString('pt-BR');
+                let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
+                if (inputNota) {
+                    notasAtualizadas = notasAtualizadas 
+                        ? `${notasAtualizadas} | [Reagendado em ${timestampNota} para ${dataFmt} às ${horaFmt}]: ${inputNota}`
+                        : `[Reagendado em ${timestampNota} para ${dataFmt} às ${horaFmt}]: ${inputNota}`;
+                }
+
+                // 2. Atualiza no Supabase
+                const { error } = await supabaseClient
+                    .from('leads_contatos')
+                    .update({
+                        data_agendamento: novaDataIso,
+                        notas_agendamento: notasAtualizadas || null
+                    })
+                    .eq('id', leadAtualEmEdicao.id)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (error) throw error;
+
+                // 3. Busca dados do imóvel para a mensagem do WhatsApp (se houver)
+                let dadosImovelTexto = 'Visita a imóvel';
+                if (leadAtualEmEdicao.imovel_id) {
+                    const { data: im } = await supabaseClient
+                        .from('imoveis')
+                        .select('codigo_ref, titulo, bairro, cidade')
+                        .eq('id', leadAtualEmEdicao.imovel_id)
+                        .maybeSingle();
+                    if (im) {
+                        dadosImovelTexto = `*${im.titulo}*\n📌 *Ref:* ${im.codigo_ref}${im.bairro ? ` • *Bairro:* ${im.bairro}` : ''}`;
+                    }
+                }
+
+                // 4. Monta e dispara a mensagem no WhatsApp do cliente
+                const zapLimpo = ('' + (leadAtualEmEdicao.whatsapp || '')).replace(/\D/g, '');
+                if (zapLimpo) {
+                    const nomeImob = dadosImobiliaria.nome_fantasia || 'Nossa Imobiliária';
+                    const mensagemZap = 
+`Olá *${leadAtualEmEdicao.nome}*, tudo bem?
+
+Passando para confirmar o *reagendamento da sua visita* com a *${nomeImob}*:
+
+📅 *Nova Data:* ${dataFmt}
+⏰ *Novo Horário:* ${horaFmt}
+🏠 *Imóvel:*
+${dadosImovelTexto}
+
+Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposição!`;
+
+                    const urlZap = `https://wa.me/${zapLimpo}?text=${encodeURIComponent(mensagemZap)}`;
+                    window.open(urlZap, '_blank');
+                }
+
+                exibirToast('sucesso', 'Visita reagendada e WhatsApp aberto para notificar o cliente!');
+
+                // 5. Atualiza calendário, contadores e recarrega a ficha do modal
+                await carregarAgendaMes();
+                await abrirDossieAgendamento(leadAtualEmEdicao.id);
+
+            } catch (err) {
+                console.error('[REAGENDAMENTO] Erro:', err);
+                exibirToast('erro', 'Erro ao reagendar visita. Tente novamente.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check text-[10px]"></i> Salvar Novo Horário';
+            }
+        }
+
+function cancelarCompromissoAgenda() {
+            if (!leadAtualEmEdicao || !dadosImobiliaria) return;
+
+            const modalConfirma = document.getElementById('modal-confirmacao-acao');
+            const tituloEl = document.getElementById('modal-confirma-titulo');
+            const msgEl = document.getElementById('modal-confirma-msg');
+            const btnConfirmar = document.getElementById('btn-executar-confirma');
+            const btnCancelar = document.getElementById('btn-cancelar-confirma');
+
+            if (!modalConfirma) return;
+
+            const nomeCliente = leadAtualEmEdicao.nome || 'o cliente';
+            const dataAnteriorFmt = leadAtualEmEdicao.data_agendamento 
+                ? new Date(leadAtualEmEdicao.data_agendamento).toLocaleString('pt-BR') 
+                : 'Data não definida';
+
+            // Configura o visual do modal do sistema para alerta de cancelamento
+            if (tituloEl) tituloEl.innerHTML = '<span class="text-rose-400 flex items-center justify-center gap-2"><i class="fa-solid fa-calendar-xmark"></i> Cancelar Visita da Agenda</span>';
+            if (msgEl) {
+                msgEl.innerHTML = `Deseja realmente cancelar a visita agendada com <strong class="text-white uppercase font-bold">${nomeCliente}</strong>?<br><span class="text-[11px] text-slate-400 block mt-1">Horário marcado: ${dataAnteriorFmt}</span>`;
+            }
+
+            modalConfirma.classList.remove('hidden');
+
+            // Clona botões para limpar cliques anteriores
+            const novoBtnConfirmar = btnConfirmar.cloneNode(true);
+            const novoBtnCancelar = btnCancelar.cloneNode(true);
+
+            novoBtnConfirmar.className = 'bg-rose-600 hover:bg-rose-500 text-white font-black px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-rose-950/40 flex items-center gap-1.5';
+            novoBtnConfirmar.innerHTML = '<i class="fa-solid fa-trash-can text-[10px]"></i><span>Sim, Cancelar Visita</span>';
+
+            novoBtnCancelar.innerHTML = 'Voltar';
+
+            btnConfirmar.parentNode.replaceChild(novoBtnConfirmar, btnConfirmar);
+            btnCancelar.parentNode.replaceChild(novoBtnCancelar, btnCancelar);
+
+            novoBtnCancelar.onclick = () => {
+                modalConfirma.classList.add('hidden');
+            };
+
+            novoBtnConfirmar.onclick = async () => {
+                modalConfirma.classList.add('hidden');
+                novoBtnConfirmar.disabled = true;
+
+                try {
+                    // 1. Identifica o autor para auditoria
+                    let autorNome = 'Super Administrador';
+                    if (!isMasterSuporte && dadosUsuario && dadosUsuario.nome_completo) {
+                        autorNome = dadosUsuario.nome_completo;
+                    }
+
+                    const agoraIso = new Date().toISOString();
+                    const timestampHoje = new Date().toLocaleDateString('pt-BR');
+
+                    // 2. Busca dados do imóvel para a auditoria
+                    let refImovel = 'Não vinculado';
+                    let tituloImovel = '';
+                    if (leadAtualEmEdicao.imovel_id) {
+                        const { data: im } = await supabaseClient
+                            .from('imoveis')
+                            .select('codigo_ref, titulo')
+                            .eq('id', leadAtualEmEdicao.imovel_id)
+                            .maybeSingle();
+                        if (im) {
+                            refImovel = im.codigo_ref;
+                            tituloImovel = im.titulo;
+                        }
+                    }
+
+                    // 3. REGISTRO OFICIAL DE AUDITORIA NA TABELA leads_historico
+                    await supabaseClient
+                        .from('leads_historico')
+                        .insert([{
+                            lead_id: leadAtualEmEdicao.id,
+                            imobiliaria_id: dadosImobiliaria.id,
+                            autor_nome: autorNome,
+                            tipo_evento: 'cancelamento_visita',
+                            descricao: `Visita cancelada na agenda por ${autorNome}. Imóvel Ref: ${refImovel}. Data anterior agendada: ${dataAnteriorFmt}`,
+                            detalhes: {
+                                acao: 'Cancelamento de visita',
+                                autor: autorNome,
+                                cliente_nome: leadAtualEmEdicao.nome,
+                                cliente_whatsapp: leadAtualEmEdicao.whatsapp,
+                                imovel_id: leadAtualEmEdicao.imovel_id,
+                                imovel_ref: refImovel,
+                                imovel_titulo: tituloImovel,
+                                data_agendamento_cancelada: leadAtualEmEdicao.data_agendamento,
+                                data_cancelamento: agoraIso
+                            },
+                            criado_em: agoraIso
+                        }]);
+
+                    // 4. Atualiza leads_contatos removendo da agenda e carimbando nas notas
+                    let notasAtualizadas = leadAtualEmEdicao.notas_agendamento || '';
+                    notasAtualizadas = notasAtualizadas 
+                        ? `${notasAtualizadas} | [Visita cancelada por ${autorNome} em ${timestampHoje}]`
+                        : `[Visita cancelada por ${autorNome} em ${timestampHoje}]`;
+
+                    const { error: errUpdate } = await supabaseClient
+                        .from('leads_contatos')
+                        .update({
+                            data_agendamento: null,
+                            status: 'Cancelado',
+                            notas_agendamento: notasAtualizadas
+                        })
+                        .eq('id', leadAtualEmEdicao.id)
+                        .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                    if (errUpdate) throw errUpdate;
+
+                    fecharModalAgendamento();
+                    exibirToast('aviso', `Compromisso com ${nomeCliente} cancelado e auditado com sucesso!`);
+
+                    // 5. Atualiza calendário, contadores e faixa de alertas do topo
+                    await carregarAgendaMes();
+                    await carregarMetricas(dadosImobiliaria.id);
+
+                } catch (err) {
+                    console.error('[CANCELAR VISITA / AUDITORIA] Erro:', err);
+                    exibirToast('erro', 'Erro ao cancelar compromisso. Tente novamente.');
+                }
+            };
+        }
+
         function fecharModalAgendamento() {
             const modal = document.getElementById('modal-dash-agendamento');
             if (modal) modal.classList.add('hidden');
+            leadAtualEmEdicao = null;
         }
 
         // =========================================================================
@@ -3836,6 +4681,7 @@
 
         setTimeout(carregarAvisosGestor, 800);
 
+
         async function executarLogout() {
             if (isMasterSuporte) {
                 window.close();
@@ -3848,7 +4694,326 @@
             }
         }
 
+  // =========================================================================
+        // MOTOR DE BAIXA INTELIGENTE & ANEXO DE COMPROVANTES
+        // =========================================================================
+        let modoApenasAnexo = false;
+
+        function abrirModalBaixaAluguel(mensalidadeId, inquilino, imovelRef, competencia, vencimento, valorAluguel, jaPago = false, dataPagamentoAtual = '') {
+            const modal = document.getElementById('modal-baixa-aluguel');
+            if (!modal) return;
+
+            modoApenasAnexo = jaPago;
+
+            document.getElementById('baixa-mensalidade-id').value = mensalidadeId;
+            document.getElementById('baixa-aluguel-inquilino').innerText = inquilino;
+            document.getElementById('baixa-aluguel-imovel').innerText = `Ref: ${imovelRef}`;
+            document.getElementById('baixa-aluguel-competencia').innerText = `${competencia} (Venc: ${vencimento})`;
+            document.getElementById('baixa-aluguel-valor').innerText = valorAluguel.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            const elTituloModal = modal.querySelector('h3, span.font-black, .text-sm');
+            const btnSubmit = document.getElementById('btn-salvar-baixa-aluguel');
+            const campoDataContainer = document.getElementById('baixa-data-pagamento').closest('div');
+
+            const hoje = new Date();
+            const dataHojeFmt = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+
+            if (jaPago) {
+                // MODO 1: O ALUGUEL JÁ FOI PAGO -> SOMENTE ANEXAR COMPROVANTE
+                if (elTituloModal) elTituloModal.innerText = 'Anexar Comprovante do Aluguel';
+                if (btnSubmit) {
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-paperclip"></i><span>Salvar Comprovante</span>';
+                    btnSubmit.className = 'px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-cyan-950/40 cursor-pointer';
+                }
+                if (campoDataContainer) {
+                    campoDataContainer.innerHTML = `
+                        <label class="block font-bold text-slate-300 mb-1">Status do Aluguel:</label>
+                        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-emerald-400 font-bold flex items-center gap-2 text-xs">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Este aluguel já consta como PAGO ${dataPagamentoAtual ? `(${dataPagamentoAtual})` : ''}.</span>
+                        </div>
+                        <input type="hidden" id="baixa-data-pagamento" value="${dataHojeFmt}">
+                    `;
+                }
+            } else {
+                // MODO 2: ALUGUEL EM ABERTO -> REGISTRAR BAIXA E RECEBIMENTO
+                if (elTituloModal) elTituloModal.innerText = 'Registrar Baixa de Aluguel';
+                if (btnSubmit) {
+                    btnSubmit.innerHTML = '<i class="fa-solid fa-check"></i><span>Confirmar Recebimento</span>';
+                    btnSubmit.className = 'px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black flex items-center gap-2 shadow-lg shadow-emerald-950/40 cursor-pointer';
+                }
+                if (campoDataContainer) {
+                    campoDataContainer.innerHTML = `
+                        <label class="block font-bold text-slate-300 mb-1">Data Efetiva do Pagamento:</label>
+                        <input type="date" id="baixa-data-pagamento" required value="${dataHojeFmt}"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-emerald-400">
+                    `;
+                }
+            }
+
+            document.getElementById('baixa-url-comprovante').value = '';
+            document.getElementById('baixa-arquivo-comprovante').value = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalBaixaAluguel() {
+            const modal = document.getElementById('modal-baixa-aluguel');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function confirmarBaixaAluguel(e) {
+            e.preventDefault();
+            const mensalidadeId = document.getElementById('baixa-mensalidade-id').value;
+            const dataPagamentoEl = document.getElementById('baixa-data-pagamento');
+            const dataPagamento = dataPagamentoEl ? dataPagamentoEl.value : null;
+            const arquivoInput = document.getElementById('baixa-arquivo-comprovante');
+            const urlInput = document.getElementById('baixa-url-comprovante').value.trim();
+            const btnSalvar = document.getElementById('btn-salvar-baixa-aluguel');
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
+
+            try {
+                let comprovanteUrlFinal = urlInput || null;
+
+                // Upload no Storage
+                if (arquivoInput.files && arquivoInput.files[0]) {
+                    const file = arquivoInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `recibo_${mensalidadeId}_${Date.now()}.${fileExt}`;
+                    const filePath = `comprovantes/${dadosImobiliaria.id}/${fileName}`;
+
+                    const { error: errUpload } = await supabaseClient.storage
+                        .from('documentos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (errUpload) {
+                        console.error('[STORAGE UPLOAD FALHOU]:', errUpload);
+                        throw new Error(`Falha no bucket 'documentos': ${errUpload.message || 'Execute o SQL de liberação do bucket no Supabase'}`);
+                    }
+
+                    const { data: publicUrlData } = supabaseClient.storage
+                        .from('documentos')
+                        .getPublicUrl(filePath);
+                    comprovanteUrlFinal = publicUrlData.publicUrl;
+                }
+
+                // Payload condicional: se já estava pago, atualiza apenas o comprovante
+                const dadosAtualizar = { comprovante_url: comprovanteUrlFinal };
+                if (!modoApenasAnexo) {
+                    dadosAtualizar.status_inquilino = 'Pago';
+                    dadosAtualizar.data_pagamento_inquilino = dataPagamento;
+                }
+
+                const { error: errUpdate } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .update(dadosAtualizar)
+                    .eq('id', mensalidadeId)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (errUpdate) throw errUpdate;
+
+                exibirToast('sucesso', modoApenasAnexo ? 'Comprovante anexado com sucesso!' : 'Pagamento registrado com sucesso! Repasse liberado.');
+                fecharModalBaixaAluguel();
+
+                // Recarrega extrato e KPIs
+                await carregarDashboardFinanceiro();
+                await carregarMetricas(dadosImobiliaria.id);
+
+            } catch (err) {
+                console.error('[ERRO AO PROCESSAR]:', err);
+                exibirToast('erro', err.message || 'Erro ao processar');
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = modoApenasAnexo ? '<i class="fa-solid fa-paperclip"></i> Salvar Comprovante' : '<i class="fa-solid fa-check"></i> Confirmar Recebimento';
+            }
+        }
+window.abrirModalBaixaAluguel = abrirModalBaixaAluguel;
+        window.fecharModalBaixaAluguel = fecharModalBaixaAluguel;
+        window.confirmarBaixaAluguel = confirmarBaixaAluguel;
+
+        // =========================================================================
+        // MOTOR DE CONFIRMAÇÃO DE REPASSE AO PROPRIETÁRIO
+        // =========================================================================
+        function abrirModalConfirmarRepasse(mensalidadeId, imovelRef, competencia, valorRepasse) {
+            const modal = document.getElementById('modal-confirmar-repasse');
+            if (!modal) return;
+
+            document.getElementById('repasse-mensalidade-id').value = mensalidadeId;
+            document.getElementById('repasse-imovel-ref').innerText = `Ref: ${imovelRef}`;
+            document.getElementById('repasse-competencia').innerText = competencia;
+            document.getElementById('repasse-valor-liquido').innerText = valorRepasse.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            const hoje = new Date();
+            const dataHojeFmt = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+            document.getElementById('repasse-data-efetiva').value = dataHojeFmt;
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalRepasse() {
+            const modal = document.getElementById('modal-confirmar-repasse');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function salvarConfirmacaoRepasse(e) {
+            e.preventDefault();
+            const mensalidadeId = document.getElementById('repasse-mensalidade-id').value;
+            const dataRepasse = document.getElementById('repasse-data-efetiva').value;
+            const btnSalvar = document.getElementById('btn-salvar-repasse');
+
+            if (!mensalidadeId || !dataRepasse) return;
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
+
+            try {
+                const { error } = await supabaseClient
+                    .from('locacao_mensalidades_recebiveis')
+                    .update({
+                        status_repasse: 'Repassado',
+                        data_repasse: dataRepasse
+                    })
+                    .eq('id', mensalidadeId)
+                    .eq('imobiliaria_id', dadosImobiliaria.id);
+
+                if (error) throw error;
+
+                exibirToast('sucesso', 'Repasse ao proprietário confirmado com sucesso!');
+                fecharModalRepasse();
+
+                await carregarDashboardFinanceiro();
+            } catch (err) {
+                console.error('[ERRO REPASSE]:', err);
+                exibirToast('erro', 'Falha ao confirmar repasse: ' + (err.message || 'Erro no banco'));
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Repasse';
+            }
+        }
+window.abrirModalConfirmarRepasse = abrirModalConfirmarRepasse;
+        window.fecharModalRepasse = fecharModalRepasse;
+        window.salvarConfirmacaoRepasse = salvarConfirmacaoRepasse;
+
+        // =========================================================================
+        // MOTOR DE EFETIVAÇÃO DE PAGAMENTOS / ADIANTAMENTOS A CORRETORES
+        // =========================================================================
+        function abrirModalPagarCorretor(corretorId, corretorNome, mesRef, saldoSugerido) {
+            const modal = document.getElementById('modal-pagar-corretor');
+            if (!modal) return;
+
+            document.getElementById('pgto-corretor-id').value = corretorId;
+            document.getElementById('pgto-corretor-nome').innerText = corretorNome;
+            document.getElementById('pgto-corretor-mes').innerText = mesRef;
+            document.getElementById('pgto-corretor-saldo-pendente').innerText = Number(saldoSugerido || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            // Sugere o saldo pendente, mas é 100% editável para valores parciais/adiantamentos
+            document.getElementById('pgto-corretor-valor').value = saldoSugerido > 0 ? Number(saldoSugerido).toFixed(2) : '';
+            
+            const hoje = new Date();
+            const dtHojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+            document.getElementById('pgto-corretor-data').value = dtHojeStr;
+            document.getElementById('pgto-corretor-obs').value = '';
+            document.getElementById('pgto-corretor-arquivo').value = '';
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalPagarCorretor() {
+            const modal = document.getElementById('modal-pagar-corretor');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function salvarPagamentoCorretor(e) {
+            e.preventDefault();
+            const corretorId = document.getElementById('pgto-corretor-id').value;
+            const corretorNome = document.getElementById('pgto-corretor-nome').innerText;
+            const mesRef = document.getElementById('pgto-corretor-mes').innerText;
+       const valorPago = Number(document.getElementById('pgto-corretor-valor').value);
+            const dataInputRaw = document.getElementById('pgto-corretor-data').value;
+            const formaPgto = document.getElementById('pgto-corretor-forma').value;
+
+            // Une a data selecionada com a hora, minuto e segundo locais reais (elimina o recuo de 3h do UTC)
+            const agoraLocal = new Date();
+            const [anoSel, mesSel, diaSel] = (dataInputRaw || '').split('-').map(Number);
+            const dataComHoraReal = new Date(anoSel, mesSel - 1, diaSel, agoraLocal.getHours(), agoraLocal.getMinutes(), agoraLocal.getSeconds());
+            const dataPgto = dataComHoraReal.toISOString();
+            const obs = document.getElementById('pgto-corretor-obs').value.trim();
+            const arquivoInput = document.getElementById('pgto-corretor-arquivo');
+            const btnSalvar = document.getElementById('btn-salvar-pgto-corretor');
+
+            if (!corretorId || !valorPago || valorPago <= 0) {
+                exibirToast('aviso', 'Informe um valor de pagamento válido.');
+                return;
+            }
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando Pagamento...';
+
+            try {
+                let comprovanteUrlFinal = null;
+
+                // Upload seguro no Storage particionado por imobiliária
+                if (arquivoInput.files && arquivoInput.files[0]) {
+                    const file = arquivoInput.files[0];
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `pgto_corretor_${corretorId}_${Date.now()}.${fileExt}`;
+                    const filePath = `comprovantes/${dadosImobiliaria.id}/${fileName}`;
+
+                    const { error: errUpload } = await supabaseClient.storage
+                        .from('documentos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (!errUpload) {
+                        const { data: pUrl } = supabaseClient.storage.from('documentos').getPublicUrl(filePath);
+                        comprovanteUrlFinal = pUrl.publicUrl;
+                    }
+                }
+
+                // Gravação auditada na tabela corretores_pagamentos
+                const { error: errInsert } = await supabaseClient
+                    .from('corretores_pagamentos')
+                    .insert([{
+                        imobiliaria_id: dadosImobiliaria.id,
+                        corretor_id: corretorId,
+                        mes_referencia: mesRef,
+                        valor_pago: valorPago,
+                        data_pagamento: dataPgto,
+                        forma_pagamento: formaPgto,
+                        comprovante_url: comprovanteUrlFinal,
+                        observacoes: obs || null
+                    }]);
+
+                if (errInsert) throw errInsert;
+
+                exibirToast('sucesso', `Pagamento de R$ ${valorPago.toLocaleString('pt-BR')} registrado para ${corretorNome}!`);
+                fecharModalPagarCorretor();
+
+                // Recarrega dashboard financeiro e reabre o dossiê atualizado com o novo saldo
+                await carregarDashboardFinanceiro();
+                abrirDossieCorretor(corretorId, corretorNome);
+
+            } catch (err) {
+                console.error('[PAGAMENTO CORRETOR] Erro:', err);
+                exibirToast('erro', 'Erro ao registrar pagamento: ' + (err.message || 'Falha no banco'));
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Pagamento';
+            }
+        }
+
+        window.abrirModalPagarCorretor = abrirModalPagarCorretor;
+        window.fecharModalPagarCorretor = fecharModalPagarCorretor;
+        window.salvarPagamentoCorretor = salvarPagamentoCorretor;
+
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
-</body>
+// 1. CARREGAR EQUIPE / CORRETORES DA IMOBILIÁRIA
+                const { data: usuariosEquipe } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('imobiliaria_id', imobId);
+                
+                cacheUsuariosCorretores = usuariosEquipe || [];</body>
 </html>
