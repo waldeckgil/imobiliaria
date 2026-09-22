@@ -4930,9 +4930,15 @@ window.abrirModalConfirmarRepasse = abrirModalConfirmarRepasse;
             const corretorId = document.getElementById('pgto-corretor-id').value;
             const corretorNome = document.getElementById('pgto-corretor-nome').innerText;
             const mesRef = document.getElementById('pgto-corretor-mes').innerText;
-            const valorPago = Number(document.getElementById('pgto-corretor-valor').value);
-            const dataPgto = document.getElementById('pgto-corretor-data').value;
+       const valorPago = Number(document.getElementById('pgto-corretor-valor').value);
+            const dataInputRaw = document.getElementById('pgto-corretor-data').value;
             const formaPgto = document.getElementById('pgto-corretor-forma').value;
+
+            // Une a data selecionada com a hora, minuto e segundo locais reais (elimina o recuo de 3h do UTC)
+            const agoraLocal = new Date();
+            const [anoSel, mesSel, diaSel] = (dataInputRaw || '').split('-').map(Number);
+            const dataComHoraReal = new Date(anoSel, mesSel - 1, diaSel, agoraLocal.getHours(), agoraLocal.getMinutes(), agoraLocal.getSeconds());
+            const dataPgto = dataComHoraReal.toISOString();
             const obs = document.getElementById('pgto-corretor-obs').value.trim();
             const arquivoInput = document.getElementById('pgto-corretor-arquivo');
             const btnSalvar = document.getElementById('btn-salvar-pgto-corretor');
