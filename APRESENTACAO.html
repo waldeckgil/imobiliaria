@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGI • Apresentação do Sistema para Gestores Imobiliários</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            background-color: #060913; 
+            color: #f8fafc; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            scroll-behavior: smooth;
+        }
+        .box-tech { 
+            background: #0f172a; 
+            border: 1px solid #334155; 
+            border-radius: 1.25rem; 
+        }
+        .box-destaque {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(6, 9, 19, 0.98));
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 1.25rem;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.08);
+        }
+        .gradiente-texto {
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950">
+
+    <!-- CABEÇALHO / TOPBAR -->
+    <header class="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50 py-3.5 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg">
+                    <i class="fa-solid fa-building-shield"></i>
+                </div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-black tracking-wider text-white">SGI • GESTÃO IMOBILIÁRIA</h1>
+                    <p class="text-[10px] text-cyan-400 font-extrabold uppercase tracking-widest">Apresentação Executiva do Sistema</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+agendar+uma+demonstra%C3%A7%C3%A3o+do+SGI+Imobili%C3%A1rio." 
+                   target="_blank" 
+                   class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-950/50 transition">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span class="hidden sm:inline">Falar com Consultor</span>
+                    <span class="sm:hidden">WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-10 sm:py-16 space-y-16 sm:space-y-24">
+
+        <!-- HERO SECTION: IMPACTO & PROPOSTA DE VALOR -->
+        <section class="text-center max-w-4xl mx-auto space-y-6">
+            <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-inner">
+                <i class="fa-solid fa-gem text-cyan-400"></i> Tecnologia de Ponta para Imobiliárias e Gestores
+            </div>
+
+            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+                Assuma o Controle Total da sua Imobiliária: <span class="gradiente-texto">Do Lead ao Repasse Financeiro.</span>
+            </h2>
+
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+                Elimine o caos de planilhas dispersas, evite atritos de comissões com a equipe e blinde sua carteira de proprietários em uma plataforma única, moderna e 100% segura.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-4">
+                <a href="#pilares" class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-8 py-3.5 rounded-xl shadow-xl transition flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                    <span>Conhecer os Recursos</span>
+                    <i class="fa-solid fa-arrow-down text-xs"></i>
+                </a>
+
+                <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Quero+iniciar+meu+teste+gr%C3%A1tis+de+30+dias+no+SGI." 
+                   target="_blank" 
+                   class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-7 py-3.5 rounded-xl transition flex items-center justify-center gap-2 text-xs">
+                    <i class="fa-solid fa-rocket text-cyan-400"></i>
+                    <span>Solicitar Teste Grátis de 30 Dias</span>
+                </a>
+            </div>
+
+            <!-- BADGES DE CREDIBILIDADE -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-8 max-w-3xl mx-auto text-left">
+                <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                    <span class="text-cyan-400 font-black text-sm block">100% Digital</span>
+                    <span class="text-[11px] text-slate-400">Acesse do celular ou PC</span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                    <span class="text-emerald-400 font-black text-sm block">Zero Planilhas</span>
+                    <span class="text-[11px] text-slate-400">Rateio financeiro automático</span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                    <span class="text-purple-400 font-black text-sm block">PDF WhatsApp</span>
+                    <span class="text-[11px] text-slate-400">Fichas em 1 clique</span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-800 p-3 rounded-xl">
+                    <span class="text-amber-400 font-black text-sm block">LGPD Blindada</span>
+                    <span class="text-[11px] text-slate-400">Conformidade e segurança</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: O PROBLEMA VS A SOLUÇÃO -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            <!-- ANTES -->
+            <div class="box-tech p-6 sm:p-8 border-rose-900/40 bg-gradient-to-b from-rose-950/15 to-slate-950 space-y-4">
+                <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg border border-rose-500/30">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="text-lg font-black text-white">Como a maioria das imobiliárias ainda opera:</h3>
+                <ul class="space-y-3 text-xs text-slate-300">
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                        <span>Leads que chegam pelo site ou portais e se perdem por falta de distribuição ágil.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                        <span>Horas perdidas no fim do mês calculando na mão o repasse de cada locação e comissão.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                        <span>Corretores com acesso desprotegido aos contatos pessoais de proprietários de captações.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                        <span>Envio manual e despadronizado de fotos e textos soltos no WhatsApp do comprador.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- DEPOIS (COM O SGI) -->
+            <div class="box-destaque p-6 sm:p-8 space-y-4 bg-gradient-to-b from-cyan-950/20 to-slate-950">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/30">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="text-lg font-black text-white">Com a gestão soberana do SGI:</h3>
+                <ul class="space-y-3 text-xs text-slate-200">
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                        <span><strong>Funil Comercial Dinâmico:</strong> Distribuição de leads, agenda de visitas e botão direto de WhatsApp.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                        <span><strong>Extrato 360° em Tempo Real:</strong> Aluguel bruto, honorário da casa e repasse líquido calculados na hora.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                        <span><strong>Blindagem Patrimonial:</strong> O gestor decide quais corretores podem ou não ver dados de proprietários.</span>
+                    </li>
+                    <li class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                        <span><strong>Ficha Comercial em PDF A4:</strong> Compilação instantânea com dados, mídias e fotos para o WhatsApp.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- OS 6 PILARES DO SISTEMA -->
+        <section id="pilares" class="space-y-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-black uppercase text-cyan-400 tracking-widest block">Módulos Integrados</span>
+                <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                    O Que Você Gerencia na Prática
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-400">
+                    Cada módulo foi desenvolvido para responder a uma necessidade real do dia a dia da imobiliária.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- 1. VITRINE PÚBLICA -->
+                <div class="box-tech p-6 space-y-3 hover:border-cyan-500/50 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl border border-cyan-500/30 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h4 class="text-base font-black text-white">1. Vitrine Digital Exclusiva</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Sua imobiliária ganha um site oficial com link próprio (sem anúncios de concorrentes), busca ágil por código de referência, filtros inteligentes e captação direta de interessados.
+                    </p>
+                    <span class="text-[11px] font-bold text-cyan-400 block pt-1">
+                        • Zero taxas sobre o seu tráfego
+                    </span>
+                </div>
+
+                <!-- 2. CRM & FUNIL DE VENDAS -->
+                <div class="box-tech p-6 space-y-3 hover:border-blue-500/50 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl border border-blue-500/30 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <h4 class="text-base font-black text-white">2. CRM & Central de Leads</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Acompanhe o percurso completo do cliente: <em>Novos, Em Atendimento, Visita Agendada, Proposta e Fechamento</em>. Delegue corretores responsáveis e mantenha o histórico imutável.
+                    </p>
+                    <span class="text-[11px] font-bold text-blue-400 block pt-1">
+                        • Botão de WhatsApp em 1 clique
+                    </span>
+                </div>
+
+                <!-- 3. MOTOR JSPDF AUTOMÁTICO -->
+                <div class="box-tech p-6 space-y-3 hover:border-purple-500/50 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl border border-purple-500/30 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <h4 class="text-base font-black text-white">3. Gerador de Fichas em PDF</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Esqueça a tarefa de montar folhetos à mão. Selecione qualquer imóvel do seu catálogo e o sistema gera na hora uma ficha comercial em PDF A4 com a sua marca e contatos.
+                    </p>
+                    <span class="text-[11px] font-bold text-purple-400 block pt-1">
+                        • Pronto para envio imediato no WhatsApp
+                    </span>
+                </div>
+
+                <!-- 4. GESTÃO DE EQUIPE & COMISSÕES -->
+                <div class="box-tech p-6 space-y-3 hover:border-emerald-500/50 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl border border-emerald-500/30 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h4 class="text-base font-black text-white">4. Equipe & Rateio de Comissões</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Pactue alíquotas individuais de comissão para cada corretor (vendas e locações). Ao fechar o negócio, o extrato é gerado e o saldo a pagar fica claro e auditado.
+                    </p>
+                    <span class="text-[11px] font-bold text-emerald-400 block pt-1">
+                        • Fim dos conflitos de comissionamento
+                    </span>
+                </div>
+
+                <!-- 5. BLINDAGEM PATRIMONIAL -->
+                <div class="box-tech p-6 space-y-3 hover:border-amber-500/50 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl border border-amber-500/30 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h4 class="text-base font-black text-white">5. Blindagem de Captações</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Proteja o seu bem mais precioso: sua carteira de proprietários. O gestor pode ocultar telefones e dados de donos para corretores associados através da matriz de permissões.
+                    </p>
+                    <span class="text-[11px] font-bold text-amber-400 block pt-1">
+                        • Captações seguras nas mãos da diretoria
+                    </span>
+                </div>
+
+                <!-- 6. FINANCEIRO ANALÍTICO 360° -->
+                <div class="box-tech p-6 space-y-3 hover:border-rose-500/50 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl border border-rose-500/30 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <h4 class="text-base font-black text-white">6. Financeiro de Aluguéis & Vendas</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Controle vencimentos de locação, registre baixas com anexo de comprovante PIX e saiba com precisão: quanto é taxa da imobiliária e quanto deve ser repassado ao dono.
+                    </p>
+                    <span class="text-[11px] font-bold text-rose-400 block pt-1">
+                        • Extrato de competência mensal consolidado
+                    </span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SEÇÃO: COMO FUNCIONA (PASSO A PASSO SIMPLES) -->
+        <section class="box-destaque p-8 sm:p-12 text-center space-y-8">
+            <div class="max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-black uppercase text-cyan-400 tracking-widest block">Implantação Expressa</span>
+                <h3 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    Sua Imobiliária Pronta em Menos de 5 Minutos
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-400">
+                    Sem instalações pesadas, sem necessidade de servidores locais e sem surpresas.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <div class="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl relative space-y-2">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-3">1</span>
+                    <h4 class="font-bold text-white text-sm">Criar sua Conta</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Informe o nome da sua imobiliária e CRECI. O sistema cria automaticamente sua vitrine digital e seu painel gestor.</p>
+                </div>
+
+                <div class="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl relative space-y-2">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-3">2</span>
+                    <h4 class="font-bold text-white text-sm">Cadastrar Catálogo & Equipe</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Publique seus imóveis com fotos, defina os corretores responsáveis e configure as alíquotas de comissões.</p>
+                </div>
+
+                <div class="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl relative space-y-2">
+                    <span class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-3">3</span>
+                    <h4 class="font-bold text-white text-sm">Atender & Fechar Negócios</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Receba os leads pelo portal, dispare fichas em PDF pelo WhatsApp e liquide os repasses com total transparência.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FINAL COM LINK DE CONTATO -->
+        <section class="bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 border border-cyan-500/40 p-8 sm:p-12 rounded-3xl text-center space-y-6 shadow-2xl">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto border border-emerald-500/30">
+                <i class="fa-brands fa-whatsapp"></i>
+            </div>
+
+            <div class="space-y-2 max-w-xl mx-auto">
+                <h3 class="text-2xl sm:text-4xl font-black text-white">
+                    Pronto para Elevar o Padrão da sua Gestão?
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Entre em contato conosco pelo WhatsApp. Liberamos um ambiente de demonstração completo para você e sua equipe navegarem por <strong>30 dias grátis</strong>.
+                </p>
+            </div>
+
+            <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+conversar+sobre+o+SGI+para+a+minha+imobili%C3%A1ria." 
+                   target="_blank" 
+                   class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-8 py-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/50">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Conversar no WhatsApp: (21) 96412-0231</span>
+                </a>
+
+                <a href="cadastro-imobiliaria.html" 
+                   class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold px-7 py-4 rounded-xl text-xs transition border border-slate-700">
+                    <span>Iniciar Cadastro Direto</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ TÉCNICO -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-center py-6 px-4 text-xs text-slate-500 space-y-1">
+        <p class="font-bold text-slate-400">SGI • Sistema de Gestão Imobiliária SaaS Multi-tenant</p>
+        <p class="text-[11px] text-slate-600">Desenvolvido por WB Projetos de Gestão Comercial • WhatsApp: (21) 96412-0231</p>
+    </footer>
+
+</body>
+</html>
