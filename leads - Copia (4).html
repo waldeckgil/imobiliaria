@@ -71,6 +71,8 @@
     <!-- CONTAINER FLUTUANTE GLOBAL DE TOASTS (NOTIFICAÇÕES DO SISTEMA) -->
     <div id="container-toasts" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none p-2"></div>
 
+ 
+
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
         <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto justify-between">
@@ -95,9 +97,12 @@
         </div>
     </div>
 
-    <!-- CABEÇALHO TOPBAR -->
+ <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
+        <!-- LARGURA DO CABEÇALHO: Mantenha o mesmo valor do <main> (ex: 1560px) -->
         <div class="w-full max-w-[1560px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+
+
 
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
@@ -134,9 +139,11 @@
         </div>
     </header>
 
+
     <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-950/60 border-b border-slate-800/80 px-4 sm:px-8 py-2.5">
         <div class="w-full max-w-[1560px] mx-auto flex items-center justify-center gap-2 sm:gap-3.5 overflow-x-auto text-sm sm:text-base py-1">
+
             <a href="dashboard.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
                 <i class="fa-solid fa-chart-pie text-slate-400"></i>
                 <span>Dashboard 360</span>
@@ -160,10 +167,14 @@
         </div>
     </nav>
 
-    <!-- CORPO PRINCIPAL -->
+<!-- ========================================================================= -->
+    <!-- CONTROLE DE LARGURA DO CORPO DA PÁGINA (CENTRAL DE ATENDIMENTOS & CRM)   -->
+    <!-- Para diminuir a largura: troque 1560px por 1480px, 1440px ou 1400px       -->
+    <!-- Para aumentar a largura: troque 1560px por 1650px, 1750px ou 1850px       -->
+    <!-- O campo a alterar é exatamente o número dentro de: max-w-[1560px]         -->
+    <!-- ========================================================================= -->
     <main class="w-full max-w-[1560px] mx-auto px-4 sm:px-6 py-4 flex-1 space-y-6">
-        
-        <!-- CARDS DO FUNIL COMERCIAL -->
+<!-- CARDS DO FUNIL COMERCIAL (7 ESTÁGIOS OFICIAIS COM TOOLTIPS & FILTRO POR CLIQUE) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             
             <!-- CARD 1: NOVOS -->
@@ -179,12 +190,13 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-blue-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-blue-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-bell"></i>
                         <span>Estágio: Novo Lead</span>
                     </div>
-                    <p class="leading-relaxed">Clientes que acabaram de enviar contato pelo site. Requer abordagem prioritária.</p>
+                    <p class="leading-relaxed">Clientes que acabaram de enviar formulário pelo site. Requer contato rápido no WhatsApp para não esfriar a oportunidade.</p>
                 </div>
             </div>
 
@@ -201,12 +213,13 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-amber-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-amber-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-headset"></i>
                         <span>Estágio: Em Conversa</span>
                     </div>
-                    <p class="leading-relaxed">O corretor já iniciou a sondagem com o cliente para entender perfil e alinhar visitas.</p>
+                    <p class="leading-relaxed">O corretor já iniciou a sondagem com o cliente via WhatsApp/telefone para entender perfil, crédito e alinhar visitas.</p>
                 </div>
             </div>
 
@@ -223,12 +236,13 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-cyan-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-cyan-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-calendar-days"></i>
                         <span>Estágio: Visita Marcada</span>
                     </div>
-                    <p class="leading-relaxed">Compromissos agendados no imóvel.</p>
+                    <p class="leading-relaxed">Compromissos agendados no imóvel. Use a confirmação de WhatsApp para reduzir faltas e registrar instruções de portaria.</p>
                 </div>
             </div>
 
@@ -245,16 +259,17 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-purple-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-purple-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-file-contract"></i>
                         <span>Estágio: Negociação Ativa</span>
                     </div>
-                    <p class="leading-relaxed">Cliente fez oferta de valor ou condições de pagamento.</p>
+                    <p class="leading-relaxed">Cliente fez oferta de valor ou condições de pagamento. Fase crítica para alinhamento entre corretor, comprador e proprietário.</p>
                 </div>
             </div>
 
-            <!-- CARD 5: CONCLUÍDOS -->
+            <!-- CARD 5: VENDAS CONCLUÍDAS -->
             <div onclick="clicarCardFunil('Fechado')" 
                  id="card-funil-Fechado"
                  class="group relative box-tech p-3.5 border-l-4 border-l-emerald-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/80 hover:bg-slate-850">
@@ -267,16 +282,17 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-emerald-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-emerald-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-trophy"></i>
                         <span>Estágio: Venda Fechada</span>
                     </div>
-                    <p class="leading-relaxed">Contrato assinado e comissões calculadas.</p>
+                    <p class="leading-relaxed">Contrato assinado e comissões calculadas. O imóvel é retirado da vitrine pública e registrado no módulo financeiro.</p>
                 </div>
             </div>
 
-            <!-- CARD 6: CANCELADOS -->
+            <!-- CARD 6: CANCELADOS (NOVO) -->
             <div onclick="clicarCardFunil('Cancelado')" 
                  id="card-funil-Cancelado"
                  class="group relative box-tech p-3.5 border-l-4 border-l-rose-500 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-rose-400/80 hover:bg-slate-850">
@@ -289,16 +305,17 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-rose-500/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-rose-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-calendar-xmark"></i>
                         <span>Estágio: Visita Cancelada</span>
                     </div>
-                    <p class="leading-relaxed">Visitas desmarcadas ou canceladas antes do fechamento.</p>
+                    <p class="leading-relaxed">Visitas desmarcadas ou canceladas antes do fechamento. Permite auditar motivos e tentar novo agendamento futuramente.</p>
                 </div>
             </div>
 
-            <!-- CARD 7: PERDIDOS -->
+            <!-- CARD 7: PERDIDOS (NOVO) -->
             <div onclick="clicarCardFunil('Perdido')" 
                  id="card-funil-Perdido"
                  class="group relative box-tech p-3.5 border-l-4 border-l-slate-500 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-slate-400/80 hover:bg-slate-850">
@@ -311,36 +328,26 @@
                     <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
+                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-slate-600/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-slate-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-ban"></i>
                         <span>Estágio: Oportunidade Encerrada</span>
                     </div>
-                    <p class="leading-relaxed">Contatos sem perfil de compra ou sem resposta após tentativas.</p>
+                    <p class="leading-relaxed">Contatos sem perfil de compra, imóveis fora do orçamento ou sem resposta após tentativas. Mantidos para registro histórico.</p>
                 </div>
             </div>
 
         </div>
 
-        <!-- BARRA DE FILTROS E BUSCA COM SELETOR DE MODALIDADE -->
+        <!-- BARRA DE FILTROS E BUSCA -->
         <div class="box-tech p-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
-                
-                <div class="lg:col-span-4 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-12 gap-3 text-xs">
+                <div class="lg:col-span-5 relative">
                     <input type="text" id="filtro-busca" placeholder="Buscar por cliente, WhatsApp, ref ou mensagem..." 
                            oninput="aplicarFiltros()"
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white text-xs outline-none focus:border-cyan-400">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
-                </div>
-
-                <!-- FILTRO DE MODALIDADE (VENDA / LOCAÇÃO) -->
-                <div class="lg:col-span-2">
-                    <select id="filtro-modalidade" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                        <option value="">Modalidade: Todas</option>
-                        <option value="VENDA">🏷️ Somente Venda</option>
-                        <option value="LOCACAO">🔑 Somente Locação</option>
-                        <option value="AVALIACAO">📋 Avaliação / Captação</option>
-                    </select>
                 </div>
 
                 <div class="lg:col-span-3">
@@ -350,13 +357,13 @@
                         <option value="Em Atendimento">🟡 Em Atendimento</option>
                         <option value="Visita Agendada">🟣 Visita Agendada</option>
                         <option value="Proposta">🟠 Proposta Feita</option>
-                        <option value="Fechado">🟢 Concluído</option>
+                        <option value="Fechado">🟢 Venda Concluída</option>
                         <option value="Cancelado">🚫 Cancelado</option>
                         <option value="Perdido">⚫ Perdido</option>
                     </select>
                 </div>
 
-                <div class="lg:col-span-2">
+                <div class="lg:col-span-3">
                     <select id="filtro-corretor" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Corretor: Todos</option>
                     </select>
@@ -378,7 +385,7 @@
                         <tr>
                             <th class="py-3 px-4">Recebido em</th>
                             <th class="py-3 px-3">Cliente</th>
-                            <th class="py-3 px-3">Origem / Negócio & Imóvel</th>
+                            <th class="py-3 px-3">Origem / Imóvel</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
                             <th class="py-3 px-3">Estágio do Funil</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
@@ -428,7 +435,7 @@
 
             <input type="hidden" id="cockpit-lead-id">
 
-            <!-- BLOCO 1: RESUMO DO CLIENTE + CARD DO IMÓVEL COM MODALIDADE VISÍVEL + CORRETOR -->
+            <!-- BLOCO 1: RESUMO DO CLIENTE + CARD DO IMÓVEL + CORRETOR -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs">
                 
                 <!-- DADOS DO CLIENTE -->
@@ -444,7 +451,7 @@
 
                 <!-- CONTEXTO DO IMÓVEL -->
                 <div class="md:col-span-4 space-y-1 border-b md:border-b-0 md:border-r border-slate-800 pb-2 md:pb-0 md:pr-3" id="cockpit-imovel-card">
-                    <!-- Dinâmico com badge de modalidade -->
+                    <!-- Dinâmico -->
                 </div>
 
                 <!-- CORRETOR RESPONSÁVEL -->
@@ -458,7 +465,7 @@
                 </div>
             </div>
 
-            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS -->
+            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS (PIPELINE INTERATIVO COM CANCELADO INCLUSO) -->
             <div class="space-y-1.5">
                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
                 <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5" id="cockpit-pipeline-botoes">
@@ -700,7 +707,9 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: FECHAMENTO DE VENDA -->
+    <!-- ==================================================================== -->
+    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: APERTO DE MÃO (FECHAMENTO DE VENDA) -->
+    <!-- ==================================================================== -->
     <div id="modal-confirmar-venda-explicativo" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4">
             
@@ -714,6 +723,7 @@
                 </div>
             </div>
 
+            <!-- QUADRO EXPLICATIVO DIDÁTICO PARA O GESTOR -->
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5 text-xs text-slate-300">
                 <p class="font-bold text-white text-[11px] uppercase tracking-wider">
                     Ao confirmar, o sistema realizará automaticamente:
@@ -799,7 +809,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Central de Atendimento Cockpit
     </footer>
 
-    <!-- JAVASCRIPT COMPLETO -->
+    <!-- JAVASCRIPT COMPLETO COM TOASTS NATIVOS E FUNIL INTERATIVO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -817,8 +827,9 @@
         let isMasterSuporte = false;
 
         let leadAtivoCockpit = null;
-        let filtroEstagioAtivoCard = null;
+        let filtroEstagioAtivoCard = null; // Guarda se há um card ativo filtrando
 
+        // ESTÁGIOS DO FUNIL COM O ESTÁGIO "CANCELADO" OFICIALIZADO E INTEGRADO
         const ESTAGIOS_FUNIL = [
             { chave: 'Novo', rotulo: 'Novo', cor: 'blue', icone: 'fa-circle-dot' },
             { chave: 'Em Atendimento', rotulo: 'Atendimento', cor: 'amber', icone: 'fa-headset' },
@@ -830,7 +841,7 @@
         ];
 
         // ====================================================================
-        // SISTEMA DE NOTIFICAÇÕES NATIVAS (TOASTS)
+        // SISTEMA DE NOTIFICAÇÕES NATIVAS (TOASTS ELEGANTES DARK TECH)
         // ====================================================================
         function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', duracaoMs = 4000) {
             const container = document.getElementById('container-toasts');
@@ -876,6 +887,7 @@
 
             container.appendChild(toast);
 
+            // Anima barra de progresso
             setTimeout(() => {
                 const bar = document.getElementById(`bar-${id}`);
                 if (bar) {
@@ -884,6 +896,7 @@
                 }
             }, 50);
 
+            // Auto-remover
             setTimeout(() => {
                 removerToast(id);
             }, duracaoMs);
@@ -900,58 +913,6 @@
         }
 
         // ====================================================================
-        // PARSER INTELIGENTE: MODALIDADE, ORIGEM E VALOR DO LEAD
-        // ====================================================================
-        function extrairContextoLead(lead) {
-            const msg = lead.mensagem || '';
-            let canal = 'Mensagem no Site';
-            let modalidade = 'GERAL';
-            let valorExibicao = '';
-
-            if (msg.includes('[SOLICITAÇÃO DE AVALIAÇÃO')) {
-                modalidade = 'AVALIACAO';
-                canal = 'Avaliação no Site';
-                return { modalidade, canal, valorExibicao: 'Avaliação' };
-            }
-
-            if (msg.includes('[INTERESSE: LOCAÇÃO') || msg.includes('[INTERESSE: LOCACAO') || msg.toLowerCase().includes('locação')) {
-                modalidade = 'LOCACAO';
-            } else if (msg.includes('[INTERESSE: VENDA') || msg.toLowerCase().includes('comprar') || msg.toLowerCase().includes('venda')) {
-                modalidade = 'VENDA';
-            } else if (lead.imovel) {
-                if (lead.imovel.finalidade === 'Locacao' || lead.imovel.finalidade === 'Locação') {
-                    modalidade = 'LOCACAO';
-                } else if (lead.imovel.finalidade === 'Venda') {
-                    modalidade = 'VENDA';
-                } else {
-                    modalidade = 'AMBOS';
-                }
-            }
-
-            if (lead.imovel) {
-                if (modalidade === 'LOCACAO') {
-                    const vl = lead.imovel.valor_locacao || 0;
-                    valorExibicao = vl ? Number(vl).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês' : 'Sob consulta';
-                } else if (modalidade === 'VENDA') {
-                    const vv = lead.imovel.valor_venda || 0;
-                    valorExibicao = vv ? Number(vv).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sob consulta';
-                } else {
-                    const vv = lead.imovel.valor_venda ? Number(lead.imovel.valor_venda).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
-                    const vl = lead.imovel.valor_locacao ? Number(lead.imovel.valor_locacao).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês' : '';
-                    valorExibicao = [vv, vl].filter(Boolean).join(' | ');
-                }
-            }
-
-            if (msg.includes('[CANAL: MENSAGEM DO SITE]')) {
-                canal = 'Mensagem no Site';
-            } else if (msg.toLowerCase().includes('whatsapp')) {
-                canal = 'WhatsApp Direto';
-            }
-
-            return { modalidade, canal, valorExibicao };
-        }
-
-        // ====================================================================
         // INICIALIZAÇÃO DA PÁGINA
         // ====================================================================
         async function inicializarLeads() {
@@ -964,6 +925,7 @@
             const email = session.user.email.toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
 
+            // 1. MODO MASTER SUPORTE OPERACIONAL
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
                 modoLeitura = false;
@@ -1001,6 +963,7 @@
                 return;
             }
 
+            // 2. GESTOR / CORRETOR LOGADO
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
@@ -1098,7 +1061,7 @@
                 if (imoveisIds.length > 0) {
                     const { data: imoveisData, error: errImoveis } = await supabaseClient
                         .from('imoveis')
-                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao, finalidade, tipo, status')
+                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao, status')
                         .in('id', imoveisIds);
 
                     if (!errImoveis && imoveisData) {
@@ -1135,7 +1098,7 @@
             }
         }
 
-        function atualizarMetricasFunil(leads) {
+function atualizarMetricasFunil(leads) {
             document.getElementById('kpi-leads-novos').innerText = leads.filter(l => (l.status || 'Novo') === 'Novo').length;
             document.getElementById('kpi-leads-atendimento').innerText = leads.filter(l => l.status === 'Em Atendimento').length;
             document.getElementById('kpi-leads-visitas').innerText = leads.filter(l => l.status === 'Visita Agendada').length;
@@ -1150,7 +1113,6 @@
 
             document.getElementById('contador-leads').innerText = leads.length;
         }
-
         function formatarDataVisita(isoString) {
             if (!isoString) return '';
             const d = new Date(isoString);
@@ -1190,9 +1152,13 @@
             }
         }
 
+        // ====================================================================
+        // INTERAÇÃO DOS CARDS DO FUNIL (FILTRO POR CLIQUE)
+        // ====================================================================
         function clicarCardFunil(status) {
             const select = document.getElementById('filtro-status');
 
+            // Se clicar no card que já está ativo, desmarca e volta a mostrar todos
             if (filtroEstagioAtivoCard === status) {
                 filtroEstagioAtivoCard = null;
                 select.value = '';
@@ -1214,7 +1180,7 @@
             aplicarFiltros();
         }
 
-        function atualizarDestaqueCardsFunil() {
+ function atualizarDestaqueCardsFunil() {
             const cardsIds = {
                 'Novo': 'card-funil-Novo',
                 'Em Atendimento': 'card-funil-Em-Atendimento',
@@ -1235,8 +1201,6 @@
                 }
             });
         }
-
-        // RENDERIZAÇÃO DA TABELA COM IDENTIFICAÇÃO VISUAL EXPLÍCITA [VENDA] / [LOCAÇÃO] E CANAL
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
@@ -1256,72 +1220,31 @@
                 const dataCriacao = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
                 
-                const { modalidade, canal, valorExibicao } = extrairContextoLead(l);
-                
+                const ehAvaliacao = (l.mensagem && l.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
                 let imovelBloco = '<span class="text-slate-500 italic">Interesse Geral</span>';
                 let refImovelTexto = 'Geral';
 
-                if (modalidade === 'AVALIACAO') {
+                if (ehAvaliacao) {
                     imovelBloco = `
                         <div class="flex items-center gap-2">
                             <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-600/60 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 shadow-sm">
                                 <i class="fa-solid fa-calculator"></i>
                             </div>
-                            <div class="truncate max-w-[200px]">
-                                <div class="flex items-center gap-1.5 mb-0.5">
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-600/60 inline-flex items-center gap-1">
-                                        <i class="fa-solid fa-calculator"></i> AVALIAÇÃO
-                                    </span>
-                                </div>
-                                <span class="font-bold text-white block truncate">Captação de Novo Imóvel</span>
-                                <span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
-                                    <i class="fa-regular fa-envelope text-cyan-400 text-[9px]"></i> Formulário no Site
-                                </span>
+                            <div class="truncate max-w-[180px]">
+                                <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase block">Captação / Avaliação</span>
+                                <span class="font-bold text-white block truncate">Novo Imóvel do Cliente</span>
                             </div>
                         </div>
                     `;
                 } else if (l.imovel) {
                     refImovelTexto = l.imovel.codigo_ref;
                     const foto = l.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
-                    
-                    let badgeModalidadeHtml = '';
-                    if (modalidade === 'LOCACAO') {
-                        badgeModalidadeHtml = `
-                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950/90 text-purple-300 border border-purple-600/60 inline-flex items-center gap-1 shadow-sm">
-                                <i class="fa-solid fa-key text-[9px]"></i> LOCAÇÃO
-                            </span>
-                            <span class="font-mono text-[10px] text-purple-300 font-bold ml-1">${valorExibicao}</span>
-                        `;
-                    } else if (modalidade === 'VENDA') {
-                        badgeModalidadeHtml = `
-                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-cyan-950/90 text-cyan-300 border border-cyan-600/60 inline-flex items-center gap-1 shadow-sm">
-                                <i class="fa-solid fa-tag text-[9px]"></i> VENDA
-                            </span>
-                            <span class="font-mono text-[10px] text-cyan-300 font-bold ml-1">${valorExibicao}</span>
-                        `;
-                    } else {
-                        badgeModalidadeHtml = `
-                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-blue-950/90 text-blue-300 border border-blue-600/60 inline-flex items-center gap-1">
-                                <i class="fa-solid fa-arrows-split-up-and-left text-[9px]"></i> VENDA / LOCAÇÃO
-                            </span>
-                        `;
-                    }
-
                     imovelBloco = `
                         <div class="flex items-center gap-2">
                             <img src="${foto}" class="w-10 h-10 rounded object-cover border border-slate-700 flex-shrink-0">
-                            <div class="truncate max-w-[210px]">
-                                <div class="flex items-center flex-wrap gap-1 mb-0.5">
-                                    ${badgeModalidadeHtml}
-                                </div>
-                                <div class="flex items-center gap-1">
-                                    <span class="font-mono text-[10px] text-slate-400 font-bold">Ref: ${l.imovel.codigo_ref}</span>
-                                    <span class="text-slate-600">•</span>
-                                    <span class="font-bold text-white truncate max-w-[130px]" title="${l.imovel.titulo}">${l.imovel.titulo}</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
-                                    <i class="fa-regular fa-envelope text-cyan-400 text-[9px]"></i> ${canal}
-                                </span>
+                            <div class="truncate max-w-[180px]">
+                                <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${l.imovel.codigo_ref}</span>
+                                <span class="font-bold text-white block truncate" title="${l.imovel.titulo}">${l.imovel.titulo}</span>
                             </div>
                         </div>
                     `;
@@ -1333,6 +1256,7 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
+                // Badges da Etapa Atual (Com badge explícita para CANCELADO)
                 const statusAtual = l.status || 'Novo';
                 let badgeStatusHtml = '';
                 if (statusAtual === 'Novo') {
@@ -1352,13 +1276,14 @@
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
 
+                // Montagem da URL de WhatsApp
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
-                    if (modalidade === 'AVALIACAO') {
-                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação de imóvel pelo site. Podemos conversar sobre os detalhes do seu imóvel?`;
+                    if (ehAvaliacao) {
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação de imóvel através do nosso site. Podemos conversar sobre os detalhes do seu imóvel?`;
                         urlWa += `?text=${encodeURIComponent(texto)}`;
                     } else {
                         const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
@@ -1366,8 +1291,7 @@
                             ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
                             : '';
 
-                        const modalidadeTexto = (modalidade === 'LOCACAO') ? 'LOCAÇÃO' : (modalidade === 'VENDA' ? 'COMPRA' : 'negociação');
-                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua mensagem de interesse na ${modalidadeTexto} do imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
                         urlWa += `?text=${encodeURIComponent(texto)}`;
                     }
                 }
@@ -1404,13 +1328,17 @@
                         </select>
                     </td>
 
+                    <!-- AÇÃO DIRETA LIMPA & EFICIENTE -->
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-2">
+                            
+                            <!-- BOTAO WHATSAPP PRIMÁRIO -->
                             <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Chamar</span>
                             </a>
 
+                            <!-- BOTAO COCKPIT UNIFICADO -->
                             <button onclick="abrirCockpitLead('${l.id}')" 
                                     class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 hover:border-cyan-400 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                                     title="Abrir Ficha e Gerenciar Atendimento">
@@ -1418,12 +1346,14 @@
                                 <span>Gerenciar</span>
                             </button>
 
+                            <!-- BOTAO DESCARTAR LEAD -->
                             <button onclick="abrirModalExcluirLead('${l.id}', '${l.nome.replace(/'/g, "\\'")}')" 
                                     ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
                                     title="Descartar Atendimento">
                                 <i class="fa-regular fa-trash-can text-xs"></i>
                             </button>
+
                         </div>
                     </td>
                 </tr>`;
@@ -1447,54 +1377,44 @@
             document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
             document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
 
+            // Card do Imóvel no Cockpit
             const cardImovel = document.getElementById('cockpit-imovel-card');
-            const { modalidade, valorExibicao } = extrairContextoLead(lead);
+            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
 
-            if (modalidade === 'AVALIACAO') {
+            if (ehAvaliacao) {
                 cardImovel.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-emerald-400 uppercase block tracking-wider">Origem do Atendimento</span>
-                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-300 border border-emerald-600">AVALIAÇÃO</span>
-                    </div>
+                    <span class="text-[10px] font-bold text-emerald-400 uppercase block tracking-wider">Origem do Atendimento</span>
                     <div class="flex items-center gap-2 mt-0.5">
                         <div class="w-8 h-8 rounded-lg bg-emerald-950 border border-emerald-600 text-emerald-400 flex items-center justify-center text-sm">
                             <i class="fa-solid fa-calculator"></i>
                         </div>
                         <div>
                             <span class="font-bold text-white block">Captação & Avaliação</span>
-                            <span class="text-slate-400 text-[10px]">Cliente solicitou precificação pelo portal</span>
+                            <span class="text-slate-400 text-[10px]">Cliente solicitou precificação</span>
                         </div>
                     </div>
                 `;
             } else if (lead.imovel) {
                 const foto = lead.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
+                const preco = lead.imovel.valor_venda 
+                    ? Number(lead.imovel.valor_venda).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                    : (lead.imovel.valor_locacao ? Number(lead.imovel.valor_locacao).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sob consulta');
+
                 const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
                 const urlVitrine = `${baseUrl}?imob=${imobiliariaSlug}&imovel=${lead.imovel.id}`;
-
-                let badgeModalidade = '';
-                if (modalidade === 'LOCACAO') {
-                    badgeModalidade = `<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950 text-purple-300 border border-purple-600"><i class="fa-solid fa-key mr-1"></i> LOCAÇÃO</span>`;
-                } else if (modalidade === 'VENDA') {
-                    badgeModalidade = `<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-600"><i class="fa-solid fa-tag mr-1"></i> VENDA</span>`;
-                } else {
-                    badgeModalidade = `<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-600">VENDA / LOCAÇÃO</span>`;
-                }
 
                 cardImovel.innerHTML = `
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] font-bold text-slate-500 uppercase block tracking-wider">Imóvel de Interesse</span>
-                        <div class="flex items-center gap-1.5">
-                            ${badgeModalidade}
-                            <a href="${urlVitrine}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1 ml-1">
-                                <span>Vitrine</span>
-                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                            </a>
-                        </div>
+                        <a href="${urlVitrine}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1">
+                            <span>Ver na vitrine</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                        </a>
                     </div>
                     <div class="flex items-center gap-2 mt-0.5">
                         <img src="${foto}" class="w-8 h-8 rounded object-cover border border-slate-700 flex-shrink-0">
                         <div class="truncate">
-                            <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${lead.imovel.codigo_ref} • ${valorExibicao}</span>
+                            <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${lead.imovel.codigo_ref} • ${preco}</span>
                             <span class="font-bold text-white block truncate" title="${lead.imovel.titulo}">${lead.imovel.titulo}</span>
                         </div>
                     </div>
@@ -1506,9 +1426,13 @@
                 `;
             }
 
+            // Seleciona o corretor no Cockpit
             document.getElementById('cockpit-corretor-select').value = lead.corretor_atribuido_id || '';
+
+            // Renderiza os botões do Pipeline com o status atual
             renderizarPipelineCockpit(lead.status || 'Novo');
 
+            // Carrega valores na aba de Visita
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
                 d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -1518,14 +1442,18 @@
             }
             document.getElementById('cockpit-visita-notas').value = lead.notas_agendamento || '';
 
+            // Carrega valores na aba de Proposta
             document.getElementById('cockpit-proposta-valor').value = lead.valor_proposta || '';
             document.getElementById('cockpit-proposta-condicoes').value = lead.condicoes_proposta || '';
 
+            // Configura a aba de Fechamento de Venda
             configurarAbaFechamentoCockpit(lead);
 
+            // Abre o modal e a aba desejada
             trocarAbaCockpit(abaInicial);
             document.getElementById('modal-cockpit-lead').classList.remove('hidden');
 
+            // Carrega a linha do tempo
             carregarEventosTimelineCockpit(lead.id);
         }
 
@@ -1567,6 +1495,7 @@
             const etapaAntiga = leadAtivoCockpit.status || 'Novo';
             if (etapaAntiga === novaEtapa) return;
 
+            // Se for mudar para Visita Agendada, direciona para a aba de visita
             if (novaEtapa === 'Visita Agendada') {
                 trocarAbaCockpit('visita');
             } else if (novaEtapa === 'Proposta') {
@@ -1576,9 +1505,11 @@
                 return;
             }
 
-            try {
+
+try {
                 const payloadUpdate = { status: novaEtapa };
 
+                // REGRA DE NEGÓCIO: Se saiu de 'Visita Agendada' para 'Em Atendimento', 'Proposta', 'Cancelado' ou 'Perdido', desocupa a agenda
                 if (novaEtapa !== 'Visita Agendada') {
                     payloadUpdate.data_agendamento = null;
                 }
@@ -1587,6 +1518,7 @@
                     .from('leads_contatos')
                     .update(payloadUpdate)
                     .eq('id', leadAtivoCockpit.id);
+
 
                 if (error) throw error;
 
@@ -2015,6 +1947,7 @@
             const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) ? dadosImobiliaria.comissao_venda_padrao_pct : 6.0;
             document.getElementById('cockpit-venda-comissao-total-pct').value = comissaoPadrao;
 
+            // Busca fatia do corretor
             let fatiaCorretor = 30.0;
             if (lead.corretor_atribuido_id) {
                 const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
@@ -2043,6 +1976,7 @@
             document.getElementById('cockpit-sim-repasse').innerText = valorRepasseProprietario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
+        // DISPARA O MODAL EXPLICATIVO DE CONFIRMAÇÃO DA VENDA
         function iniciarConfirmacaoExplicativaVenda() {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
@@ -2060,6 +1994,7 @@
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
 
+            // Alimenta os dados no modal explicativo de confirmação
             document.getElementById('conf-imovel-ref').innerText = `Ref: ${leadAtivoCockpit.imovel.codigo_ref}`;
             document.getElementById('conf-valor-venda').innerText = valorVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('conf-valor-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -2095,6 +2030,7 @@
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
+                // 1. Registra a venda na tabela de vendas fechadas
                 const { error: errVenda } = await supabaseClient
                     .from('vendas_fechadas')
                     .insert([{
@@ -2116,16 +2052,19 @@
 
                 if (errVenda) throw errVenda;
 
+                // 2. Atualiza o imóvel para Vendido e desativa da vitrine pública
                 await supabaseClient
                     .from('imoveis')
                     .update({ status: 'Vendido', ativa: false })
                     .eq('id', leadAtivoCockpit.imovel.id);
 
+                // 3. Atualiza o status do lead para Concluído / Fechado
                 await supabaseClient
                     .from('leads_contatos')
                     .update({ status: 'Fechado' })
                     .eq('id', leadAtivoCockpit.id);
 
+                // 4. Registra histórico oficial de auditoria
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
                     'fechamento',
@@ -2148,6 +2087,9 @@
             }
         }
 
+        // ====================================================================
+        // ATRIBUIÇÃO DIRETA DE CORRETOR NA TABELA
+        // ====================================================================
         async function atribuirCorretorLead(leadId, corretorId) {
             if (modoLeitura && !isMasterSuporte) return;
             try {
@@ -2188,12 +2130,9 @@
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
-            const modalidadeFiltro = document.getElementById('filtro-modalidade').value;
             const corretor = document.getElementById('filtro-corretor').value;
 
             let filtrados = listaLeadsCompleta.filter(l => {
-                const { modalidade } = extrairContextoLead(l);
-
                 const matchBusca = !busca || 
                     (l.nome && l.nome.toLowerCase().includes(busca)) ||
                     (l.whatsapp && l.whatsapp.includes(busca)) ||
@@ -2203,14 +2142,7 @@
                 const matchStatus = !status || (l.status || 'Novo') === status;
                 const matchCorretor = !corretor || String(l.corretor_atribuido_id) === String(corretor);
 
-                let matchModalidade = true;
-                if (modalidadeFiltro) {
-                    if (modalidadeFiltro === 'VENDA') matchModalidade = (modalidade === 'VENDA' || modalidade === 'AMBOS');
-                    else if (modalidadeFiltro === 'LOCACAO') matchModalidade = (modalidade === 'LOCACAO' || modalidade === 'AMBOS');
-                    else if (modalidadeFiltro === 'AVALIACAO') matchModalidade = (modalidade === 'AVALIACAO');
-                }
-
-                return matchBusca && matchStatus && matchCorretor && matchModalidade;
+                return matchBusca && matchStatus && matchCorretor;
             });
 
             renderizarTabelaLeads(filtrados);
@@ -2220,7 +2152,6 @@
             filtroEstagioAtivoCard = null;
             document.getElementById('filtro-busca').value = '';
             document.getElementById('filtro-status').value = '';
-            document.getElementById('filtro-modalidade').value = '';
             document.getElementById('filtro-corretor').value = '';
             atualizarDestaqueCardsFunil();
             renderizarTabelaLeads(listaLeadsCompleta);
@@ -2230,6 +2161,9 @@
             }
         }
 
+        // ====================================================================
+        // EXCLUSÃO DE LEAD
+        // ====================================================================
         function abrirModalExcluirLead(id, nome) {
             if (modoLeitura && !isMasterSuporte) return;
             document.getElementById('modal-excluir-lead-id').value = id;
