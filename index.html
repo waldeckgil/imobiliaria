@@ -505,12 +505,9 @@
                         </div>
                     </div>
 
-           <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
+    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         Fale Conosco
                     </a>
-
-                    <!-- REDES SOCIAIS OFICIAIS NO TOPO -->
-                    <div id="header-redes-sociais" class="flex items-center gap-1.5 py-1"></div>
 
                     <a id="btn-telefone-header" href="tel:" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
                         <i class="fa-solid fa-phone text-xs"></i>
@@ -520,16 +517,21 @@
             </div>
         </header>
 
-        <!-- FAIXA PRETA DE BUSCA -->
+ <!-- FAIXA PRETA DE BUSCA -->
         <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
             <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
-                        Catálogo de Imóveis Disponíveis
-                    </h1>
-                    <p class="text-xs text-gray-300 mt-1">
-                        <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
-                    </p>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 flex-wrap">
+                    <div>
+                        <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
+                            Catálogo de Imóveis Disponíveis
+                        </h1>
+                        <p class="text-xs text-gray-300 mt-1">
+                            <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
+                        </p>
+                    </div>
+
+                    <!-- ATALHOS REDES SOCIAIS & WHATSAPP NA FAIXA PRETA -->
+                    <div id="faixa-preta-redes-sociais" class="flex items-center gap-2 pt-1 sm:pt-0"></div>
                 </div>
 
                 <div class="w-full md:w-64">
@@ -1025,43 +1027,63 @@
                 return url;
             };
 
-            // 1. Redes Oficiais no Topo (Com cores de marca e ícones originais)
-            const containerHeaderRedes = document.getElementById('header-redes-sociais');
-            if (containerHeaderRedes) {
-                let htmlHeader = '';
+   // 1. Redes Oficiais + WhatsApp na FAIXA PRETA (Cores de marca com alto contraste no fundo escuro)
+            const containerFaixaPreta = document.getElementById('faixa-preta-redes-sociais');
+            if (containerFaixaPreta) {
+                let htmlFaixaPreta = '';
+
+                // Botão Oficial WhatsApp (Verde #25D366)
+                if (imob.whatsapp_contato && imob.whatsapp_contato.trim() !== '') {
+                    const zapUrl = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
+                    htmlFaixaPreta += `
+                        <a href="${zapUrl}" target="_blank" rel="noopener noreferrer" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#25D366] shadow-md hover:scale-110 transition-transform" 
+                           title="Falar no WhatsApp com ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                        </a>`;
+                }
+
+                // Botão Oficial Instagram (Degradê autêntico)
                 if (imob.instagram && imob.instagram.trim() !== '') {
-                    htmlHeader += `
+                    htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" 
-                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] shadow-sm hover:scale-110 transition-transform" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] shadow-md hover:scale-110 transition-transform" 
                            title="Instagram da ${imob.nome_fantasia}">
-                            <i class="fa-brands fa-instagram text-xs"></i>
+                            <i class="fa-brands fa-instagram text-sm"></i>
                         </a>`;
                 }
+
+                // Botão Oficial Facebook (Azul #1877F2)
                 if (imob.facebook && imob.facebook.trim() !== '') {
-                    htmlHeader += `
+                    htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.facebook, 'facebook')}" target="_blank" rel="noopener noreferrer" 
-                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-[#1877F2] shadow-sm hover:scale-110 transition-transform" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#1877F2] shadow-md hover:scale-110 transition-transform" 
                            title="Facebook da ${imob.nome_fantasia}">
-                            <i class="fa-brands fa-facebook-f text-xs"></i>
+                            <i class="fa-brands fa-facebook-f text-sm"></i>
                         </a>`;
                 }
+
+                // Botão Oficial YouTube (Vermelho #FF0000)
                 if (imob.youtube && imob.youtube.trim() !== '') {
-                    htmlHeader += `
+                    htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.youtube, 'youtube')}" target="_blank" rel="noopener noreferrer" 
-                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-[#FF0000] shadow-sm hover:scale-110 transition-transform" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#FF0000] shadow-md hover:scale-110 transition-transform" 
                            title="Canal no YouTube da ${imob.nome_fantasia}">
-                            <i class="fa-brands fa-youtube text-xs"></i>
+                            <i class="fa-brands fa-youtube text-sm"></i>
                         </a>`;
                 }
+
+                // Botão Oficial LinkedIn (Azul #0A66C2)
                 if (imob.linkedin && imob.linkedin.trim() !== '') {
-                    htmlHeader += `
+                    htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.linkedin, 'linkedin')}" target="_blank" rel="noopener noreferrer" 
-                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-[#0A66C2] shadow-sm hover:scale-110 transition-transform" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#0A66C2] shadow-md hover:scale-110 transition-transform" 
                            title="LinkedIn da ${imob.nome_fantasia}">
-                            <i class="fa-brands fa-linkedin-in text-xs"></i>
+                            <i class="fa-brands fa-linkedin-in text-sm"></i>
                         </a>`;
                 }
-                containerHeaderRedes.innerHTML = htmlHeader;
+
+                containerFaixaPreta.innerHTML = htmlFaixaPreta;
             }
 
             // 2. Redes no Rodapé (Estilo escuro harmonioso)
