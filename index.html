@@ -505,9 +505,12 @@
                         </div>
                     </div>
 
-                    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
+           <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         Fale Conosco
                     </a>
+
+                    <!-- REDES SOCIAIS OFICIAIS NO TOPO -->
+                    <div id="header-redes-sociais" class="flex items-center gap-1.5 py-1"></div>
 
                     <a id="btn-telefone-header" href="tel:" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
                         <i class="fa-solid fa-phone text-xs"></i>
@@ -1006,23 +1009,64 @@
   const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
 
-            // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS
+  // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS (TOPO E RODAPÉ)
+            const formatarLinkRede = (link, tipo) => {
+                if (!link) return '';
+                let url = link.trim();
+                if (url.startsWith('@')) {
+                    if (tipo === 'instagram') return `https://instagram.com/${url.substring(1)}`;
+                    if (tipo === 'facebook') return `https://facebook.com/${url.substring(1)}`;
+                    if (tipo === 'youtube') return `https://youtube.com/${url.substring(1)}`;
+                    if (tipo === 'linkedin') return `https://linkedin.com/in/${url.substring(1)}`;
+                }
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    return `https://${url}`;
+                }
+                return url;
+            };
+
+            // 1. Redes Oficiais no Topo (Com cores de marca e ícones originais)
+            const containerHeaderRedes = document.getElementById('header-redes-sociais');
+            if (containerHeaderRedes) {
+                let htmlHeader = '';
+                if (imob.instagram && imob.instagram.trim() !== '') {
+                    htmlHeader += `
+                        <a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] shadow-sm hover:scale-110 transition-transform" 
+                           title="Instagram da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-instagram text-xs"></i>
+                        </a>`;
+                }
+                if (imob.facebook && imob.facebook.trim() !== '') {
+                    htmlHeader += `
+                        <a href="${formatarLinkRede(imob.facebook, 'facebook')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-[#1877F2] shadow-sm hover:scale-110 transition-transform" 
+                           title="Facebook da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-facebook-f text-xs"></i>
+                        </a>`;
+                }
+                if (imob.youtube && imob.youtube.trim() !== '') {
+                    htmlHeader += `
+                        <a href="${formatarLinkRede(imob.youtube, 'youtube')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-[#FF0000] shadow-sm hover:scale-110 transition-transform" 
+                           title="Canal no YouTube da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-youtube text-xs"></i>
+                        </a>`;
+                }
+                if (imob.linkedin && imob.linkedin.trim() !== '') {
+                    htmlHeader += `
+                        <a href="${formatarLinkRede(imob.linkedin, 'linkedin')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-7 h-7 rounded-full flex items-center justify-center text-white bg-[#0A66C2] shadow-sm hover:scale-110 transition-transform" 
+                           title="LinkedIn da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-linkedin-in text-xs"></i>
+                        </a>`;
+                }
+                containerHeaderRedes.innerHTML = htmlHeader;
+            }
+
+            // 2. Redes no Rodapé (Estilo escuro harmonioso)
             const containerRedes = document.getElementById('footer-redes-sociais');
             if (containerRedes) {
-                const formatarLinkRede = (link, tipo) => {
-                    if (!link) return '';
-                    let url = link.trim();
-                    if (url.startsWith('@')) {
-                        if (tipo === 'instagram') return `https://instagram.com/${url.substring(1)}`;
-                        if (tipo === 'facebook') return `https://facebook.com/${url.substring(1)}`;
-                        if (tipo === 'youtube') return `https://youtube.com/${url.substring(1)}`;
-                    }
-                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                        return `https://${url}`;
-                    }
-                    return url;
-                };
-
                 let htmlRedes = '';
                 if (imob.instagram && imob.instagram.trim() !== '') {
                     htmlRedes += `<a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-pink-500 hover:text-pink-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="Instagram"><i class="fa-brands fa-instagram"></i></a>`;
@@ -1039,7 +1083,6 @@
                 containerRedes.innerHTML = htmlRedes;
             }
         }
-
         function exibirVitrineNaoEncontrada() {
             document.getElementById('header-razao').innerText = 'Vitrine Não Localizada';
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
