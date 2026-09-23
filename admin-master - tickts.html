@@ -70,6 +70,13 @@
                     <span class="text-slate-400 text-[11px]">dias antes</span>
                 </div>
 
+                <!-- BOTÃO DE CHAMADOS & SUPORTE TÉCNICO MASTER -->
+                <button onclick="abrirModalMasterTickets()" class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 font-bold px-3 py-1.5 rounded-xl border border-indigo-700/80 flex items-center gap-1.5 transition cursor-pointer text-xs shadow" title="Central Soberana de Chamados e Suporte">
+                    <i class="fa-solid fa-headset text-indigo-400 text-xs"></i>
+                    <span>Chamados</span>
+                    <span id="badge-contador-tickets" class="bg-indigo-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full font-mono">0</span>
+                </button>
+
                 <!-- BOTÃO DE AUDITORIA & EXPURGO -->
                 <button onclick="abrirModalAuditoriaMaster()" class="bg-rose-950/60 hover:bg-rose-900 text-rose-300 font-bold px-3 py-1.5 rounded-xl border border-rose-800/80 flex items-center gap-1.5 transition cursor-pointer text-xs shadow" title="Consultar Histórico de Expurgo e Auditoria">
                     <i class="fa-solid fa-shield-halved text-rose-400 text-xs"></i>
@@ -91,9 +98,9 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6 sm:space-y-8">
-        
-        <!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+      
+<!-- CARDS DE MÉTRICAS SAAS & FATURAMENTO (MRR) - GRADE 6 COLUNAS -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             
             <!-- MRR -->
             <div class="box-master p-3.5 sm:p-4 border-l-4 border-l-amber-400 flex flex-col justify-between">
@@ -158,7 +165,7 @@
             </div>
 
             <!-- BLOQUEADAS / PENDÊNCIAS -->
-            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-rose-500 flex flex-col justify-between col-span-2 sm:col-span-1">
+            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-rose-500 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                         <span>Pendências</span>
@@ -171,7 +178,30 @@
                 </div>
                 <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Acesso restrito</span>
             </div>
+
+     <!-- CARD NOVO: CHAMADOS (ABERTO & EM ANÁLISE COM ALERTA PULSANTE) -->
+            <div id="card-kpi-chamados" class="box-tech p-3.5 sm:p-4 border-l-4 border-l-indigo-500 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group" 
+                 onclick="abrirModalMasterTicketsFiltrado('ativos')" title="Clique para visualizar e gerenciar chamados em aberto e em análise">
+     
+     
+            <div>
+                    <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
+                        <span>Chamados</span>
+                        <i class="fa-solid fa-headset text-indigo-400 text-sm sm:text-base group-hover:scale-110 transition"></i>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-1">
+                        <span id="kpi-chamados-total" class="text-xl sm:text-2xl font-black text-indigo-300">0</span>
+                        <span class="text-[10px] text-slate-400">pendentes</span>
+                    </div>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-[9px] sm:text-[10px] font-bold">
+                    <span id="kpi-chamados-substatus" class="text-amber-400">0 aberto • 0 análise</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[8px] text-indigo-400"></i>
+                </div>
+            </div>
+
         </div>
+
 
         <!-- GESTÃO DE ASSINANTES -->
         <div class="box-tech overflow-hidden shadow-2xl space-y-4 p-4 sm:p-5">
@@ -846,6 +876,98 @@
         </div>
     </div>
 
+<!-- ========================================================================= -->
+    <!-- MODAL SOBERANO: CENTRAL DE ATENDIMENTO & TICKETS MASTER                   -->
+    <!-- ========================================================================= -->
+    <div id="modal-master-tickets" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-5xl w-full p-4 sm:p-6 shadow-2xl relative border-2 border-indigo-500/60 max-h-[94vh] flex flex-col">
+            
+            <button type="button" onclick="fecharModalMasterTickets()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- TOPO DO MODAL -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/40 shrink-0">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm sm:text-base font-black text-white">Central Soberana de Suporte & Chamados</h3>
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
+                                CONTROLE MASTER
+                            </span>
+                        </div>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Atenda dúvidas, contate o gestor no WhatsApp com 1 clique e encerre os chamados com parecer formal.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                    <button type="button" onclick="carregarTicketsMaster()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-indigo-300 border border-indigo-800 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer">
+                        <i class="fa-solid fa-rotate text-xs"></i>
+                        <span>Recarregar</span>
+                    </button>
+                    <div class="bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-right">
+                        <span class="text-[9px] text-slate-400 uppercase font-bold block">Pendentes de Solução</span>
+                        <strong id="contador-tickets-pendentes" class="text-xs text-amber-400 font-mono">0 abertos</strong>
+                    </div>
+                </div>
+            </div>
+
+     <!-- BARRA DE FILTROS AVANÇADOS (4 COLUNAS COM FILTRO DE MÊS INTEGRADO) -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Mês de Referência:</label>
+                    <select id="filtro-ticket-mes" onchange="filtrarTicketsMaster()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-cyan-300 font-mono font-bold outline-none focus:border-indigo-400 cursor-pointer">
+                        <!-- Preenchido dinamicamente via JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Filtrar por Imobiliária:</label>
+                    <select id="filtro-ticket-imob" onchange="filtrarTicketsMaster()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-indigo-400 cursor-pointer">
+                        <option value="">Todas as Imobiliárias</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Status do Chamado:</label>
+                    <select id="filtro-ticket-status" onchange="filtrarTicketsMaster()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-indigo-400 cursor-pointer">
+                        <option value="ativos" selected>Abertos + Em Análise</option>
+                        <option value="aberto">Apenas Abertos (Novos)</option>
+                        <option value="em_analise">Apenas Em Análise</option>
+                        <option value="resolvido">Resolvidos / Concluídos</option>
+                        <option value="">Todos os Status</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Busca Rápida:</label>
+                    <div class="relative">
+                        <input type="text" id="filtro-ticket-busca" placeholder="Assunto, mensagem, nome..." 
+                               oninput="filtrarTicketsMaster()"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-lg py-2 pl-8 pr-3 text-white outline-none focus:border-indigo-400">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LISTAGEM DOS CARDS DE TICKETS -->
+            <div id="lista-master-tickets-corpo" class="overflow-y-auto flex-1 space-y-3 pr-1">
+                <div class="py-12 text-center text-slate-500 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-xl mb-2"></i>
+                    <p>Consultando base unificada de chamados...</p>
+                </div>
+            </div>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
+                <span>Total exibido: <strong id="contador-tickets-total" class="text-white">0</strong> chamados</span>
+                <button type="button" onclick="fecharModalMasterTickets()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                    Fechar Janela
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL 6: MODAL DE CONFIRMAÇÃO CUSTOMIZADO -->
     <div id="modal-confirm-custom" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[9990] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-md w-full p-5 sm:p-6 shadow-2xl relative border border-amber-500/40">
@@ -1227,8 +1349,7 @@
                 mostrarToast('Falha ao atualizar regra de aviso.', 'erro');
             }
         }
-
-        async function carregarDadosMaster() {
+async function carregarDadosMaster() {
             try {
                 const { data: imobs, error: errImobs } = await supabaseClient
                     .from('imobiliarias')
@@ -1248,12 +1369,433 @@
                 atualizarMetricasMaster();
                 renderizarTabelaImobiliarias(listaImobiliarias);
                 popularSelectImobiliariasFiltro();
+                popularSelectTicketsImobiliarias();
+                await carregarTicketsMaster();
 
             } catch (err) {
                 console.error(err);
                 mostrarToast('Erro ao consultar banco de dados master.', 'erro');
             }
         }
+
+        // =========================================================================
+        // MOTOR DE GESTÃO DE CHAMADOS MASTER & ATENDIMENTO
+        // =========================================================================
+   let listaGlobalTickets = [];
+
+        function popularSelectMesesTickets() {
+            const select = document.getElementById('filtro-ticket-mes');
+            if (!select || select.children.length > 0) return;
+
+            const mesesNomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const hoje = new Date();
+
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+                const mesNum = String(d.getMonth() + 1).padStart(2, '0');
+                const ano = d.getFullYear();
+                const valorRef = `${mesNum}/${ano}`;
+                const rotuloMes = (i === 0) 
+                    ? `${mesesNomes[d.getMonth()]} / ${ano} (Atual)` 
+                    : `${mesesNomes[d.getMonth()]} / ${ano}`;
+
+                const opt = document.createElement('option');
+                opt.value = valorRef;
+                opt.textContent = rotuloMes;
+                if (i === 0) opt.selected = true;
+                select.appendChild(opt);
+            }
+
+            const optTodos = document.createElement('option');
+            optTodos.value = 'todos';
+            optTodos.textContent = 'Todos os Meses (Histórico)';
+            select.appendChild(optTodos);
+        }
+function popularSelectTicketsImobiliarias() {
+            popularSelectMesesTickets();
+            const select = document.getElementById('filtro-ticket-imob');
+            if (!select) return;
+            const valorAtual = select.value;
+            select.innerHTML = '<option value="">Todas as Imobiliárias</option>';
+
+            const ordenadas = [...listaImobiliarias].sort((a, b) => (a.nome_fantasia || '').localeCompare(b.nome_fantasia || ''));
+            ordenadas.forEach(im => {
+                const opt = document.createElement('option');
+                opt.value = im.id;
+                opt.textContent = im.nome_fantasia;
+                select.appendChild(opt);
+            });
+
+            if (valorAtual) select.value = valorAtual;
+        }
+
+        async function carregarTicketsMaster() {
+            try {
+                const { data: tickets, error } = await supabaseClient
+                    .from('support_tickets')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                listaGlobalTickets = tickets || [];
+
+                const abertos = listaGlobalTickets.filter(t => t.status === 'aberto').length;
+                const emAnalise = listaGlobalTickets.filter(t => t.status === 'em_analise').length;
+                const totalPendentes = abertos + emAnalise;
+
+                // 1. ATUALIZAÇÃO DO BADGE NO CABEÇALHO COM PULSO AMARELO FORTE
+                const badgeTop = document.getElementById('badge-contador-tickets');
+                const badgeModal = document.getElementById('contador-tickets-pendentes');
+
+                if (badgeTop) {
+                    badgeTop.innerText = abertos;
+                    if (abertos > 0) {
+                        badgeTop.className = 'bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full font-mono animate-pulse shadow-lg shadow-amber-400/60 ring-2 ring-amber-300';
+                    } else {
+                        badgeTop.className = 'bg-indigo-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full font-mono';
+                    }
+                }
+
+                if (badgeModal) badgeModal.innerText = `${totalPendentes} ativos`;
+
+                // 2. ATUALIZAÇÃO DO CARD NO COCKPIT COM ALERTA AMARELO PISCANTE
+                const cardCockpit = document.getElementById('card-kpi-chamados');
+                const elKpiTotal = document.getElementById('kpi-chamados-total');
+                const elKpiSub = document.getElementById('kpi-chamados-substatus');
+
+                if (cardCockpit) {
+                    if (abertos > 0) {
+                        // Estado de Atenção Máxima: Borda Amarela Vibrante, Glow e Fundo Destacado
+                        cardCockpit.className = 'box-tech p-3.5 sm:p-4 border-l-4 border-l-amber-400 bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-950 ring-1 ring-amber-500/50 shadow-xl shadow-amber-950/40 flex flex-col justify-between cursor-pointer hover:scale-[1.02] transition-all group';
+                    } else {
+                        // Estado Normal de Operação
+                        cardCockpit.className = 'box-tech p-3.5 sm:p-4 border-l-4 border-l-indigo-500 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group';
+                    }
+                }
+
+                if (elKpiTotal) {
+                    elKpiTotal.innerText = totalPendentes;
+                    if (abertos > 0) {
+                        elKpiTotal.className = 'text-xl sm:text-2xl font-black text-amber-400 animate-pulse drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]';
+                    } else {
+                        elKpiTotal.className = 'text-xl sm:text-2xl font-black text-indigo-300';
+                    }
+                }
+
+                if (elKpiSub) {
+                    if (abertos > 0) {
+                        elKpiSub.innerHTML = `<span class="text-amber-300 font-black animate-pulse flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${abertos} NOVO(S) ABERTO(S)</span>`;
+                    } else {
+                        elKpiSub.innerText = `0 aberto • ${emAnalise} análise`;
+                        elKpiSub.className = 'text-amber-400';
+                    }
+                }
+
+                filtrarTicketsMaster();
+
+            } catch (err) {
+                console.error('[TICKETS MASTER] Erro ao carregar chamados:', err);
+            }
+        }
+
+        function abrirModalMasterTickets() {
+            popularSelectTicketsImobiliarias();
+            document.getElementById('modal-master-tickets').classList.remove('hidden');
+            carregarTicketsMaster();
+        }
+
+        function abrirModalMasterTicketsFiltrado(statusAlvo) {
+            popularSelectTicketsImobiliarias();
+            const selectStatus = document.getElementById('filtro-ticket-status');
+            if (selectStatus) {
+                selectStatus.value = statusAlvo || 'ativos';
+            }
+            document.getElementById('modal-master-tickets').classList.remove('hidden');
+            carregarTicketsMaster();
+        }
+
+        function fecharModalMasterTickets() {
+            document.getElementById('modal-master-tickets').classList.add('hidden');
+        }
+
+function filtrarTicketsMaster() {
+            const mesFiltro = document.getElementById('filtro-ticket-mes')?.value;
+            const imobFiltro = document.getElementById('filtro-ticket-imob')?.value;
+            const statusFiltro = document.getElementById('filtro-ticket-status')?.value;
+            const termoBusca = (document.getElementById('filtro-ticket-busca')?.value || '').toLowerCase().trim();
+
+            let filtrados = [...listaGlobalTickets];
+
+            // 1. FILTRO DE MÊS/ANO DE ABERTURA (PADRÃO: MÊS CORRENTE)
+            if (mesFiltro && mesFiltro !== 'todos') {
+                filtrados = filtrados.filter(t => {
+                    if (!t.created_at) return false;
+                    const d = new Date(t.created_at);
+                    const mesAno = `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+                    return mesAno === mesFiltro;
+                });
+            }
+
+            // 2. FILTRO DE IMOBILIÁRIA
+            if (imobFiltro) {
+                filtrados = filtrados.filter(t => t.imobiliaria_id === imobFiltro);
+            }
+            if (statusFiltro === 'ativos') {
+                filtrados = filtrados.filter(t => t.status === 'aberto' || t.status === 'em_analise');
+            } else if (statusFiltro) {
+                filtrados = filtrados.filter(t => t.status === statusFiltro);
+            }
+
+
+            if (termoBusca) {
+                filtrados = filtrados.filter(t => {
+                    const imob = listaImobiliarias.find(i => i.id === t.imobiliaria_id);
+                    const nomeImob = imob ? imob.nome_fantasia.toLowerCase() : '';
+                    const assunto = (t.assunto || '').toLowerCase();
+                    const msg = (t.mensagem || '').toLowerCase();
+                    const gestor = (t.gestor_nome || '').toLowerCase();
+                    return nomeImob.includes(termoBusca) || assunto.includes(termoBusca) || msg.includes(termoBusca) || gestor.includes(termoBusca);
+                });
+            }
+
+            renderizarCardsTicketsMaster(filtrados);
+        }
+
+ // PALETA DE CORES DETERMINÍSTICA POR IMOBILIÁRIA (CADA CLIENTE TEM SUA PRÓPRIA COR)
+        const PALETA_TEMAS_IMOBILIARIAS = [
+            { borderLeft: 'border-l-cyan-400', badge: 'bg-cyan-950/80 text-cyan-300 border-cyan-700/70', slug: 'text-cyan-400' },
+            { borderLeft: 'border-l-purple-400', badge: 'bg-purple-950/80 text-purple-300 border-purple-700/70', slug: 'text-purple-400' },
+            { borderLeft: 'border-l-emerald-400', badge: 'bg-emerald-950/80 text-emerald-300 border-emerald-700/70', slug: 'text-emerald-400' },
+            { borderLeft: 'border-l-rose-400', badge: 'bg-rose-950/80 text-rose-300 border-rose-700/70', slug: 'text-rose-400' },
+            { borderLeft: 'border-l-sky-400', badge: 'bg-sky-950/80 text-sky-300 border-sky-700/70', slug: 'text-sky-400' },
+            { borderLeft: 'border-l-amber-400', badge: 'bg-amber-950/80 text-amber-300 border-amber-700/70', slug: 'text-amber-400' },
+            { borderLeft: 'border-l-teal-400', badge: 'bg-teal-950/80 text-teal-300 border-teal-700/70', slug: 'text-teal-400' },
+            { borderLeft: 'border-l-fuchsia-400', badge: 'bg-fuchsia-950/80 text-fuchsia-300 border-fuchsia-700/70', slug: 'text-fuchsia-400' },
+            { borderLeft: 'border-l-blue-400', badge: 'bg-blue-950/80 text-blue-300 border-blue-700/70', slug: 'text-blue-400' }
+        ];
+
+        function obterTemaVisualImobiliaria(imobId) {
+            if (!imobId) return PALETA_TEMAS_IMOBILIARIAS[0];
+            let hash = 0;
+            for (let i = 0; i < imobId.length; i++) {
+                hash = (hash << 5) - hash + imobId.charCodeAt(i);
+                hash |= 0;
+            }
+            const indice = Math.abs(hash) % PALETA_TEMAS_IMOBILIARIAS.length;
+            return PALETA_TEMAS_IMOBILIARIAS[indice];
+        }
+
+        function renderizarCardsTicketsMaster(tickets) {
+            const container = document.getElementById('lista-master-tickets-corpo');
+            const contadorTotal = document.getElementById('contador-tickets-total');
+            if (!container) return;
+
+            if (contadorTotal) contadorTotal.innerText = tickets.length;
+
+            if (tickets.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-slate-950 p-8 rounded-xl border border-slate-800 text-center text-slate-500 text-xs">
+                        <i class="fa-solid fa-headset text-slate-600 text-2xl mb-2"></i>
+                        <p>Nenhum chamado encontrado com os filtros selecionados.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tickets.map(t => {
+                const imob = listaImobiliarias.find(i => i.id === t.imobiliaria_id);
+                const nomeImob = imob ? imob.nome_fantasia : 'Imobiliária Não Localizada';
+                const slugImob = imob ? imob.slug : '';
+                const dataAbertura = new Date(t.created_at).toLocaleString('pt-BR');
+                const zapLimpo = ('' + (t.gestor_whatsapp || '')).replace(/\D/g, '');
+
+                // Tema visual exclusivo da imobiliária
+                const temaImob = obterTemaVisualImobiliaria(t.imobiliaria_id);
+
+                const msgZapTexto = `Olá ${t.gestor_nome}! Sou o Administrador do SGI. Estou entrando em contato referente ao seu chamado sobre "${t.assunto}".`;
+                const urlZap = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(msgZapTexto)}` : null;
+
+                let badgeStatus = '';
+                let bordaCard = 'border-slate-800 bg-slate-950';
+
+                if (t.status === 'aberto') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-400 text-slate-950 border border-amber-300 flex items-center gap-1 animate-pulse shadow-md shadow-amber-400/50"><i class="fa-solid fa-bell text-slate-950"></i> ABERTO (NOVO)</span>';
+                    bordaCard = 'border-amber-400/60 bg-gradient-to-r from-amber-950/25 to-slate-950 shadow-lg shadow-amber-950/30 ring-1 ring-amber-400/30';
+                } else if (t.status === 'em_analise') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 animate-pulse"><i class="fa-solid fa-spinner fa-spin text-[8px]"></i> EM ANÁLISE</span>';
+                    bordaCard = 'border-blue-900/50 bg-blue-950/10';
+                } else if (t.status === 'resolvido') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> RESOLVIDO</span>';
+                    bordaCard = 'border-slate-800 bg-slate-950/70';
+                }
+
+                return `
+                    <div class="p-4 rounded-xl border border-l-4 ${temaImob.borderLeft} ${bordaCard} space-y-3 text-xs shadow-sm transition">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
+                            <div class="space-y-0.5 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="px-2.5 py-0.5 rounded-lg border text-xs font-black uppercase tracking-wide flex items-center gap-1.5 shadow-sm ${temaImob.badge}">
+                                        <i class="fa-solid fa-building text-[10px]"></i>
+                                        <span>${nomeImob}</span>
+                                    </span>
+                                    <span class="text-[10px] font-mono ${temaImob.slug}">/${slugImob}</span>
+                                    <span class="text-[9px] font-mono font-bold uppercase px-2 py-0.2 rounded bg-slate-900 text-indigo-300 border border-slate-800">
+                                        ${t.categoria}
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 pt-0.5">
+                                    Aberto por <strong>${t.gestor_nome}</strong> (${t.gestor_email || 'Sem e-mail'}) • <span class="font-mono text-slate-500">${dataAbertura}</span>
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                ${badgeStatus}
+                                ${urlZap ? `
+                                    <a href="${urlZap}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 shadow transition">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                                        <span>Chamar Gestor</span>
+                                    </a>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-message text-[10px]"></i>
+                                <span>${t.assunto}</span>
+                            </h4>
+                            <div class="bg-slate-900/90 p-3 rounded-lg border border-slate-800 text-slate-200 leading-relaxed text-[11px]">
+                                ${t.mensagem}
+                            </div>
+                        </div>
+
+                        ${t.resposta_admin ? `
+                            <div class="bg-indigo-950/30 p-3 rounded-lg border border-indigo-500/40 space-y-1">
+                                <div class="flex items-center justify-between text-[10px]">
+                                    <span class="font-black uppercase text-indigo-300 flex items-center gap-1">
+                                        <i class="fa-solid fa-shield-halved"></i> Parecer do Administrador Master:
+                                    </span>
+                                    <span class="text-slate-400 font-mono">
+                                        ${t.respondido_em ? new Date(t.respondido_em).toLocaleString('pt-BR') : ''}
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-indigo-100 leading-relaxed">${t.resposta_admin}</p>
+                            </div>
+                        ` : ''}
+
+                        ${t.status !== 'resolvido' ? `
+                            <div class="pt-2 border-t border-slate-800/80 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="font-bold text-slate-300 text-[11px] flex items-center gap-1.5">
+                                        <i class="fa-solid fa-reply text-indigo-400"></i>
+                                        <span>Redigir Parecer Técnico / Resolução:</span>
+                                    </label>
+                                    ${t.status === 'aberto' ? `
+                                        <button type="button" onclick="colocarTicketEmAnalise('${t.id}')" class="text-blue-400 hover:text-blue-300 font-bold text-[10px] flex items-center gap-1 cursor-pointer">
+                                            <i class="fa-solid fa-spinner"></i> Colocar em Análise
+                                        </button>
+                                    ` : ''}
+                                </div>
+                                <div class="flex flex-col sm:flex-row gap-2">
+                                    <input type="text" id="resposta-ticket-${t.id}" placeholder="Escreva a resposta que o gestor verá no painel dele..." 
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400">
+                                    <button type="button" onclick="resolverTicketMaster('${t.id}')" 
+                                            class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition shadow cursor-pointer whitespace-nowrap">
+                                        <i class="fa-solid fa-check"></i>
+                                        <span>Concluir & Responder</span>
+                                    </button>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="pt-1 flex items-center justify-end">
+                                <button type="button" onclick="reabrirTicketMaster('${t.id}')" class="text-slate-500 hover:text-amber-400 text-[10px] font-bold transition cursor-pointer">
+                                    Reabrir chamado se necessário
+                                </button>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+        async function colocarTicketEmAnalise(ticketId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('support_tickets')
+                    .update({ status: 'em_analise' })
+                    .eq('id', ticketId);
+
+                if (error) throw error;
+
+                mostrarToast('Chamado colocado em análise com sucesso!', 'sucesso');
+                await carregarTicketsMaster();
+
+            } catch (err) {
+                console.error(err);
+                mostrarToast('Erro ao atualizar status do chamado.', 'erro');
+            }
+        }
+
+        async function resolverTicketMaster(ticketId) {
+            const inputResposta = document.getElementById(`resposta-ticket-${ticketId}`);
+            const resposta = (inputResposta?.value || '').trim();
+
+            if (!resposta) {
+                mostrarToast('Por favor, digite uma resposta para concluir o chamado.', 'aviso');
+                return;
+            }
+
+            try {
+                const agora = new Date().toISOString();
+                const { error } = await supabaseClient
+                    .from('support_tickets')
+                    .update({
+                        resposta_admin: resposta,
+                        respondido_em: agora,
+                        status: 'resolvido'
+                    })
+                    .eq('id', ticketId);
+
+                if (error) throw error;
+
+                mostrarToast('Chamado respondido e resolvido com sucesso!', 'sucesso');
+                await carregarTicketsMaster();
+
+            } catch (err) {
+                console.error(err);
+                mostrarToast('Falha ao concluir chamado: ' + err.message, 'erro');
+            }
+        }
+
+        async function reabrirTicketMaster(ticketId) {
+            const confirmou = await solicitarConfirmacaoMaster(
+                'Reabrir Chamado',
+                'Deseja reabrir este chamado para status "Em Análise"?',
+                'Reabrir',
+                'amber'
+            );
+
+            if (confirmou) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('support_tickets')
+                        .update({ status: 'em_analise' })
+                        .eq('id', ticketId);
+
+                    if (error) throw error;
+                    mostrarToast('Chamado reaberto!', 'sucesso');
+                    await carregarTicketsMaster();
+                } catch (err) {
+                    mostrarToast('Erro ao reabrir chamado.', 'erro');
+                }
+            }
+        }
+window.abrirModalMasterTickets = abrirModalMasterTickets;
+        window.abrirModalMasterTicketsFiltrado = abrirModalMasterTicketsFiltrado;
+        window.fecharModalMasterTickets = fecharModalMasterTickets;
+        window.filtrarTicketsMaster = filtrarTicketsMaster;
+        window.carregarTicketsMaster = carregarTicketsMaster;
+        window.colocarTicketEmAnalise = colocarTicketEmAnalise;
+        window.resolverTicketMaster = resolverTicketMaster;
+        window.reabrirTicketMaster = reabrirTicketMaster;
 
         async function carregarTotalizadoresPagamentos() {
             try {
