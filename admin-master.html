@@ -1561,6 +1561,30 @@ function filtrarTicketsMaster() {
             renderizarCardsTicketsMaster(filtrados);
         }
 
+ // PALETA DE CORES DETERMINÍSTICA POR IMOBILIÁRIA (CADA CLIENTE TEM SUA PRÓPRIA COR)
+        const PALETA_TEMAS_IMOBILIARIAS = [
+            { borderLeft: 'border-l-cyan-400', badge: 'bg-cyan-950/80 text-cyan-300 border-cyan-700/70', slug: 'text-cyan-400' },
+            { borderLeft: 'border-l-purple-400', badge: 'bg-purple-950/80 text-purple-300 border-purple-700/70', slug: 'text-purple-400' },
+            { borderLeft: 'border-l-emerald-400', badge: 'bg-emerald-950/80 text-emerald-300 border-emerald-700/70', slug: 'text-emerald-400' },
+            { borderLeft: 'border-l-rose-400', badge: 'bg-rose-950/80 text-rose-300 border-rose-700/70', slug: 'text-rose-400' },
+            { borderLeft: 'border-l-sky-400', badge: 'bg-sky-950/80 text-sky-300 border-sky-700/70', slug: 'text-sky-400' },
+            { borderLeft: 'border-l-amber-400', badge: 'bg-amber-950/80 text-amber-300 border-amber-700/70', slug: 'text-amber-400' },
+            { borderLeft: 'border-l-teal-400', badge: 'bg-teal-950/80 text-teal-300 border-teal-700/70', slug: 'text-teal-400' },
+            { borderLeft: 'border-l-fuchsia-400', badge: 'bg-fuchsia-950/80 text-fuchsia-300 border-fuchsia-700/70', slug: 'text-fuchsia-400' },
+            { borderLeft: 'border-l-blue-400', badge: 'bg-blue-950/80 text-blue-300 border-blue-700/70', slug: 'text-blue-400' }
+        ];
+
+        function obterTemaVisualImobiliaria(imobId) {
+            if (!imobId) return PALETA_TEMAS_IMOBILIARIAS[0];
+            let hash = 0;
+            for (let i = 0; i < imobId.length; i++) {
+                hash = (hash << 5) - hash + imobId.charCodeAt(i);
+                hash |= 0;
+            }
+            const indice = Math.abs(hash) % PALETA_TEMAS_IMOBILIARIAS.length;
+            return PALETA_TEMAS_IMOBILIARIAS[indice];
+        }
+
         function renderizarCardsTicketsMaster(tickets) {
             const container = document.getElementById('lista-master-tickets-corpo');
             const contadorTotal = document.getElementById('contador-tickets-total');
@@ -1585,35 +1609,41 @@ function filtrarTicketsMaster() {
                 const dataAbertura = new Date(t.created_at).toLocaleString('pt-BR');
                 const zapLimpo = ('' + (t.gestor_whatsapp || '')).replace(/\D/g, '');
 
+                // Tema visual exclusivo da imobiliária
+                const temaImob = obterTemaVisualImobiliaria(t.imobiliaria_id);
+
                 const msgZapTexto = `Olá ${t.gestor_nome}! Sou o Administrador do SGI. Estou entrando em contato referente ao seu chamado sobre "${t.assunto}".`;
                 const urlZap = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(msgZapTexto)}` : null;
 
                 let badgeStatus = '';
-                let bordaCard = 'border-slate-800';
+                let bordaCard = 'border-slate-800 bg-slate-950';
 
-             if (t.status === 'aberto') {
+                if (t.status === 'aberto') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-400 text-slate-950 border border-amber-300 flex items-center gap-1 animate-pulse shadow-md shadow-amber-400/50"><i class="fa-solid fa-bell text-slate-950"></i> ABERTO (NOVO)</span>';
-                    bordaCard = 'border-2 border-amber-400 bg-gradient-to-r from-amber-950/30 to-slate-950 shadow-lg shadow-amber-950/40 ring-1 ring-amber-400/30';
+                    bordaCard = 'border-amber-400/60 bg-gradient-to-r from-amber-950/25 to-slate-950 shadow-lg shadow-amber-950/30 ring-1 ring-amber-400/30';
                 } else if (t.status === 'em_analise') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 animate-pulse"><i class="fa-solid fa-spinner fa-spin text-[8px]"></i> EM ANÁLISE</span>';
                     bordaCard = 'border-blue-900/50 bg-blue-950/10';
                 } else if (t.status === 'resolvido') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> RESOLVIDO</span>';
-                    bordaCard = 'border-emerald-900/40 bg-slate-950';
+                    bordaCard = 'border-slate-800 bg-slate-950/70';
                 }
 
                 return `
-                    <div class="p-4 rounded-xl border ${bordaCard} space-y-3 text-xs shadow-sm">
+                    <div class="p-4 rounded-xl border border-l-4 ${temaImob.borderLeft} ${bordaCard} space-y-3 text-xs shadow-sm transition">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-2.5">
                             <div class="space-y-0.5 min-w-0">
                                 <div class="flex items-center gap-2 flex-wrap">
-                                    <strong class="text-white text-sm uppercase">${nomeImob}</strong>
-                                    <span class="text-[10px] text-cyan-400 font-mono">/${slugImob}</span>
+                                    <span class="px-2.5 py-0.5 rounded-lg border text-xs font-black uppercase tracking-wide flex items-center gap-1.5 shadow-sm ${temaImob.badge}">
+                                        <i class="fa-solid fa-building text-[10px]"></i>
+                                        <span>${nomeImob}</span>
+                                    </span>
+                                    <span class="text-[10px] font-mono ${temaImob.slug}">/${slugImob}</span>
                                     <span class="text-[9px] font-mono font-bold uppercase px-2 py-0.2 rounded bg-slate-900 text-indigo-300 border border-slate-800">
                                         ${t.categoria}
                                     </span>
                                 </div>
-                                <p class="text-[11px] text-slate-400">
+                                <p class="text-[11px] text-slate-400 pt-0.5">
                                     Aberto por <strong>${t.gestor_nome}</strong> (${t.gestor_email || 'Sem e-mail'}) • <span class="font-mono text-slate-500">${dataAbertura}</span>
                                 </p>
                             </div>
@@ -1686,7 +1716,6 @@ function filtrarTicketsMaster() {
                 `;
             }).join('');
         }
-
         async function colocarTicketEmAnalise(ticketId) {
             try {
                 const { error } = await supabaseClient
