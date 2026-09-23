@@ -1375,9 +1375,39 @@ async function carregarDadosMaster() {
         // =========================================================================
         // MOTOR DE GESTÃO DE CHAMADOS MASTER & ATENDIMENTO
         // =========================================================================
-        let listaGlobalTickets = [];
+   let listaGlobalTickets = [];
+
+        function popularSelectMesesTickets() {
+            const select = document.getElementById('filtro-ticket-mes');
+            if (!select || select.children.length > 0) return;
+
+            const mesesNomes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const hoje = new Date();
+
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+                const mesNum = String(d.getMonth() + 1).padStart(2, '0');
+                const ano = d.getFullYear();
+                const valorRef = `${mesNum}/${ano}`;
+                const rotuloMes = (i === 0) 
+                    ? `${mesesNomes[d.getMonth()]} / ${ano} (Atual)` 
+                    : `${mesesNomes[d.getMonth()]} / ${ano}`;
+
+                const opt = document.createElement('option');
+                opt.value = valorRef;
+                opt.textContent = rotuloMes;
+                if (i === 0) opt.selected = true;
+                select.appendChild(opt);
+            }
+
+            const optTodos = document.createElement('option');
+            optTodos.value = 'todos';
+            optTodos.textContent = 'Todos os Meses (Histórico)';
+            select.appendChild(optTodos);
+        }
 
         function popularSelectTicketsImobiliarias() {
+            popularSelectMesesTickets();
             const select = document.getElementById('filtro-ticket-imob');
             if (!select) return;
             const valorAtual = select.value;
@@ -1393,8 +1423,6 @@ async function carregarDadosMaster() {
 
             if (valorAtual) select.value = valorAtual;
         }
-
-async function carregarTicketsMaster() {
             try {
                 const { data: tickets, error } = await supabaseClient
                     .from('support_tickets')
@@ -1484,12 +1512,24 @@ async function carregarTicketsMaster() {
         }
 
 function filtrarTicketsMaster() {
+            const mesFiltro = document.getElementById('filtro-ticket-mes')?.value;
             const imobFiltro = document.getElementById('filtro-ticket-imob')?.value;
             const statusFiltro = document.getElementById('filtro-ticket-status')?.value;
             const termoBusca = (document.getElementById('filtro-ticket-busca')?.value || '').toLowerCase().trim();
 
             let filtrados = [...listaGlobalTickets];
 
+            // 1. FILTRO DE MÊS/ANO DE ABERTURA (PADRÃO: MÊS CORRENTE)
+            if (mesFiltro && mesFiltro !== 'todos') {
+                filtrados = filtrados.filter(t => {
+                    if (!t.created_at) return false;
+                    const d = new Date(t.created_at);
+                    const mesAno = `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+                    return mesAno === mesFiltro;
+                });
+            }
+
+            // 2. FILTRO DE IMOBILIÁRIA
             if (imobFiltro) {
                 filtrados = filtrados.filter(t => t.imobiliaria_id === imobFiltro);
             }
