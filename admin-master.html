@@ -179,10 +179,12 @@
                 <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Acesso restrito</span>
             </div>
 
-            <!-- CARD NOVO: CHAMADOS (ABERTO & EM ANÁLISE) -->
-            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-indigo-500 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group" 
+     <!-- CARD NOVO: CHAMADOS (ABERTO & EM ANÁLISE COM ALERTA PULSANTE) -->
+            <div id="card-kpi-chamados" class="box-tech p-3.5 sm:p-4 border-l-4 border-l-indigo-500 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group" 
                  onclick="abrirModalMasterTicketsFiltrado('ativos')" title="Clique para visualizar e gerenciar chamados em aberto e em análise">
-                <div>
+     
+     
+            <div>
                     <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
                         <span>Chamados</span>
                         <i class="fa-solid fa-headset text-indigo-400 text-sm sm:text-base group-hover:scale-110 transition"></i>
@@ -1406,18 +1408,53 @@ async function carregarTicketsMaster() {
                 const emAnalise = listaGlobalTickets.filter(t => t.status === 'em_analise').length;
                 const totalPendentes = abertos + emAnalise;
 
-                // Atualiza badge de contagem no topo
+                // 1. ATUALIZAÇÃO DO BADGE NO CABEÇALHO COM PULSO AMARELO FORTE
                 const badgeTop = document.getElementById('badge-contador-tickets');
                 const badgeModal = document.getElementById('contador-tickets-pendentes');
 
-                if (badgeTop) badgeTop.innerText = abertos;
+                if (badgeTop) {
+                    badgeTop.innerText = abertos;
+                    if (abertos > 0) {
+                        badgeTop.className = 'bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full font-mono animate-pulse shadow-lg shadow-amber-400/60 ring-2 ring-amber-300';
+                    } else {
+                        badgeTop.className = 'bg-indigo-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full font-mono';
+                    }
+                }
+
                 if (badgeModal) badgeModal.innerText = `${totalPendentes} ativos`;
 
-                // Alimenta os números no novo Card de Chamados do Cockpit
+                // 2. ATUALIZAÇÃO DO CARD NO COCKPIT COM ALERTA AMARELO PISCANTE
+                const cardCockpit = document.getElementById('card-kpi-chamados');
                 const elKpiTotal = document.getElementById('kpi-chamados-total');
                 const elKpiSub = document.getElementById('kpi-chamados-substatus');
-                if (elKpiTotal) elKpiTotal.innerText = totalPendentes;
-                if (elKpiSub) elKpiSub.innerText = `${abertos} aberto(s) • ${emAnalise} análise`;
+
+                if (cardCockpit) {
+                    if (abertos > 0) {
+                        // Estado de Atenção Máxima: Borda Amarela Vibrante, Glow e Fundo Destacado
+                        cardCockpit.className = 'box-tech p-3.5 sm:p-4 border-l-4 border-l-amber-400 bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-950 ring-1 ring-amber-500/50 shadow-xl shadow-amber-950/40 flex flex-col justify-between cursor-pointer hover:scale-[1.02] transition-all group';
+                    } else {
+                        // Estado Normal de Operação
+                        cardCockpit.className = 'box-tech p-3.5 sm:p-4 border-l-4 border-l-indigo-500 flex flex-col justify-between cursor-pointer hover:border-indigo-400 transition hover:bg-slate-900/80 group';
+                    }
+                }
+
+                if (elKpiTotal) {
+                    elKpiTotal.innerText = totalPendentes;
+                    if (abertos > 0) {
+                        elKpiTotal.className = 'text-xl sm:text-2xl font-black text-amber-400 animate-pulse drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]';
+                    } else {
+                        elKpiTotal.className = 'text-xl sm:text-2xl font-black text-indigo-300';
+                    }
+                }
+
+                if (elKpiSub) {
+                    if (abertos > 0) {
+                        elKpiSub.innerHTML = `<span class="text-amber-300 font-black animate-pulse flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${abertos} NOVO(S) ABERTO(S)</span>`;
+                    } else {
+                        elKpiSub.innerText = `0 aberto • ${emAnalise} análise`;
+                        elKpiSub.className = 'text-amber-400';
+                    }
+                }
 
                 filtrarTicketsMaster();
 
@@ -1507,9 +1544,9 @@ function filtrarTicketsMaster() {
                 let badgeStatus = '';
                 let bordaCard = 'border-slate-800';
 
-                if (t.status === 'aberto') {
-                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 flex items-center gap-1"><i class="fa-solid fa-clock"></i> ABERTO</span>';
-                    bordaCard = 'border-amber-900/50 bg-amber-950/10';
+             if (t.status === 'aberto') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-400 text-slate-950 border border-amber-300 flex items-center gap-1 animate-pulse shadow-md shadow-amber-400/50"><i class="fa-solid fa-bell text-slate-950"></i> ABERTO (NOVO)</span>';
+                    bordaCard = 'border-2 border-amber-400 bg-gradient-to-r from-amber-950/30 to-slate-950 shadow-lg shadow-amber-950/40 ring-1 ring-amber-400/30';
                 } else if (t.status === 'em_analise') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 animate-pulse"><i class="fa-solid fa-spinner fa-spin text-[8px]"></i> EM ANÁLISE</span>';
                     bordaCard = 'border-blue-900/50 bg-blue-950/10';
