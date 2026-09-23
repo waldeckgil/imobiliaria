@@ -5620,10 +5620,19 @@ window.abrirModalPagarCorretor = abrirModalPagarCorretor;
                 btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i><span>Enviar Chamado para o Suporte</span>';
             }
         }
+// Ponte de compatibilidade para evitar qualquer erro de chamada antiga
+        function trocarVideoPlayer(url, titulo) {
+            const iframe = document.getElementById('iframe-tutorial-player');
+            const elTitulo = document.getElementById('titulo-video-ativo');
+            if (iframe && url) iframe.src = typeof extrairUrlEmbedYoutube === 'function' ? extrairUrlEmbedYoutube(url) : url;
+            if (elTitulo && titulo) elTitulo.innerText = titulo;
+        }
 
         window.abrirModalCentralAjuda = abrirModalCentralAjuda;
         window.fecharModalCentralAjuda = fecharModalCentralAjuda;
         window.alternarAbaAjuda = alternarAbaAjuda;
+        window.selecionarTutorialGestor = selecionarTutorialGestor;
+        window.carregarTutoriaisDinamicos = carregarTutoriaisDinamicos;
         window.trocarVideoPlayer = trocarVideoPlayer;
         window.carregarMeusTickets = carregarMeusTickets;
         window.enviarNovoTicket = enviarNovoTicket;
