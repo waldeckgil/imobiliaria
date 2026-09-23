@@ -22,32 +22,64 @@
         .group-dropdown:hover .dropdown-menu { display: block; }
         .tab-ativa { border-bottom: 2px solid #1c6ba0; color: #1c6ba0; font-weight: 700; }
         
+        /* ESTILO DA LANDING PAGE SAAS */
         .hero-saas-bg {
-            background: linear-gradient(to bottom, rgba(6, 9, 19, 0.88), rgba(15, 23, 42, 0.95)), 
+            background: linear-gradient(to bottom, rgba(6, 9, 19, 0.90), rgba(15, 23, 42, 0.98)), 
                         url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
+        .box-tech { 
+            background: #0f172a; 
+            border: 1px solid #334155; 
+            border-radius: 1.25rem; 
+        }
+        .box-destaque {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(6, 9, 19, 0.98));
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 1.25rem;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.08);
+        }
+        .gradiente-texto {
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body class="bg-gray-100 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
     <!-- =========================================================================
-         [MODO 1] LANDING PAGE INSTITUCIONAL SAAS (SEM ?imob=)
+         [MODO 1] LANDING PAGE INSTITUCIONAL SAAS (QUANDO ACESSADO SEM ?imob=)
          ========================================================================= -->
     <div id="secao-landing-saas" class="hidden min-h-screen flex flex-col justify-between hero-saas-bg text-white">
-        <header class="border-b border-slate-800/80 py-4 px-6 sm:px-12 backdrop-blur-md bg-slate-950/40">
-            <div class="max-w-7xl mx-auto flex items-center justify-between">
+        
+        <!-- CABEÇALHO COM NAVEGAÇÃO COMPLETA -->
+        <header class="border-b border-slate-800/80 py-3.5 px-4 sm:px-8 backdrop-blur-md bg-slate-950/70 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg">
                         <i class="fa-solid fa-building-shield"></i>
                     </div>
                     <div>
-                        <h1 class="text-base font-black tracking-wider text-white">SGI • GESTÃO IMOBILIÁRIA</h1>
+                        <h1 class="text-sm sm:text-base font-black tracking-wider text-white">SGI • GESTÃO IMOBILIÁRIA</h1>
                         <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Plataforma SaaS Multi-tenant</p>
                     </div>
                 </div>
 
+                <!-- MENU DE ANCORAGEM NO TOPO -->
+                <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-300">
+                    <a href="#recursos" class="hover:text-cyan-400 transition">Recursos</a>
+                    <a href="#comparativo" class="hover:text-cyan-400 transition">Vantagens</a>
+                    <a href="#precos" class="hover:text-amber-300 transition flex items-center gap-1">
+                        <i class="fa-solid fa-tag text-amber-400"></i> Planos & Preço
+                    </a>
+                    <a href="#como-funciona" class="hover:text-cyan-400 transition">Como Funciona</a>
+                    <a href="https://wa.me/5521964120231" target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
+                        <i class="fa-brands fa-whatsapp text-sm text-emerald-400"></i> WhatsApp
+                    </a>
+                </nav>
+
                 <div class="flex items-center gap-3 text-xs">
-                    <a href="login.html" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2.5 rounded-xl border border-slate-700 transition flex items-center gap-2">
+                    <a href="login.html" class="bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold px-4 py-2 rounded-xl border border-slate-700 hover:border-cyan-400 transition flex items-center gap-2">
                         <i class="fa-solid fa-lock text-cyan-400"></i>
                         <span>Área do Cliente</span>
                     </a>
@@ -55,33 +87,350 @@
             </div>
         </header>
 
-        <main class="max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center my-auto">
-            <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-6 shadow-sm">
-                <i class="fa-solid fa-rocket"></i> Tecnologia para Imobiliárias e Corretores
-            </div>
-            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-                Potencialize suas Vendas com uma Vitrine Digital de Alto Padrão
-            </h2>
-            <p class="text-sm sm:text-base text-slate-300 mt-6 max-w-3xl mx-auto leading-relaxed">
-                A plataforma completa para gestão comercial imobiliária: catálogo online moderno, funil de captação de leads integrado ao WhatsApp, gestão de corretores e geração instantânea de fichas comerciais em PDF.
-            </p>
+        <!-- CORPO DA APRESENTAÇÃO COMPLETA -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-8 py-12 sm:py-20 space-y-20 sm:space-y-28 w-full">
+            
+            <!-- 1. HERO BANNER PRINCIPAL COM 30 DIAS GRÁTIS -->
+            <section class="max-w-5xl mx-auto text-center space-y-6">
+                <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-inner">
+                    <i class="fa-solid fa-rocket"></i> Teste Grátis de 30 Dias • Sem Cartão de Crédito
+                </div>
+                
+                <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+                    Potencialize suas Vendas com uma Vitrine Digital de Alto Padrão
+                </h2>
+                
+                <p class="text-sm sm:text-base text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                    A plataforma completa para gestão comercial imobiliária: catálogo online moderno, funil de captação de leads integrado ao WhatsApp, gestão de corretores e geração instantânea de fichas comerciais em PDF.
+                </p>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-                <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+conhecer+mais+sobre+a+plataforma+SGI+Gest%C3%A3o+Imobili%C3%A1ria." 
-                   target="_blank" 
-                   class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black px-7 py-4 rounded-xl shadow-xl transition flex items-center justify-center gap-2.5 text-sm cursor-pointer">
-                    <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>Falar no WhatsApp: (21) 96412-0231</span>
-                </a>
+                <!-- CONDIÇÃO COMERCIAL CLARA NO HERO -->
+                <div class="inline-flex flex-wrap items-center justify-center gap-3 bg-slate-950/80 border border-amber-500/40 px-4 py-2 rounded-2xl text-xs">
+                    <span class="text-amber-400 font-black flex items-center gap-1.5">
+                        <i class="fa-solid fa-check-circle"></i> 30 Dias Grátis
+                    </span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-slate-300">Após o teste: apenas <strong class="text-cyan-300 font-mono text-sm">R$ 69,90/mês</strong></span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-emerald-400 font-bold">Pague somente após usar</span>
+                    <span class="text-slate-500">•</span>
+                    <span class="text-slate-400">Sem fidelidade</span>
+                </div>
 
-                <a href="cadastro-imobiliaria.html" 
-                   class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-7 py-4 rounded-xl shadow-xl transition flex items-center justify-center gap-2.5 text-sm cursor-pointer">
-                    <span>Iniciar Teste Grátis de 30 Dias</span>
-                    <i class="fa-solid fa-arrow-right text-xs"></i>
-                </a>
-            </div>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+conhecer+mais+sobre+o+SGI+e+iniciar+o+teste+gr%C3%A1tis+de+30+dias." 
+                       target="_blank" 
+                       class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black px-7 py-3.5 rounded-xl shadow-xl transition flex items-center justify-center gap-2.5 text-xs sm:text-sm cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Falar no WhatsApp: (21) 96412-0231</span>
+                    </a>
+
+                    <a href="cadastro-imobiliaria.html" 
+                       class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-7 py-3.5 rounded-xl shadow-xl transition flex items-center justify-center gap-2.5 text-xs sm:text-sm cursor-pointer">
+                        <span>Iniciar Teste Grátis de 30 Dias</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- BADGES DE DESTAQUE -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-8 max-w-4xl mx-auto text-left">
+                    <div class="bg-slate-950/60 border border-slate-800 p-3.5 rounded-xl">
+                        <span class="text-cyan-400 font-black text-sm block">100% Digital</span>
+                        <span class="text-[11px] text-slate-400">Acesse do celular ou computador</span>
+                    </div>
+                    <div class="bg-slate-950/60 border border-slate-800 p-3.5 rounded-xl">
+                        <span class="text-emerald-400 font-black text-sm block">Zero Planilhas</span>
+                        <span class="text-[11px] text-slate-400">Rateio financeiro automático</span>
+                    </div>
+                    <div class="bg-slate-950/60 border border-slate-800 p-3.5 rounded-xl">
+                        <span class="text-purple-400 font-black text-sm block">Ficha em PDF</span>
+                        <span class="text-[11px] text-slate-400">Geração em 1 clique para WhatsApp</span>
+                    </div>
+                    <div class="bg-slate-950/60 border border-slate-800 p-3.5 rounded-xl">
+                        <span class="text-amber-400 font-black text-sm block">LGPD Blindada</span>
+                        <span class="text-[11px] text-slate-400">Conformidade e segurança legal</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. ANTES VS DEPOIS (O PROBLEMA DO GESTOR) -->
+            <section id="comparativo" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                <div class="box-tech p-6 sm:p-8 border-rose-900/40 bg-gradient-to-b from-rose-950/15 to-slate-950 space-y-4">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg border border-rose-500/30">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-white">Como a maioria das imobiliárias ainda opera:</h3>
+                    <ul class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                            <span>Leads que chegam pelo site e se perdem por falta de distribuição ágil.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                            <span>Horas perdidas calculando manualmente comissões e repasses de locação em planilhas.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                            <span>Corretores com acesso desprotegido aos telefones dos proprietários das captações.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-xmark text-rose-500 mt-0.5"></i>
+                            <span>Envio despadronizado de fotos e textos soltos no WhatsApp do comprador.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="box-destaque p-6 sm:p-8 space-y-4 bg-gradient-to-b from-cyan-950/20 to-slate-950">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/30">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h3 class="text-lg font-black text-white">Com a gestão integrada do SGI:</h3>
+                    <ul class="space-y-3 text-xs text-slate-200">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                            <span><strong>Funil Comercial Dinâmico:</strong> Distribuição de leads, agenda de visitas e botão de contato imediato.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                            <span><strong>Financeiro 360°:</strong> Aluguel bruto, honorário da imobiliária e repasse líquido calculados na hora.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                            <span><strong>Blindagem Patrimonial:</strong> O gestor decide quais corretores podem ver os dados dos proprietários.</span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-check text-cyan-400 mt-0.5"></i>
+                            <span><strong>Folheto em PDF (A4):</strong> Em 1 clique, fotos, ficha técnica e contatos formatados para envio no WhatsApp.</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 3. OS 6 PILARES DO SISTEMA -->
+            <section id="recursos" class="space-y-8">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <span class="text-xs font-black uppercase text-cyan-400 tracking-widest block">Módulos do Sistema</span>
+                    <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                        Tudo o Que Sua Imobiliária Precisa
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-400">
+                        Conheça os recursos que você passa a gerenciar diretamente do seu painel:
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- PILAR 1 -->
+                    <div class="box-tech p-6 space-y-3 hover:border-cyan-500/50 transition">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl border border-cyan-500/30">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <h4 class="text-base font-black text-white">1. Vitrine Digital Exclusiva</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Site próprio com busca ágil por código de referência, filtros inteligentes e captação de interessados sem anúncios de concorrentes.
+                        </p>
+                    </div>
+
+                    <!-- PILAR 2 -->
+                    <div class="box-tech p-6 space-y-3 hover:border-blue-500/50 transition">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl border border-blue-500/30">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <h4 class="text-base font-black text-white">2. CRM & Funil de Atendimentos</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Organize os leads em: <em>Novos, Em Atendimento, Visita Agendada, Proposta e Fechamento</em>, com atribuição automática para corretores.
+                        </p>
+                    </div>
+
+                    <!-- PILAR 3 -->
+                    <div class="box-tech p-6 space-y-3 hover:border-purple-500/50 transition">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl border border-purple-500/30">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <h4 class="text-base font-black text-white">3. Gerador de Fichas em PDF</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Compilação instantânea em folhetos A4 com fotos e dados do imóvel prontos para encantar clientes no WhatsApp.
+                        </p>
+                    </div>
+
+                    <!-- PILAR 4 -->
+                    <div class="box-tech p-6 space-y-3 hover:border-emerald-500/50 transition">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl border border-emerald-500/30">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <h4 class="text-base font-black text-white">4. Gestão de Equipe & Comissões</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Alíquotas individuais para cada corretor. Ao fechar vendas ou locações, o rateio exato e os saldos são calculados automaticamente.
+                        </p>
+                    </div>
+
+                    <!-- PILAR 5 -->
+                    <div class="box-tech p-6 space-y-3 hover:border-amber-500/50 transition">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl border border-amber-500/30">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h4 class="text-base font-black text-white">5. Blindagem Patrimonial</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Mantenha contatos de proprietários sob controle restrito da diretoria com regras granulares de permissão por colaborador.
+                        </p>
+                    </div>
+
+                    <!-- PILAR 6 -->
+                    <div class="box-tech p-6 space-y-3 hover:border-rose-500/50 transition">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl border border-rose-500/30">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <h4 class="text-base font-black text-white">6. Financeiro de Aluguéis & Vendas</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Controle de vencimentos, baixa de pagamentos com anexo de comprovantes PIX e conciliação de repasses aos donos dos imóveis.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 4. SEÇÃO EXCLUSIVA DE PREÇO & CONDIÇÕES COMERCIAIS (R$ 69,90/MÊS) -->
+            <section id="precos" class="space-y-6 text-center max-w-4xl mx-auto">
+                <div class="space-y-2">
+                    <span class="text-xs font-black uppercase text-amber-400 tracking-widest block">Transparência Total</span>
+                    <h3 class="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                        Quanto Custa? Simples, Justo e Sem Pegadinhas
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-400">
+                        Você testa primeiro, valida na prática e só paga se realmente fizer sentido para o seu negócio.
+                    </p>
+                </div>
+
+                <!-- CARD DE PREÇO -->
+                <div class="box-destaque p-8 sm:p-10 border-2 border-cyan-500/50 relative overflow-hidden text-left max-w-2xl mx-auto space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                        <div>
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                                Plano Profissional Completo
+                            </span>
+                            <h4 class="text-xl sm:text-2xl font-black text-white mt-2">Acesso Ilimitado</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">Todos os módulos e recursos liberados.</p>
+                        </div>
+
+                        <div class="text-left sm:text-right">
+                            <span class="text-xs text-slate-400 block line-through">De R$ 149,00</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-sm font-bold text-slate-300">R$</span>
+                                <span class="text-4xl sm:text-5xl font-black text-cyan-300 font-mono">69,90</span>
+                                <span class="text-xs text-slate-400 font-bold">/mês</span>
+                            </div>
+                            <span class="text-[10px] text-amber-400 font-bold block mt-0.5">Após os primeiros 30 dias</span>
+                        </div>
+                    </div>
+
+                    <!-- PILARES DE SEGURANÇA COMERCIAL -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Pague somente após usar:</strong>
+                                <span class="text-slate-400 text-[11px]">Você tem 30 dias 100% grátis para testar com sua equipe. O primeiro pagamento só acontece após esse período.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Sem contrato de fidelidade:</strong>
+                                <span class="text-slate-400 text-[11px]">Cancele quando quiser com um clique. Não prendemos sua imobiliária com multas rescisórias ou carência.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Zero taxa de implantação:</strong>
+                                <span class="text-slate-400 text-[11px]">Sem taxas ocultas de configuração, suporte ou adesão. Seu sistema sai funcionando na hora.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-sm mt-0.5 flex-shrink-0"></i>
+                            <div>
+                                <strong class="text-white block">Sem cartão no cadastro:</strong>
+                                <span class="text-slate-400 text-[11px]">Inicie seu teste direto sem precisar cadastrar cartão de crédito ou comprometer seu limite.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOTÃO NO CARD DE PREÇO -->
+                    <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <span class="text-xs text-slate-400">Gostou? Comece hoje mesmo sem custos:</span>
+                        <a href="cadastro-imobiliaria.html" class="w-full sm:w-auto bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-6 py-3 rounded-xl text-xs uppercase tracking-wider text-center transition shadow-lg">
+                            Testar 30 Dias Grátis
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. PASSO A PASSO DE IMPLANTAÇÃO -->
+            <section id="como-funciona" class="box-destaque p-8 sm:p-12 text-center space-y-8">
+                <div class="max-w-2xl mx-auto space-y-2">
+                    <span class="text-xs font-black uppercase text-cyan-400 tracking-widest block">Implantação Rápida</span>
+                    <h3 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                        Sua Imobiliária no Ar em Menos de 5 Minutos
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div class="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl space-y-2">
+                        <span class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-3">1</span>
+                        <h4 class="font-bold text-white text-sm">Crie sua Conta</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">Cadastre seu nome e CRECI. O sistema gera automaticamente seu site exclusivo e seu painel de gestão com 30 dias grátis.</p>
+                    </div>
+
+                    <div class="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl space-y-2">
+                        <span class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-3">2</span>
+                        <h4 class="font-bold text-white text-sm">Publique Imóveis & Equipe</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">Cadastre fotos, dados técnicos, adicione seus corretores e defina as comissões acordadas.</p>
+                    </div>
+
+                    <div class="bg-slate-950/80 border border-slate-800 p-6 rounded-2xl space-y-2">
+                        <span class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-black text-sm flex items-center justify-center mb-3">3</span>
+                        <h4 class="font-bold text-white text-sm">Feche Negócios com Agilidade</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">Receba clientes pelo site, envie fichas em PDF pelo WhatsApp e liquide repasses sem planilhas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. CTA FINAL COM WHATSAPP -->
+            <section class="bg-gradient-to-r from-cyan-950/40 via-slate-900 to-slate-950 border border-cyan-500/40 p-8 sm:p-12 rounded-3xl text-center space-y-6 shadow-2xl">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto border border-emerald-500/30">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+
+                <div class="space-y-2 max-w-xl mx-auto">
+                    <h3 class="text-2xl sm:text-3xl font-black text-white">
+                        Pronto para Modernizar a Gestão da sua Imobiliária?
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Fale diretamente com nossa equipe. Liberamos seu ambiente de demonstração completo para você e sua equipe testarem por <strong>30 dias grátis</strong>, sem compromisso e sem fidelidade.
+                    </p>
+                </div>
+
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="https://wa.me/5521964120231?text=Ol%C3%A1!+Gostaria+de+conversar+sobre+o+SGI+para+a+minha+imobili%C3%A1ria." 
+                       target="_blank" 
+                       class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-8 py-3.5 rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/50">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Falar no WhatsApp: (21) 96412-0231</span>
+                    </a>
+
+                    <a href="cadastro-imobiliaria.html" 
+                       class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold px-7 py-3.5 rounded-xl text-xs transition border border-slate-700">
+                        <span>Iniciar Teste Grátis de 30 Dias</span>
+                    </a>
+                </div>
+            </section>
+
         </main>
 
+        <!-- RODAPÉ DA LANDING PAGE -->
         <footer class="border-t border-slate-800/80 py-6 px-6 text-center text-xs text-slate-400 bg-slate-950/60 backdrop-blur-md space-y-1">
             <p class="font-bold text-slate-300">
                 Desenvolvido por WB Projetos de Gestão Comercial | WhatsApp: (21) 96412-0231
@@ -93,11 +442,11 @@
     </div>
 
     <!-- =========================================================================
-         [MODO 2] VITRINE PÚBLICA DA IMOBILIÁRIA (COM ?imob=slug)
+         [MODO 2] VITRINE PÚBLICA DA IMOBILIÁRIA (QUANDO ACESSADO COM ?imob=slug)
          ========================================================================= -->
     <div id="secao-vitrine-imobiliaria" class="hidden flex-col min-h-screen justify-between">
 
-        <!-- CABEÇALHO -->
+        <!-- CABEÇALHO DA VITRINE -->
         <header class="bg-white border-b border-gray-200 py-4 px-4 sm:px-8 sticky top-0 z-40 shadow-sm">
             <div class="max-w-[1340px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-4">
                 
@@ -117,9 +466,8 @@
                     </div>
                 </a>
 
-                <!-- MENU SUPERIOR -->
+                <!-- MENU SUPERIOR DA VITRINE -->
                 <div class="flex items-center gap-5 text-[13px] font-bold text-slate-800 flex-wrap justify-center">
-                    
                     <a href="javascript:void(0)" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         Início
                     </a>
@@ -205,7 +553,7 @@
                     </div>
                 </div>
 
-                <!-- BARRA LATERAL DE FILTROS COM ATUALIZAÇÃO INSTANTÂNEA -->
+                <!-- BARRA LATERAL DE FILTROS -->
                 <div class="lg:col-span-4">
                     <div class="bg-filtro-amarelo border rounded-lg p-5 shadow-sm">
                         <div class="flex items-center justify-between pb-3 border-b border-amber-300">
@@ -222,8 +570,8 @@
                                 <label class="block font-bold text-slate-800 mb-1">Finalidade</label>
                                 <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
                                     <option value="" selected>Todas as Finalidades</option>
-                                    <option value="Venda">Comprar (Venda)</option>
-                                    <option value="Locacao">Alugar (Locação)</option>
+                                    <option value="Venda">Quero Comprar (Venda)</option>
+                                    <option value="Locacao">Quero Alugar (Locação)</option>
                                 </select>
                             </div>
 
@@ -272,11 +620,10 @@
             </div>
         </section>
 
-        <!-- SEÇÃO: "NEGOCIE SEU IMÓVEL / AVALIE SEU IMÓVEL" (MULTI-TENANT REAL) -->
+        <!-- SEÇÃO: "NEGOCIE SEU IMÓVEL / AVALIE SEU IMÓVEL" -->
         <section id="secao-negocie" class="bg-slate-50 py-16 px-4 sm:px-8 border-b border-gray-200">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- COLUNA ESQUERDA -->
                 <div class="lg:col-span-7 space-y-6">
                     <div class="rounded-2xl overflow-hidden shadow-md max-h-72">
                         <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80" 
@@ -297,7 +644,6 @@
                             Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação em sua região.
                         </p>
 
-                        <!-- CARDS DE BENEFÍCIOS -->
                         <div class="space-y-3 pt-2">
                             <div class="bg-emerald-50/70 border border-emerald-200/80 p-4 rounded-xl">
                                 <h4 class="text-sm font-black text-emerald-950 flex items-center gap-2">
@@ -323,7 +669,6 @@
                     </div>
                 </div>
 
-                <!-- COLUNA DIREITA: FORMULÁRIO -->
                 <div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-xl space-y-4 sticky top-24">
                     <span class="inline-block bg-blue-100 text-blue-800 text-[11px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
                         Avaliação de imóvel
@@ -381,16 +726,34 @@
                 </button>
 
                 <div class="flex items-center gap-2 text-blue-700 font-bold text-sm uppercase tracking-wide">
-                    <i class="fa-regular fa-paper-plane"></i>
-                    <span>Atendimento Imediato</span>
+                    <i class="fa-regular fa-envelope"></i>
+                    <span>Enviar Mensagem ao Corretor</span>
                 </div>
 
                 <h3 class="text-lg font-black text-slate-800 mt-1" id="modal-titulo-imovel">Imóvel</h3>
-                <p class="text-xs text-slate-500 mt-0.5">Preencha abaixo para conversar com nossa equipe especializada.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Preencha sua mensagem. Responderemos com brevidade no seu contato.</p>
 
                 <form id="form-lead" onsubmit="iniciarEnvioLeadImovel(event)" class="space-y-3 mt-4 text-xs">
                     <input type="hidden" id="lead-imovel-id" value="">
                     <input type="hidden" id="lead-imovel-ref" value="">
+                    <input type="hidden" id="lead-finalidade-padrao" value="">
+                    <input type="hidden" id="lead-valor-venda-num" value="0">
+                    <input type="hidden" id="lead-valor-locacao-num" value="0">
+
+                    <!-- SELETOR DE MODALIDADE -->
+                    <div id="box-seletor-modalidade" class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <label class="block font-black text-slate-800 uppercase text-[10px] mb-1.5 tracking-wider">Qual seu interesse neste imóvel? *</label>
+                        <div class="grid grid-cols-2 gap-2" id="radios-modalidade-container">
+                            <label class="flex items-center gap-2 border border-slate-200 bg-white p-2 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                <input type="radio" name="modalidade_interesse" value="Venda" checked class="text-blue-600 focus:ring-blue-500">
+                                <span class="font-bold text-slate-800" id="lbl-modalidade-venda">Comprar (Venda)</span>
+                            </label>
+                            <label class="flex items-center gap-2 border border-slate-200 bg-white p-2 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                                <input type="radio" name="modalidade_interesse" value="Locação" class="text-blue-600 focus:ring-blue-500">
+                                <span class="font-bold text-slate-800" id="lbl-modalidade-locacao">Alugar (Locação)</span>
+                            </label>
+                        </div>
+                    </div>
                     
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Seu Nome Completo *</label>
@@ -404,12 +767,12 @@
 
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
-                        <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel..."></textarea>
+                        <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel ou tirar dúvidas..."></textarea>
                     </div>
 
-                    <button type="submit" id="btn-submit-lead" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer">
-                        <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Continuar e Abrir no WhatsApp</span>
+                    <button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
+                        <i class="fa-regular fa-paper-plane"></i>
+                        <span>Enviar Mensagem</span>
                     </button>
                 </form>
             </div>
@@ -431,19 +794,15 @@
 
                 <div class="flex-1 overflow-y-auto pr-2 space-y-3 text-xs text-slate-600 leading-relaxed border border-gray-200 p-4 rounded-xl bg-slate-50">
                     <p class="font-bold text-slate-800">
-                        A sua privacidade é de extrema importância para nós. É política da <span class="text-blue-700 font-black nome-imob-termo">Imobiliária</span> respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar em nosso portal e demais canais operados para a prestação de serviços de intermediação e gestão imobiliária.
+                        A sua privacidade é de extrema importância para nós. É política da <span class="text-blue-700 font-black nome-imob-termo">Imobiliária</span> respeitar a sua privacidade em relação a qualquer informação sua que possamos coletar em nosso portal.
                     </p>
 
                     <h4 class="font-bold text-slate-900 uppercase pt-2">1. Coleta e Uso de Informações Pessoais</h4>
-                    <p>• <strong>Finalidade:</strong> Solicitamos informações pessoais (como nome, e-mail, telefone, dados de preferência de imóveis) apenas quando realmente precisamos delas para agendamento de visitas, propostas ou atendimento personalizado.</p>
-                    <p>• <strong>Transparência:</strong> Fazemo-lo por meios justos e legais, com o seu conhecimento e consentimento, informando sempre o motivo da coleta e a forma como será utilizada.</p>
-                    <p>• <strong>Retenção & Proteção:</strong> Apenas retemos as informações coletadas pelo tempo necessário para fornecer o serviço solicitado ou cumprir obrigações legais, protegendo os dados contra acessos não autorizados.</p>
-
-                    <h4 class="font-bold text-slate-900 uppercase pt-2">2. Links Externos e Cookies</h4>
-                    <p>Utilizamos cookies para melhorar a experiência de navegação e direcionar conteúdos relevantes. Nosso portal pode conter links para parceiros externos com políticas próprias.</p>
+                    <p>• <strong>Finalidade:</strong> Solicitamos informações pessoais (como nome, e-mail, telefone) apenas para agendamento de visitas, propostas e atendimento personalizado.</p>
+                    <p>• <strong>Retenção & Proteção:</strong> As informações são retidas com segurança jurídica para o cumprimento das etapas imobiliárias requeridas.</p>
 
                     <h4 class="font-bold text-slate-900 uppercase pt-2">Do Termo de Aceite Obrigatório (LGPD)</h4>
-                    <p>Para a utilização dos serviços e envio de solicitações através da plataforma da <span class="nome-imob-termo font-black text-blue-700">Imobiliária</span>, o usuário declara ter lido e concordado com todos os termos descritos. O consentimento é formalizado eletronicamente com registro probatório de data e hora para fins de conformidade com a LGPD.</p>
+                    <p>O usuário declara ter lido e concordado com todos os termos descritos. O consentimento é formalizado eletronicamente com registro de data e hora para fins de conformidade legal.</p>
                 </div>
 
                 <div class="bg-blue-50 border border-blue-200 p-3.5 rounded-xl flex items-start gap-3">
@@ -461,10 +820,25 @@
                     <button type="button" id="btn-concordar-lgpd" disabled onclick="executarConfirmacaoComLGPD()" 
                             class="px-6 py-2.5 rounded-xl bg-emerald-600 text-white font-black text-xs shadow-lg transition opacity-50 cursor-not-allowed flex items-center gap-2">
                         <i class="fa-solid fa-check"></i>
-                        <span>Concordar e Continuar</span>
+                        <span>Concordar e Enviar</span>
                     </button>
                 </div>
+            </div>
+        </div>
 
+        <!-- MODAL FEEDBACK SUCESSO -->
+        <div id="modal-sucesso-mensagem" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+                <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mx-auto shadow-sm">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="text-lg font-black text-slate-900">Mensagem Enviada!</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Sua mensagem foi recebida com sucesso pela nossa equipe. Em breve entraremos em contato através do telefone ou WhatsApp informado.
+                </p>
+                <button onclick="fecharModalSucesso()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                    Entendido, Continuar Navegando
+                </button>
             </div>
         </div>
 
@@ -474,7 +848,7 @@
             <i class="fa-brands fa-whatsapp"></i>
         </a>
 
-        <!-- RODAPÉ -->
+        <!-- RODAPÉ DA VITRINE -->
         <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
@@ -573,7 +947,6 @@
         function aplicarDadosNaTela(imob) {
             document.title = `${imob.nome_fantasia} - Imóveis`;
 
-            // RENDERIZAÇÃO CONDICIONAL DA LOGO OFICIAL
             const containerLogo = document.getElementById('container-logo-visual');
             if (imob.logo_url && imob.logo_url.trim() !== '') {
                 containerLogo.className = "flex items-center justify-center";
@@ -583,7 +956,6 @@
                          class="max-h-12 max-w-[200px] object-contain">
                 `;
             } else {
-                // Fallback: Preserva o layout tipográfico clássico caso não haja logo cadastrada
                 document.getElementById('header-nome-curto').innerText = imob.nome_fantasia.toUpperCase();
             }
 
@@ -605,7 +977,6 @@
             document.getElementById('empresa-texto').innerText = imob.sobre_corretor || 
                 `${imob.nome_fantasia} é referência em consultoria e intermediação imobiliária, atuando com transparência, seriedade e excelência para realizar o melhor negócio para você.`;
 
-            // Dinamiza Seção "Negocie seu Imóvel" sem município estático
             const tituloNegocie = document.getElementById('negocie-titulo');
             if (tituloNegocie) {
                 tituloNegocie.innerText = `Negocie seu imóvel com a ${imob.nome_fantasia}`;
@@ -645,7 +1016,6 @@
             `;
         }
 
-        // BUSCA COM CORREÇÃO DE FILTRO: LOCAÇÃO, VENDA E AMBOS
         async function carregarImoveisVitrine(filtros = {}) {
             if (!tenantAtual) return;
 
@@ -664,7 +1034,6 @@
                     .eq('ativa', true)
                     .eq('status', 'Disponível');
 
-                // Filtro Preciso de Finalidade (Locação traz Locação e Ambos; Venda traz Venda e Ambos)
                 if (filtros.finalidade) {
                     if (filtros.finalidade === 'Venda') {
                         query = query.in('finalidade', ['Venda', 'Ambos']);
@@ -706,7 +1075,6 @@
             }
         }
 
-        // RENDERIZAÇÃO INTELIGENTE DE VALORES DE ACORDO COM O FILTRO
         function renderizarCardsImoveis(imoveis, filtroFinalidadeAtual = '') {
             const container = document.getElementById('container-imoveis');
             container.innerHTML = '';
@@ -714,34 +1082,48 @@
             imoveis.forEach(imovel => {
                 let precoExibido = 0;
                 let rotuloFinalidade = 'Valor';
+                let modalidadeNegocioZap = 'negociação';
+                let valorTextoZap = '';
 
-                // Se o cliente filtrou por locação, dá prioridade ao valor de aluguel
                 if (filtroFinalidadeAtual === 'Locacao' || filtroFinalidadeAtual === 'Locação') {
                     precoExibido = imovel.valor_locacao || imovel.valor_venda || 0;
                     rotuloFinalidade = 'Aluguel (Locação)';
+                    modalidadeNegocioZap = 'LOCAÇÃO';
+                    valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês`;
                 } else if (filtroFinalidadeAtual === 'Venda') {
                     precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
                     rotuloFinalidade = 'Venda';
+                    modalidadeNegocioZap = 'VENDA (COMPRA)';
+                    valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                 } else {
                     if (imovel.finalidade === 'Ambos') {
                         rotuloFinalidade = 'Venda ou Aluguel';
                         precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
+                        modalidadeNegocioZap = 'VENDA ou LOCAÇÃO';
+                        valorTextoZap = `(Venda: ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês)`;
                     } else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') {
                         rotuloFinalidade = 'Aluguel (Locação)';
                         precoExibido = imovel.valor_locacao || 0;
+                        modalidadeNegocioZap = 'LOCAÇÃO';
+                        valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês`;
                     } else {
                         rotuloFinalidade = 'Venda';
                         precoExibido = imovel.valor_venda || 0;
+                        modalidadeNegocioZap = 'VENDA (COMPRA)';
+                        valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                     }
                 }
 
                 const precoFormatado = Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const fotoCapa = imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80';
                 
-                // Badge de finalidade sobre a foto
                 let badgeFoto = 'Venda';
                 if (imovel.finalidade === 'Ambos') badgeFoto = 'Venda & Locação';
                 else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') badgeFoto = 'Locação';
+
+                const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
+                const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
+                const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
 
                 const card = `
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
@@ -777,14 +1159,16 @@
                                 <div>
                                     <span class="text-[10px] text-slate-400 uppercase font-semibold block">${rotuloFinalidade}</span>
                                     <span class="text-xl font-extrabold azul-preco leading-none">${precoFormatado}</span>
-                                    ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Opção Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
+                                    ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
                                 </div>
 
                                 <div class="flex items-center gap-2">
-                                    <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}')" class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                    <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
+                                            class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                                         <i class="fa-regular fa-envelope"></i> Mensagem
                                     </button>
-                                    <a href="https://wa.me/${sanitizarZap(tenantAtual.whatsapp_contato)}?text=Ol%C3%A1%2C+tenho+interesse+no+im%C3%B3vel+Ref%3A+${imovel.codigo_ref}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm">
+
+                                    <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm">
                                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                                     </a>
                                 </div>
@@ -826,10 +1210,66 @@
             carregarImoveisVitrine();
         }
 
-        function abrirModalLead(idImovel, ref, titulo) {
+        function abrirModalLead(idImovel, ref, titulo, finalidade, valorVenda, valorLocacao) {
             document.getElementById('lead-imovel-id').value = idImovel;
             document.getElementById('lead-imovel-ref').value = ref;
+            document.getElementById('lead-finalidade-padrao').value = finalidade || 'Venda';
+            document.getElementById('lead-valor-venda-num').value = valorVenda || 0;
+            document.getElementById('lead-valor-locacao-num').value = valorLocacao || 0;
             document.getElementById('modal-titulo-imovel').innerText = `Ref: ${ref} • ${titulo}`;
+
+            const boxModalidade = document.getElementById('box-seletor-modalidade');
+            const containerRadios = document.getElementById('radios-modalidade-container');
+            const filtroAtual = document.getElementById('filtro-finalidade').value;
+
+            const valorVendaFmt = Number(valorVenda || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const valorLocacaoFmt = Number(valorLocacao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês';
+
+            if (finalidade === 'Ambos') {
+                boxModalidade.classList.remove('hidden');
+                const checkedVenda = (filtroAtual !== 'Locacao' && filtroAtual !== 'Locação') ? 'checked' : '';
+                const checkedLoc = (filtroAtual === 'Locacao' || filtroAtual === 'Locação') ? 'checked' : '';
+
+                containerRadios.innerHTML = `
+                    <label class="flex items-center gap-2 border border-slate-300 bg-white p-2 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                        <input type="radio" name="modalidade_interesse" value="Venda" ${checkedVenda} class="text-blue-600 focus:ring-blue-500">
+                        <div>
+                            <span class="font-bold text-slate-800 block text-xs">Comprar</span>
+                            <span class="text-[10px] text-blue-700 font-mono font-bold">${valorVendaFmt}</span>
+                        </div>
+                    </label>
+                    <label class="flex items-center gap-2 border border-slate-300 bg-white p-2 rounded-lg cursor-pointer hover:border-blue-500 transition">
+                        <input type="radio" name="modalidade_interesse" value="Locação" ${checkedLoc} class="text-blue-600 focus:ring-blue-500">
+                        <div>
+                            <span class="font-bold text-slate-800 block text-xs">Alugar</span>
+                            <span class="text-[10px] text-purple-700 font-mono font-bold">${valorLocacaoFmt}</span>
+                        </div>
+                    </label>
+                `;
+            } else if (finalidade === 'Locacao' || finalidade === 'Locação') {
+                boxModalidade.classList.remove('hidden');
+                containerRadios.innerHTML = `
+                    <label class="flex items-center gap-2 border border-purple-200 bg-purple-50/60 p-2 rounded-lg col-span-2">
+                        <input type="radio" name="modalidade_interesse" value="Locação" checked class="text-purple-600 focus:ring-purple-500">
+                        <div>
+                            <span class="font-black text-purple-900 block text-xs">Interesse em Locação (Aluguel)</span>
+                            <span class="text-[11px] text-purple-700 font-mono font-bold">${valorLocacaoFmt}</span>
+                        </div>
+                    </label>
+                `;
+            } else {
+                boxModalidade.classList.remove('hidden');
+                containerRadios.innerHTML = `
+                    <label class="flex items-center gap-2 border border-blue-200 bg-blue-50/60 p-2 rounded-lg col-span-2">
+                        <input type="radio" name="modalidade_interesse" value="Venda" checked class="text-blue-600 focus:ring-blue-500">
+                        <div>
+                            <span class="font-black text-blue-900 block text-xs">Interesse em Aquisição (Venda)</span>
+                            <span class="text-[11px] text-blue-700 font-mono font-bold">${valorVendaFmt}</span>
+                        </div>
+                    </label>
+                `;
+            }
+
             document.getElementById('modal-lead').classList.remove('hidden');
         }
 
@@ -854,6 +1294,10 @@
             operacaoPendenteLGPD = null;
         }
 
+        function fecharModalSucesso() {
+            document.getElementById('modal-sucesso-mensagem').classList.add('hidden');
+        }
+
         function iniciarEnvioAvaliacao(event) {
             event.preventDefault();
             operacaoPendenteLGPD = {
@@ -872,10 +1316,32 @@
 
         function iniciarEnvioLeadImovel(event) {
             event.preventDefault();
+
+            const radios = document.getElementsByName('modalidade_interesse');
+            let modalidadeEscolhida = 'Venda';
+            for (let r of radios) {
+                if (r.checked) {
+                    modalidadeEscolhida = r.value;
+                    break;
+                }
+            }
+
+            const valorVendaNum = Number(document.getElementById('lead-valor-venda-num').value) || 0;
+            const valorLocacaoNum = Number(document.getElementById('lead-valor-locacao-num').value) || 0;
+
+            let valorReferenciaTexto = '';
+            if (modalidadeEscolhida === 'Locação') {
+                valorReferenciaTexto = valorLocacaoNum ? Number(valorLocacaoNum).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês' : 'Sob consulta';
+            } else {
+                valorReferenciaTexto = valorVendaNum ? Number(valorVendaNum).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sob consulta';
+            }
+
             operacaoPendenteLGPD = {
                 tipo: 'imovel',
                 idImovel: document.getElementById('lead-imovel-id').value,
                 refImovel: document.getElementById('lead-imovel-ref').value,
+                modalidade: modalidadeEscolhida,
+                valorRef: valorReferenciaTexto,
                 nome: document.getElementById('lead-nome').value.trim(),
                 zap: sanitizarZap(document.getElementById('lead-zap').value.trim()),
                 msg: document.getElementById('lead-msg').value.trim()
@@ -902,6 +1368,7 @@
             try {
                 if (dados.tipo === 'avaliacao') {
                     const mensagemFormatada = `[SOLICITAÇÃO DE AVALIAÇÃO / CAPTAÇÃO DE IMÓVEL]\n` +
+                        `• Origem: Formulário do Portal\n` +
                         `• CEP do Imóvel: ${dados.cep || 'Não informado'}\n` +
                         `• Descrição do Imóvel: ${dados.desc}\n` +
                         `• E-mail do Proprietário: ${dados.email}`;
@@ -932,18 +1399,14 @@
                         user_agent: navigator.userAgent
                     }]);
 
-                    const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '');
-                    const textoZap = encodeURIComponent(`Olá! Me chamo ${dados.nome}. Gostaria de solicitar a avaliação/negociação do meu imóvel:\n\n` +
-                        `📍 *CEP:* ${dados.cep || 'Não informado'}\n` +
-                        `📝 *Detalhes:* ${dados.desc}\n` +
-                        `*(Consentimento LGPD aceito no portal)*`);
-
                     fecharModalLGPD();
                     document.getElementById('form-avaliacao-imovel').reset();
-                    alert('Solicitação de avaliação enviada com sucesso! Abrindo seu atendimento no WhatsApp...');
-                    window.open(`https://wa.me/${zapCorretor}?text=${textoZap}`, '_blank');
+                    document.getElementById('modal-sucesso-mensagem').classList.remove('hidden');
 
                 } else if (dados.tipo === 'imovel') {
+                    const mensagemFormatada = `[CANAL: MENSAGEM DO SITE] [INTERESSE: ${dados.modalidade.toUpperCase()} - ${dados.valorRef}]\n\n` +
+                        (dados.msg ? dados.msg : `Olá, tenho interesse neste imóvel para ${dados.modalidade.toLowerCase()}. Aguardo contato.`);
+
                     const { data: leadResp, error: errLead } = await supabaseClient
                         .from('leads_contatos')
                         .insert([{
@@ -951,7 +1414,7 @@
                             imovel_id: dados.idImovel,
                             nome: dados.nome,
                             whatsapp: dados.zap,
-                            mensagem: dados.msg,
+                            mensagem: mensagemFormatada,
                             status: 'Novo'
                         }])
                         .select('id')
@@ -969,19 +1432,17 @@
                         user_agent: navigator.userAgent
                     }]);
 
-                    const zapCorretor = sanitizarZap(tenantAtual.whatsapp_contato || '');
-                    const textoZap = encodeURIComponent(`Olá! Me chamo ${dados.nome}. Tenho interesse no imóvel Ref: ${dados.refImovel}. Mensagem: ${dados.msg || 'Gostaria de agendar uma visita.'}`);
-
                     fecharModalLead();
                     fecharModalLGPD();
-                    window.open(`https://wa.me/${zapCorretor}?text=${textoZap}`, '_blank');
+                    document.getElementById('form-lead').reset();
+                    document.getElementById('modal-sucesso-mensagem').classList.remove('hidden');
                 }
 
             } catch (err) {
                 console.error('Erro ao registrar lead e termo:', err);
                 alert('Ocorreu um erro ao processar seu pedido. Tente novamente.');
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Concordar e Continuar</span>';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Concordar e Enviar</span>';
                 btn.disabled = false;
             }
         }

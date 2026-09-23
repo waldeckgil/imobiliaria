@@ -851,12 +851,16 @@
         <!-- RODAPÉ DA VITRINE -->
         <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+           
+
                 <div>
                     <div class="text-white text-xl font-serif font-black tracking-widest leading-none mb-1" id="footer-nome">IMOBILIÁRIA</div>
                     <p id="footer-creci" class="text-[10px] text-slate-500 font-bold uppercase">CRECI</p>
                     <p class="text-slate-400 mt-2 leading-relaxed" id="footer-sobre">
                         Intermediação e consultoria imobiliária com transparência e segurança jurídica.
                     </p>
+                    <!-- CONTÊINER DINÂMICO DE REDES SOCIAIS -->
+                    <div id="footer-redes-sociais" class="flex items-center gap-2.5 mt-4 flex-wrap"></div>
                 </div>
 
                 <div>
@@ -999,8 +1003,41 @@
             document.getElementById('footer-telefone').innerHTML = `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${telefoneExibicao || 'Não informado'}`;
             document.getElementById('footer-email').innerHTML = `<i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> ${imob.email_admin || 'Não informado'}`;
             
-            const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
+  const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
+
+            // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS
+            const containerRedes = document.getElementById('footer-redes-sociais');
+            if (containerRedes) {
+                const formatarLinkRede = (link, tipo) => {
+                    if (!link) return '';
+                    let url = link.trim();
+                    if (url.startsWith('@')) {
+                        if (tipo === 'instagram') return `https://instagram.com/${url.substring(1)}`;
+                        if (tipo === 'facebook') return `https://facebook.com/${url.substring(1)}`;
+                        if (tipo === 'youtube') return `https://youtube.com/${url.substring(1)}`;
+                    }
+                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                        return `https://${url}`;
+                    }
+                    return url;
+                };
+
+                let htmlRedes = '';
+                if (imob.instagram && imob.instagram.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-pink-500 hover:text-pink-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="Instagram"><i class="fa-brands fa-instagram"></i></a>`;
+                }
+                if (imob.facebook && imob.facebook.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.facebook, 'facebook')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-blue-500 hover:text-blue-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>`;
+                }
+                if (imob.youtube && imob.youtube.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.youtube, 'youtube')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-red-500 hover:text-red-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="YouTube"><i class="fa-brands fa-youtube"></i></a>`;
+                }
+                if (imob.linkedin && imob.linkedin.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.linkedin, 'linkedin')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-sky-500 hover:text-sky-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>`;
+                }
+                containerRedes.innerHTML = htmlRedes;
+            }
         }
 
         function exibirVitrineNaoEncontrada() {
