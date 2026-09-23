@@ -915,15 +915,21 @@
                 </div>
             </div>
 
-            <!-- BARRA DE FILTROS AVANÇADOS -->
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 mb-4 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+     <!-- BARRA DE FILTROS AVANÇADOS (4 COLUNAS COM FILTRO DE MÊS INTEGRADO) -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Mês de Referência:</label>
+                    <select id="filtro-ticket-mes" onchange="filtrarTicketsMaster()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-cyan-300 font-mono font-bold outline-none focus:border-indigo-400 cursor-pointer">
+                        <!-- Preenchido dinamicamente via JS -->
+                    </select>
+                </div>
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Filtrar por Imobiliária:</label>
                     <select id="filtro-ticket-imob" onchange="filtrarTicketsMaster()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-indigo-400 cursor-pointer">
                         <option value="">Todas as Imobiliárias</option>
                     </select>
                 </div>
-         <div>
+                <div>
                     <label class="block font-bold text-slate-300 mb-1">Status do Chamado:</label>
                     <select id="filtro-ticket-status" onchange="filtrarTicketsMaster()" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-white outline-none focus:border-indigo-400 cursor-pointer">
                         <option value="ativos" selected>Abertos + Em Análise</option>
@@ -1405,8 +1411,7 @@ async function carregarDadosMaster() {
             optTodos.textContent = 'Todos os Meses (Histórico)';
             select.appendChild(optTodos);
         }
-
-        function popularSelectTicketsImobiliarias() {
+function popularSelectTicketsImobiliarias() {
             popularSelectMesesTickets();
             const select = document.getElementById('filtro-ticket-imob');
             if (!select) return;
@@ -1423,6 +1428,8 @@ async function carregarDadosMaster() {
 
             if (valorAtual) select.value = valorAtual;
         }
+
+        async function carregarTicketsMaster() {
             try {
                 const { data: tickets, error } = await supabaseClient
                     .from('support_tickets')
