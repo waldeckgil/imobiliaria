@@ -773,12 +773,32 @@
                         <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
                         <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel ou tirar dúvidas..."></textarea>
                     </div>
-
-                    <button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
+<button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
                         <i class="fa-regular fa-paper-plane"></i>
                         <span>Enviar Mensagem</span>
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <!-- MODAL DE VÍDEO TOUR DO IMÓVEL (YOUTUBE) -->
+        <div id="modal-video-tour" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[65] flex items-center justify-center p-4 hidden">
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+                    <div class="flex items-center gap-2 text-red-500 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-brands fa-youtube text-lg"></i>
+                        <span id="modal-video-titulo">Vídeo Tour do Imóvel</span>
+                    </div>
+                    <button onclick="fecharModalVideo()" class="text-slate-400 hover:text-white text-lg cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner">
+                    <iframe id="iframe-video-tour" src="" class="w-full h-full border-0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
             </div>
         </div>
 
@@ -1237,9 +1257,27 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                 if (imovel.finalidade === 'Ambos') badgeFoto = 'Venda & Locação';
                 else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') badgeFoto = 'Locação';
 
-                const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
+   
+const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
                 const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
                 const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
+
+                // Detecção inteligente de Vídeo Tour
+                const temVideo = imovel.video_url && imovel.video_url.trim() !== '';
+                const videoUrlTratada = temVideo ? imovel.video_url.trim().replace(/'/g, "\\'") : '';
+                const tituloTratado = (imovel.titulo || 'Imóvel').replace(/'/g, "\\'");
+
+                const badgeVideoHtml = temVideo ? `
+                    <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
+                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow flex items-center gap-1.5 cursor-pointer transition animate-pulse">
+                        <i class="fa-brands fa-youtube"></i> Vídeo Tour
+                    </button>` : '';
+
+                const botaoVideoAcao = temVideo ? `
+                    <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Assistir Vídeo Tour">
+                        <i class="fa-brands fa-youtube text-sm"></i> Tour
+                    </button>` : '';
 
                 const card = `
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
@@ -1249,6 +1287,7 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                             <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow">
                                 ${badgeFoto}
                             </div>
+                            ${badgeVideoHtml}
                             <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm">
                                 Ref: ${imovel.codigo_ref}
                             </div>
@@ -1278,7 +1317,8 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                                     ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
                                 </div>
 
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    ${botaoVideoAcao}
                                     <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
                                             class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                                         <i class="fa-regular fa-envelope"></i> Mensagem
@@ -1292,6 +1332,7 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                         </div>
                     </div>
                 </div>`;
+
                 container.innerHTML += card;
             });
         }
@@ -1388,9 +1429,31 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
 
             document.getElementById('modal-lead').classList.remove('hidden');
         }
-
-        function fecharModalLead() {
+function fecharModalLead() {
             document.getElementById('modal-lead').classList.add('hidden');
+        }
+
+        // CONTROLADOR DO VÍDEO TOUR DO YOUTUBE
+        function extrairEmbedYouTube(url) {
+            if (!url) return '';
+            const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regExp);
+            if (match && match[1]) {
+                return `https://www.youtube-nocookie.com/embed/${match[1]}?autoplay=1&rel=0`;
+            }
+            return url;
+        }
+
+        function abrirModalVideo(url, titulo) {
+            const embedUrl = extrairEmbedYouTube(url);
+            document.getElementById('iframe-video-tour').src = embedUrl;
+            document.getElementById('modal-video-titulo').innerText = titulo ? `Vídeo Tour • ${titulo}` : 'Vídeo Tour do Imóvel';
+            document.getElementById('modal-video-tour').classList.remove('hidden');
+        }
+
+        function fecharModalVideo() {
+            document.getElementById('modal-video-tour').classList.add('hidden');
+            document.getElementById('iframe-video-tour').src = '';
         }
 
         function alternarBotaoLGPD(marcado) {
