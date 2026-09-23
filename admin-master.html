@@ -70,6 +70,13 @@
                     <span class="text-slate-400 text-[11px]">dias antes</span>
                 </div>
 
+  <!-- BOTÃO DE TUTORIAIS EM VÍDEO (CMS) -->
+                <button onclick="abrirModalMasterTutoriais()" class="bg-slate-900 hover:bg-slate-800 text-cyan-300 font-bold px-3 py-1.5 rounded-xl border border-cyan-700/70 flex items-center gap-1.5 transition cursor-pointer text-xs shadow" title="Gerenciar Vídeos Tutoriais da Central de Ajuda">
+                    <i class="fa-solid fa-photo-film text-cyan-400 text-xs"></i>
+                    <span>Tutoriais</span>
+                    <span id="badge-contador-tutoriais" class="bg-cyan-500 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full font-mono">0</span>
+                </button>
+
                 <!-- BOTÃO DE CHAMADOS & SUPORTE TÉCNICO MASTER -->
                 <button onclick="abrirModalMasterTickets()" class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 font-bold px-3 py-1.5 rounded-xl border border-indigo-700/80 flex items-center gap-1.5 transition cursor-pointer text-xs shadow" title="Central Soberana de Chamados e Suporte">
                     <i class="fa-solid fa-headset text-indigo-400 text-xs"></i>
@@ -968,6 +975,120 @@
         </div>
     </div>
 
+    <!-- ========================================================================= -->
+    <!-- MODAL SOBERANO: GERENCIADOR CMS DE TUTORIAIS EM VÍDEO                    -->
+    <!-- ========================================================================= -->
+    <div id="modal-master-tutoriais" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-5xl w-full p-4 sm:p-6 shadow-2xl relative border-2 border-cyan-500/60 max-h-[94vh] flex flex-col">
+            
+            <button type="button" onclick="fecharModalMasterTutoriais()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- TOPO DO MODAL -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/40 shrink-0">
+                        <i class="fa-solid fa-photo-film"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm sm:text-base font-black text-white">Gerenciador Soberano de Vídeos Tutoriais</h3>
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono">
+                                HEADLESS CMS
+                            </span>
+                        </div>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Cadastre ou edite os vídeos do YouTube. As alterações refletem instantaneamente no painel de todas as imobiliárias.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-right">
+                    <span class="text-[9px] text-slate-400 uppercase font-bold block">Tutoriais Ativos</span>
+                    <strong id="contador-tutoriais-modal" class="text-xs text-cyan-400 font-mono">0 vídeos</strong>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO RÁPIDA -->
+            <form id="form-tutorial-master" onsubmit="salvarTutorialMaster(event)" class="bg-slate-950 p-4 rounded-2xl border border-cyan-500/30 space-y-3 mb-4 text-xs">
+                <input type="hidden" id="tut-id">
+                
+                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                    <span id="tut-form-titulo" class="font-black uppercase text-cyan-400 text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> Cadastrar Novo Tutorial
+                    </span>
+                    <button type="button" id="tut-btn-cancelar-edicao" onclick="cancelarEdicaoTutorial()" class="hidden text-slate-400 hover:text-white text-[11px] font-bold">
+                        Cancelar Edição
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                    <div class="sm:col-span-6">
+                        <label class="block font-bold text-slate-300 mb-1">Título do Vídeo *</label>
+                        <input type="text" id="tut-titulo" required placeholder="Ex: 1. Como Cadastrar Imóveis na Vitrine" 
+                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    </div>
+
+                    <div class="sm:col-span-4">
+                        <label class="block font-bold text-slate-300 mb-1">Link do Vídeo no YouTube *</label>
+                        <input type="text" id="tut-url" required placeholder="Cole o link do YouTube (PC, celular ou ID)..." 
+                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="block font-bold text-slate-300 mb-1">Ordem (Posição)</label>
+                        <input type="number" id="tut-ordem" min="1" max="99" value="1" required 
+                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-center text-white font-mono text-xs outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Descrição Explicativa (Resumo exibido abaixo do título)</label>
+                    <input type="text" id="tut-descricao" placeholder="Ex: Passo a passo para cadastrar fotos, preencher valores e destacar no portal." 
+                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-1">
+                    <button type="submit" id="btn-salvar-tutorial" class="px-5 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg transition cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span id="lbl-btn-salvar-tut">Salvar Tutorial</span>
+                    </button>
+                </div>
+            </form>
+
+            
+            <!-- TABELA DE VÍDEOS CADASTRADOS -->
+            <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
+                <table class="w-full text-left text-xs text-slate-300">
+                    <thead class="bg-slate-950 text-slate-500 uppercase text-[10px] font-black border-b border-slate-800 sticky top-0">
+                        <tr>
+                            <th class="py-2.5 px-3 text-center w-12">Ordem</th>
+                            <th class="py-2.5 px-3">Título e Descrição</th>
+                            <th class="py-2.5 px-3">Vídeo (YouTube)</th>
+                            <th class="py-2.5 px-3 text-center">Status</th>
+                            <th class="py-2.5 px-3 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-tutoriais-master-corpo" class="divide-y divide-slate-800/60">
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-xl mb-2"></i>
+                                <p>Carregando tutoriais...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="mt-4 flex items-center justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
+                <span>Gerenciador de Mídia SGI • Sincronização em Tempo Real</span>
+                <button type="button" onclick="fecharModalMasterTutoriais()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                    Fechar Janela
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL 6: MODAL DE CONFIRMAÇÃO CUSTOMIZADO -->
     <div id="modal-confirm-custom" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[9990] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-md w-full p-5 sm:p-6 shadow-2xl relative border border-amber-500/40">
@@ -1365,12 +1486,13 @@ async function carregarDadosMaster() {
 
                 if (!errImoveis) listaImoveisGlobal = imoveis || [];
 
-                await carregarTotalizadoresPagamentos();
+  await carregarTotalizadoresPagamentos();
                 atualizarMetricasMaster();
                 renderizarTabelaImobiliarias(listaImobiliarias);
                 popularSelectImobiliariasFiltro();
                 popularSelectTicketsImobiliarias();
                 await carregarTicketsMaster();
+                await carregarTutoriaisMaster();
 
             } catch (err) {
                 console.error(err);
@@ -1788,7 +1910,8 @@ function filtrarTicketsMaster() {
                 }
             }
         }
-window.abrirModalMasterTickets = abrirModalMasterTickets;
+
+        window.abrirModalMasterTickets = abrirModalMasterTickets;
         window.abrirModalMasterTicketsFiltrado = abrirModalMasterTicketsFiltrado;
         window.fecharModalMasterTickets = fecharModalMasterTickets;
         window.filtrarTicketsMaster = filtrarTicketsMaster;
@@ -1797,6 +1920,249 @@ window.abrirModalMasterTickets = abrirModalMasterTickets;
         window.resolverTicketMaster = resolverTicketMaster;
         window.reabrirTicketMaster = reabrirTicketMaster;
 
+        // =========================================================================
+        // MOTOR DO CMS SOBERANO DE VÍDEOS TUTORIAIS
+        // =========================================================================
+        let listaGlobalTutoriais = [];
+
+        // CONVERSOR INTELIGENTE: aceita youtube.com, youtu.be, embed ou apenas o ID
+        function normalizarUrlEmbedYoutube(url) {
+            if (!url) return '';
+            if (url.includes('youtube-nocookie.com/embed/')) return url;
+
+            let videoId = '';
+            const matchWatch = url.match(/[?&]v=([^&#]+)/);
+            const matchShort = url.match(/youtu\.be\/([^?&#]+)/);
+            const matchEmbed = url.match(/youtube\.com\/embed\/([^?&#]+)/);
+
+            if (matchWatch) videoId = matchWatch[1];
+            else if (matchShort) videoId = matchShort[1];
+            else if (matchEmbed) videoId = matchEmbed[1];
+            else if (url.trim().length === 11 && !url.includes('/')) videoId = url.trim();
+            else videoId = url;
+
+            return `https://www.youtube-nocookie.com/embed/${videoId}`;
+        }
+
+        async function carregarTutoriaisMaster() {
+            try {
+                const { data: tutoriais, error } = await supabaseClient
+                    .from('tutoriais_sistema')
+                    .select('*')
+                    .order('ordem', { ascending: true });
+
+                if (error) throw error;
+                listaGlobalTutoriais = tutoriais || [];
+
+                const ativos = listaGlobalTutoriais.filter(t => t.ativo).length;
+                const badgeTop = document.getElementById('badge-contador-tutoriais');
+                const badgeModal = document.getElementById('contador-tutoriais-modal');
+
+                if (badgeTop) badgeTop.innerText = ativos;
+                if (badgeModal) badgeModal.innerText = `${ativos} ativos`;
+
+                renderizarTabelaTutoriaisMaster();
+
+            } catch (err) {
+                console.error('[TUTORIAIS MASTER] Erro ao carregar:', err);
+            }
+        }
+
+        function abrirModalMasterTutoriais() {
+            document.getElementById('modal-master-tutoriais').classList.remove('hidden');
+            carregarTutoriaisMaster();
+        }
+
+        function fecharModalMasterTutoriais() {
+            document.getElementById('modal-master-tutoriais').classList.add('hidden');
+            cancelarEdicaoTutorial();
+        }
+
+        function renderizarTabelaTutoriaisMaster() {
+            const tbody = document.getElementById('tabela-tutoriais-master-corpo');
+            if (!tbody) return;
+
+            if (listaGlobalTutoriais.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-500 text-xs">
+                            Nenhum tutorial cadastrado. Utilize o formulário acima para cadastrar o primeiro!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = listaGlobalTutoriais.map(t => {
+                const embedUrl = normalizarUrlEmbedYoutube(t.video_url);
+
+                return `
+                    <tr class="hover:bg-slate-900/60 transition">
+                        <td class="py-2.5 px-3 text-center">
+                            <span class="w-6 h-6 rounded-lg bg-slate-800 text-cyan-300 font-mono font-bold text-xs inline-flex items-center justify-center border border-slate-700">
+                                ${t.ordem || 1}
+                            </span>
+                        </td>
+                        <td class="py-2.5 px-3">
+                            <strong class="text-white text-xs block leading-snug">${t.titulo}</strong>
+                            <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${t.descricao || 'Sem descrição'}</p>
+                        </td>
+                        <td class="py-2.5 px-3 font-mono text-[11px]">
+                            <a href="${t.video_url}" target="_blank" class="text-cyan-400 hover:underline flex items-center gap-1 max-w-[200px] truncate" title="Abrir vídeo">
+                                <i class="fa-brands fa-youtube text-red-500"></i>
+                                <span class="truncate">${t.video_url}</span>
+                            </a>
+                        </td>
+                        <td class="py-2.5 px-3 text-center">
+                            <button type="button" onclick="alternarStatusTutorial('${t.id}', ${t.ativo})" 
+                                    class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase transition cursor-pointer ${t.ativo ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
+                                ${t.ativo ? 'Ativo' : 'Pausado'}
+                            </button>
+                        </td>
+                        <td class="py-2.5 px-3 text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <button type="button" onclick="editarTutorialMaster('${t.id}')" 
+                                        class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 transition cursor-pointer" title="Editar Título e Link">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </button>
+                                <button type="button" onclick="excluirTutorialMaster('${t.id}', '${(t.titulo).replace(/'/g, "\\'")}')" 
+                                        class="p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900 text-rose-300 border border-rose-800/60 transition cursor-pointer" title="Excluir Tutorial">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function salvarTutorialMaster(e) {
+            e.preventDefault();
+            const id = document.getElementById('tut-id').value;
+            const titulo = document.getElementById('tut-titulo').value.trim();
+            const descricao = document.getElementById('tut-descricao').value.trim();
+            const urlRaw = document.getElementById('tut-url').value.trim();
+            const ordem = parseInt(document.getElementById('tut-ordem').value, 10) || 1;
+            const btn = document.getElementById('btn-salvar-tutorial');
+
+            if (!titulo || !urlRaw) {
+                mostrarToast('Preencha o título e o link do vídeo.', 'aviso');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
+
+            try {
+                const payload = {
+                    titulo,
+                    descricao: descricao || null,
+                    video_url: urlRaw,
+                    ordem,
+                    ativo: true
+                };
+
+                if (id) {
+                    // Edição
+                    const { error } = await supabaseClient
+                        .from('tutoriais_sistema')
+                        .update(payload)
+                        .eq('id', id);
+                    if (error) throw error;
+                    mostrarToast('Tutorial atualizado com sucesso!', 'sucesso');
+                } else {
+                    // Cadastro Novo
+                    const { error } = await supabaseClient
+                        .from('tutoriais_sistema')
+                        .insert([payload]);
+                    if (error) throw error;
+                    mostrarToast('Novo tutorial cadastrado com sucesso!', 'sucesso');
+                }
+
+                cancelarEdicaoTutorial();
+                await carregarTutoriaisMaster();
+
+            } catch (err) {
+                console.error('[SALVAR TUTORIAL] Erro:', err);
+                mostrarToast('Erro ao salvar tutorial: ' + err.message, 'erro');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span id="lbl-btn-salvar-tut">Salvar Tutorial</span>';
+            }
+        }
+
+        function editarTutorialMaster(id) {
+            const tut = listaGlobalTutoriais.find(t => t.id === id);
+            if (!tut) return;
+
+            document.getElementById('tut-id').value = tut.id;
+            document.getElementById('tut-titulo').value = tut.titulo;
+            document.getElementById('tut-descricao').value = tut.descricao || '';
+            document.getElementById('tut-url').value = tut.video_url;
+            document.getElementById('tut-ordem').value = tut.ordem || 1;
+
+            document.getElementById('tut-form-titulo').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editando Tutorial';
+            document.getElementById('lbl-btn-salvar-tut').innerText = 'Salvar Alterações';
+            document.getElementById('tut-btn-cancelar-edicao').classList.remove('hidden');
+
+            document.getElementById('form-tutorial-master').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelarEdicaoTutorial() {
+            document.getElementById('form-tutorial-master').reset();
+            document.getElementById('tut-id').value = '';
+            document.getElementById('tut-form-titulo').innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar Novo Tutorial';
+            document.getElementById('lbl-btn-salvar-tut').innerText = 'Salvar Tutorial';
+            document.getElementById('tut-btn-cancelar-edicao').classList.add('hidden');
+        }
+
+        async function alternarStatusTutorial(id, statusAtual) {
+            try {
+                const novoStatus = !statusAtual;
+                const { error } = await supabaseClient
+                    .from('tutoriais_sistema')
+                    .update({ ativo: novoStatus })
+                    .eq('id', id);
+
+                if (error) throw error;
+                mostrarToast(`Tutorial ${novoStatus ? 'ativado' : 'pausado'}!`, 'sucesso');
+                await carregarTutoriaisMaster();
+            } catch (err) {
+                mostrarToast('Erro ao alterar status: ' + err.message, 'erro');
+            }
+        }
+
+        async function excluirTutorialMaster(id, titulo) {
+            const confirmou = await solicitarConfirmacaoMaster(
+                'Excluir Tutorial',
+                `Deseja realmente apagar o tutorial "${titulo}"? Ele sairá da tela de todas as imobiliárias.`,
+                'Excluir Definitivamente',
+                'rose'
+            );
+
+            if (confirmou) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('tutoriais_sistema')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) throw error;
+                    mostrarToast('Tutorial excluído com sucesso!', 'sucesso');
+                    await carregarTutoriaisMaster();
+                } catch (err) {
+                    mostrarToast('Erro ao excluir tutorial.', 'erro');
+                }
+            }
+        }
+
+        window.abrirModalMasterTutoriais = abrirModalMasterTutoriais;
+        window.fecharModalMasterTutoriais = fecharModalMasterTutoriais;
+        window.salvarTutorialMaster = salvarTutorialMaster;
+        window.editarTutorialMaster = editarTutorialMaster;
+        window.cancelarEdicaoTutorial = cancelarEdicaoTutorial;
+        window.alternarStatusTutorial = alternarStatusTutorial;
+        window.excluirTutorialMaster = excluirTutorialMaster;
         async function carregarTotalizadoresPagamentos() {
             try {
                 const { data: mensalidades, error } = await supabaseClient
