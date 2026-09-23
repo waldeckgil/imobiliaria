@@ -1055,7 +1055,7 @@
                 </div>
             </form>
 
-
+            
             <!-- TABELA DE VÍDEOS CADASTRADOS -->
             <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
                 <table class="w-full text-left text-xs text-slate-300">
@@ -2036,8 +2036,108 @@ function filtrarTicketsMaster() {
             }).join('');
         }
 
-    
+  async function salvarTutorialMaster(e) {
+            e.preventDefault();
+            const id = document.getElementById('tut-id')?.value;
+            const titulo = (document.getElementById('tut-titulo')?.value || '').trim();
+            const descricao = (document.getElementById('tut-descricao')?.value || '').trim();
+            const urlRaw = (document.getElementById('tut-url')?.value || '').trim();
+            const ordem = parseInt(document.getElementById('tut-ordem')?.value, 10) || 1;
+            const btn = document.getElementById('btn-salvar-tutorial');
 
+            if (!titulo || !urlRaw) {
+                mostrarToast('Preencha o título e o link do vídeo.', 'aviso');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
+            }
+
+            try {
+                const payload = {
+                    titulo,
+                    descricao: descricao || null,
+                    video_url: urlRaw,
+                    ordem,
+                    ativo: true
+                };
+
+                if (id) {
+                    // Edição
+                    const { error } = await supabaseClient
+                        .from('tutoriais_sistema')
+                        .update(payload)
+                        .eq('id', id);
+                    if (error) throw error;
+                    mostrarToast('Tutorial atualizado com sucesso!', 'sucesso');
+                } else {
+                    // Cadastro Novo
+                    const { error } = await supabaseClient
+                        .from('tutoriais_sistema')
+                        .insert([payload]);
+                    if (error) throw error;
+                    mostrarToast('Novo tutorial cadastrado com sucesso!', 'sucesso');
+                }
+
+                cancelarEdicaoTutorial();
+                await carregarTutoriaisMaster();
+
+            } catch (err) {
+                console.error('[SALVAR TUTORIAL] Erro:', err);
+                mostrarToast('Erro ao salvar tutorial: ' + err.message, 'erro');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Tutorial</span>';
+                }
+            }
+        }
+
+        function editarTutorialMaster(id) {
+            const tut = listaGlobalTutoriais.find(t => t.id === id);
+            if (!tut) return;
+
+            const inputId = document.getElementById('tut-id');
+            const inputTitulo = document.getElementById('tut-titulo');
+            const inputDesc = document.getElementById('tut-descricao');
+            const inputUrl = document.getElementById('tut-url');
+            const inputOrdem = document.getElementById('tut-ordem');
+            const tituloForm = document.getElementById('tut-form-titulo');
+            const btnSalvar = document.getElementById('btn-salvar-tutorial');
+            const btnCancelar = document.getElementById('tut-btn-cancelar-edicao');
+
+            if (inputId) inputId.value = tut.id;
+            if (inputTitulo) inputTitulo.value = tut.titulo;
+            if (inputDesc) inputDesc.value = tut.descricao || '';
+            if (inputUrl) inputUrl.value = tut.video_url;
+            if (inputOrdem) inputOrdem.value = tut.ordem || 1;
+
+            if (tituloForm) tituloForm.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editando Tutorial';
+            if (btnSalvar) btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Alterações</span>';
+            if (btnCancelar) btnCancelar.classList.remove('hidden');
+
+            const form = document.getElementById('form-tutorial-master');
+            if (form) form.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelarEdicaoTutorial() {
+            const form = document.getElementById('form-tutorial-master');
+            if (form) form.reset();
+
+            const inputId = document.getElementById('tut-id');
+            if (inputId) inputId.value = '';
+
+            const tituloForm = document.getElementById('tut-form-titulo');
+            if (tituloForm) tituloForm.innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar Novo Tutorial';
+
+            const btnSalvar = document.getElementById('btn-salvar-tutorial');
+            if (btnSalvar) btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Salvar Tutorial</span>';
+
+            const btnCancelar = document.getElementById('tut-btn-cancelar-edicao');
+            if (btnCancelar) btnCancelar.classList.add('hidden');
+        }
         async function alternarStatusTutorial(id, statusAtual) {
             try {
                 const novoStatus = !statusAtual;
