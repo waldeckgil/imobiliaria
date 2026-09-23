@@ -1055,7 +1055,7 @@
                 </div>
             </form>
 
-            
+
             <!-- TABELA DE VÍDEOS CADASTRADOS -->
             <div class="overflow-y-auto flex-1 border border-slate-800 rounded-xl">
                 <table class="w-full text-left text-xs text-slate-300">
@@ -2036,85 +2036,7 @@ function filtrarTicketsMaster() {
             }).join('');
         }
 
-        async function salvarTutorialMaster(e) {
-            e.preventDefault();
-            const id = document.getElementById('tut-id').value;
-            const titulo = document.getElementById('tut-titulo').value.trim();
-            const descricao = document.getElementById('tut-descricao').value.trim();
-            const urlRaw = document.getElementById('tut-url').value.trim();
-            const ordem = parseInt(document.getElementById('tut-ordem').value, 10) || 1;
-            const btn = document.getElementById('btn-salvar-tutorial');
-
-            if (!titulo || !urlRaw) {
-                mostrarToast('Preencha o título e o link do vídeo.', 'aviso');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
-
-            try {
-                const payload = {
-                    titulo,
-                    descricao: descricao || null,
-                    video_url: urlRaw,
-                    ordem,
-                    ativo: true
-                };
-
-                if (id) {
-                    // Edição
-                    const { error } = await supabaseClient
-                        .from('tutoriais_sistema')
-                        .update(payload)
-                        .eq('id', id);
-                    if (error) throw error;
-                    mostrarToast('Tutorial atualizado com sucesso!', 'sucesso');
-                } else {
-                    // Cadastro Novo
-                    const { error } = await supabaseClient
-                        .from('tutoriais_sistema')
-                        .insert([payload]);
-                    if (error) throw error;
-                    mostrarToast('Novo tutorial cadastrado com sucesso!', 'sucesso');
-                }
-
-                cancelarEdicaoTutorial();
-                await carregarTutoriaisMaster();
-
-            } catch (err) {
-                console.error('[SALVAR TUTORIAL] Erro:', err);
-                mostrarToast('Erro ao salvar tutorial: ' + err.message, 'erro');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span id="lbl-btn-salvar-tut">Salvar Tutorial</span>';
-            }
-        }
-
-        function editarTutorialMaster(id) {
-            const tut = listaGlobalTutoriais.find(t => t.id === id);
-            if (!tut) return;
-
-            document.getElementById('tut-id').value = tut.id;
-            document.getElementById('tut-titulo').value = tut.titulo;
-            document.getElementById('tut-descricao').value = tut.descricao || '';
-            document.getElementById('tut-url').value = tut.video_url;
-            document.getElementById('tut-ordem').value = tut.ordem || 1;
-
-            document.getElementById('tut-form-titulo').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editando Tutorial';
-            document.getElementById('lbl-btn-salvar-tut').innerText = 'Salvar Alterações';
-            document.getElementById('tut-btn-cancelar-edicao').classList.remove('hidden');
-
-            document.getElementById('form-tutorial-master').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function cancelarEdicaoTutorial() {
-            document.getElementById('form-tutorial-master').reset();
-            document.getElementById('tut-id').value = '';
-            document.getElementById('tut-form-titulo').innerHTML = '<i class="fa-solid fa-plus"></i> Cadastrar Novo Tutorial';
-            document.getElementById('lbl-btn-salvar-tut').innerText = 'Salvar Tutorial';
-            document.getElementById('tut-btn-cancelar-edicao').classList.add('hidden');
-        }
+    
 
         async function alternarStatusTutorial(id, statusAtual) {
             try {
