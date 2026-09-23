@@ -155,15 +155,20 @@
                 <i class="fa-solid fa-users text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
                 <span>Equipe & Permissões</span>
             </a>
+>
 
             <a href="configurar-imobiliaria.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
                 <i class="fa-solid fa-gear text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
                 <span>Configurações & Publicidade</span>
             </a>
 
+            <button type="button" onclick="abrirModalCentralAjuda()" class="group px-4 py-2 rounded-xl font-medium bg-indigo-950/40 text-indigo-300 border border-indigo-800/60 hover:border-indigo-400 hover:bg-indigo-900/60 hover:text-white whitespace-nowrap flex items-center gap-2 transition cursor-pointer shadow-sm">
+                <i class="fa-solid fa-headset text-indigo-400 text-xs group-hover:scale-110 transition"></i>
+                <span>Central de Ajuda & Suporte</span>
+            </button>
+
         </div>
     </nav>
-
 <!-- ========================================================================= -->
     <!-- CONTROLE DE LARGURA DO CORPO DA PÁGINA (CARDS & FINANCEIRO)               -->
     <!-- Para diminuir a largura: troque 1560px por 1480px, 1440px ou 1400px       -->
@@ -554,8 +559,237 @@
 
             </div>
         </div>
+</main>
 
-    </main>
+    <!-- MODAL DA CENTRAL DE AJUDA & GESTÃO DE CHAMADOS -->
+    <div id="modal-central-ajuda" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-5xl w-full p-5 sm:p-6 border border-indigo-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+            
+            <!-- TOPO DO MODAL -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/30">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-black text-white uppercase tracking-wide">Central de Ajuda & Suporte Técnico</h3>
+                            <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
+                                ÁREA DO GESTOR
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Assista aos tutoriais práticos ou abra um ticket formal para atendimento direto pelo Administrador Master.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharModalCentralAjuda()" class="text-slate-400 hover:text-white transition cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- SELETOR DE ABAS -->
+            <div class="flex items-center gap-2 border-b border-slate-800 pb-2 text-xs font-bold">
+                <button type="button" id="btn-aba-videos" onclick="alternarAbaAjuda('videos')" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-black flex items-center gap-2 transition cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Vídeos Tutoriais</span>
+                </button>
+                <button type="button" id="btn-aba-tickets" onclick="alternarAbaAjuda('tickets')" class="px-4 py-2 rounded-xl bg-slate-900 text-slate-400 hover:text-white flex items-center gap-2 transition cursor-pointer border border-slate-800">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Meus Chamados & Abertura</span>
+                    <span id="badge-total-meus-tickets" class="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-indigo-300 font-mono">0</span>
+                </button>
+            </div>
+
+            <!-- CONTEÚDO DAS ABAS -->
+            <div class="flex-1 overflow-y-auto pr-1 space-y-4 text-xs">
+                
+                <!-- ABA 1: VÍDEOS TUTORIAIS -->
+                <div id="conteudo-aba-videos" class="space-y-4">
+                    <!-- Player Principal com YouTube No-Cookie -->
+                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 shadow-inner">
+                        <div class="relative w-full pb-[56.25%] h-0 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
+                            <iframe id="iframe-tutorial-player" class="absolute top-0 left-0 w-full h-full"
+                                    src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ" 
+                                    title="Tutorial SGI" frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                        <div class="mt-2.5 flex items-center justify-between px-1">
+                            <div>
+                                <span class="text-[10px] uppercase font-black tracking-wider text-indigo-400 block">Vídeo em exibição:</span>
+                                <h4 id="titulo-video-ativo" class="text-xs font-bold text-white">Como cadastrar e destacar imóveis na vitrine</h4>
+                            </div>
+                            <span class="text-[10px] text-slate-500 font-mono">YouTube No-Cookie Player</span>
+                        </div>
+                    </div>
+
+                    <!-- Grade de Atalhos dos Vídeos -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] uppercase font-black tracking-wider text-slate-400 block">
+                            Escolha o tema que você deseja aprender:
+                        </span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                            
+                            <button type="button" onclick="trocarVideoPlayer('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', '1. Como cadastrar e destacar imóveis na vitrine')" 
+                                    class="card-tutorial-btn bg-slate-950 p-3 rounded-xl border border-indigo-500/40 hover:border-indigo-400 text-left transition flex items-start gap-2.5 group cursor-pointer shadow-sm">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500 group-hover:text-slate-950 transition">
+                                    <i class="fa-solid fa-house-circle-check text-xs"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block group-hover:text-indigo-300 transition leading-snug">1. Cadastro e Vitrine</span>
+                                    <p class="text-[10px] text-slate-400 line-clamp-2">Cadastro de fotos, dados técnicos e destaques no portal público.</p>
+                                </div>
+                            </button>
+
+                            <button type="button" onclick="trocarVideoPlayer('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', '2. Como gerenciar leads e contatos recebidos')" 
+                                    class="card-tutorial-btn bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-indigo-400 text-left transition flex items-start gap-2.5 group cursor-pointer shadow-sm">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500 group-hover:text-slate-950 transition">
+                                    <i class="fa-solid fa-comments text-xs"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block group-hover:text-emerald-300 transition leading-snug">2. Leads e Atendimentos</span>
+                                    <p class="text-[10px] text-slate-400 line-clamp-2">Funil de interessados, histórico de conversas e agendamentos.</p>
+                                </div>
+                            </button>
+
+                            <button type="button" onclick="trocarVideoPlayer('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', '3. Controle financeiro de aluguéis e repasses aos donos')" 
+                                    class="card-tutorial-btn bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-indigo-400 text-left transition flex items-start gap-2.5 group cursor-pointer shadow-sm">
+                                <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500 group-hover:text-slate-950 transition">
+                                    <i class="fa-solid fa-file-invoice-dollar text-xs"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block group-hover:text-purple-300 transition leading-snug">3. Gestão de Aluguéis</span>
+                                    <p class="text-[10px] text-slate-400 line-clamp-2">Baixas de pagamento de inquilinos e repasse aos donos.</p>
+                                </div>
+                            </button>
+
+                            <button type="button" onclick="trocarVideoPlayer('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', '4. Geração instantânea de fichas comerciais em PDF')" 
+                                    class="card-tutorial-btn bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-indigo-400 text-left transition flex items-start gap-2.5 group cursor-pointer shadow-sm">
+                                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-500 group-hover:text-slate-950 transition">
+                                    <i class="fa-solid fa-file-pdf text-xs"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block group-hover:text-amber-300 transition leading-snug">4. Fichas Comerciais em PDF</span>
+                                    <p class="text-[10px] text-slate-400 line-clamp-2">Gere fichas prontas personalizadas para envio rápido no Zap.</p>
+                                </div>
+                            </button>
+
+                            <button type="button" onclick="trocarVideoPlayer('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', '5. Configuração de taxas, logo e banner da fachada')" 
+                                    class="card-tutorial-btn bg-slate-950 p-3 rounded-xl border border-slate-800 hover:border-indigo-400 text-left transition flex items-start gap-2.5 group cursor-pointer shadow-sm">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500 group-hover:text-slate-950 transition">
+                                    <i class="fa-solid fa-sliders text-xs"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white text-xs block group-hover:text-cyan-300 transition leading-snug">5. Identidade & Taxas</span>
+                                    <p class="text-[10px] text-slate-400 line-clamp-2">Troque logos, redes sociais, taxas padrão e regras da equipe.</p>
+                                </div>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 2: FORMULÁRIO E HISTÓRICO DE TICKETS -->
+                <div id="conteudo-aba-tickets" class="space-y-6 hidden">
+                    
+                    <!-- FORMULÁRIO DE ABERTURA DE TICKET -->
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-indigo-500/40 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-black uppercase text-indigo-400 flex items-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Abrir Novo Chamado de Suporte</span>
+                            </h4>
+                            <span class="text-[10px] text-slate-500 font-mono">Resposta gravada e auditada</span>
+                        </div>
+
+                        <form id="form-novo-ticket" onsubmit="enviarNovoTicket(event)" class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Seu Nome Completo:</label>
+                                    <input type="text" id="ticket-gestor-nome" required
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Seu E-mail Corporativo:</label>
+                                    <input type="email" id="ticket-gestor-email" required
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400">
+                                </div>
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Seu WhatsApp com DDD:</label>
+                                    <input type="text" id="ticket-gestor-whatsapp" required placeholder="(00) 00000-0000"
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-indigo-400">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Categoria do Chamado:</label>
+                                    <select id="ticket-categoria" required
+                                            class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400 cursor-pointer">
+                                        <option value="Dúvida Geral">Dúvida Geral</option>
+                                        <option value="Imóveis">Imóveis & Vitrine</option>
+                                        <option value="Financeiro">Financeiro & Repasses</option>
+                                        <option value="Leads">Leads & Atendimentos</option>
+                                        <option value="Bug">Possível Erro / Bug</option>
+                                    </select>
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block font-bold text-slate-300 mb-1 text-[11px]">Assunto Resumido:</label>
+                                    <input type="text" id="ticket-assunto" required placeholder="Ex: Como configurar a foto principal do imóvel"
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-300 mb-1 text-[11px]">Descreva sua dúvida ou solicitação com detalhes:</label>
+                                <textarea id="ticket-mensagem" rows="3" required placeholder="Explique o que deseja fazer ou qual comportamento está observando..."
+                                          class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400"></textarea>
+                            </div>
+
+                            <div class="flex items-center justify-end pt-1">
+                                <button type="submit" id="btn-enviar-ticket" 
+                                        class="px-5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-black text-xs flex items-center gap-2 shadow-lg shadow-indigo-950/40 cursor-pointer transition">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                    <span>Enviar Chamado para o Suporte</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- HISTÓRICO DE TICKETS DA IMOBILIÁRIA -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <h4 class="text-xs font-black uppercase text-slate-300 flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i>
+                                <span>Histórico de Chamados Abertos</span>
+                            </h4>
+                            <button type="button" onclick="carregarMeusTickets()" class="text-slate-400 hover:text-indigo-300 text-[11px] font-bold flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-rotate text-[10px]"></i>
+                                <span>Atualizar Lista</span>
+                            </button>
+                        </div>
+
+                        <div id="lista-meus-tickets" class="space-y-2.5">
+                            <div class="py-8 text-center text-slate-500 text-xs">
+                                <i class="fa-solid fa-spinner fa-spin text-indigo-400 text-lg mb-2"></i>
+                                <p>Carregando histórico de chamados...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RODAPÉ DO MODAL -->
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-mono text-[11px]">SGI Help Center • Conectado à Base Master</span>
+                <button type="button" onclick="fecharModalCentralAjuda()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- NOVO MODAL: DOSSIÊ COMPLETO DO CORRETOR / FUNCIONÁRIO (CADASTRO, CRECI, REGRAS E GANHOS) -->
     <div id="modal-dossie-corretor" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
@@ -5131,10 +5365,226 @@ Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposi�
                 btnSalvar.innerHTML = '<i class="fa-solid fa-check"></i> Confirmar Pagamento';
             }
         }
-
-        window.abrirModalPagarCorretor = abrirModalPagarCorretor;
+window.abrirModalPagarCorretor = abrirModalPagarCorretor;
         window.fecharModalPagarCorretor = fecharModalPagarCorretor;
         window.salvarPagamentoCorretor = salvarPagamentoCorretor;
+
+        // =========================================================================
+        // MOTOR DA CENTRAL DE AJUDA & SUPORTE (TUTORIAIS & TICKETS)
+        // =========================================================================
+        function abrirModalCentralAjuda() {
+            const modal = document.getElementById('modal-central-ajuda');
+            if (!modal) return;
+
+            // Pré-preenche automaticamente os dados do solicitante logado
+            const inputNome = document.getElementById('ticket-gestor-nome');
+            const inputEmail = document.getElementById('ticket-gestor-email');
+            const inputZap = document.getElementById('ticket-gestor-whatsapp');
+
+            if (inputNome && !inputNome.value) {
+                inputNome.value = dadosUsuario?.nome_completo || dadosImobiliaria?.nome_fantasia || '';
+            }
+            if (inputEmail && !inputEmail.value) {
+                inputEmail.value = dadosUsuario?.email || dadosSessao?.user?.email || '';
+            }
+            if (inputZap && !inputZap.value) {
+                inputZap.value = dadosUsuario?.whatsapp || dadosImobiliaria?.whatsapp_contato || dadosImobiliaria?.telefone_contato || '';
+            }
+
+            modal.classList.remove('hidden');
+            carregarMeusTickets();
+        }
+
+        function fecharModalCentralAjuda() {
+            const modal = document.getElementById('modal-central-ajuda');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function alternarAbaAjuda(aba) {
+            const btnVideos = document.getElementById('btn-aba-videos');
+            const btnTickets = document.getElementById('btn-aba-tickets');
+            const boxVideos = document.getElementById('conteudo-aba-videos');
+            const boxTickets = document.getElementById('conteudo-aba-tickets');
+
+            if (aba === 'tickets') {
+                btnTickets.className = 'px-4 py-2 rounded-xl bg-indigo-600 text-white font-black flex items-center gap-2 transition cursor-pointer shadow-sm';
+                btnVideos.className = 'px-4 py-2 rounded-xl bg-slate-900 text-slate-400 hover:text-white flex items-center gap-2 transition cursor-pointer border border-slate-800';
+                boxVideos.classList.add('hidden');
+                boxTickets.classList.remove('hidden');
+                carregarMeusTickets();
+            } else {
+                btnVideos.className = 'px-4 py-2 rounded-xl bg-indigo-600 text-white font-black flex items-center gap-2 transition cursor-pointer shadow-sm';
+                btnTickets.className = 'px-4 py-2 rounded-xl bg-slate-900 text-slate-400 hover:text-white flex items-center gap-2 transition cursor-pointer border border-slate-800';
+                boxTickets.classList.add('hidden');
+                boxVideos.classList.remove('hidden');
+            }
+        }
+
+        function trocarVideoPlayer(url, titulo) {
+            const iframe = document.getElementById('iframe-tutorial-player');
+            const elTitulo = document.getElementById('titulo-video-ativo');
+            if (iframe) iframe.src = url;
+            if (elTitulo) elTitulo.innerText = titulo;
+
+            document.querySelectorAll('.card-tutorial-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-500/40');
+                btn.classList.add('border-slate-800');
+            });
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.remove('border-slate-800');
+                event.currentTarget.classList.add('border-indigo-500/40');
+            }
+        }
+
+        async function carregarMeusTickets() {
+            if (!dadosImobiliaria) return;
+
+            const listaContainer = document.getElementById('lista-meus-tickets');
+            const badgeTotal = document.getElementById('badge-total-meus-tickets');
+            if (!listaContainer) return;
+
+            try {
+                const { data: tickets, error } = await supabaseClient
+                    .from('support_tickets')
+                    .select('*')
+                    .eq('imobiliaria_id', dadosImobiliaria.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (badgeTotal) badgeTotal.innerText = (tickets || []).length;
+
+                if (!tickets || tickets.length === 0) {
+                    listaContainer.innerHTML = `
+                        <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 text-center text-slate-500 text-xs">
+                            <i class="fa-solid fa-headset text-slate-600 text-2xl mb-2"></i>
+                            <p>Sua imobiliária não possui chamados abertos no momento.</p>
+                            <span class="text-[10px] text-slate-600 mt-1 block">Caso tenha dúvidas ou precise de ajuda, preencha o formulário acima!</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listaContainer.innerHTML = tickets.map(t => {
+                    const dataAbertura = new Date(t.created_at).toLocaleString('pt-BR');
+                    
+                    let badgeStatus = '';
+                    let bordaCard = 'border-slate-800';
+
+                    if (t.status === 'aberto') {
+                        badgeStatus = '<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 flex items-center gap-1"><i class="fa-solid fa-clock"></i> ABERTO</span>';
+                        bordaCard = 'border-amber-900/40';
+                    } else if (t.status === 'em_analise') {
+                        badgeStatus = '<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 animate-pulse"><i class="fa-solid fa-spinner fa-spin text-[8px]"></i> EM ANÁLISE</span>';
+                        bordaCard = 'border-blue-800/60';
+                    } else if (t.status === 'resolvido') {
+                        badgeStatus = '<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> RESOLVIDO</span>';
+                        bordaCard = 'border-emerald-900/50';
+                    }
+
+                    return `
+                        <div class="bg-slate-950 p-3.5 rounded-xl border ${bordaCard} space-y-2 text-xs">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-900 text-indigo-300 border border-slate-800">
+                                            ${t.categoria}
+                                        </span>
+                                        <strong class="text-white font-bold leading-snug">${t.assunto}</strong>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400 font-mono block mt-1">Aberto em ${dataAbertura} por ${t.gestor_nome}</span>
+                                </div>
+                                ${badgeStatus}
+                            </div>
+
+                            <p class="text-[11px] text-slate-300 bg-slate-900/70 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed">
+                                "${t.mensagem}"
+                            </p>
+
+                            ${t.resposta_admin ? `
+                                <div class="bg-indigo-950/30 p-2.5 rounded-lg border border-indigo-500/40 space-y-1 mt-2">
+                                    <div class="flex items-center justify-between text-[10px]">
+                                        <span class="font-black uppercase text-indigo-300 flex items-center gap-1">
+                                            <i class="fa-solid fa-shield-halved"></i> Parecer do Administrador Master:
+                                        </span>
+                                        <span class="text-slate-400 font-mono">
+                                            ${t.respondido_em ? new Date(t.respondido_em).toLocaleString('pt-BR') : ''}
+                                        </span>
+                                    </div>
+                                    <p class="text-[11px] text-indigo-100 font-medium leading-relaxed">
+                                        ${t.resposta_admin}
+                                    </p>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.error('[MEUS TICKETS] Erro:', err);
+                listaContainer.innerHTML = '<p class="text-center text-rose-400 text-xs py-4">Erro ao listar chamados.</p>';
+            }
+        }
+
+        async function enviarNovoTicket(e) {
+            e.preventDefault();
+            if (!dadosImobiliaria) return;
+
+            const btnSubmit = document.getElementById('btn-enviar-ticket');
+            const nome = document.getElementById('ticket-gestor-nome').value.trim();
+            const email = document.getElementById('ticket-gestor-email').value.trim();
+            const zap = document.getElementById('ticket-gestor-whatsapp').value.trim();
+            const categoria = document.getElementById('ticket-categoria').value;
+            const assunto = document.getElementById('ticket-assunto').value.trim();
+            const mensagem = document.getElementById('ticket-mensagem').value.trim();
+
+            if (!nome || !email || !zap || !assunto || !mensagem) {
+                exibirToast('aviso', 'Por favor, preencha todos os campos do chamado.');
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando ao Suporte...';
+
+            try {
+                const { error } = await supabaseClient
+                    .from('support_tickets')
+                    .insert([{
+                        imobiliaria_id: dadosImobiliaria.id,
+                        usuario_id: dadosUsuario?.id || null,
+                        gestor_nome: nome,
+                        gestor_email: email,
+                        gestor_whatsapp: zap,
+                        categoria: categoria,
+                        assunto: assunto,
+                        mensagem: mensagem,
+                        status: 'aberto'
+                    }]);
+
+                if (error) throw error;
+
+                exibirToast('sucesso', 'Chamado registrado com sucesso! O Administrador Master foi notificado.');
+                
+                document.getElementById('ticket-assunto').value = '';
+                document.getElementById('ticket-mensagem').value = '';
+
+                await carregarMeusTickets();
+
+            } catch (err) {
+                console.error('[ENVIAR TICKET] Erro:', err);
+                exibirToast('erro', 'Falha ao registrar chamado: ' + (err.message || 'Erro no banco'));
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i><span>Enviar Chamado para o Suporte</span>';
+            }
+        }
+
+        window.abrirModalCentralAjuda = abrirModalCentralAjuda;
+        window.fecharModalCentralAjuda = fecharModalCentralAjuda;
+        window.alternarAbaAjuda = alternarAbaAjuda;
+        window.trocarVideoPlayer = trocarVideoPlayer;
+        window.carregarMeusTickets = carregarMeusTickets;
+        window.enviarNovoTicket = enviarNovoTicket;
 
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>

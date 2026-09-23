@@ -603,14 +603,31 @@
                     </div>
                 </div>
 
-                <!-- OPÇÃO DE GRATUIDADE / CORTESIA -->
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-                    <div>
-                        <span class="font-bold text-amber-400 block text-xs">Plano Cortesia / Gratuito</span>
-                        <span class="text-[10px] text-slate-400">Isentar cobrança (R$ 0,00)</span>
+  <!-- OPÇÕES DE GRATUIDADE (30 DIAS OU DEFINITIVA) -->
+                <div class="space-y-2">
+                    <!-- 1. CORTESIA TEMPORÁRIA DE 30 DIAS -->
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-cyan-400 block text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Conceder 30 Dias Grátis (Teste)
+                            </span>
+                            <span class="text-[10px] text-slate-400">Estende vencimento em +30 dias a partir de hoje</span>
+                        </div>
+                        <input type="checkbox" id="modal-plano-cortesia-30" 
+                               class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-cyan-500 cursor-pointer focus:ring-0">
                     </div>
-                    <input type="checkbox" id="modal-plano-gratuidade" onchange="alternarGratuidadeNoInput(this.checked)" 
-                           class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-amber-500 cursor-pointer focus:ring-0">
+
+                    <!-- 2. GRATUIDADE DEFINITIVA -->
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <span class="font-bold text-amber-400 block text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-gift"></i> Gratuidade Definitiva (Vitalícia)
+                            </span>
+                            <span class="text-[10px] text-slate-400">Isentar cobrança para sempre (R$ 0,00)</span>
+                        </div>
+                        <input type="checkbox" id="modal-plano-gratuidade" onchange="alternarGratuidadeNoInput(this.checked)" 
+                               class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-amber-500 cursor-pointer focus:ring-0">
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2">
@@ -1766,16 +1783,19 @@
                 btn.disabled = false;
             }
         }
-
-        function abrirModalEditarPlano(imobId) {
+function abrirModalEditarPlano(imobId) {
             const imob = listaImobiliarias.find(i => i.id === imobId);
             if (!imob) return;
 
             document.getElementById('modal-plano-imob-id').value = imob.id;
             document.getElementById('modal-plano-imob-nome').innerText = `${imob.nome_fantasia} (/${imob.slug})`;
             
-            const valorAtual = Number(imob.plano_valor !== null ? imob.plano_valor : 149);
+            const valorAtual = Number(imob.plano_valor !== null ? imob.plano_valor : 69.90);
             document.getElementById('modal-plano-valor-input').value = valorAtual.toFixed(2);
+
+            // Reseta checkbox de 30 dias
+            const check30Dias = document.getElementById('modal-plano-cortesia-30');
+            if (check30Dias) check30Dias.checked = false;
 
             const checkGratuidade = document.getElementById('modal-plano-gratuidade');
             checkGratuidade.checked = (valorAtual === 0);
@@ -1786,15 +1806,18 @@
 
         function alternarGratuidadeNoInput(marcado) {
             const inputValor = document.getElementById('modal-plano-valor-input');
+            const check30Dias = document.getElementById('modal-plano-cortesia-30');
+
             if (marcado) {
                 inputValor.value = '0.00';
                 inputValor.readOnly = true;
                 inputValor.classList.add('opacity-50');
+                if (check30Dias) check30Dias.checked = false; // Desmarca os 30 dias se for definitivo
             } else {
                 inputValor.readOnly = false;
                 inputValor.classList.remove('opacity-50');
                 if (parseFloat(inputValor.value) === 0) {
-                    inputValor.value = '149.00';
+                    inputValor.value = '69.90';
                 }
             }
         }
@@ -1807,6 +1830,8 @@
             event.preventDefault();
             const imobId = document.getElementById('modal-plano-imob-id').value;
             const novoValor = parseFloat(document.getElementById('modal-plano-valor-input').value);
+            const dar30Dias = document.getElementById('modal-plano-cortesia-30')?.checked;
+            const ehGratuito = document.getElementById('modal-plano-gratuidade')?.checked;
 
             if (isNaN(novoValor) || novoValor < 0) {
                 mostrarToast('Informe um valor monetário válido.', 'aviso');
@@ -1819,7 +1844,16 @@
 
             try {
                 const payload = { plano_valor: novoValor };
-                if (novoValor === 0) payload.status = 'active';
+
+                // Se marcou 30 dias grátis: estende o vencimento para 30 dias a partir de hoje e ativa a conta
+                if (dar30Dias) {
+                    const dataVenc30 = new Date();
+                    dataVenc30.setDate(dataVenc30.getDate() + 30);
+                    payload.data_vencimento = dataVenc30.toISOString().split('T')[0];
+                    payload.status = 'active';
+                } else if (ehGratuito || novoValor === 0) {
+                    payload.status = 'active';
+                }
 
                 const { error } = await supabaseClient
                     .from('imobiliarias')
@@ -1828,12 +1862,20 @@
 
                 if (error) throw error;
 
-                mostrarToast(novoValor === 0 ? 'Gratuidade (Cortesia) aplicada com sucesso!' : 'Valor do plano atualizado com sucesso!', 'sucesso');
+                if (dar30Dias) {
+                    const dataFmt = payload.data_vencimento.split('-').reverse().join('/');
+                    mostrarToast(`Teste de 30 dias concedido! Vencimento ajustado para ${dataFmt}.`, 'sucesso');
+                } else if (ehGratuito || novoValor === 0) {
+                    mostrarToast('Gratuidade definitiva (vitalícia) aplicada!', 'sucesso');
+                } else {
+                    mostrarToast('Valor do plano atualizado com sucesso!', 'sucesso');
+                }
+
                 fecharModalEditarPlano();
                 await carregarDadosMaster();
 
             } catch (err) {
-                mostrarToast('Erro ao atualizar plano.', 'erro');
+                mostrarToast('Erro ao atualizar plano: ' + err.message, 'erro');
             } finally {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Salvar Valor</span>';
                 btn.disabled = false;
