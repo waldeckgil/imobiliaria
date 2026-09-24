@@ -16,7 +16,7 @@
         <div class="space-y-2">
             <label class="block text-xs font-bold uppercase text-slate-400">1. Selecionar Planilha de Dados (CSV / Excel)</label>
             <input type="file" id="input-planilha" accept=".csv, .xlsx" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-            <p class="text-[10px] text-slate-500">A planilha deve conter as colunas completas (<code class="text-cyan-300">imobiliaria_id</code>, <code class="text-cyan-300">proprietario</code>, etc.).</p>
+            <p class="text-[10px] text-slate-500">A planilha deve conter as colunas completas (<code class="text-cyan-300">imobiliaria_id</code>, <code class="text-cyan-300">proprietario_id</code>, etc.).</p>
         </div>
 
         <!-- Passo 2: Campo para seleção múltipla de fotos direto do diretório local -->
@@ -107,9 +107,12 @@
                     }
 
                     const fotoCapa = urlsFotos.length > 0 ? urlsFotos[0] : null;
-                    const nomeProprietario = imovel.proprietario ? String(imovel.proprietario).trim() : 'Sem proprietário';
+                    
+                    // Pega o valor da coluna proprietario_id da planilha (tratando eventuais variações)
+                    const valorProprietario = imovel.proprietario_id || imovel.proprietario || 'Sem proprietário';
+                    const nomeProprietario = String(valorProprietario).trim();
 
-                    // Executa a inserção mapeando todas as colunas da tabela do banco
+                    // Executa a inserção mapeando a coluna proprietario_id exatamente como o banco espera
                     const { error: insertError } = await supabaseClient.from('imoveis').insert([{
                         imobiliaria_id: imobiliariaId,
                         codigo_ref: codigoRef,
@@ -126,7 +129,7 @@
                         ativa: imovel.ativa !== undefined ? Boolean(imovel.ativa) : true,
                         foto_capa: fotoCapa,
                         fotos: urlsFotos,
-                        proprietario: nomeProprietario
+                        proprietario_id: nomeProprietario
                     }]);
 
                     if (insertError) {
