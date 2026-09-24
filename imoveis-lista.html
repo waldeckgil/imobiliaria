@@ -56,7 +56,7 @@
     <!-- CONTAINER DE TOASTS PROFISSIONAIS (SUBSTITUTO DOS ALERTS DO NAVEGADOR) -->
     <div id="toast-container" class="fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none"></div>
 
- <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
+    <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
         <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto justify-between">
             <div class="flex items-center gap-2">
@@ -71,6 +71,7 @@
             </button>
         </div>
     </div>
+
     <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
         <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto">
@@ -79,10 +80,8 @@
         </div>
     </div>
 
-
     <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
-        <!-- LARGURA DO CABEÇALHO: Mantenha o mesmo valor do <main> (ex: 1560px) -->
         <div class="w-full max-w-[1560px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
             <div class="flex items-center gap-3">
@@ -121,10 +120,9 @@
         </div>
     </header>
 
- <!-- NAVEGAÇÃO DOS MÓDULOS -->
+    <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-900/40 border-b border-slate-800/80 px-4 sm:px-8 py-2">
         <div class="w-full max-w-[1560px] mx-auto flex items-center gap-2 overflow-x-auto text-xs py-1">
-
             <a href="dashboard.html" class="px-3 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition whitespace-nowrap">
                 <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard 360
             </a>
@@ -143,12 +141,7 @@
         </div>
     </nav>
 
-<!-- ========================================================================= -->
-    <!-- CONTROLE DE LARGURA DO CORPO DA PÁGINA (CATÁLOGO DE IMÓVEIS)             -->
-    <!-- Para diminuir a largura: troque 1560px por 1480px, 1440px ou 1400px       -->
-    <!-- Para aumentar a largura: troque 1560px por 1650px, 1750px ou 1850px       -->
-    <!-- O campo a alterar é exatamente o número dentro de: max-w-[1560px]         -->
-    <!-- ========================================================================= -->
+    <!-- CORPO PRINCIPAL DO CATÁLOGO -->
     <main class="w-full max-w-[1560px] mx-auto px-4 sm:px-6 py-4 flex-1 space-y-6">
 
         <!-- BARRA DE FILTROS -->
@@ -294,7 +287,7 @@
         </div>
     </div>
 
-    <!-- MODAL 1: REGISTRO DE VENDA (COMPRADOR EM MAIÚSCULO & GAVETA DE DOCUMENTOS ACUMULATIVA) -->
+    <!-- MODAL 1: REGISTRO DE VENDA -->
     <div id="modal-registrar-venda" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-2xl w-full p-6 shadow-2xl relative border border-amber-500/50 space-y-4 max-h-[92vh] flex flex-col">
             <button type="button" onclick="fecharModalVenda()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -315,7 +308,7 @@
 
             <form id="form-venda" onsubmit="confirmarFechamentoVenda(event)" class="space-y-3.5 text-xs flex-1 overflow-y-auto pr-1">
                 
-                <!-- SEÇÃO DO COMPRADOR (PADRÃO MAIÚSCULO) -->
+                <!-- SEÇÃO DO COMPRADOR -->
                 <div class="bg-slate-900/60 p-3.5 rounded-xl border border-amber-500/30 space-y-3">
                     <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block flex items-center gap-1.5">
                         <i class="fa-solid fa-user-check"></i> Ficha Cadastral do Comprador (Vínculo Permanente)
@@ -409,7 +402,7 @@
                     </div>
                 </div>
 
-                <!-- ANEXOS DE DOCUMENTOS DA VENDA (GAVETA CUMULATIVA INTELIGENTE) -->
+                <!-- ANEXOS DE DOCUMENTOS DA VENDA -->
                 <div>
                     <label class="block font-bold text-slate-300 mb-1 flex items-center justify-between">
                         <span class="flex items-center gap-1.5">
@@ -1148,6 +1141,7 @@
                     badgeFinalidade = '<span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 inline-flex items-center gap-1"><i class="fa-solid fa-tag text-[9px]"></i> Venda</span>';
                 }
 
+                // 1. BLINDAGEM VISUAL DO PROPRIETÁRIO
                 const propObj = (im.proprietario_id && mapaClientes[im.proprietario_id]) ? mapaClientes[im.proprietario_id] : null;
                 const nomeProprietarioHtml = propObj 
                     ? `<button type="button" onclick="abrirDossieUniversal('${propObj.id}', '${(propObj.nome || '').replace(/'/g, "\\'")}', '${propObj.cpf_cnpj || ''}', 'proprietario')" 
@@ -1156,7 +1150,9 @@
                             <span>${propObj.nome}</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-0 group-hover:opacity-100 text-amber-400 transition"></i>
                        </button>`
-                    : '<span class="text-slate-500 italic">Sem proprietário</span>';
+                    : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-950/80 text-rose-400 border border-rose-800/60 inline-flex items-center gap-1" title="Cadastro incompleto: vincule um proprietário na edição do imóvel">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Sem Proprietário
+                       </span>`;
                 
                 const contratoInq = mapaInquilinosPorImovel[im.id] || null;
                 const nomeInquilino = contratoInq ? (contratoInq.cliente_nome || 'Contrato Ativo') : null;
@@ -1202,17 +1198,24 @@
                 if (im.status === 'Alugado') statusBadge = 'bg-purple-950 text-purple-300 border-purple-800';
                 if (im.status === 'Vendido') statusBadge = 'bg-rose-950 text-rose-300 border-rose-800 font-black';
 
-                // BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" PODE IR AO AR
+                // 2. BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" E COM PROPRIETÁRIO VINCULADO
                 const estaDisponivel = (im.status === 'Disponível');
-                const toggleClass = (estaDisponivel && im.ativa) 
+                const temProprietario = Boolean(im.proprietario_id);
+                const podePublicar = estaDisponivel && temProprietario;
+
+                const toggleClass = (podePublicar && im.ativa) 
                     ? 'bg-emerald-500 text-slate-950 hover:bg-emerald-400' 
-                    : (estaDisponivel ? 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700' : 'bg-slate-900 text-slate-600 border border-slate-800/80 opacity-40 cursor-not-allowed');
+                    : (podePublicar ? 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700' : 'bg-slate-900 text-slate-600 border border-slate-800/80 opacity-40 cursor-not-allowed');
                 
-                const toggleTexto = (estaDisponivel && im.ativa) ? 'No Ar' : 'Pausado';
-                const toggleIcone = estaDisponivel ? 'fa-solid fa-circle text-[7px]' : 'fa-solid fa-lock text-[8px]';
-                const toggleTitle = estaDisponivel 
-                    ? 'Clique para alternar presença na vitrine' 
-                    : `Imóvel com status "${im.status}". Apenas imóveis Disponíveis podem ser publicados na vitrine.`;
+                const toggleTexto = (podePublicar && im.ativa) ? 'No Ar' : 'Pausado';
+                const toggleIcone = podePublicar ? 'fa-solid fa-circle text-[7px]' : 'fa-solid fa-lock text-[8px]';
+                
+                let toggleTitle = 'Clique para alternar presença na vitrine';
+                if (!temProprietario) {
+                    toggleTitle = 'Imóvel sem proprietário. Vincule um proprietário para liberar a publicação na vitrine.';
+                } else if (!estaDisponivel) {
+                    toggleTitle = `Imóvel com status "${im.status}". Apenas imóveis com status "Disponível" podem ser publicados.`;
+                }
 
                 let botoesFechamento = '';
                 if (im.status === 'Disponível' || im.status === 'Em Proposta') {
@@ -1703,12 +1706,18 @@
         }
 
         // =========================================================================
-        // FLUXO 1: FECHAMENTO DE VENDA COM CADASTRO DO COMPRADOR & GAVETA DE ANEXOS
+        // FLUXO 1: FECHAMENTO DE VENDA COM BLINDAGEM DE PROPRIETÁRIO
         // =========================================================================
         function abrirModalVenda(imovelId) {
             if (modoLeitura) return;
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
             if (!imovel) return;
+
+            // BLINDAGEM CONTRA VENDA SEM PROPRIETÁRIO
+            if (!imovel.proprietario_id) {
+                mostrarToast('erro', 'Venda Bloqueada', 'Não é possível registrar venda sem um proprietário vinculado para receber o repasse financeiro. Vincule o proprietário editando o imóvel.');
+                return;
+            }
 
             document.getElementById('venda-imovel-id').value = imovel.id;
             document.getElementById('venda-imovel-titulo').innerText = imovel.titulo || '---';
@@ -1903,18 +1912,24 @@
         }
 
         // =========================================================================
-        // FLUXO 2: FECHAMENTO DE LOCAÇÃO COM DOCUMENTOS
+        // FLUXO 2: FECHAMENTO DE LOCAÇÃO COM BLINDAGEM DE PROPRIETÁRIO
         // =========================================================================
         function abrirModalLocacao(imovelId) {
             if (modoLeitura) return;
             const imovel = listaImoveisCompleta.find(i => i.id === imovelId);
             if (!imovel) return;
 
+            // BLINDAGEM CONTRA LOCAÇÃO SEM PROPRIETÁRIO
+            if (!imovel.proprietario_id) {
+                mostrarToast('erro', 'Locação Bloqueada', 'Não é possível formalizar contrato de locação sem um proprietário vinculado para receber o repasse do aluguel. Vincule o proprietário editando o imóvel.');
+                return;
+            }
+
             document.getElementById('loc-imovel-id').value = imovel.id;
             document.getElementById('loc-imovel-titulo').innerText = imovel.titulo || '---';
             document.getElementById('loc-imovel-ref').innerText = `Ref: ${imovel.codigo_ref || '---'}`;
             
-            const prop = imovel.proprietario_id ? mapaClientes[imovel.proprietario_id] : null;
+            const prop = mapaClientes[imovel.proprietario_id];
             document.getElementById('loc-proprietario-nome').innerText = prop ? (prop.nome || 'Proprietário') : 'Não informado';
 
             document.getElementById('loc-inquilino-nome').value = '';
@@ -2060,10 +2075,19 @@
         }
 
         // =========================================================================
-        // BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" PODE IR AO AR
+        // BLINDAGEM DA VITRINE: APENAS STATUS "DISPONÍVEL" E COM PROPRIETÁRIO
         // =========================================================================
         async function alternarVisibilidadeVitrine(imovelId, estadoAtual, statusImovel) {
             if (modoLeitura) return;
+
+            const im = listaImoveisCompleta.find(i => i.id === imovelId);
+            if (!im) return;
+
+            // BLOQUEIO SE NÃO HOUVER PROPRIETÁRIO
+            if (!im.proprietario_id) {
+                mostrarToast('aviso', 'Ação Bloqueada', 'Este imóvel não possui um proprietário vinculado. Cadastre o proprietário na edição antes de publicá-lo na vitrine.');
+                return;
+            }
 
             if (statusImovel && statusImovel !== 'Disponível') {
                 mostrarToast('aviso', 'Ação Não Permitida', `Imóvel com status "${statusImovel}". Somente imóveis com status "Disponível" podem ser colocados no ar.`);

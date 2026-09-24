@@ -1,8 +1,21 @@
 
 ======================================================================
+ 
+em imovel-form.html
 
 
-em index na vitrine criar    :  Quero Vender , Quero Alugar 
+1. Identificação & Anúncio Comercial
+
+
+Destinação / Finalidade *
+se for escolhido venda  não habilitar o campo "Valor de Locação (R$/mês)"
+
+
+
+Destinação / Finalidade *
+se for escolhido locação  não habilitar o campo "Valor de Venda (R$)"
+
+======================================================================
 
 
 
