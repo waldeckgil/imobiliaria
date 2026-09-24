@@ -11,9 +11,15 @@ Destinação / Finalidade *
 se for escolhido venda  não habilitar o campo "Valor de Locação (R$/mês)"
 
 
-
 Destinação / Finalidade *
 se for escolhido locação  não habilitar o campo "Valor de Venda (R$)"
+
+
+
+7. Localização (Busca Automática via CEP)	
+
+
+todos os campos devem ser obrigatórios , somente o campo "Complemento" que não é obrigatorio
 
 ======================================================================
 

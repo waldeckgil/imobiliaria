@@ -132,7 +132,7 @@
 
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Destinação / Finalidade *</label>
-                        <select id="campo-finalidade" required onchange="ajustarCamposFinalidade()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 font-bold">
+                        <select id="campo-finalidade" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                             <option value="Venda" selected>Venda</option>
                             <option value="Locacao">Locação</option>
                             <option value="Ambos">Ambos (Venda e Locação)</option>
@@ -222,19 +222,19 @@
                 </div>
             </div>
 
-            <!-- 3. PROPRIETÁRIO DO IMÓVEL (OBRIGATÓRIO) -->
+            <!-- 3. PROPRIETÁRIO DO IMÓVEL (EXCLUSIVO) -->
             <div class="box-tech p-6 space-y-4 border border-amber-500/30 bg-amber-950/10">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                     <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-user-tie"></i> 3. Proprietário do Imóvel (Obrigatório)
+                        <i class="fa-solid fa-user-tie"></i> 3. Proprietário do Imóvel (Controle Interno)
                     </h3>
-                    <span class="text-[11px] text-slate-400">Vínculo cadastral obrigatório para segurança jurídica e repasses.</span>
+                    <span class="text-[11px] text-slate-400">Vínculo cadastral sigiloso para apuração de repasses e comissões.</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
                     <div class="sm:col-span-9">
-                        <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado *</label>
-                        <select id="campo-proprietario" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400 font-bold">
+                        <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado</label>
+                        <select id="campo-proprietario" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400">
                             <option value="">Carregando proprietários...</option>
                         </select>
                     </div>
@@ -278,7 +278,7 @@
                 </div>
             </div>
 
-            <!-- 5. VALORES FINANCEIROS GERAIS DO IMÓVEL (CONDICIONADOS PELA FINALIDADE) -->
+            <!-- 5. VALORES FINANCEIROS GERAIS DO IMÓVEL (COM MÁSCARA MONETÁRIA BRASILEIRA) -->
             <div class="box-tech p-6 space-y-4">
                 <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-3">
                     <i class="fa-solid fa-dollar-sign"></i> 5. Valores Comerciais de Anúncio
@@ -288,12 +288,12 @@
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Valor de Venda (R$)</label>
                         <input type="text" inputmode="numeric" id="campo-valor-venda" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400 transition">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Valor de Locação (R$/mês)</label>
                         <input type="text" inputmode="numeric" id="campo-valor-locacao" oninput="mascaraMoedaEvento(this); sincronizarValorLocacao(this.value)" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-amber-300 font-black text-xs outline-none focus:border-cyan-400 transition">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-amber-300 font-black text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Condomínio Mensal (R$)</label>
@@ -353,7 +353,7 @@
                 </div>
             </div>
 
-            <!-- 7. LOCALIZAÇÃO (TODOS OS CAMPOS OBRIGATÓRIOS, EXCETO COMPLEMENTO) -->
+            <!-- 7. LOCALIZAÇÃO -->
             <div class="box-tech p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                     <h3 class="text-sm font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
@@ -371,19 +371,19 @@
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="block font-bold text-slate-300 mb-1">Logradouro (Rua / Avenida) *</label>
-                        <input type="text" id="campo-logradouro" required placeholder="Nome da rua" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <label class="block font-bold text-slate-300 mb-1">Logradouro (Rua / Avenida)</label>
+                        <input type="text" id="campo-logradouro" placeholder="Nome da rua" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Número *</label>
-                        <input type="text" id="campo-numero" required placeholder="123 ou S/N" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <label class="block font-bold text-slate-300 mb-1">Número</label>
+                        <input type="text" id="campo-numero" placeholder="123" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Complemento (Opcional)</label>
-                        <input type="text" id="campo-complemento" placeholder="Apto, Bloco, Casa 2..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <label class="block font-bold text-slate-300 mb-1">Complemento</label>
+                        <input type="text" id="campo-complemento" placeholder="Apto, Bloco" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Bairro *</label>
@@ -584,7 +584,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Módulo de Catalogação & Locações
     </footer>
 
-    <!-- JAVASCRIPT MASTER -->
+    <!-- JAVASCRIPT MASTER: UPLOADS, RENOMEAÇÃO COM LÁPIS E CONTROLES -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -602,7 +602,7 @@
         let listaDocsLocatarioEstado = [];
 
         // =========================================================================
-        // MOTORES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
+        // MOTOES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
         // =========================================================================
         function formatarValorBRL(valor) {
             if (valor === null || valor === undefined || valor === '') return '';
@@ -624,48 +624,12 @@
                 input.value = '';
                 return;
             }
+            // Algoritmo progressivo de centavos para milhar (ex: 2500000 -> 25.000,00)
             const floatVal = (parseInt(valor, 10) / 100).toFixed(2);
             input.value = Number(floatVal).toLocaleString('pt-BR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
-        }
-
-        // =========================================================================
-        // CONTROLE DINÂMICO DE VALORES PELA FINALIDADE (VENDA / LOCAÇÃO / AMBOS)
-        // =========================================================================
-        function ajustarCamposFinalidade() {
-            const finalidade = document.getElementById('campo-finalidade').value;
-            const campoVenda = document.getElementById('campo-valor-venda');
-            const campoLocacao = document.getElementById('campo-valor-locacao');
-
-            if (finalidade === 'Venda') {
-                campoLocacao.disabled = true;
-                campoLocacao.value = '';
-                campoLocacao.classList.add('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
-                campoLocacao.classList.remove('bg-slate-950');
-
-                campoVenda.disabled = false;
-                campoVenda.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
-                campoVenda.classList.add('bg-slate-950');
-            } else if (finalidade === 'Locacao' || finalidade === 'Locação') {
-                campoVenda.disabled = true;
-                campoVenda.value = '';
-                campoVenda.classList.add('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
-                campoVenda.classList.remove('bg-slate-950');
-
-                campoLocacao.disabled = false;
-                campoLocacao.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
-                campoLocacao.classList.add('bg-slate-950');
-            } else { // Ambos
-                campoVenda.disabled = false;
-                campoVenda.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
-                campoVenda.classList.add('bg-slate-950');
-
-                campoLocacao.disabled = false;
-                campoLocacao.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
-                campoLocacao.classList.add('bg-slate-950');
-            }
         }
 
         async function inicializarFormulario() {
@@ -738,7 +702,6 @@
                 await carregarDadosImovelEdicao(idParam);
             } else {
                 sugerirCodigoReferencia();
-                ajustarCamposFinalidade();
             }
         }
 
@@ -883,7 +846,7 @@
 
                 if (error) throw error;
 
-                select.innerHTML = '<option value="">-- Selecione o Proprietário do Imóvel (Obrigatório) --</option>';
+                select.innerHTML = '<option value="">-- Selecione o Proprietário do Imóvel --</option>';
                 if (proprietarios && proprietarios.length > 0) {
                     proprietarios.forEach(p => {
                         const sel = (selecionadoId && p.id === selecionadoId) ? 'selected' : '';
@@ -983,6 +946,7 @@
                 return;
             }
 
+            // Preserva a extensão original automaticamente
             doc.nome = nomeLimpo.endsWith(extOriginal) ? nomeLimpo : `${nomeLimpo}${extOriginal}`;
             renderizarDocumentosPreview();
         }
@@ -1073,9 +1037,6 @@
                 document.getElementById('campo-valor-locacao').value = formatarValorBRL(imovel.valor_locacao);
                 document.getElementById('campo-valor-condominio').value = formatarValorBRL(imovel.valor_condominio);
                 document.getElementById('campo-valor-iptu').value = formatarValorBRL(imovel.valor_iptu);
-
-                // AJUSTA HABILITAÇÃO/DESABILITAÇÃO CONFORME FINALIDADE SALVA
-                ajustarCamposFinalidade();
 
                 document.getElementById('campo-quartos').value = imovel.quartos || 0;
                 document.getElementById('campo-suites').value = imovel.suites || 0;
@@ -1277,25 +1238,6 @@
             const alertaTexto = document.getElementById('alerta-texto');
             const alertaIcone = document.getElementById('alerta-icone');
 
-            // 1. VALIDAÇÃO RÍGIDA DE PROPRIETÁRIO
-            const proprietarioSelecionado = document.getElementById('campo-proprietario').value;
-            if (!proprietarioSelecionado) {
-                alert('Atenção: É obrigatório vincular um Proprietário Titular a este imóvel.');
-                document.getElementById('campo-proprietario').focus();
-                document.getElementById('campo-proprietario').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return;
-            }
-
-            // 2. VALIDAÇÃO RÍGIDA DE LOCALIZAÇÃO COMPLETA
-            const logradouro = document.getElementById('campo-logradouro').value.trim();
-            const numero = document.getElementById('campo-numero').value.trim();
-            if (!logradouro || !numero) {
-                alert('Por favor, informe o Logradouro (Rua/Avenida) e o Número do imóvel para garantir a localização.');
-                if (!logradouro) document.getElementById('campo-logradouro').focus();
-                else document.getElementById('campo-numero').focus();
-                return;
-            }
-
             const statusComercial = document.getElementById('campo-status').value;
 
             if (statusComercial === 'Alugado') {
@@ -1318,7 +1260,7 @@
             try {
                 const idImovel = imovelIdAtual || crypto.randomUUID();
 
-                // UPLOAD DE FOTOS
+                // 1. UPLOAD DE FOTOS
                 let urlsFinais = [];
                 let urlCapaFinal = null;
 
@@ -1348,7 +1290,7 @@
 
                 if (!urlCapaFinal && urlsFinais.length > 0) urlCapaFinal = urlsFinais[0];
 
-                // UPLOAD DE DOCUMENTOS DA CASA
+                // 2. UPLOAD DE DOCUMENTOS DA CASA COM PRESERVAÇÃO DO NOME EDITADO
                 let urlsDocumentosFinais = [];
 
                 for (let itemDoc of listaDocumentosEstado) {
@@ -1376,7 +1318,7 @@
                     }
                 }
 
-                // UPLOAD DE DOCUMENTOS DO LOCATÁRIO
+                // 3. UPLOAD DE DOCUMENTOS DO LOCATÁRIO COM NOME EDITADO
                 let urlsDocsLocatarioFinais = [];
 
                 for (let itemDocLoc of listaDocsLocatarioEstado) {
@@ -1404,26 +1346,11 @@
                     }
                 }
 
-                // LÓGICA DE PRECIFICAÇÃO CONFORME FINALIDADE
-                const finalidadeEscolhida = document.getElementById('campo-finalidade').value;
-                let valorVendaFinal = null;
-                let valorLocacaoFinal = null;
-
-                if (finalidadeEscolhida === 'Venda') {
-                    valorVendaFinal = converterMoedaParaFloat(document.getElementById('campo-valor-venda').value);
-                    valorLocacaoFinal = null;
-                } else if (finalidadeEscolhida === 'Locacao' || finalidadeEscolhida === 'Locação') {
-                    valorVendaFinal = null;
-                    valorLocacaoFinal = converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value);
-                } else { // Ambos
-                    valorVendaFinal = converterMoedaParaFloat(document.getElementById('campo-valor-venda').value);
-                    valorLocacaoFinal = converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value);
-                }
-
+                // CONVERSÃO PRECISA DOS VALORES COM MÁSCARA PARA NÚMEROS DO POSTGRESQL (NUMERIC)
                 const payloadImovel = {
                     imobiliaria_id: imobiliariaId,
                     codigo_ref: document.getElementById('campo-codigo-ref').value.trim(),
-                    finalidade: finalidadeEscolhida,
+                    finalidade: document.getElementById('campo-finalidade').value,
                     tipo: document.getElementById('campo-tipo').value,
                     status: statusComercial,
                     titulo: document.getElementById('campo-titulo').value.trim(),
@@ -1431,10 +1358,10 @@
                     destaque: document.getElementById('campo-destaque').checked,
                     ativa: document.getElementById('campo-ativa').checked,
 
-                    proprietario_id: proprietarioSelecionado,
+                    proprietario_id: document.getElementById('campo-proprietario').value || null,
 
-                    valor_venda: valorVendaFinal,
-                    valor_locacao: valorLocacaoFinal,
+                    valor_venda: converterMoedaParaFloat(document.getElementById('campo-valor-venda').value),
+                    valor_locacao: converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value),
                     valor_condominio: converterMoedaParaFloat(document.getElementById('campo-valor-condominio').value),
                     valor_iptu: converterMoedaParaFloat(document.getElementById('campo-valor-iptu').value),
 
@@ -1449,8 +1376,8 @@
                     aceita_pet: document.getElementById('campo-pet').checked,
 
                     cep: document.getElementById('campo-cep').value.trim(),
-                    logradouro: logradouro,
-                    numero: numero,
+                    logradouro: document.getElementById('campo-logradouro').value.trim(),
+                    numero: document.getElementById('campo-numero').value.trim(),
                     complemento: document.getElementById('campo-complemento').value.trim(),
                     bairro: document.getElementById('campo-bairro').value.trim(),
                     cidade: document.getElementById('campo-cidade').value.trim(),
@@ -1556,6 +1483,7 @@
                 let mensagemAmigavel = err.message || 'Erro ao salvar imóvel. Tente novamente.';
                 const errStr = (String(err.message || '') + ' ' + String(err.details || '')).toLowerCase();
 
+                // TRADUÇÃO HUMANIZADA: CÓDIGO DE REFERÊNCIA DUPLICADO
                 if (errStr.includes('unq_imovel_ref_por_imob') || errStr.includes('codigo_ref') || err.code === '23505') {
                     const codDigitado = document.getElementById('campo-codigo-ref').value.trim();
                     mensagemAmigavel = `O Código de Referência "${codDigitado}" já está em uso em outro imóvel da sua imobiliária. Por favor, utilize um código diferente.`;
