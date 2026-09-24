@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Exclusão em Lote - Imóveis e Fotos</title>
+    <title>Exclusão em Lote - Imóveis, Fotos e Clientes</title>
     <!-- Importação de frameworks de estilo (Tailwind CSS) e bibliotecas de integração (Supabase e SheetJS) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10,18 +10,18 @@
 </head>
 <body class="bg-slate-950 text-slate-100 p-8">
     <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
-        <h1 class="text-xl font-black text-rose-500">Exclusão Automatizada de Imóveis & Fotos</h1>
+        <h1 class="text-xl font-black text-rose-500">Exclusão Automatizada (Imóveis, Fotos & Clientes)</h1>
         
         <!-- Passo 1: Campo para upload da planilha contendo os códigos dos imóveis a apagar -->
         <div class="space-y-2">
             <label class="block text-xs font-bold uppercase text-slate-400">1. Selecionar Planilha com Códigos (CSV / Excel)</label>
             <input type="file" id="input-planilha" accept=".csv, .xlsx" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-            <p class="text-[10px] text-slate-500">A planilha deve conter pelo menos a coluna <code class="text-rose-400">codigo_ref</code> com as referências a excluir.</p>
+            <p class="text-[10px] text-slate-500">A planilha deve conter pelo menos a coluna <code class="text-rose-400">codigo_ref</code> e opcionalmente a coluna de proprietários.</p>
         </div>
 
         <!-- Botão de disparo do processo de exclusão -->
         <button onclick="executarExclusaoLote()" class="w-full bg-rose-500 hover:bg-rose-400 text-slate-950 font-black py-3 rounded-xl transition cursor-pointer">
-            Executar Exclusão em Lote (Banco + Storage)
+            Executar Exclusão em Lote (Banco, Storage & Clientes)
         </button>
 
         <!-- Caixa de logs para monitoramento em tempo real do progresso pelo operador -->
@@ -52,7 +52,8 @@
          * Função principal que gerencia o fluxo completo de exclusão em lote:
          * 1. Lê a planilha de referências.
          * 2. Remove os arquivos de mídia associados no Storage do Supabase.
-         * 3. Deleta o registro do imóvel na tabela do banco de dados pelo código de referência.
+         * 3. Deleta o registro do imóvel na tabela `imoveis`.
+         * 4. Remove o cliente (proprietário) correspondente caso ele não tenha outros imóveis.
          */
         async function executarExclusaoLote() {
             const arquivoPlanilha = document.getElementById('input-planilha').files[0];
@@ -62,7 +63,7 @@
                 return;
             }
 
-            if (!confirm('ATENÇÃO: Deseja realmente excluir permanentemente os imóveis listados e suas respectivas fotos do sistema?')) {
+            if (!confirm('ATENÇÃO: Deseja realmente excluir permanentemente os imóveis listados, as fotos e os respectivos proprietários associados do sistema?')) {
                 return;
             }
 
@@ -84,6 +85,16 @@
 
                     const imobiliariaId = String(imovel.imobiliaria_id || ID_IMOBILIARIA_PADRAO).trim();
                     logMensagem(`Processando exclusão da referência: ${codigoRef}...`);
+
+                    // Primeiro, buscamos o imóvel no banco antes de apagar, para capturar o ID do proprietário vinculado
+                    const { data: imovelAtual, error: erroBuscaImovel } = await supabaseClient
+                        .from('imoveis')
+                        .select('proprietario_id')
+                        .eq('codigo_ref', codigoRef)
+                        .eq('imobiliaria_id', imobiliariaId)
+                        .maybeSingle();
+
+                    const proprietarioIdVinculado = imovelAtual ? imovelAtual.proprietario_id : null;
 
                     // 1. Apagar as fotos do Storage na pasta correspondente à imobiliária e imóvel
                     const pastaStorage = `${imobiliariaId}/imoveis/${codigoRef}`;
@@ -121,9 +132,32 @@
                     } else {
                         logMensagem(`Imóvel ${codigoRef} excluído com sucesso do banco de dados!`);
                     }
+
+                    // 3. Verificar e remover o proprietário da tabela `clientes` se ele não tiver mais nenhum imóvel
+                    if (proprietarioIdVinculado) {
+                        // Verifica se ainda existe algum outro imóvel apontando para este proprietario_id
+                        const { count, error: erroContagem } = await supabaseClient
+                            .from('imoveis')
+                            .select('*', { count: 'exact', head: true })
+                            .eq('proprietario_id', proprietarioIdVinculado);
+
+                        if (!erroContagem && count === 0) {
+                            // Se o contador for zero, significa que o cliente ficou órfão e pode ser limpo
+                            const { error: deleteClienteError } = await supabaseClient
+                                .from('clientes')
+                                .delete()
+                                .eq('id', proprietarioIdVinculado);
+
+                            if (deleteClienteError) {
+                                logMensagem(`Aviso ao remover cliente órfão: ${deleteClienteError.message}`);
+                            } else {
+                                logMensagem(`Proprietário vinculado removido da tabela de clientes (sem outros imóveis).`);
+                            }
+                        }
+                    }
                 }
 
-                logMensagem('Processo de exclusão em lote concluído!');
+                logMensagem('Processo de exclusão em lote (Imóveis + Storage + Clientes) concluído!');
             };
 
             reader.readAsArrayBuffer(arquivoPlanilha);
