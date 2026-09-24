@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Exclusão em Lote - Imóveis e Fotos</title>
+    <!-- Importação de frameworks de estilo (Tailwind CSS) e bibliotecas de integração (Supabase e SheetJS) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-8">
+    <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <h1 class="text-xl font-black text-rose-500">Exclusão Automatizada de Imóveis & Fotos</h1>
+        
+        <!-- Passo 1: Campo para upload da planilha contendo os códigos dos imóveis a apagar -->
+        <div class="space-y-2">
+            <label class="block text-xs font-bold uppercase text-slate-400">1. Selecionar Planilha com Códigos (CSV / Excel)</label>
+            <input type="file" id="input-planilha" accept=".csv, .xlsx" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+            <p class="text-[10px] text-slate-500">A planilha deve conter pelo menos a coluna <code class="text-rose-400">codigo_ref</code> com as referências a excluir.</p>
+        </div>
+
+        <!-- Botão de disparo do processo de exclusão -->
+        <button onclick="executarExclusaoLote()" class="w-full bg-rose-500 hover:bg-rose-400 text-slate-950 font-black py-3 rounded-xl transition cursor-pointer">
+            Executar Exclusão em Lote (Banco + Storage)
+        </button>
+
+        <!-- Caixa de logs para monitoramento em tempo real do progresso pelo operador -->
+        <div id="status-log" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-rose-400 h-40 overflow-y-auto">
+            Aguardando início do processo de exclusão...
+        </div>
+    </div>
+
+    <script>
+        // Configurações de acesso à API e Storage do Supabase da aplicação
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        // Identificador padrão correspondente à Imobiliária SGI caso a célula venha vazia
+        const ID_IMOBILIARIA_PADRAO = "6bbb3039-ef41-4377-b435-f1ed386c2e36";
+
+        /**
+         * Função utilitária para registrar mensagens de log na tela do operador.
+         */
+        function logMensagem(msg) {
+            const box = document.getElementById('status-log');
+            box.innerHTML += `<div>> ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        /**
+         * Função principal que gerencia o fluxo completo de exclusão em lote:
+         * 1. Lê a planilha de referências.
+         * 2. Remove os arquivos de mídia associados no Storage do Supabase.
+         * 3. Deleta o registro do imóvel na tabela do banco de dados pelo código de referência.
+         */
+        async function executarExclusaoLote() {
+            const arquivoPlanilha = document.getElementById('input-planilha').files[0];
+
+            if (!arquivoPlanilha) {
+                alert('Por favor, selecione a planilha contendo os códigos para exclusão.');
+                return;
+            }
+
+            if (!confirm('ATENÇÃO: Deseja realmente excluir permanentemente os imóveis listados e suas respectivas fotos do sistema?')) {
+                return;
+            }
+
+            logMensagem('Lendo planilha de exclusão...');
+
+            const reader = new FileReader();
+            
+            reader.onload = async function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const primeiraAba = workbook.SheetNames[0];
+                const linhasImoveis = XLSX.utils.sheet_to_json(workbook.Sheets[primeiraAba]);
+
+                logMensagem(`Total de referências encontradas para exclusão: ${linhasImoveis.length}`);
+
+                for (let imovel of linhasImoveis) {
+                    const codigoRef = String(imovel.codigo_ref || '').trim();
+                    if (!codigoRef) continue;
+
+                    const imobiliariaId = String(imovel.imobiliaria_id || ID_IMOBILIARIA_PADRAO).trim();
+                    logMensagem(`Processando exclusão da referência: ${codigoRef}...`);
+
+                    // 1. Apagar as fotos do Storage na pasta correspondente à imobiliária e imóvel
+                    const pastaStorage = `${imobiliariaId}/imoveis/${codigoRef}`;
+                    logMensagem(`Buscando mídias no Storage (${pastaStorage})...`);
+
+                    const { data: listFiles, error: listError } = await supabaseClient.storage
+                        .from('imoveis-midias')
+                        .list(pastaStorage);
+
+                    if (!listError && listFiles && listFiles.length > 0) {
+                        const arquivosParaApagar = listFiles.map(file => `${pastaStorage}/${file.name}`);
+                        
+                        const { error: removeError } = await supabaseClient.storage
+                            .from('imoveis-midias')
+                            .remove(arquivosParaApagar);
+
+                        if (removeError) {
+                            logMensagem(`Aviso ao apagar arquivos do storage para ${codigoRef}: ${removeError.message}`);
+                        } else {
+                            logMensagem(`${arquivosParaApagar.length} arquivo(s) de mídia removidos do Storage.`);
+                        }
+                    } else {
+                        logMensagem(`Nenhuma mídia encontrada no storage para ${codigoRef}.`);
+                    }
+
+                    // 2. Deletar o registro do imóvel na tabela do banco de dados
+                    const { error: deleteError } = await supabaseClient
+                        .from('imoveis')
+                        .delete()
+                        .eq('codigo_ref', codigoRef)
+                        .eq('imobiliaria_id', imobiliariaId);
+
+                    if (deleteError) {
+                        logMensagem(`Erro ao deletar imóvel ${codigoRef} do banco: ${deleteError.message}`);
+                    } else {
+                        logMensagem(`Imóvel ${codigoRef} excluído com sucesso do banco de dados!`);
+                    }
+                }
+
+                logMensagem('Processo de exclusão em lote concluído!');
+            };
+
+            reader.readAsArrayBuffer(arquivoPlanilha);
+        }
+    </script>
+</body>
+</html>
