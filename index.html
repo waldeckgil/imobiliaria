@@ -592,6 +592,29 @@
                             </div>
 
                             <div>
+<div>
+                                <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
+                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
+                                    <option value="" selected>Todos os Tipos</option>
+                                    <option value="Apartamento">Apartamento</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Terreno">Terreno</option>
+                                    <option value="Comercial">Comercial</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-800 mb-1">Dormitórios</label>
+                                <select id="filtro-quartos" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
+                                    <option value="" selected>Todos os Dormitórios</option>
+                                    <option value="1">1 dormitório ou mais</option>
+                                    <option value="2">2 dormitórios ou mais</option>
+                                    <option value="3">3 dormitórios ou mais</option>
+                                    <option value="4">4 dormitórios ou mais</option>
+                                </select>
+                            </div>
+
+                            <div>
                                 <label class="block font-bold text-slate-800 mb-1">Buscar por Bairro</label>
                                 <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
                             </div>
@@ -1197,9 +1220,9 @@
                     }
                 }
 
-                if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
+ if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
+                if (filtros.quartos) query = query.gte('quartos', Number(filtros.quartos));
                 if (filtros.bairro) query = query.ilike('bairro', `%${filtros.bairro}%`);
-
                 const { data, error } = await query.order('created_at', { ascending: false }).limit(30);
                 if (error) throw error;
 
@@ -1452,11 +1475,11 @@
             document.getElementById('filtro-tipo').value = tipo;
             aplicarFiltrosLaterais();
         }
-
-        function aplicarFiltrosLaterais() {
+function aplicarFiltrosLaterais() {
             carregarImoveisVitrine({
                 finalidade: document.getElementById('filtro-finalidade').value,
                 tipo: document.getElementById('filtro-tipo').value,
+                quartos: document.getElementById('filtro-quartos').value,
                 bairro: document.getElementById('filtro-bairro').value.trim()
             });
         }
@@ -1464,6 +1487,7 @@
         function limparFiltros() {
             document.getElementById('form-filtros').reset();
             document.getElementById('filtro-finalidade').value = '';
+            document.getElementById('filtro-quartos').value = '';
             carregarImoveisVitrine();
         }
 
