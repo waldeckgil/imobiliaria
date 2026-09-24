@@ -270,9 +270,9 @@
                 <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-emerald-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-emerald-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-trophy"></i>
-                        <span>Estágio: Negócio Fechado</span>
+                        <span>Estágio: Venda Fechada</span>
                     </div>
-                    <p class="leading-relaxed">Contrato formalizado e comissões calculadas.</p>
+                    <p class="leading-relaxed">Contrato assinado e comissões calculadas.</p>
                 </div>
             </div>
 
@@ -488,8 +488,8 @@
 
                 <button onclick="trocarAbaCockpit('fechamento')" id="btn-aba-fechamento" 
                         class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition cursor-pointer">
-                    <i id="icone-aba-fechamento" class="fa-solid fa-handshake text-amber-400"></i>
-                    <span id="txt-aba-fechamento">Concluir Negócio</span>
+                    <i class="fa-solid fa-handshake text-amber-400"></i>
+                    <span>Concluir Venda (Aperto de Mão)</span>
                 </button>
             </div>
 
@@ -501,7 +501,7 @@
                     <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
                         <label class="block text-[11px] font-bold uppercase text-slate-400">Adicionar Nota Interna ou Resumo de Conversa</label>
                         <div class="flex gap-2">
-                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, alinhamos detalhes..." 
+                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, pediu proposta com 10% de entrada..." 
                                    class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                             <button onclick="gravarNotaCockpit()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
                                 <i class="fa-solid fa-paper-plane"></i>
@@ -569,12 +569,12 @@
                     <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-3">
                         <h4 class="font-black text-purple-300 text-xs uppercase flex items-center gap-1.5">
                             <i class="fa-solid fa-hand-holding-dollar"></i>
-                            <span id="cockpit-proposta-titulo-aba">Registro de Proposta Comercial Ofertada</span>
+                            <span>Registro de Proposta Comercial Ofertada</span>
                         </h4>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label id="cockpit-proposta-valor-lbl" class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Valor da Proposta (R$)</label>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Valor da Proposta (R$)</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
                                     <input type="number" step="0.01" id="cockpit-proposta-valor" placeholder="0,00" 
@@ -582,7 +582,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label id="cockpit-proposta-condicoes-lbl" class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Forma de Pagamento / Condições</label>
+                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Forma de Pagamento / Condições</label>
                                 <input type="text" id="cockpit-proposta-condicoes" placeholder="Ex: 20% sinal + Financiamento Caixa..." 
                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400">
                             </div>
@@ -604,22 +604,22 @@
                     </div>
                 </div>
 
-                <!-- ABA 4: CONVERSÃO DE NEGÓCIO (VENDA OU LOCAÇÃO) -->
+                <!-- ABA 4: CONVERSÃO DE VENDA (APERTO DE MÃO) -->
                 <div id="aba-conteudo-fechamento" class="hidden space-y-4">
-                    <div id="cockpit-box-fechamento" class="bg-slate-950/90 p-4 rounded-xl border border-amber-500/40 space-y-3">
-                        <div class="flex items-center gap-2 text-amber-400 font-black text-xs uppercase" id="cockpit-fechamento-header-container">
-                            <i id="cockpit-fechamento-icone-topo" class="fa-solid fa-handshake text-base"></i>
-                            <span id="cockpit-fechamento-titulo-topo">Conclusão Formal de Venda & Rateio Financeiro</span>
+                    <div class="bg-slate-950/90 p-4 rounded-xl border border-amber-500/40 space-y-3">
+                        <div class="flex items-center gap-2 text-amber-400 font-black text-xs uppercase">
+                            <i class="fa-solid fa-handshake text-base"></i>
+                            <span>Conclusão Formal de Venda & Rateio Financeiro</span>
                         </div>
 
                         <div id="cockpit-fechar-alerta-sem-imovel" class="hidden p-3 bg-red-950/40 border border-red-800 text-red-300 rounded-xl text-xs">
-                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para formalizar o negócio, vincule um imóvel primeiro.
+                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para gerar a baixa e as comissões, vincule um imóvel primeiro.
                         </div>
 
                         <div id="cockpit-fechar-formulario" class="space-y-3">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label id="lbl-fechamento-valor" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Valor Real de Fechamento (R$) *</label>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Valor Real de Fechamento (R$) *</label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
                                         <input type="number" step="0.01" id="cockpit-venda-valor-real" oninput="calcularRateioCockpit()" 
@@ -627,7 +627,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label id="lbl-fechamento-data" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Data do Fechamento *</label>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Data do Fechamento *</label>
                                     <input type="date" id="cockpit-venda-data" 
                                            class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs">
                                 </div>
@@ -635,7 +635,7 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label id="lbl-fechamento-pct-imob" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Comissão Total Negociada (%) *</label>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Comissão Total Negociada (%) *</label>
                                     <div class="relative">
                                         <input type="number" step="0.1" id="cockpit-venda-comissao-total-pct" oninput="calcularRateioCockpit()" 
                                                class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
@@ -643,7 +643,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label id="lbl-fechamento-pct-corretor" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Fatia do Corretor (%) *</label>
+                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Fatia do Corretor (%) *</label>
                                     <div class="relative">
                                         <input type="number" step="0.5" id="cockpit-venda-comissao-corretor-pct" oninput="calcularRateioCockpit()" 
                                                class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
@@ -654,20 +654,20 @@
 
                             <!-- CARD DE RATEIO INSTANTÂNEO -->
                             <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2">
-                                <span id="lbl-rateio-card-titulo" class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
                                     Simulação de Comissões e Repasse ao Proprietário:
                                 </span>
                                 <div class="grid grid-cols-3 gap-2 text-[11px] pt-1">
                                     <div>
-                                        <span id="lbl-rateio-col1" class="text-slate-500 block">Honorários / Taxa:</span>
+                                        <span class="text-slate-500 block">Comissão Bruta:</span>
                                         <strong id="cockpit-sim-comissao-total" class="text-amber-400 font-mono">R$ 0,00</strong>
                                     </div>
                                     <div>
-                                        <span id="lbl-rateio-col2" class="text-slate-500 block">Imobiliária:</span>
+                                        <span class="text-slate-500 block">Imobiliária:</span>
                                         <strong id="cockpit-sim-imob" class="text-emerald-400 font-mono">R$ 0,00</strong>
                                     </div>
                                     <div>
-                                        <span id="lbl-rateio-col3" class="text-slate-500 block">Corretor:</span>
+                                        <span class="text-slate-500 block">Corretor:</span>
                                         <strong id="cockpit-sim-corretor" class="text-cyan-300 font-mono">R$ 0,00</strong>
                                     </div>
                                 </div>
@@ -677,10 +677,10 @@
                                 </div>
                             </div>
 
-                            <button type="button" onclick="iniciarConfirmacaoExplicativaVenda()" id="btn-iniciar-fechamento-negocio"
+                            <button type="button" onclick="iniciarConfirmacaoExplicativaVenda()" 
                                     class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black flex items-center justify-center gap-2 transition shadow cursor-pointer text-xs">
-                                <i id="btn-iniciar-fechamento-icone" class="fa-solid fa-handshake"></i>
-                                <span id="btn-iniciar-fechamento-txt">Avançar para Conclusão de Negócio</span>
+                                <i class="fa-solid fa-handshake"></i>
+                                <span>Avançar para Conclusão de Venda</span>
                             </button>
                         </div>
                     </div>
@@ -700,7 +700,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: FECHAMENTO DE VENDA OU LOCAÇÃO -->
+    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: FECHAMENTO DE VENDA -->
     <div id="modal-confirmar-venda-explicativo" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4">
             
@@ -709,7 +709,7 @@
                     <i class="fa-solid fa-handshake"></i>
                 </div>
                 <div>
-                    <h3 class="text-base font-black text-white">Confirmação de Negócio Fechado</h3>
+                    <h3 class="text-base font-black text-white">Confirmação de Venda Fechada</h3>
                     <p class="text-xs text-amber-400 font-bold">Por favor, revise os impactos desta operação:</p>
                 </div>
             </div>
@@ -721,12 +721,12 @@
                 
                 <div class="flex items-start gap-2 text-slate-300">
                     <i class="fa-solid fa-house-circle-xmark text-red-400 text-sm mt-0.5"></i>
-                    <span><strong>Baixa do Catálogo:</strong> O imóvel <span class="text-cyan-300 font-mono font-bold" id="conf-imovel-ref">Ref: ---</span> será baixado da vitrine pública com status correspondente.</span>
+                    <span><strong>Baixa do Catálogo:</strong> O imóvel <span class="text-cyan-300 font-mono font-bold" id="conf-imovel-ref">Ref: ---</span> será marcado como <strong>"Vendido"</strong> e desativado da vitrine pública.</span>
                 </div>
 
                 <div class="flex items-start gap-2 text-slate-300">
                     <i class="fa-solid fa-file-invoice-dollar text-emerald-400 text-sm mt-0.5"></i>
-                    <span><strong>Lançamento Financeiro:</strong> O negócio no valor de <strong class="text-emerald-400 font-mono" id="conf-valor-venda">R$ 0,00</strong> gerará o recebível da imobiliária (<span class="text-emerald-300 font-mono font-bold" id="conf-valor-imob">R$ 0,00</span>) e comissão do corretor (<span class="text-cyan-300 font-mono font-bold" id="conf-valor-corretor">R$ 0,00</span>).</span>
+                    <span><strong>Lançamento Financeiro:</strong> A venda de <strong class="text-emerald-400 font-mono" id="conf-valor-venda">R$ 0,00</strong> gerará o recebível de comissão para a imobiliária (<span class="text-emerald-300 font-mono font-bold" id="conf-valor-imob">R$ 0,00</span>) e comissão do corretor (<span class="text-cyan-300 font-mono font-bold" id="conf-valor-corretor">R$ 0,00</span>).</span>
                 </div>
 
                 <div class="flex items-start gap-2 text-slate-300">
@@ -742,7 +742,7 @@
                 <button onclick="executarConfirmacaoFinalVenda()" id="btn-executar-venda-final" 
                         class="w-1/2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-amber-950/50 flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-check"></i>
-                    <span>Sim, Concluir</span>
+                    <span>Sim, Concluir Venda</span>
                 </button>
             </div>
         </div>
@@ -1051,7 +1051,7 @@
             try {
                 const { data, error } = await supabaseClient
                     .from('usuarios')
-                    .select('id, nome_completo, cargo, comissao_venda_pct, comissao_locacao_pct')
+                    .select('id, nome_completo, cargo, comissao_venda_pct')
                     .eq('imobiliaria_id', imobiliariaId)
                     .eq('ativo', true);
 
@@ -1977,9 +1977,7 @@
                 return;
             }
 
-            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
-            const sufixo = (modalidade === 'LOCACAO') ? '/mês' : '';
-            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + sufixo;
+            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             const refImovel = leadAtivoCockpit.imovel ? `para o imóvel Ref: ${leadAtivoCockpit.imovel.codigo_ref}` : 'para a negociação em andamento';
                 
             const zapLimpo = ('' + leadAtivoCockpit.whatsapp).replace(/\D/g, '');
@@ -1995,39 +1993,11 @@
         }
 
         // ====================================================================
-        // LÓGICA DE CONVERSÃO CONTEXTUALIZADA (LOCAÇÃO vs. VENDA)
+        // LÓGICA DE CONVERSÃO EM VENDA FECHADA (APERTO DE MÃO)
         // ====================================================================
         function configurarAbaFechamentoCockpit(lead) {
             const containerAlerta = document.getElementById('cockpit-fechar-alerta-sem-imovel');
             const containerForm = document.getElementById('cockpit-fechar-formulario');
-            const { modalidade } = extrairContextoLead(lead);
-            const ehLocacao = (modalidade === 'LOCACAO');
-
-            // Ajuste dos rótulos da aba de Proposta Comercial
-            const lblPropValor = document.getElementById('cockpit-proposta-valor-lbl');
-            const inputPropCond = document.getElementById('cockpit-proposta-condicoes');
-            if (lblPropValor && inputPropCond) {
-                if (ehLocacao) {
-                    lblPropValor.innerText = 'Valor do Aluguel Proposto (R$/mês)';
-                    inputPropCond.placeholder = 'Ex: 3 meses caução, seguro fiança, fiador, carência...';
-                } else {
-                    lblPropValor.innerText = 'Valor da Proposta (R$)';
-                    inputPropCond.placeholder = 'Ex: 20% sinal + Financiamento Caixa, FGTS...';
-                }
-            }
-
-            // Ajuste do botão da Aba 4 no Topo do Cockpit
-            const btnAbaTxt = document.getElementById('txt-aba-fechamento');
-            const btnAbaIcon = document.getElementById('icone-aba-fechamento');
-            if (btnAbaTxt && btnAbaIcon) {
-                if (ehLocacao) {
-                    btnAbaTxt.innerText = 'Concluir Locação (Contrato)';
-                    btnAbaIcon.className = 'fa-solid fa-file-signature text-purple-400';
-                } else {
-                    btnAbaTxt.innerText = 'Concluir Venda (Aperto de Mão)';
-                    btnAbaIcon.className = 'fa-solid fa-handshake text-amber-400';
-                }
-            }
 
             if (!lead.imovel) {
                 containerAlerta.classList.remove('hidden');
@@ -2038,90 +2008,34 @@
             containerAlerta.classList.add('hidden');
             containerForm.classList.remove('hidden');
 
-            const headerContainer = document.getElementById('cockpit-fechamento-header-container');
-            const tituloTopo = document.getElementById('cockpit-fechamento-titulo-topo');
-            const iconeTopo = document.getElementById('cockpit-fechamento-icone-topo');
-            const lblValor = document.getElementById('lbl-fechamento-valor');
-            const lblData = document.getElementById('lbl-fechamento-data');
-            const lblPctImob = document.getElementById('lbl-fechamento-pct-imob');
-            const lblPctCorretor = document.getElementById('lbl-fechamento-pct-corretor');
-            const btnTxt = document.getElementById('btn-iniciar-fechamento-txt');
-            const btnIcon = document.getElementById('btn-iniciar-fechamento-icone');
-
-            if (ehLocacao) {
-                if (headerContainer) headerContainer.className = 'flex items-center gap-2 text-purple-400 font-black text-xs uppercase';
-                if (tituloTopo) tituloTopo.innerText = 'Formalização de Contrato de Locação';
-                if (iconeTopo) iconeTopo.className = 'fa-solid fa-file-signature text-base';
-                if (lblValor) lblValor.innerText = 'Valor do Aluguel Mensal Fechado (R$/mês) *';
-                if (lblData) lblData.innerText = 'Data de Início do Contrato *';
-                if (lblPctImob) lblPctImob.innerText = 'Taxa de Adm. da Imobiliária (%) *';
-                if (lblPctCorretor) lblPctCorretor.innerText = 'Comissão do Corretor na Locação (%) *';
-                if (btnTxt) btnTxt.innerText = 'Avançar para Conclusão de Locação';
-                if (btnIcon) btnIcon.className = 'fa-solid fa-file-signature';
-
-                const valorSugerido = lead.valor_proposta || lead.imovel.valor_locacao || '';
-                document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
-
-                const taxaAdmPadrao = (dadosImobiliaria && dadosImobiliaria.taxa_locacao_padrao_pct) 
-                    ? dadosImobiliaria.taxa_locacao_padrao_pct 
-                    : 10.0;
-                document.getElementById('cockpit-venda-comissao-total-pct').value = taxaAdmPadrao;
-
-                let comissaoCorretor = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_locacao_padrao_pct) 
-                    ? dadosImobiliaria.repasse_corretor_locacao_padrao_pct 
-                    : 0.0;
-                if (lead.corretor_atribuido_id) {
-                    const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
-                    if (corretor && corretor.comissao_locacao_pct !== null && corretor.comissao_locacao_pct !== undefined) {
-                        comissaoCorretor = corretor.comissao_locacao_pct;
-                    }
-                }
-                document.getElementById('cockpit-venda-comissao-corretor-pct').value = comissaoCorretor;
-
-            } else {
-                if (headerContainer) headerContainer.className = 'flex items-center gap-2 text-amber-400 font-black text-xs uppercase';
-                if (tituloTopo) tituloTopo.innerText = 'Conclusão Formal de Venda & Rateio Financeiro';
-                if (iconeTopo) iconeTopo.className = 'fa-solid fa-handshake text-base';
-                if (lblValor) lblValor.innerText = 'Valor Real de Fechamento (R$) *';
-                if (lblData) lblData.innerText = 'Data do Fechamento *';
-                if (lblPctImob) lblPctImob.innerText = 'Comissão Total Negociada (%) *';
-                if (lblPctCorretor) lblPctCorretor.innerText = 'Fatia do Corretor (%) *';
-                if (btnTxt) btnTxt.innerText = 'Avançar para Conclusão de Venda';
-                if (btnIcon) btnIcon.className = 'fa-solid fa-handshake';
-
-                const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
-                document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
-
-                const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) 
-                    ? dadosImobiliaria.comissao_venda_padrao_pct 
-                    : 6.0;
-                document.getElementById('cockpit-venda-comissao-total-pct').value = comissaoPadrao;
-
-                let fatiaCorretor = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_venda_padrao_pct) 
-                    ? dadosImobiliaria.repasse_corretor_venda_padrao_pct 
-                    : 30.0;
-                if (lead.corretor_atribuido_id) {
-                    const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
-                    if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
-                        fatiaCorretor = corretor.comissao_venda_pct;
-                    }
-                }
-                document.getElementById('cockpit-venda-comissao-corretor-pct').value = fatiaCorretor;
-            }
-
+            const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
+            document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
             document.getElementById('cockpit-venda-data').value = new Date().toISOString().split('T')[0];
+
+            const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) ? dadosImobiliaria.comissao_venda_padrao_pct : 6.0;
+            document.getElementById('cockpit-venda-comissao-total-pct').value = comissaoPadrao;
+
+            let fatiaCorretor = 30.0;
+            if (lead.corretor_atribuido_id) {
+                const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
+                if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
+                    fatiaCorretor = corretor.comissao_venda_pct;
+                }
+            }
+            document.getElementById('cockpit-venda-comissao-corretor-pct').value = fatiaCorretor;
+
             calcularRateioCockpit();
         }
 
         function calcularRateioCockpit() {
-            const valorNegocio = Number(document.getElementById('cockpit-venda-valor-real').value) || 0;
+            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value) || 0;
             const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
             const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
 
-            const valorComissaoTotal = (valorNegocio * comissaoTotalPct) / 100;
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorNegocio - valorComissaoTotal;
+            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
 
             document.getElementById('cockpit-sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('cockpit-sim-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -2133,26 +2047,23 @@
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
 
-            const valorNegocio = Number(document.getElementById('cockpit-venda-valor-real').value);
-            if (!valorNegocio || valorNegocio <= 0) {
-                notificar('aviso', 'Valor Inválido', 'Informe um valor maior que zero para formalizar o negócio.');
+            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
+            if (!valorVenda || valorVenda <= 0) {
+                notificar('aviso', 'Valor Inválido', 'Informe um valor de fechamento maior que zero.');
                 return;
             }
 
-            const pctTotal = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
-            const pctCorretor = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
+            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
+            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
 
-            const valorTotalCalculado = (valorNegocio * pctTotal) / 100;
-            const valorCorretorCalculado = (valorTotalCalculado * pctCorretor) / 100;
-            const valorImobCalculado = valorTotalCalculado - valorCorretorCalculado;
-
-            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
-            const ehLocacao = (modalidade === 'LOCACAO');
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
 
             document.getElementById('conf-imovel-ref').innerText = `Ref: ${leadAtivoCockpit.imovel.codigo_ref}`;
-            document.getElementById('conf-valor-venda').innerText = valorNegocio.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + (ehLocacao ? '/mês' : '');
-            document.getElementById('conf-valor-imob').innerText = valorImobCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('conf-valor-corretor').innerText = valorCorretorCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-venda').innerText = valorVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-corretor').innerText = valorComissaoCorretor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('conf-lead-nome').innerText = leadAtivoCockpit.nome;
 
             document.getElementById('modal-confirmar-venda-explicativo').classList.remove('hidden');
@@ -2166,131 +2077,73 @@
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
 
-            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
-            const ehLocacao = (modalidade === 'LOCACAO');
-
             const btn = document.getElementById('btn-executar-venda-final');
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Concluindo ${ehLocacao ? 'locação' : 'venda'}...`;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Concluindo venda...';
             btn.disabled = true;
 
-            const valorNegocio = Number(document.getElementById('cockpit-venda-valor-real').value);
-            const dataNegocio = document.getElementById('cockpit-venda-data').value;
-            const pctTotal = Number(document.getElementById('cockpit-venda-comissao-total-pct').value);
-            const pctCorretor = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value);
+            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
+            const dataVenda = document.getElementById('cockpit-venda-data').value;
+            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value);
+            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value);
 
-            const valorTotalCalculado = (valorNegocio * pctTotal) / 100;
-            const valorCorretorCalculado = (valorTotalCalculado * pctCorretor) / 100;
-            const valorImobCalculado = valorTotalCalculado - valorCorretorCalculado;
-            const valorRepasseProprietario = valorNegocio - valorTotalCalculado;
+            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
+            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
 
             const corretorObj = listaCorretores.find(c => c.id === leadAtivoCockpit.corretor_atribuido_id);
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
-                if (ehLocacao) {
-                    // CÁLCULO DA DATA FINAL (PADRÃO 12 MESES)
-                    const dInicio = new Date(dataNegocio);
-                    const dFim = new Date(dInicio);
-                    dFim.setFullYear(dFim.getFullYear() + 1);
-                    const dataFimFormatada = dFim.toISOString().split('T')[0];
+                const { error: errVenda } = await supabaseClient
+                    .from('vendas_fechadas')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        imovel_id: leadAtivoCockpit.imovel.id,
+                        cliente_comprador_nome: leadAtivoCockpit.nome,
+                        corretor_id: leadAtivoCockpit.corretor_atribuido_id || null,
+                        corretor_nome: corretorNome,
+                        valor_venda_real: valorVenda,
+                        comissao_total_pct: comissaoTotalPct,
+                        valor_comissao_total: valorComissaoTotal,
+                        comissao_corretor_pct: comissaoCorretorPct,
+                        valor_comissao_corretor: valorComissaoCorretor,
+                        valor_comissao_imobiliaria: valorComissaoImobiliaria,
+                        valor_repasse_proprietario: valorRepasseProprietario,
+                        data_venda: dataVenda,
+                        status_pagamento: 'Recebido'
+                    }]);
 
-                    // INSERÇÃO NA TABELA OFICIAL DE CONTRATOS DE LOCAÇÃO
-                    const { error: errLocacao } = await supabaseClient
-                        .from('contratos_locacao')
-                        .insert([{
-                            imobiliaria_id: imobiliariaId,
-                            imovel_id: leadAtivoCockpit.imovel.id,
-                            lead_id: leadAtivoCockpit.id,
-                            cliente_nome: leadAtivoCockpit.nome,
-                            cliente_whatsapp: leadAtivoCockpit.whatsapp,
-                            cliente_email: leadAtivoCockpit.email || null,
-                            valor_aluguel_bruto: valorNegocio,
-                            taxa_administracao_pct: pctTotal,
-                            valor_comissao_imobiliaria: valorImobCalculado,
-                            valor_repasse_proprietario: valorRepasseProprietario,
-                            dia_vencimento_aluguel: 10,
-                            data_inicio: dataNegocio,
-                            data_fim: dataFimFormatada,
-                            status: 'Ativo'
-                        }]);
+                if (errVenda) throw errVenda;
 
-                    if (errLocacao) throw errLocacao;
+                await supabaseClient
+                    .from('imoveis')
+                    .update({ status: 'Vendido', ativa: false })
+                    .eq('id', leadAtivoCockpit.imovel.id);
 
-                    // ATUALIZA IMÓVEL PARA 'ALUGADO'
-                    await supabaseClient
-                        .from('imoveis')
-                        .update({ status: 'Alugado', ativa: false })
-                        .eq('id', leadAtivoCockpit.imovel.id);
+                await supabaseClient
+                    .from('leads_contatos')
+                    .update({ status: 'Fechado' })
+                    .eq('id', leadAtivoCockpit.id);
 
-                    // ATUALIZA LEAD NO FUNIL
-                    await supabaseClient
-                        .from('leads_contatos')
-                        .update({ status: 'Fechado' })
-                        .eq('id', leadAtivoCockpit.id);
-
-                    await registrarEventoHistorico(
-                        leadAtivoCockpit.id,
-                        'fechamento',
-                        `Contrato de locação firmado com sucesso! Aluguel de R$ ${valorNegocio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês com taxa de adm de ${pctTotal}%. Imóvel baixado como "Alugado".`,
-                        { valor_aluguel: valorNegocio, taxa_adm: pctTotal }
-                    );
-
-                    notificar('sucesso', 'Locação Concluída com Sucesso!', `Imóvel marcado como Alugado e contrato gerado no financeiro.`, 6000);
-
-                } else {
-                    // INSERÇÃO NA TABELA OFICIAL DE VENDAS FECHADAS
-                    const { error: errVenda } = await supabaseClient
-                        .from('vendas_fechadas')
-                        .insert([{
-                            imobiliaria_id: imobiliariaId,
-                            imovel_id: leadAtivoCockpit.imovel.id,
-                            cliente_comprador_nome: leadAtivoCockpit.nome,
-                            corretor_id: leadAtivoCockpit.corretor_atribuido_id || null,
-                            corretor_nome: corretorNome,
-                            valor_venda_real: valorNegocio,
-                            comissao_total_pct: pctTotal,
-                            valor_comissao_total: valorTotalCalculado,
-                            comissao_corretor_pct: pctCorretor,
-                            valor_comissao_corretor: valorCorretorCalculado,
-                            valor_comissao_imobiliaria: valorImobCalculado,
-                            valor_repasse_proprietario: valorRepasseProprietario,
-                            data_venda: dataNegocio,
-                            status_pagamento: 'Recebido'
-                        }]);
-
-                    if (errVenda) throw errVenda;
-
-                    // ATUALIZA IMÓVEL PARA 'VENDIDO'
-                    await supabaseClient
-                        .from('imoveis')
-                        .update({ status: 'Vendido', ativa: false })
-                        .eq('id', leadAtivoCockpit.imovel.id);
-
-                    // ATUALIZA LEAD NO FUNIL
-                    await supabaseClient
-                        .from('leads_contatos')
-                        .update({ status: 'Fechado' })
-                        .eq('id', leadAtivoCockpit.id);
-
-                    await registrarEventoHistorico(
-                        leadAtivoCockpit.id,
-                        'fechamento',
-                        `Venda formal concluída com sucesso! Imóvel vendido por R$ ${valorNegocio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Imobiliária'}. Imóvel baixado da vitrine.`,
-                        { valor_venda: valorNegocio, comissao_total: valorTotalCalculado }
-                    );
-
-                    notificar('sucesso', 'Venda Fechada com Sucesso!', `Imóvel baixado da vitrine e comissões lançadas no financeiro.`, 6000);
-                }
+                await registrarEventoHistorico(
+                    leadAtivoCockpit.id,
+                    'fechamento',
+                    `Venda formal concluída com sucesso! Imóvel vendido por R$ ${valorVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Imobiliária'}. Imóvel baixado da vitrine.`,
+                    { valor_venda: valorVenda, comissao_total: valorComissaoTotal }
+                );
 
                 fecharConfirmacaoExplicativaVenda();
                 fecharCockpitLead();
+
+                notificar('sucesso', 'Venda Fechada com Sucesso!', `Imóvel baixado da vitrine e comissões lançadas no financeiro.`, 6000);
                 await carregarLeads();
 
             } catch (err) {
-                console.error('Erro no fechamento do negócio:', err);
+                console.error('Erro no fechamento:', err);
                 notificar('erro', 'Falha no Fechamento', err.message);
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Sim, Concluir</span>';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Sim, Concluir Venda</span>';
                 btn.disabled = false;
             }
         }
