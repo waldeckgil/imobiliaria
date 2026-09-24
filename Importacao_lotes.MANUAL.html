@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-pt">
 <head>
     <meta charset="UTF-8">
     <title>Importação em Lote - Imóveis e Fotos</title>
@@ -16,19 +16,19 @@
         <div class="space-y-2">
             <label class="block text-xs font-bold uppercase text-slate-400">1. Selecionar Planilha de Dados (CSV / Excel)</label>
             <input type="file" id="input-planilha" accept=".csv, .xlsx" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-            <p class="text-[10px] text-slate-500">A planilha deve conter as colunas completas (<code class="text-cyan-300">imobiliaria_id</code>, <code class="text-cyan-300">proprietario_id</code>, etc.).</p>
+            <p class="text-[10px] text-slate-500">A planilha utiliza a coluna <code class="text-cyan-300">proprietario_id</code> com os nomes dos proprietários.</p>
         </div>
 
         <!-- Passo 2: Campo para seleção múltipla de fotos direto do diretório local -->
         <div class="space-y-2">
             <label class="block text-xs font-bold uppercase text-slate-400">2. Selecionar Fotos dos Imóveis (Múltiplas)</label>
             <input type="file" id="input-fotos" accept="image/*" multiple class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
-            <p class="text-[10px] text-slate-500">Regra: O nome de cada arquivo de foto deve iniciar com o código de referência do imóvel (Ex: <code class="text-cyan-300">IMO101_01.jpg</code>).</p>
+            <p class="text-[10px] text-slate-500">Regra: O nome de cada ficheiro de foto deve iniciar com o código de referência do imóvel (Ex: <code class="text-cyan-300">IMO101_01.jpg</code>).</p>
         </div>
 
         <!-- Botão de disparo do processo de automação -->
         <button onclick="executarImportacaoLote()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black py-3 rounded-xl transition cursor-pointer">
-            Processar e Inserir no Banco de Dados
+            Processar Proprietários e Inserir Imóveis
         </button>
 
         <!-- Caixa de logs para monitoramento em tempo real do progresso pelo operador -->
@@ -47,7 +47,7 @@
         const ID_IMOBILIARIA_PADRAO = "6bbb3039-ef41-4377-b435-f1ed386c2e36";
 
         /**
-         * Função utilitária para registrar mensagens de log na tela do operador.
+         * Função utilitária para registar mensagens de log na tela do operador.
          */
         function logMensagem(msg) {
             const box = document.getElementById('status-log');
@@ -56,7 +56,11 @@
         }
 
         /**
-         * Função principal que gerencia o fluxo completo de importação em lote.
+         * Função principal que gere o fluxo completo de importação em massa:
+         * 1. Lê a planilha.
+         * 2. Verifica ou cria automaticamente os proprietários na tabela `clientes`.
+         * 3. Faz o upload das fotos correspondentes no Storage.
+         * 4. Regista o imóvel na tabela `imoveis` com o `proprietario_id` em formato UUID correto.
          */
         async function executarImportacaoLote() {
             const arquivoPlanilha = document.getElementById('input-planilha').files[0];
@@ -67,7 +71,7 @@
                 return;
             }
 
-            logMensagem('Lendo planilha de dados...');
+            logMensagem('A ler a planilha de dados...');
 
             const reader = new FileReader();
             
@@ -79,57 +83,109 @@
 
                 logMensagem(`Total de imóveis encontrados na planilha: ${linhasImoveis.length}`);
 
+                // Cache local para guardar os UUIDs dos proprietários já processados nesta execução
+                const cacheProprietarios = new Map();
+
                 for (let imovel of linhasImoveis) {
                     const codigoRef = String(imovel.codigo_ref || '').trim();
-                    logMensagem(`Processando imóvel ref: ${codigoRef}...`);
+                    if (!codigoRef) continue;
+
+                    logMensagem(`A processar imóvel ref: ${codigoRef}...`);
 
                     // Captura o ID da imobiliária direto da planilha ou assume o padrão
                     const imobiliariaId = String(imovel.imobiliaria_id || ID_IMOBILIARIA_PADRAO).trim();
 
-                    // Filtra apenas as fotos locais cujos nomes contenham o código de referência deste imóvel
+                    // 1. Captura o nome do proprietário diretamente da coluna proprietario_id da planilha
+                    const nomeProprietario = String(
+                        imovel.proprietario_id || imovel.nome_proprietario || imovel.proprietario || ''
+                    ).trim();
+
+                    let proprietarioIdUuid = null;
+
+                    if (nomeProprietario) {
+                        // Verifica se já temos o UUID guardado no cache desta importação
+                        if (cacheProprietarios.has(nomeProprietario)) {
+                            proprietarioIdUuid = cacheProprietarios.get(nomeProprietario);
+                        } else {
+                            // Tenta procurar o cliente existente no banco para esta imobiliária
+                            const { data: clienteExistente, error: erroBuscaCliente } = await supabaseClient
+                                .from('clientes')
+                                .select('id')
+                                .eq('imobiliaria_id', imobiliariaId)
+                                .ilike('nome', nomeProprietario)
+                                .maybeSingle();
+
+                            if (clienteExistente) {
+                                proprietarioIdUuid = clienteExistente.id;
+                                logMensagem(`Proprietário identificado: ${nomeProprietario}`);
+                            } else {
+                                // Se não existe, regista automaticamente na tabela `clientes` e obtém o UUID
+                                logMensagem(`A registar novo proprietário: ${nomeProprietario}...`);
+                                const { data: novoCliente, error: erroInsereCliente } = await supabaseClient
+                                    .from('clientes')
+                                    .insert([{
+                                        imobiliaria_id: imobiliariaId,
+                                        nome: nomeProprietario,
+                                        tipo: 'Proprietario'
+                                    }])
+                                    .select('id')
+                                    .single();
+
+                                if (erroInsereCliente) {
+                                    logMensagem(`Erro ao registar proprietário ${nomeProprietario}: ${erroInsereCliente.message}`);
+                                } else if (novoCliente) {
+                                    proprietarioIdUuid = novoCliente.id;
+                                    logMensagem(`Proprietário criado com sucesso (UUID gerado).`);
+                                }
+                            }
+
+                            // Guarda no cache local para reaproveitar noutros imóveis do mesmo dono
+                            if (proprietarioIdUuid) {
+                                cacheProprietarios.set(nomeProprietario, proprietarioIdUuid);
+                            }
+                        }
+                    }
+
+                    // 2. Filtra e envia as fotos locais correspondentes ao código de referência
                     const fotosDoImovel = arquivosFotos.filter(f => f.name.includes(codigoRef));
                     let urlsFotos = [];
 
                     for (let fotoFile of fotosDoImovel) {
                         const caminhoStorage = `${imobiliariaId}/imoveis/${codigoRef}/${Date.now()}_${fotoFile.name}`;
-                        logMensagem(`Enviando foto ${fotoFile.name} para o Storage...`);
+                        logMensagem(`A enviar foto ${fotoFile.name} para o Storage...`);
 
                         const { data: uploadData, error: uploadError } = await supabaseClient.storage
                             .from('imoveis-midias')
                             .upload(caminhoStorage, fotoFile);
 
                         if (!uploadError) {
-                            const { data: urlData } = supabaseClient.storage.from('imoveis-midias').getPublicUrl(caminhoStorage);
-                            urlsFotos.push(urlData.publicUrl);
+                            const { data: publicUrlData } = supabaseClient.storage.from('imoveis-midias').getPublicUrl(caminhoStorage);
+                            urlsFotos.push(publicUrlData.publicUrl);
                         } else {
                             logMensagem(`Erro ao enviar foto: ${uploadError.message}`);
                         }
                     }
 
                     const fotoCapa = urlsFotos.length > 0 ? urlsFotos[0] : null;
-                    
-                    // Pega o valor da coluna proprietario_id da planilha (tratando eventuais variações)
-                    const valorProprietario = imovel.proprietario_id || imovel.proprietario || 'Sem proprietário';
-                    const nomeProprietario = String(valorProprietario).trim();
 
-                    // Executa a inserção mapeando a coluna proprietario_id exatamente como o banco espera
+                    // 3. Executa a inserção do imóvel no banco de dados com o UUID correto
                     const { error: insertError } = await supabaseClient.from('imoveis').insert([{
                         imobiliaria_id: imobiliariaId,
                         codigo_ref: codigoRef,
-                        titulo: imovel.titulo,
-                        tipo: imovel.tipo,
-                        finalidade: imovel.finalidade,
-                        bairro: imovel.bairro,
+                        titulo: imovel.titulo || `Imóvel ${codigoRef}`,
+                        tipo: imovel.tipo || 'Casa',
+                        finalidade: imovel.finalidade || 'Venda',
+                        bairro: imovel.bairro || null,
                         valor_venda: imovel.valor_venda ? Number(imovel.valor_venda) : null,
                         valor_locacao: imovel.valor_locacao ? Number(imovel.valor_locacao) : null,
-                        area_util: imovel.area_util ? Number(imovel.area_util) : 0,
+                        area_util: imovel.area_util ? Number(imovel.area_util) : null,
                         quartos: imovel.quartos ? Number(imovel.quartos) : 0,
                         vagas: imovel.vagas ? Number(imovel.vagas) : 0,
                         status: imovel.status || 'Disponível',
                         ativa: imovel.ativa !== undefined ? Boolean(imovel.ativa) : true,
                         foto_capa: fotoCapa,
                         fotos: urlsFotos,
-                        proprietario_id: nomeProprietario
+                        proprietario_id: proprietarioIdUuid // UUID definitivo obtido da tabela clientes
                     }]);
 
                     if (insertError) {
