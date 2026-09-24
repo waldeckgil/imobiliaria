@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 p-8">
-    <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+    <div class="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
         <h1 class="text-xl font-black text-cyan-400">Importação Automatizada de Imóveis & Fotos</h1>
         
         <!-- Passo 1: Campo para upload da planilha contendo as informações dos imóveis -->
@@ -32,8 +32,8 @@
         </button>
 
         <!-- Caixa de logs para monitoramento em tempo real do progresso pelo operador -->
-        <div id="status-log" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-cyan-300 h-40 overflow-y-auto">
-            Aguardando início do processo...
+        <div id="status-log" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-cyan-300 h-60 overflow-y-auto space-y-1">
+            <div>> Aguardando início do processo...</div>
         </div>
     </div>
 
@@ -61,6 +61,7 @@
          * 2. Verifica ou cria automaticamente os proprietários na tabela `clientes`.
          * 3. Faz o upload das fotos correspondentes no Storage.
          * 4. Regista o imóvel na tabela `imoveis` com o `proprietario_id` em formato UUID correto.
+         * 5. Executa um resumo agrupado e detalhado pós-importação.
          */
         async function executarImportacaoLote() {
             const arquivoPlanilha = document.getElementById('input-planilha').files[0];
@@ -85,6 +86,7 @@
 
                 // Cache local para guardar os UUIDs dos proprietários já processados nesta execução
                 const cacheProprietarios = new Map();
+                let imobiliariaIdUsada = ID_IMOBILIARIA_PADRAO;
 
                 for (let imovel of linhasImoveis) {
                     const codigoRef = String(imovel.codigo_ref || '').trim();
@@ -94,6 +96,7 @@
 
                     // Captura o ID da imobiliária direto da planilha ou assume o padrão
                     const imobiliariaId = String(imovel.imobiliaria_id || ID_IMOBILIARIA_PADRAO).trim();
+                    imobiliariaIdUsada = imobiliariaId;
 
                     // 1. Captura o nome do proprietário diretamente da coluna proprietario_id da planilha
                     const nomeProprietario = String(
@@ -185,7 +188,7 @@
                         ativa: imovel.ativa !== undefined ? Boolean(imovel.ativa) : true,
                         foto_capa: fotoCapa,
                         fotos: urlsFotos,
-                        proprietario_id: proprietarioIdUuid // UUID definitivo obtido da tabela clientes
+                        proprietario_id: proprietarioIdUuid
                     }]);
 
                     if (insertError) {
@@ -195,7 +198,49 @@
                     }
                 }
 
-                logMensagem('Importação em lote concluída com sucesso!');
+                logMensagem('=== IMPORTAÇÃO CONCLUÍDA! GERANDO RELATÓRIO... ===');
+
+                // 4. Consulta de resumo pós-importação com agrupamento e junção com clientes
+                const { data: resumoImoveis, error: erroResumo } = await supabaseClient
+                    .from('imoveis')
+                    .select(`
+                        titulo,
+                        tipo,
+                        finalidade,
+                        bairro,
+                        status,
+                        fotos,
+                        clientes ( nome )
+                    `)
+                    .eq('imobiliaria_id', imobiliariaIdUsada);
+
+                if (erroResumo) {
+                    logMensagem(`Erro ao gerar resumo: ${erroResumo.message}`);
+                } else if (resumoImoveis && resumoImoveis.length > 0) {
+                    // Agrupamento por tipo
+                    const contagemPorTipo = {};
+                    resumoImoveis.forEach(item => {
+                        const tipoImovel = item.tipo || 'Outros';
+                        contagemPorTipo[tipoImovel] = (contagemPorTipo[tipoImovel] || 0) + 1;
+                    });
+
+                    logMensagem('--- RESUMO DE QUANTIDADES POR TIPO ---');
+                    for (const [tipo, quantidade] of Object.entries(contagemPorTipo)) {
+                        logMensagem(`• ${tipo}: ${quantidade} unidade(s)`);
+                    }
+
+                    logMensagem('--- LISTAGEM DETALHADA DOS REGISTOS ---');
+                    resumoImoveis.forEach((item, index) => {
+                        const tituloOriginal = item.titulo || '';
+                        const tituloCurto = tituloOriginal.length > 10 ? tituloOriginal.substring(0, 10) + '...' : tituloOriginal;
+                        const nomeProprietario = item.clientes?.nome || 'N/D';
+                        const totalFotos = Array.isArray(item.fotos) ? item.fotos.length : 0;
+
+                        logMensagem(`[#${index + 1}] Título: "${tituloCurto}" | Tipo: ${item.tipo} | Finalidade: ${item.finalidade} | Bairro: ${item.bairro || 'N/D'} | Status: ${item.status} | Proprietário: ${nomeProprietario} | Total Fotos: ${totalFotos}`);
+                    });
+                } else {
+                    logMensagem('Nenhum imóvel encontrado para gerar o resumo.');
+                }
             };
 
             reader.readAsArrayBuffer(arquivoPlanilha);
