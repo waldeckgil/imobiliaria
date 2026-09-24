@@ -1281,10 +1281,15 @@
                 const totalFotos = fotosUnificadas.length;
                 const fotoInicial = fotosUnificadas[0];
 
-                let badgeFoto = 'Venda';
-                if (imovel.finalidade === 'Ambos') badgeFoto = 'Venda & Locação';
-                else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') badgeFoto = 'Locação';
-
+  let badgeFoto = 'Venda';
+                let corBadgeFoto = 'bg-emerald-600';
+                if (imovel.finalidade === 'Ambos') {
+                    badgeFoto = 'Venda & Locação';
+                    corBadgeFoto = 'bg-purple-700';
+                } else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') {
+                    badgeFoto = 'Locação';
+                    corBadgeFoto = 'bg-blue-700';
+                }
                 const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
                 const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
                 const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
@@ -1330,7 +1335,7 @@
                         <div class="md:col-span-5 relative bg-slate-900 min-h-[240px] select-none group">
                             <img id="img-card-${imovel.id}" src="${fotoInicial}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px] transition-opacity duration-300">
                             
-                            <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow z-10">
+              <div class="absolute top-3 left-3 ${corBadgeFoto} text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow z-10">
                                 ${badgeFoto}
                             </div>
                             
