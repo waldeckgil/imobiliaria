@@ -1220,15 +1220,11 @@
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono outline-none focus:border-emerald-400">
                 </div>
 
-                <div>
+    <div>
                     <label class="block font-bold text-slate-300 mb-1">Anexar Comprovante Bancário (PDF ou Imagem):</label>
                     <input type="file" id="baixa-arquivo-comprovante" accept=".pdf,.png,.jpg,.jpeg,.webp"
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-cyan-300 hover:file:bg-slate-700 cursor-pointer">
-                    <span class="text-[10px] text-slate-500 mt-1 block">Ou cole o link/URL direta do comprovante caso já esteja hospedado:</span>
-                    <input type="url" id="baixa-url-comprovante" placeholder="https://..."
-                           class="w-full bg-slate-950 border border-slate-800 rounded-xl py-1.5 px-3 text-slate-300 text-xs mt-1 outline-none focus:border-emerald-400">
                 </div>
-
                 <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-800">
                     <button type="button" onclick="fecharModalBaixaAluguel()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
                         Cancelar
@@ -5113,9 +5109,8 @@ Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposi�
                     `;
                 }
             }
-
-            document.getElementById('baixa-url-comprovante').value = '';
-            document.getElementById('baixa-arquivo-comprovante').value = '';
+const arquivoInputReset = document.getElementById('baixa-arquivo-comprovante');
+            if (arquivoInputReset) arquivoInputReset.value = '';
 
             modal.classList.remove('hidden');
         }
@@ -5131,14 +5126,13 @@ Qualquer dúvida ou caso necessite de novo ajuste, estou à sua inteira disposi�
             const dataPagamentoEl = document.getElementById('baixa-data-pagamento');
             const dataPagamento = dataPagamentoEl ? dataPagamentoEl.value : null;
             const arquivoInput = document.getElementById('baixa-arquivo-comprovante');
-            const urlInput = document.getElementById('baixa-url-comprovante').value.trim();
             const btnSalvar = document.getElementById('btn-salvar-baixa-aluguel');
 
             btnSalvar.disabled = true;
             btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gravando...';
 
             try {
-                let comprovanteUrlFinal = urlInput || null;
+                let comprovanteUrlFinal = null;
 
                 if (arquivoInput.files && arquivoInput.files[0]) {
                     const file = arquivoInput.files[0];
