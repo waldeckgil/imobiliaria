@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Importação em Lote - Imóveis e Fotos</title>
+    <!-- Importação de frameworks de estilo (Tailwind CSS) e bibliotecas de integração (Supabase e SheetJS) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-8">
+    <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+        <h1 class="text-xl font-black text-cyan-400">Importação Automatizada de Imóveis & Fotos</h1>
+        
+        <!-- Passo 1: Campo para upload da planilha contendo as informações dos imóveis -->
+        <div class="space-y-2">
+            <label class="block text-xs font-bold uppercase text-slate-400">1. Selecionar Planilha de Dados (CSV / Excel)</label>
+            <input type="file" id="input-planilha" accept=".csv, .xlsx" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+        </div>
+
+        <!-- Passo 2: Campo para seleção múltipla de fotos direto do diretório local -->
+        <div class="space-y-2">
+            <label class="block text-xs font-bold uppercase text-slate-400">2. Selecionar Fotos dos Imóveis (Múltiplas)</label>
+            <input type="file" id="input-fotos" accept="image/*" multiple class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+            <p class="text-[10px] text-slate-500">Regra: O nome de cada arquivo de foto deve iniciar com o código de referência do imóvel (Ex: <code class="text-cyan-300">IMO101_01.jpg</code>).</p>
+        </div>
+
+        <!-- Botão de disparo do processo de automação -->
+        <button onclick="executarImportacaoLote()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black py-3 rounded-xl transition cursor-pointer">
+            Processar e Inserir no Banco de Dados
+        </button>
+
+        <!-- Caixa de logs para monitoramento em tempo real do progresso pelo operador -->
+        <div id="status-log" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-cyan-300 h-40 overflow-y-auto">
+            Aguardando início do processo...
+        </div>
+    </div>
+
+    <script>
+        // Configurações de acesso à API e Storage do Supabase da aplicação
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        // Identificador fixo correspondente à Imobiliária SGI no banco de dados
+        const ID_IMOBILIARIA_SGI = "6bbb3039-ef41-4377-b435-f1ed386c2e36";
+
+        /**
+         * Função utilitária para registrar mensagens de log na tela do operador.
+         * Facilita o acompanhamento visual do sucesso ou falha de cada etapa.
+         */
+        function logMensagem(msg) {
+            const box = document.getElementById('status-log');
+            box.innerHTML += `<div>> ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        /**
+         * Função principal que gerencia o fluxo completo de importação em lote:
+         * 1. Lê os dados da planilha carregada.
+         * 2. Cruza os códigos de referência com os arquivos de imagem selecionados.
+         * 3. Faz o upload das mídias para o Storage estruturado por pastas.
+         * 4. Salva os registros finais com as respectivas capas e galerias na tabela de imóveis.
+         */
+        async function executarImportacaoLote() {
+            const arquivoPlanilha = document.getElementById('input-planilha').files[0];
+            const arquivosFotos = Array.from(document.getElementById('input-fotos').files);
+
+            // Validação inicial para garantir que o arquivo de dados foi anexado
+            if (!arquivoPlanilha) {
+                alert('Por favor, selecione a planilha de dados.');
+                return;
+            }
+
+            logMensagem('Lendo planilha de dados...');
+
+            const reader = new FileReader();
+            
+            // Evento executado após a leitura bem-sucedida do arquivo da planilha
+            reader.onload = async function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const primeiraAba = workbook.SheetNames[0];
+                const linhasImoveis = XLSX.utils.sheet_to_json(workbook.Sheets[primeiraAba]);
+
+                logMensagem(`Total de imóveis encontrados na planilha: ${linhasImoveis.length}`);
+
+                // Laço de repetição para processar cada imóvel individualmente da planilha
+                for (let imovel of linhasImoveis) {
+                    const codigoRef = String(imovel.codigo_ref || '').trim();
+                    logMensagem(`Processando imóvel ref: ${codigoRef}...`);
+
+                    // Filtra apenas as fotos locais cujos nomes contenham o código de referência deste imóvel
+                    const fotosDoImovel = arquivosFotos.filter(f => f.name.includes(codigoRef));
+                    let urlsFotos = [];
+
+                    // Laço para realizar o upload de cada foto vinculada ao imóvel atual
+                    for (let fotoFile of fotosDoImovel) {
+                        const caminhoStorage = `${ID_IMOBILIARIA_SGI}/imoveis/${codigoRef}/${Date.now()}_${fotoFile.name}`;
+                        logMensagem(`Enviando foto ${fotoFile.name} para o Storage...`);
+
+                        // Envio do arquivo binário para o bucket oficial no Supabase Storage
+                        const { data: uploadData, error: uploadError } = await supabaseClient.storage
+                            .from('imoveis-midias')
+                            .upload(caminhoStorage, fotoFile);
+
+                        // Se o upload ocorrer sem erros, resgata a URL pública gerada para a imagem
+                        if (!uploadError) {
+                            const { data: urlData } = supabaseClient.storage.from('imoveis-midias').getPublicUrl(caminhoStorage);
+                            urlsFotos.push(urlData.publicUrl);
+                        } else {
+                            logMensagem(`Erro ao enviar foto: ${uploadError.message}`);
+                        }
+                    }
+
+                    // Define a primeira foto da lista automaticamente como a capa principal do imóvel
+                    const fotoCapa = urlsFotos.length > 0 ? urlsFotos[0] : null;
+
+                    // Executa a inserção do registro completo do imóvel no banco de dados com seus respectivos vínculos
+                    const { error: insertError } = await supabaseClient.from('imoveis').insert([{
+                        imobiliaria_id: ID_IMOBILIARIA_SGI,
+                        codigo_ref: codigoRef,
+                        titulo: imovel.titulo,
+                        tipo: imovel.tipo,
+                        finalidade: imovel.finalidade,
+                        bairro: imovel.bairro,
+                        valor_venda: imovel.valor_venda ? Number(imovel.valor_venda) : null,
+                        valor_locacao: imovel.valor_locacao ? Number(imovel.valor_locacao) : null,
+                        area_util: imovel.area_util ? Number(imovel.area_util) : 0,
+                        quartos: imovel.quartos ? Number(imovel.quartos) : 0,
+                        vagas: imovel.vagas ? Number(imovel.vagas) : 0,
+                        status: imovel.status || 'Disponível',
+                        ativa: true,
+                        foto_capa: fotoCapa,
+                        fotos_galeria: urlsFotos
+                    }]);
+
+                    // Validação do resultado da operação no banco de dados
+                    if (insertError) {
+                        logMensagem(`Erro ao inserir imóvel ${codigoRef}: ${insertError.message}`);
+                    } else {
+                        logMensagem(`Imóvel ${codigoRef} inserido com sucesso com ${urlsFotos.length} foto(s)!`);
+                    }
+                }
+
+                logMensagem('Importação em lote concluída com sucesso!');
+            };
+
+            // Inicia a leitura do arquivo em formato de array buffer para processamento via SheetJS
+            reader.readAsArrayBuffer(arquivoPlanilha);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Local de Importação em Lote - SGI</title>
+    <!-- Frameworks visuais e bibliotecas de integração -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 p-6 font-sans">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Cabeçalho -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h1 class="text-2xl font-black text-cyan-400">Ferramenta Local de Importação</h1>
+            <p class="text-sm text-slate-400 mt-1">Cadastre imóveis em lote e envie fotos locais direto para o Supabase da Imobiliária SGI.</p>
+        </div>
+
+        <!-- Checklist Passo a Passo (Guia Visual) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+            <h2 class="text-sm font-bold uppercase text-cyan-400 tracking-wider">📋 Checklist Prévio (O que fazer antes de rodar)</h2>
+            <ul class="text-xs text-slate-300 space-y-2">
+                <li class="flex items-center gap-2">
+                    <input type="checkbox" class="accent-cyan-400 w-4 h-4">
+                    <span><strong>1. Planilha Pronta:</strong> Crie um arquivo Excel (`.xlsx`) ou CSV contendo a linha de cabeçalho exata listada abaixo.</span>
+                </li>
+                <li class="flex items-center gap-2">
+                    <input type="checkbox" class="accent-cyan-400 w-4 h-4">
+                    <span><strong>2. Nomenclatura das Fotos:</strong> Na pasta do seu computador, renomeie os arquivos de foto para começarem com o código de referência (Ex: <code class="text-cyan-300">IMO101_fachada.jpg</code>).</span>
+                </li>
+                <li class="flex items-center gap-2">
+                    <input type="checkbox" class="accent-cyan-400 w-4 h-4">
+                    <span><strong>3. Execução:</strong> Selecione o arquivo da planilha, selecione todas as fotos da pasta de uma vez e clique no botão de processar.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Layout de Envio (Inputs) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Bloco Planilha -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+                <label class="block text-xs font-bold uppercase text-slate-400">1. Arquivo da Planilha (.xlsx ou .csv)</label>
+                <input type="file" id="input-planilha" accept=".csv, .xlsx" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                <div class="text-[11px] text-slate-500 bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono">
+                    <strong>Colunas obrigatórias na planilha:</strong><br>
+                    codigo_ref, titulo, tipo, finalidade, bairro, valor_venda, valor_locacao, area_util, quartos, vagas, status
+                </div>
+            </div>
+
+            <!-- Bloco Fotos -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+                <label class="block text-xs font-bold uppercase text-slate-400">2. Selecionar Fotos (Múltiplas do Windows)</label>
+                <input type="file" id="input-fotos" accept="image/*" multiple class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300">
+                <div class="text-[11px] text-slate-500 bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono">
+                    <strong>Exemplo de nome na pasta:</strong><br>
+                    • IMO101_01.jpg<br>
+                    • IMO101_02.jpg<br>
+                    • IMO102_sala.jpg
+                </div>
+            </div>
+        </div>
+
+        <!-- Botão de Ação -->
+        <button onclick="executarImportacaoLocal()" class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black py-4 rounded-2xl transition cursor-pointer text-sm shadow-lg shadow-cyan-500/10">
+            Processar Importação em Lote Agora
+        </button>
+
+        <!-- Log de Execução em Tempo Real -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-2">
+            <h3 class="text-xs font-bold uppercase text-slate-400">Console de Log (Progresso)</h3>
+            <div id="status-log" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-cyan-300 h-44 overflow-y-auto">
+                [Sistema Pronto] Aguardando arquivos...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Conexão direta com o Supabase da SGI
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        // ID fixo da Imobiliária SGI mapeado no banco
+        const ID_IMOBILIARIA_SGI = "6bbb3039-ef41-4377-b435-f1ed386c2e36";
+
+        function logMensagem(msg) {
+            const box = document.getElementById('status-log');
+            box.innerHTML += `<div>> ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function executarImportacaoLocal() {
+            const arquivoPlanilha = document.getElementById('input-planilha').files[0];
+            const arquivosFotos = Array.from(document.getElementById('input-fotos').files);
+
+            if (!arquivoPlanilha) {
+                alert('Selecione o arquivo da planilha antes de continuar!');
+                return;
+            }
+
+            logMensagem('Lendo dados da planilha local...');
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const primeiraAba = workbook.SheetNames[0];
+                const linhasImoveis = XLSX.utils.sheet_to_json(workbook.Sheets[primeiraAba]);
+
+                logMensagem(`Total de linhas lidas na planilha: ${linhasImoveis.length}`);
+
+                for (let imovel of linhasImoveis) {
+                    const codigoRef = String(imovel.codigo_ref || '').trim();
+                    logMensagem(`Processando referência: ${codigoRef}`);
+
+                    // Filtra as fotos do computador correspondentes ao código do imóvel
+                    const fotosDoImovel = arquivosFotos.filter(f => f.name.includes(codigoRef));
+                    let urlsFotos = [];
+
+                    for (let fotoFile of fotosDoImovel) {
+                        const caminhoStorage = `${ID_IMOBILIARIA_SGI}/imoveis/${codigoRef}/${Date.now()}_${fotoFile.name}`;
+                        logMensagem(`Enviando ${fotoFile.name} para o Storage...`);
+
+                        const { error: uploadError } = await supabaseClient.storage
+                            .from('imoveis-midias')
+                            .upload(caminhoStorage, fotoFile);
+
+                        if (!uploadError) {
+                            const { data: urlData } = supabaseClient.storage.from('imoveis-midias').getPublicUrl(caminhoStorage);
+                            urlsFotos.push(urlData.publicUrl);
+                        } else {
+                            logMensagem(`Erro no upload da foto: ${uploadError.message}`);
+                        }
+                    }
+
+                    const fotoCapa = urlsFotos.length > 0 ? urlsFotos[0] : null;
+
+                    // Insere o imóvel diretamente no Supabase via API
+                    const { error: insertError } = await supabaseClient.from('imoveis').insert([{
+                        imobiliaria_id: ID_IMOBILIARIA_SGI,
+                        codigo_ref: codigoRef,
+                        titulo: imovel.titulo,
+                        tipo: imovel.tipo,
+                        finalidade: imovel.finalidade,
+                        bairro: imovel.bairro,
+                        valor_venda: imovel.valor_venda ? Number(imovel.valor_venda) : null,
+                        valor_locacao: imovel.valor_locacao ? Number(imovel.valor_locacao) : null,
+                        area_util: imovel.area_util ? Number(imovel.area_util) : 0,
+                        quartos: imovel.quartos ? Number(imovel.quartos) : 0,
+                        vagas: imovel.vagas ? Number(imovel.vagas) : 0,
+                        status: imovel.status || 'Disponível',
+                        ativa: true,
+                        foto_capa: fotoCapa,
+                        fotos_galeria: urlsFotos
+                    }]);
+
+                    if (insertError) {
+                        logMensagem(`❌ Erro ao salvar imóvel ${codigoRef}: ${insertError.message}`);
+                    } else {
+                        logMensagem(`✅ Imóvel ${codigoRef} inserido com ${urlsFotos.length} foto(s)!`);
+                    }
+                }
+
+                logMensagem('Processo de importação em lote finalizado com sucesso!');
+            };
+
+            reader.readAsArrayBuffer(arquivoPlanilha);
+        }
+    </script>
+</body>
+</html>
