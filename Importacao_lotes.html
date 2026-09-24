@@ -132,7 +132,7 @@
                         status: imovel.status || 'Disponível',
                         ativa: true,
                         foto_capa: fotoCapa,
-                        fotos_galeria: urlsFotos
+                        fotos: urlsFotos // <--- Correção aplicada: coluna correta 'fotos' mapeada para o array de URLs
                     }]);
 
                     // Validação do resultado da operação no banco de dados
