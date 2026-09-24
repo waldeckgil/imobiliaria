@@ -505,7 +505,7 @@
                         </div>
                     </div>
 
-                    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
+    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         Fale Conosco
                     </a>
 
@@ -517,16 +517,21 @@
             </div>
         </header>
 
-        <!-- FAIXA PRETA DE BUSCA -->
+ <!-- FAIXA PRETA DE BUSCA -->
         <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
             <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
-                        Catálogo de Imóveis Disponíveis
-                    </h1>
-                    <p class="text-xs text-gray-300 mt-1">
-                        <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
-                    </p>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 flex-wrap">
+                    <div>
+                        <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
+                            Catálogo de Imóveis Disponíveis
+                        </h1>
+                        <p class="text-xs text-gray-300 mt-1">
+                            <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
+                        </p>
+                    </div>
+
+                    <!-- ATALHOS REDES SOCIAIS & WHATSAPP NA FAIXA PRETA -->
+                    <div id="faixa-preta-redes-sociais" class="flex items-center gap-2 pt-1 sm:pt-0"></div>
                 </div>
 
                 <div class="w-full md:w-64">
@@ -623,14 +628,13 @@
         <!-- SEÇÃO: "NEGOCIE SEU IMÓVEL / AVALIE SEU IMÓVEL" -->
         <section id="secao-negocie" class="bg-slate-50 py-16 px-4 sm:px-8 border-b border-gray-200">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
-                <div class="lg:col-span-7 space-y-6">
+   <div class="lg:col-span-7 space-y-6">
                     <div class="rounded-2xl overflow-hidden shadow-md max-h-72">
-                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80" 
+                        <img id="img-negocie-fachada" 
+                             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80" 
                              alt="Negocie seu Imóvel" 
                              class="w-full h-full object-cover">
                     </div>
-
                     <div class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm space-y-4">
                         <span class="inline-block bg-emerald-100 text-emerald-800 text-[11px] font-black uppercase px-3 py-1 rounded-full tracking-wider">
                             Venda, aluguel fixo ou temporada
@@ -769,12 +773,32 @@
                         <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
                         <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel ou tirar dúvidas..."></textarea>
                     </div>
-
-                    <button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
+<button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
                         <i class="fa-regular fa-paper-plane"></i>
                         <span>Enviar Mensagem</span>
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <!-- MODAL DE VÍDEO TOUR DO IMÓVEL (YOUTUBE) -->
+        <div id="modal-video-tour" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[65] flex items-center justify-center p-4 hidden">
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+                    <div class="flex items-center gap-2 text-red-500 font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-brands fa-youtube text-lg"></i>
+                        <span id="modal-video-titulo">Vídeo Tour do Imóvel</span>
+                    </div>
+                    <button onclick="fecharModalVideo()" class="text-slate-400 hover:text-white text-lg cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner">
+                    <iframe id="iframe-video-tour" src="" class="w-full h-full border-0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
             </div>
         </div>
 
@@ -851,12 +875,16 @@
         <!-- RODAPÉ DA VITRINE -->
         <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+           
+
                 <div>
                     <div class="text-white text-xl font-serif font-black tracking-widest leading-none mb-1" id="footer-nome">IMOBILIÁRIA</div>
                     <p id="footer-creci" class="text-[10px] text-slate-500 font-bold uppercase">CRECI</p>
                     <p class="text-slate-400 mt-2 leading-relaxed" id="footer-sobre">
                         Intermediação e consultoria imobiliária com transparência e segurança jurídica.
                     </p>
+                    <!-- CONTÊINER DINÂMICO DE REDES SOCIAIS -->
+                    <div id="footer-redes-sociais" class="flex items-center gap-2.5 mt-4 flex-wrap"></div>
                 </div>
 
                 <div>
@@ -982,14 +1010,29 @@
                 tituloNegocie.innerText = `Negocie seu imóvel com a ${imob.nome_fantasia}`;
             }
 
-            const txtNegocie = document.getElementById('negocie-texto-cidade');
+const txtNegocie = document.getElementById('negocie-texto-cidade');
             if (txtNegocie) {
                 const pracaAtuacao = (imob.cidade && imob.cidade.trim()) 
                     ? `em ${imob.cidade} e região` 
                     : 'em sua região';
                 txtNegocie.innerText = `Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação ${pracaAtuacao}.`;
             }
-
+// ATUALIZAÇÃO DINÂMICA DA FACHADA/BANNER DA IMOBILIÁRIA (COM FALLBACK)
+            const imgFachada = document.getElementById('img-negocie-fachada') || document.querySelector('#secao-negocie img');
+            if (imgFachada) {
+                const fotoFachada = (imob.banner_url && imob.banner_url.trim() !== '') 
+                    ? imob.banner_url.trim() 
+                    : ((imob.fundo_url && imob.fundo_url.trim() !== '') ? imob.fundo_url.trim() : '');
+                
+                if (fotoFachada) {
+                    imgFachada.src = fotoFachada;
+                    imgFachada.onerror = function() {
+                        this.src = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
+                    };
+                } else {
+                    imgFachada.src = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
+                }
+            }
             document.querySelectorAll('.nome-imob-termo').forEach(el => {
                 el.innerText = imob.nome_fantasia;
             });
@@ -999,10 +1042,103 @@
             document.getElementById('footer-telefone').innerHTML = `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${telefoneExibicao || 'Não informado'}`;
             document.getElementById('footer-email').innerHTML = `<i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> ${imob.email_admin || 'Não informado'}`;
             
-            const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
+  const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
-        }
 
+  // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS (TOPO E RODAPÉ)
+            const formatarLinkRede = (link, tipo) => {
+                if (!link) return '';
+                let url = link.trim();
+                if (url.startsWith('@')) {
+                    if (tipo === 'instagram') return `https://instagram.com/${url.substring(1)}`;
+                    if (tipo === 'facebook') return `https://facebook.com/${url.substring(1)}`;
+                    if (tipo === 'youtube') return `https://youtube.com/${url.substring(1)}`;
+                    if (tipo === 'linkedin') return `https://linkedin.com/in/${url.substring(1)}`;
+                }
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    return `https://${url}`;
+                }
+                return url;
+            };
+
+   // 1. Redes Oficiais + WhatsApp na FAIXA PRETA (Cores de marca com alto contraste no fundo escuro)
+            const containerFaixaPreta = document.getElementById('faixa-preta-redes-sociais');
+            if (containerFaixaPreta) {
+                let htmlFaixaPreta = '';
+
+                // Botão Oficial WhatsApp (Verde #25D366)
+                if (imob.whatsapp_contato && imob.whatsapp_contato.trim() !== '') {
+                    const zapUrl = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
+                    htmlFaixaPreta += `
+                        <a href="${zapUrl}" target="_blank" rel="noopener noreferrer" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#25D366] shadow-md hover:scale-110 transition-transform" 
+                           title="Falar no WhatsApp com ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-whatsapp text-base"></i>
+                        </a>`;
+                }
+
+                // Botão Oficial Instagram (Degradê autêntico)
+                if (imob.instagram && imob.instagram.trim() !== '') {
+                    htmlFaixaPreta += `
+                        <a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] shadow-md hover:scale-110 transition-transform" 
+                           title="Instagram da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-instagram text-sm"></i>
+                        </a>`;
+                }
+
+                // Botão Oficial Facebook (Azul #1877F2)
+                if (imob.facebook && imob.facebook.trim() !== '') {
+                    htmlFaixaPreta += `
+                        <a href="${formatarLinkRede(imob.facebook, 'facebook')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#1877F2] shadow-md hover:scale-110 transition-transform" 
+                           title="Facebook da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-facebook-f text-sm"></i>
+                        </a>`;
+                }
+
+                // Botão Oficial YouTube (Vermelho #FF0000)
+                if (imob.youtube && imob.youtube.trim() !== '') {
+                    htmlFaixaPreta += `
+                        <a href="${formatarLinkRede(imob.youtube, 'youtube')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#FF0000] shadow-md hover:scale-110 transition-transform" 
+                           title="Canal no YouTube da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-youtube text-sm"></i>
+                        </a>`;
+                }
+
+                // Botão Oficial LinkedIn (Azul #0A66C2)
+                if (imob.linkedin && imob.linkedin.trim() !== '') {
+                    htmlFaixaPreta += `
+                        <a href="${formatarLinkRede(imob.linkedin, 'linkedin')}" target="_blank" rel="noopener noreferrer" 
+                           class="w-8 h-8 rounded-full flex items-center justify-center text-white bg-[#0A66C2] shadow-md hover:scale-110 transition-transform" 
+                           title="LinkedIn da ${imob.nome_fantasia}">
+                            <i class="fa-brands fa-linkedin-in text-sm"></i>
+                        </a>`;
+                }
+
+                containerFaixaPreta.innerHTML = htmlFaixaPreta;
+            }
+
+            // 2. Redes no Rodapé (Estilo escuro harmonioso)
+            const containerRedes = document.getElementById('footer-redes-sociais');
+            if (containerRedes) {
+                let htmlRedes = '';
+                if (imob.instagram && imob.instagram.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-pink-500 hover:text-pink-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="Instagram"><i class="fa-brands fa-instagram"></i></a>`;
+                }
+                if (imob.facebook && imob.facebook.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.facebook, 'facebook')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-blue-500 hover:text-blue-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>`;
+                }
+                if (imob.youtube && imob.youtube.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.youtube, 'youtube')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-red-500 hover:text-red-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="YouTube"><i class="fa-brands fa-youtube"></i></a>`;
+                }
+                if (imob.linkedin && imob.linkedin.trim() !== '') {
+                    htmlRedes += `<a href="${formatarLinkRede(imob.linkedin, 'linkedin')}" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 hover:border-sky-500 hover:text-sky-400 text-slate-300 flex items-center justify-center transition text-sm shadow" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>`;
+                }
+                containerRedes.innerHTML = htmlRedes;
+            }
+        }
         function exibirVitrineNaoEncontrada() {
             document.getElementById('header-razao').innerText = 'Vitrine Não Localizada';
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
@@ -1121,9 +1257,27 @@
                 if (imovel.finalidade === 'Ambos') badgeFoto = 'Venda & Locação';
                 else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') badgeFoto = 'Locação';
 
-                const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
+   
+const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
                 const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
                 const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
+
+                // Detecção inteligente de Vídeo Tour
+                const temVideo = imovel.video_url && imovel.video_url.trim() !== '';
+                const videoUrlTratada = temVideo ? imovel.video_url.trim().replace(/'/g, "\\'") : '';
+                const tituloTratado = (imovel.titulo || 'Imóvel').replace(/'/g, "\\'");
+
+                const badgeVideoHtml = temVideo ? `
+                    <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
+                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow flex items-center gap-1.5 cursor-pointer transition animate-pulse">
+                        <i class="fa-brands fa-youtube"></i> Vídeo Tour
+                    </button>` : '';
+
+                const botaoVideoAcao = temVideo ? `
+                    <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Assistir Vídeo Tour">
+                        <i class="fa-brands fa-youtube text-sm"></i> Tour
+                    </button>` : '';
 
                 const card = `
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
@@ -1133,6 +1287,7 @@
                             <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow">
                                 ${badgeFoto}
                             </div>
+                            ${badgeVideoHtml}
                             <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm">
                                 Ref: ${imovel.codigo_ref}
                             </div>
@@ -1162,7 +1317,8 @@
                                     ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
                                 </div>
 
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    ${botaoVideoAcao}
                                     <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
                                             class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                                         <i class="fa-regular fa-envelope"></i> Mensagem
@@ -1176,6 +1332,7 @@
                         </div>
                     </div>
                 </div>`;
+
                 container.innerHTML += card;
             });
         }
@@ -1272,9 +1429,31 @@
 
             document.getElementById('modal-lead').classList.remove('hidden');
         }
-
-        function fecharModalLead() {
+function fecharModalLead() {
             document.getElementById('modal-lead').classList.add('hidden');
+        }
+
+        // CONTROLADOR DO VÍDEO TOUR DO YOUTUBE
+        function extrairEmbedYouTube(url) {
+            if (!url) return '';
+            const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(regExp);
+            if (match && match[1]) {
+                return `https://www.youtube-nocookie.com/embed/${match[1]}?autoplay=1&rel=0`;
+            }
+            return url;
+        }
+
+        function abrirModalVideo(url, titulo) {
+            const embedUrl = extrairEmbedYouTube(url);
+            document.getElementById('iframe-video-tour').src = embedUrl;
+            document.getElementById('modal-video-titulo').innerText = titulo ? `Vídeo Tour • ${titulo}` : 'Vídeo Tour do Imóvel';
+            document.getElementById('modal-video-tour').classList.remove('hidden');
+        }
+
+        function fecharModalVideo() {
+            document.getElementById('modal-video-tour').classList.add('hidden');
+            document.getElementById('iframe-video-tour').src = '';
         }
 
         function alternarBotaoLGPD(marcado) {

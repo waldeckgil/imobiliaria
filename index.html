@@ -505,7 +505,7 @@
                         </div>
                     </div>
 
-    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
+                    <a href="#contato" class="hover:text-blue-700 transition uppercase tracking-wide py-2">
                         Fale Conosco
                     </a>
 
@@ -517,7 +517,7 @@
             </div>
         </header>
 
- <!-- FAIXA PRETA DE BUSCA -->
+        <!-- FAIXA PRETA DE BUSCA -->
         <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
             <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 flex-wrap">
@@ -628,7 +628,7 @@
         <!-- SEÇÃO: "NEGOCIE SEU IMÓVEL / AVALIE SEU IMÓVEL" -->
         <section id="secao-negocie" class="bg-slate-50 py-16 px-4 sm:px-8 border-b border-gray-200">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-   <div class="lg:col-span-7 space-y-6">
+                <div class="lg:col-span-7 space-y-6">
                     <div class="rounded-2xl overflow-hidden shadow-md max-h-72">
                         <img id="img-negocie-fachada" 
                              src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80" 
@@ -773,7 +773,8 @@
                         <label class="block font-bold text-slate-700 mb-1">Mensagem (opcional)</label>
                         <textarea id="lead-msg" rows="3" class="w-full border border-gray-300 rounded p-2.5 outline-none focus:border-blue-600" placeholder="Gostaria de agendar uma visita para este imóvel ou tirar dúvidas..."></textarea>
                     </div>
-<button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
+
+                    <button type="submit" id="btn-submit-lead" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-2 text-sm transition cursor-pointer hover:opacity-95">
                         <i class="fa-regular fa-paper-plane"></i>
                         <span>Enviar Mensagem</span>
                     </button>
@@ -875,8 +876,6 @@
         <!-- RODAPÉ DA VITRINE -->
         <footer id="contato" class="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-8 border-t border-slate-800">
             <div class="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-           
-
                 <div>
                     <div class="text-white text-xl font-serif font-black tracking-widest leading-none mb-1" id="footer-nome">IMOBILIÁRIA</div>
                     <p id="footer-creci" class="text-[10px] text-slate-500 font-bold uppercase">CRECI</p>
@@ -925,6 +924,9 @@
         let tenantAtual = null;
         let listaImoveisCache = [];
         let operacaoPendenteLGPD = null;
+        
+        // CACHE DE GALERIA PARA NAVEGAÇÃO DOS CARDS
+        const galeriaImoveisCache = {};
 
         function identificarTenant() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1010,14 +1012,15 @@
                 tituloNegocie.innerText = `Negocie seu imóvel com a ${imob.nome_fantasia}`;
             }
 
-const txtNegocie = document.getElementById('negocie-texto-cidade');
+            const txtNegocie = document.getElementById('negocie-texto-cidade');
             if (txtNegocie) {
                 const pracaAtuacao = (imob.cidade && imob.cidade.trim()) 
                     ? `em ${imob.cidade} e região` 
                     : 'em sua região';
                 txtNegocie.innerText = `Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação ${pracaAtuacao}.`;
             }
-// ATUALIZAÇÃO DINÂMICA DA FACHADA/BANNER DA IMOBILIÁRIA (COM FALLBACK)
+
+            // ATUALIZAÇÃO DINÂMICA DA FACHADA/BANNER DA IMOBILIÁRIA (COM FALLBACK)
             const imgFachada = document.getElementById('img-negocie-fachada') || document.querySelector('#secao-negocie img');
             if (imgFachada) {
                 const fotoFachada = (imob.banner_url && imob.banner_url.trim() !== '') 
@@ -1033,6 +1036,7 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                     imgFachada.src = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
                 }
             }
+
             document.querySelectorAll('.nome-imob-termo').forEach(el => {
                 el.innerText = imob.nome_fantasia;
             });
@@ -1042,10 +1046,10 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
             document.getElementById('footer-telefone').innerHTML = `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${telefoneExibicao || 'Não informado'}`;
             document.getElementById('footer-email').innerHTML = `<i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> ${imob.email_admin || 'Não informado'}`;
             
-  const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
+            const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
 
-  // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS (TOPO E RODAPÉ)
+            // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS (TOPO E RODAPÉ)
             const formatarLinkRede = (link, tipo) => {
                 if (!link) return '';
                 let url = link.trim();
@@ -1061,12 +1065,11 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                 return url;
             };
 
-   // 1. Redes Oficiais + WhatsApp na FAIXA PRETA (Cores de marca com alto contraste no fundo escuro)
+            // 1. Redes Oficiais + WhatsApp na FAIXA PRETA
             const containerFaixaPreta = document.getElementById('faixa-preta-redes-sociais');
             if (containerFaixaPreta) {
                 let htmlFaixaPreta = '';
 
-                // Botão Oficial WhatsApp (Verde #25D366)
                 if (imob.whatsapp_contato && imob.whatsapp_contato.trim() !== '') {
                     const zapUrl = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
                     htmlFaixaPreta += `
@@ -1077,7 +1080,6 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                         </a>`;
                 }
 
-                // Botão Oficial Instagram (Degradê autêntico)
                 if (imob.instagram && imob.instagram.trim() !== '') {
                     htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.instagram, 'instagram')}" target="_blank" rel="noopener noreferrer" 
@@ -1087,7 +1089,6 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                         </a>`;
                 }
 
-                // Botão Oficial Facebook (Azul #1877F2)
                 if (imob.facebook && imob.facebook.trim() !== '') {
                     htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.facebook, 'facebook')}" target="_blank" rel="noopener noreferrer" 
@@ -1097,7 +1098,6 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                         </a>`;
                 }
 
-                // Botão Oficial YouTube (Vermelho #FF0000)
                 if (imob.youtube && imob.youtube.trim() !== '') {
                     htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.youtube, 'youtube')}" target="_blank" rel="noopener noreferrer" 
@@ -1107,7 +1107,6 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                         </a>`;
                 }
 
-                // Botão Oficial LinkedIn (Azul #0A66C2)
                 if (imob.linkedin && imob.linkedin.trim() !== '') {
                     htmlFaixaPreta += `
                         <a href="${formatarLinkRede(imob.linkedin, 'linkedin')}" target="_blank" rel="noopener noreferrer" 
@@ -1120,7 +1119,7 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                 containerFaixaPreta.innerHTML = htmlFaixaPreta;
             }
 
-            // 2. Redes no Rodapé (Estilo escuro harmonioso)
+            // 2. Redes no Rodapé
             const containerRedes = document.getElementById('footer-redes-sociais');
             if (containerRedes) {
                 let htmlRedes = '';
@@ -1139,6 +1138,7 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                 containerRedes.innerHTML = htmlRedes;
             }
         }
+
         function exibirVitrineNaoEncontrada() {
             document.getElementById('header-razao').innerText = 'Vitrine Não Localizada';
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
@@ -1251,14 +1251,41 @@ const txtNegocie = document.getElementById('negocie-texto-cidade');
                 }
 
                 const precoFormatado = Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                const fotoCapa = imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80';
                 
+                // UNIFICAÇÃO DA GALERIA DE FOTOS (FOTO CAPA + ARRAY DE FOTOS)
+                const fallbackImg = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80';
+                const fotosUnificadas = [];
+
+                if (imovel.foto_capa && typeof imovel.foto_capa === 'string' && imovel.foto_capa.trim() !== '') {
+                    fotosUnificadas.push(imovel.foto_capa.trim());
+                }
+
+                if (Array.isArray(imovel.fotos)) {
+                    imovel.fotos.forEach(f => {
+                        if (f && typeof f === 'string' && f.trim() !== '' && !fotosUnificadas.includes(f.trim())) {
+                            fotosUnificadas.push(f.trim());
+                        }
+                    });
+                }
+
+                if (fotosUnificadas.length === 0) {
+                    fotosUnificadas.push(fallbackImg);
+                }
+
+                // Armazena no cache local da sessão para navegação rápida
+                galeriaImoveisCache[imovel.id] = {
+                    fotos: fotosUnificadas,
+                    indiceAtual: 0
+                };
+
+                const totalFotos = fotosUnificadas.length;
+                const fotoInicial = fotosUnificadas[0];
+
                 let badgeFoto = 'Venda';
                 if (imovel.finalidade === 'Ambos') badgeFoto = 'Venda & Locação';
                 else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') badgeFoto = 'Locação';
 
-   
-const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
+                const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
                 const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
                 const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
 
@@ -1269,7 +1296,7 @@ const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalid
 
                 const badgeVideoHtml = temVideo ? `
                     <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
-                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow flex items-center gap-1.5 cursor-pointer transition animate-pulse">
+                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow flex items-center gap-1.5 cursor-pointer transition animate-pulse z-10">
                         <i class="fa-brands fa-youtube"></i> Vídeo Tour
                     </button>` : '';
 
@@ -1279,18 +1306,41 @@ const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalid
                         <i class="fa-brands fa-youtube text-sm"></i> Tour
                     </button>` : '';
 
+                // CONTROLES DE NAVEGAÇÃO DA GALERIA
+                const controlesGaleriaHtml = totalFotos > 1 ? `
+                    <!-- Seta Esquerda -->
+                    <button type="button" onclick="navegarFotoCard(event, '${imovel.id}', -1)" 
+                            class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <!-- Seta Direita -->
+                    <button type="button" onclick="navegarFotoCard(event, '${imovel.id}', 1)" 
+                            class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <!-- Contador de Fotos -->
+                    <div id="badge-contador-${imovel.id}" class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 z-10">
+                        <i class="fa-solid fa-camera"></i> <span id="txt-contador-${imovel.id}">1/${totalFotos}</span>
+                    </div>
+                ` : '';
+
                 const card = `
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
                     <div class="grid grid-cols-1 md:grid-cols-12">
-                        <div class="md:col-span-5 relative bg-slate-900 min-h-[240px]">
-                            <img src="${fotoCapa}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px]">
-                            <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow">
+                        <div class="md:col-span-5 relative bg-slate-900 min-h-[240px] select-none group">
+                            <img id="img-card-${imovel.id}" src="${fotoInicial}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px] transition-opacity duration-300">
+                            
+                            <div class="absolute top-3 left-3 bg-blue-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow z-10">
                                 ${badgeFoto}
                             </div>
+                            
                             ${badgeVideoHtml}
-                            <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm">
+
+                            <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm z-10">
                                 Ref: ${imovel.codigo_ref}
                             </div>
+
+                            ${controlesGaleriaHtml}
                         </div>
 
                         <div class="md:col-span-7 p-5 flex flex-col justify-between">
@@ -1335,6 +1385,30 @@ const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalid
 
                 container.innerHTML += card;
             });
+        }
+
+        // CONTROLADOR DE NAVEGAÇÃO DA GALERIA NO CARD
+        function navegarFotoCard(event, imovelId, direcao) {
+            if (event) event.stopPropagation();
+
+            const galeria = galeriaImoveisCache[imovelId];
+            if (!galeria || !galeria.fotos || galeria.fotos.length <= 1) return;
+
+            const total = galeria.fotos.length;
+            galeria.indiceAtual = (galeria.indiceAtual + direcao + total) % total;
+
+            const imgElement = document.getElementById(`img-card-${imovelId}`);
+            const contadorElement = document.getElementById(`txt-contador-${imovelId}`);
+
+            if (imgElement) {
+                imgElement.style.opacity = '0.7';
+                imgElement.src = galeria.fotos[galeria.indiceAtual];
+                imgElement.onload = () => { imgElement.style.opacity = '1'; };
+            }
+
+            if (contadorElement) {
+                contadorElement.innerText = `${galeria.indiceAtual + 1}/${total}`;
+            }
         }
 
         function buscarCodigo() {
@@ -1429,7 +1503,8 @@ const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalid
 
             document.getElementById('modal-lead').classList.remove('hidden');
         }
-function fecharModalLead() {
+
+        function fecharModalLead() {
             document.getElementById('modal-lead').classList.add('hidden');
         }
 
