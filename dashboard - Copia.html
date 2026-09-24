@@ -3424,57 +3424,9 @@ function alternarVisaoFinanceira(abrir) {
                     .eq('imobiliaria_id', imobId)
                     .eq('mes_referencia', mesRef);
                 
-  window.cachePagamentosCorretoresMes = pagamentosCorretoresData || [];
+                window.cachePagamentosCorretoresMes = pagamentosCorretoresData || [];
 
-                // 2. MOTOR AUTO-SYNC & LOCAÇÕES (MENSALIDADES RECEBÍVEIS)
-                // Sincroniza automaticamente qualquer contrato ativo que ainda não teve fatura gerada para este mês
-                if (mesRef) {
-                    try {
-                        const { data: contratosAtivos } = await supabaseClient
-                            .from('contratos_locacao')
-                            .select('*')
-                            .eq('imobiliaria_id', imobId)
-                            .eq('status', 'Ativo');
-
-                        if (contratosAtivos && contratosAtivos.length > 0) {
-                            const { data: faturasExistentes } = await supabaseClient
-                                .from('locacao_mensalidades_recebiveis')
-                                .select('contrato_id')
-                                .eq('imobiliaria_id', imobId)
-                                .eq('mes_referencia', mesRef);
-
-                            const idsComFatura = new Set((faturasExistentes || []).map(f => f.contrato_id));
-
-                            for (const ct of contratosAtivos) {
-                                if (!idsComFatura.has(ct.id)) {
-                                    const [mNum, aNum] = mesRef.split('/').map(Number);
-                                    const diaVenc = ct.dia_vencimento_aluguel || 10;
-                                    const dataVencCalculada = `${aNum}-${String(mNum).padStart(2, '0')}-${String(diaVenc).padStart(2, '0')}`;
-
-                                    await supabaseClient
-                                        .from('locacao_mensalidades_recebiveis')
-                                        .insert([{
-                                            imobiliaria_id: imobId,
-                                            contrato_id: ct.id,
-                                            imovel_id: ct.imovel_id,
-                                            mes_referencia: mesRef,
-                                            data_vencimento: dataVencCalculada,
-                                            valor_aluguel: Number(ct.valor_aluguel_bruto || 0),
-                                            taxa_adm_pct: Number(ct.taxa_administracao_pct || 10),
-                                            valor_taxa_imobiliaria: Number(ct.valor_comissao_imobiliaria || 0),
-                                            valor_repasse_proprietario: Number(ct.valor_repasse_proprietario || 0),
-                                            status_inquilino: 'Pendente',
-                                            status_repasse: 'Aguardando'
-                                        }]);
-                                }
-                            }
-                        }
-                    } catch (errSync) {
-                        console.warn('[AUTO-SYNC MENSALIDADES] Alerta:', errSync);
-                    }
-                }
-
-                // Consulta atualizada com os recebíveis já sincronizados
+                // 2. LOCAÇÕES (MENSALIDADES RECEBÍVEIS)
                 let queryLoc = supabaseClient
                     .from('locacao_mensalidades_recebiveis')
                     .select('*, imoveis(id, codigo_ref, titulo, corretor_responsavel_id), contratos_locacao(id, cliente_id, cliente_nome, cliente_cpf_cnpj)')
@@ -3483,6 +3435,7 @@ function alternarVisaoFinanceira(abrir) {
                 
                 if (mesRef) queryLoc = queryLoc.eq('mes_referencia', mesRef);
                 const { data: mensalidades } = await queryLoc;
+
                 let totalAluguelBruto = 0;
                 let taxaImobQuitada = 0;
                 let taxaImobPendente = 0;
