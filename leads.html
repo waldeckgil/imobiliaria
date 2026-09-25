@@ -68,9 +68,8 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- CONTAINER FLUTUANTE GLOBAL DE TOASTS (NOTIFICAÇÕES DO SISTEMA) -->
-    <div id="container-toasts" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none p-2"></div>
-
+  <!-- CONTAINER FLUTUANTE GLOBAL DE TOASTS (CENTRALIZADO NO CENTRO DO TOPO DA TELA) -->
+    <div id="container-toasts" class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 max-w-lg w-full pointer-events-none p-3"></div>
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
         <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto justify-between">
@@ -1036,23 +1035,22 @@
                 icone = 'fa-circle-xmark text-red-400';
                 barCor = 'bg-red-400';
             }
-
-            const toast = document.createElement('div');
+const toast = document.createElement('div');
             toast.id = id;
-            toast.className = `animar-toast-in pointer-events-auto border rounded-xl p-3.5 shadow-2xl backdrop-blur-md relative overflow-hidden flex items-start gap-3 text-xs ${bgEstilo}`;
+            toast.className = `animar-toast-in pointer-events-auto border-2 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl relative overflow-hidden flex items-start gap-3.5 text-xs sm:text-sm w-full ring-2 ring-black/40 ${bgEstilo}`;
 
             toast.innerHTML = `
-                <div class="text-base mt-0.5 flex-shrink-0">
+                <div class="text-xl sm:text-2xl mt-0.5 flex-shrink-0 drop-shadow">
                     <i class="fa-solid ${icone}"></i>
                 </div>
-                <div class="flex-1 pr-2 space-y-0.5">
-                    <h5 class="font-black text-white text-xs tracking-wide">${titulo}</h5>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">${mensagem}</p>
+                <div class="flex-1 pr-2 space-y-1">
+                    <h5 class="font-black text-white text-sm sm:text-base tracking-wide uppercase flex items-center gap-1.5">${titulo}</h5>
+                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-medium">${mensagem}</p>
                 </div>
-                <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-0.5 cursor-pointer">
-                    <i class="fa-solid fa-xmark text-xs"></i>
+                <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar aviso">
+                    <i class="fa-solid fa-xmark text-base"></i>
                 </button>
-                <div class="absolute bottom-0 left-0 h-1 ${barCor} transition-all duration-[${duracaoMs}ms] w-full" id="bar-${id}"></div>
+                <div class="absolute bottom-0 left-0 h-1.5 ${barCor} transition-all duration-[${duracaoMs}ms] w-full" id="bar-${id}"></div>
             `;
 
             container.appendChild(toast);
@@ -1730,9 +1728,9 @@
             const statusAtual = lead.status || 'Novo';
             const estObj = ESTAGIOS_FUNIL.find(e => e.chave === statusAtual) || ESTAGIOS_FUNIL[0];
 
-            // Renderiza badge grande com cor viva no topo
-            badgeTopo.className = `px-3.5 py-1 rounded-xl text-xs font-black uppercase border shadow-md inline-flex items-center gap-2 ${estObj.badgeClasses}`;
-            badgeTopo.innerHTML = `<i class="fa-solid ${estObj.icone} text-sm"></i> <span>${estObj.rotulo.toUpperCase()}</span>`;
+// Renderiza badge ainda maior, mais visível e imponente no topo
+            badgeTopo.className = `px-4 sm:px-5 py-1.5 rounded-xl text-xs sm:text-sm font-black uppercase border-2 shadow-lg tracking-wider inline-flex items-center gap-2.5 ${estObj.badgeClasses}`;
+            badgeTopo.innerHTML = `<i class="fa-solid ${estObj.icone} text-base"></i> <span class="tracking-wide">${estObj.rotulo.toUpperCase()}</span>`;
 
             // Se tiver visita agendada, destaca no topo com data e hora
             if (lead.data_agendamento && alertVisita && textoVisita) {
