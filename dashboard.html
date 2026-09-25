@@ -398,47 +398,83 @@
                         </button>
                     </div>
                 </div>
-                <!-- CARDS DE METRICA DO EXTRATO (5 CARDS AUDITADOS E INTERLIGADOS) -->
+        
+                <!-- CARDS DE METRICA DO EXTRATO (5 CARDS COM INTERROGAÇÃO (?) EXPLICATIVA) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     <!-- CARD 1 -->
-                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-purple-500 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Aluguéis Bruto do Mês</span>
-                        <span id="fin-kpi-aluguel-bruto" class="text-2xl font-black text-white font-mono mt-1 block">R$ 0,00</span>
-                        <span class="text-[10px] text-purple-400 block mt-0.5">Cobrança total dos inquilinos</span>
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-purple-500 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Aluguéis Bruto do Mês</span>
+                                <button type="button" onclick="abrirAjudaCardFin(1)" class="text-purple-400/80 hover:text-purple-300 p-0.5 transition cursor-pointer" title="Entenda esta métrica">
+                                    <i class="fa-solid fa-circle-question text-xs"></i>
+                                </button>
+                            </div>
+                            <span id="fin-kpi-aluguel-bruto" class="text-2xl font-black text-white font-mono mt-1 block">R$ 0,00</span>
+                        </div>
+                        <span class="text-[10px] text-purple-400 block mt-1">Cobrança total dos inquilinos</span>
                     </div>
 
                     <!-- CARD 2 -->
-                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-emerald-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Taxa Imobiliária (Locação)</span>
-                        <span id="fin-kpi-taxa-imob-recebida" class="text-2xl font-black text-emerald-400 font-mono mt-1 block">R$ 0,00</span>
-                        <div class="flex items-center justify-between text-[10px] mt-0.5">
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-emerald-400 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Taxa Imobiliária (Locação)</span>
+                                <button type="button" onclick="abrirAjudaCardFin(2)" class="text-emerald-400/80 hover:text-emerald-300 p-0.5 transition cursor-pointer" title="Entenda esta métrica">
+                                    <i class="fa-solid fa-circle-question text-xs"></i>
+                                </button>
+                            </div>
+                            <span id="fin-kpi-taxa-imob-recebida" class="text-2xl font-black text-emerald-400 font-mono mt-1 block">R$ 0,00</span>
+                        </div>
+                        <div class="flex items-center justify-between text-[10px] mt-1">
                             <span class="text-emerald-400 font-bold">Quitado</span>
                             <span id="fin-kpi-taxa-imob-pendente" class="text-amber-400 font-mono font-bold">Pendente: R$ 0,00</span>
                         </div>
                     </div>
 
                     <!-- CARD 3 -->
-                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-cyan-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Repasse aos Proprietários</span>
-                        <span id="fin-kpi-repasse-proprietarios" class="text-2xl font-black text-cyan-300 font-mono mt-1 block">R$ 0,00</span>
-                        <div class="flex items-center justify-between text-[10px] mt-0.5">
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-cyan-400 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Repasse aos Proprietários</span>
+                                <button type="button" onclick="abrirAjudaCardFin(3)" class="text-cyan-400/80 hover:text-cyan-300 p-0.5 transition cursor-pointer" title="Entenda esta métrica">
+                                    <i class="fa-solid fa-circle-question text-xs"></i>
+                                </button>
+                            </div>
+                            <span id="fin-kpi-repasse-proprietarios" class="text-2xl font-black text-cyan-300 font-mono mt-1 block">R$ 0,00</span>
+                        </div>
+                        <div class="flex items-center justify-between text-[10px] mt-1">
                             <span id="fin-kpi-repasse-realizado" class="text-cyan-400 font-mono">Repassado: R$ 0,00</span>
                             <span id="fin-kpi-repasse-pendente" class="text-amber-300 font-mono">Aguardando: R$ 0,00</span>
                         </div>
                     </div>
 
                     <!-- CARD 4 -->
-                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-amber-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Comissões Imob (Vendas)</span>
-                        <span id="fin-kpi-comissao-vendas" class="text-2xl font-black text-amber-300 font-mono mt-1 block">R$ 0,00</span>
-                        <span id="fin-kpi-vgv-vendas-mes" class="text-[10px] text-slate-400 block mt-0.5">VGV fechado: R$ 0,00</span>
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-amber-400 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Comissões Imob (Vendas)</span>
+                                <button type="button" onclick="abrirAjudaCardFin(4)" class="text-amber-400/80 hover:text-amber-300 p-0.5 transition cursor-pointer" title="Entenda esta métrica">
+                                    <i class="fa-solid fa-circle-question text-xs"></i>
+                                </button>
+                            </div>
+                            <span id="fin-kpi-comissao-vendas" class="text-2xl font-black text-amber-300 font-mono mt-1 block">R$ 0,00</span>
+                        </div>
+                        <span id="fin-kpi-vgv-vendas-mes" class="text-[10px] text-slate-400 block mt-1">VGV fechado: R$ 0,00</span>
                     </div>
 
                     <!-- CARD 5 -->
-                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-blue-400 border border-slate-800">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Tot. Comissões / Corretores</span>
-                        <span id="fin-kpi-comissao-corretores" class="text-2xl font-black text-blue-300 font-mono mt-1 block">R$ 0,00</span>
-                        <span id="fin-kpi-qtd-vendas-corretores" class="text-[10px] text-slate-400 block mt-0.5">0 repasses de equipe</span>
+                    <div class="bg-slate-950 p-4 rounded-xl border-l-4 border-l-blue-400 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">Tot. Comissões / Corretores</span>
+                                <button type="button" onclick="abrirAjudaCardFin(5)" class="text-blue-400/80 hover:text-blue-300 p-0.5 transition cursor-pointer" title="Entenda esta métrica">
+                                    <i class="fa-solid fa-circle-question text-xs"></i>
+                                </button>
+                            </div>
+                            <span id="fin-kpi-comissao-corretores" class="text-2xl font-black text-blue-300 font-mono mt-1 block">R$ 0,00</span>
+                        </div>
+                        <span id="fin-kpi-qtd-vendas-corretores" class="text-[10px] text-slate-400 block mt-1">0 repasses de equipe</span>
                     </div>
                 </div>
 
@@ -5678,7 +5714,169 @@ window.abrirModalPagarCorretor = abrirModalPagarCorretor;
         window.carregarMeusTickets = carregarMeusTickets;
         window.enviarNovoTicket = enviarNovoTicket;
 
+ // =========================================================================
+        // MANUAL DIDÁTICO DOS 5 CARDS FINANCEIROS (?)
+        // =========================================================================
+        const GUIA_CARDS_FINANCEIROS = {
+            1: {
+                titulo: "Total Aluguéis Bruto do Mês",
+                cor: "purple",
+                borda: "border-purple-500",
+                badge: "bg-purple-950 text-purple-300 border-purple-800",
+                icone: "fa-receipt text-purple-400",
+                oQueE: "Volume financeiro total sob cobrança da carteira de locação da imobiliária no mês de referência selecionado.",
+                comoFunciona: "Representa a soma integral de todos os boletos e PIX de aluguel emitidos para os inquilinos que possuem contrato ativo na competência.",
+                destaques: [
+                    { label: "Finalidade:", valor: "Mostra o tamanho e a capacidade total de movimentação da carteira de locação administrada." },
+                    { label: "Importante:", valor: "Este valor não pertence integralmente à imobiliária; a maior parte é repassada aos proprietários dos imóveis." }
+                ]
+            },
+            2: {
+                titulo: "Taxa Imobiliária (Locação)",
+                cor: "emerald",
+                borda: "border-emerald-500",
+                badge: "bg-emerald-950 text-emerald-400 border-emerald-800",
+                icone: "fa-percent text-emerald-400",
+                oQueE: "Faturamento líquido próprio da imobiliária gerado pela taxa de administração (ex: 8%, 10% ou 12%) cobrada sobre os aluguéis.",
+                comoFunciona: "Conforme cada inquilino quita seu aluguel, a fatia da taxa é retida automaticamente pela imobiliária como receita realizada.",
+                destaques: [
+                    { label: "Quitado (Verde):", valor: "Dinheiro que já entrou no caixa da imobiliária porque os inquilinos já efetuaram o pagamento." },
+                    { label: "Pendente (Amarelo):", valor: "Receita prevista que ainda aguarda o pagamento dos inquilinos que estão em aberto na competência." }
+                ]
+            },
+            3: {
+                titulo: "Repasse aos Proprietários",
+                cor: "cyan",
+                borda: "border-cyan-500",
+                badge: "bg-cyan-950 text-cyan-300 border-cyan-800",
+                icone: "fa-hand-holding-dollar text-cyan-400",
+                oQueE: "Montante líquido pertencente aos donos dos imóveis alugados (Aluguel Bruto pago menos a taxa de administração da imobiliária).",
+                comoFunciona: "Indica o dinheiro em custódia que deve ser transferido via PIX ou TED bancário para cada proprietário.",
+                destaques: [
+                    { label: "Repassado:", valor: "Valores já transferidos formalmente aos proprietários com quitação registrada." },
+                    { label: "Disponível/Aguardando:", valor: "Aluguéis quitados pelos inquilinos que já estão no caixa da imobiliária aguardando a transferência ao proprietário." }
+                ]
+            },
+            4: {
+                titulo: "Comissões Imob (Vendas)",
+                cor: "amber",
+                borda: "border-amber-500",
+                badge: "bg-amber-950 text-amber-300 border-amber-800",
+                icone: "fa-handshake text-amber-400",
+                oQueE: "Faturamento da imobiliária com intermediação de compras e vendas de imóveis fechadas no mês.",
+                comoFunciona: "Calcula a comissão total negociada no fechamento (ex: 6%) deduzindo a comissão devida ao corretor fechador.",
+                destaques: [
+                    { label: "VGV Fechado:", valor: "Valor Geral de Vendas — soma do preço total de venda de todos os imóveis fechados no mês." },
+                    { label: "Diferencial:", valor: "Ao contrário da locação (recorrente), a receita de vendas é pontual e calculada sobre contratos de compra e venda." }
+                ]
+            },
+            5: {
+                titulo: "Tot. Comissões / Corretores",
+                cor: "blue",
+                borda: "border-blue-500",
+                badge: "bg-blue-950 text-blue-300 border-blue-800",
+                icone: "fa-users-viewfinder text-blue-400",
+                oQueE: "Montante total de honorários destinados à remuneração dos corretores da equipe comercial.",
+                comoFunciona: "Soma as fatias de comissão devidas aos corretores fechadores de vendas e corretores responsáveis por locações no mês.",
+                destaques: [
+                    { label: "Comissões Mapeadas:", valor: "Quantidade de negócios concluídos com participação de corretores na competência." },
+                    { label: "Extrato Individual:", valor: "Acesse a seção 3 do extrato abaixo para auditar os valores de cada corretor e emitir adiantamentos." }
+                ]
+            }
+        };
+
+        function abrirAjudaCardFin(cardId) {
+            const info = GUIA_CARDS_FINANCEIROS[cardId];
+            if (!info) return;
+
+            const modal = document.getElementById('modal-ajuda-card-financeiro');
+            const box = document.getElementById('ajuda-card-fin-box');
+            const icone = document.getElementById('ajuda-card-fin-icone');
+            const titulo = document.getElementById('ajuda-card-fin-titulo');
+            const badge = document.getElementById('ajuda-card-fin-badge');
+            const corpo = document.getElementById('ajuda-card-fin-corpo');
+
+            if (!modal) return;
+
+            icone.className = `fa-solid ${info.icone} text-lg`;
+            titulo.innerText = info.titulo;
+            badge.className = `px-2.5 py-0.5 rounded text-[10px] font-black uppercase border ${info.badge}`;
+            badge.innerText = `Card ${cardId} • Indicador Financeiro`;
+
+            box.className = `box-tech max-w-lg w-full p-5 sm:p-6 border-2 ${info.borda} shadow-2xl space-y-4 text-xs bg-slate-900`;
+
+            const destaquesHtml = info.destaques.map(d => `
+                <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[11px] space-y-0.5">
+                    <strong class="text-white block font-mono">${d.label}</strong>
+                    <span class="text-slate-300 leading-relaxed">${d.valor}</span>
+                </div>
+            `).join('');
+
+            corpo.innerHTML = `
+                <div class="space-y-2 text-slate-300 leading-relaxed text-[11px]">
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-[10px] font-black uppercase text-slate-400 block tracking-wider">O que é:</span>
+                        <p class="text-white font-medium">${info.oQueE}</p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Como funciona no sistema:</span>
+                        <p class="text-slate-300">${info.comoFunciona}</p>
+                    </div>
+
+                    <div class="space-y-1.5 pt-1">
+                        <span class="text-[10px] font-black uppercase text-slate-400 block tracking-wider">Regras de Negócio e Interpretação:</span>
+                        ${destaquesHtml}
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharAjudaCardFin() {
+            const modal = document.getElementById('modal-ajuda-card-financeiro');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        window.abrirAjudaCardFin = abrirAjudaCardFin;
+        window.fecharAjudaCardFin = fecharAjudaCardFin;
+
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
+
+    <!-- MODAL DIDÁTICO: EXPLICAÇÃO DETALHADA DOS CARDS FINANCEIROS (?) -->
+    <div id="modal-ajuda-card-financeiro" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[95] flex items-center justify-center p-4 hidden">
+        <div id="ajuda-card-fin-box" class="box-tech max-w-lg w-full p-5 sm:p-6 border-2 border-cyan-500/80 shadow-2xl space-y-4 text-xs bg-slate-900">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-slate-950 flex items-center justify-center border border-slate-800">
+                        <i id="ajuda-card-fin-icone" class="fa-solid fa-circle-question text-cyan-400 text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 id="ajuda-card-fin-titulo" class="text-sm font-black text-white uppercase tracking-wide">Métrica Financeira</h3>
+                            <span id="ajuda-card-fin-badge" class="px-2 py-0.5 rounded text-[9px] font-black uppercase">Card</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 font-mono mt-0.5">Auditoria e Conceito Contábil da Imobiliária</p>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharAjudaCardFin()" class="text-slate-400 hover:text-white cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div id="ajuda-card-fin-corpo" class="space-y-3 max-h-[65vh] overflow-y-auto pr-1">
+                <!-- Preenchido via JavaScript -->
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span class="font-mono text-[10px]">SGI • Gestão Financeira 360°</span>
+                <button type="button" onclick="fecharAjudaCardFin()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition cursor-pointer">
+                    Entendido, Fechar
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
