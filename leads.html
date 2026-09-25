@@ -1106,7 +1106,7 @@
         // ====================================================================
         // SISTEMA DE NOTIFICAÇÕES NATIVAS (CENTRALIZADAS, SEM TIMER, COM "OK")
         // ====================================================================
-        function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '') {
+    function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', exigeConfirmacao = false, duracaoMs = 2500) {
             const container = document.getElementById('container-toasts');
             if (!container) return;
 
@@ -1132,33 +1132,42 @@
 
             const toast = document.createElement('div');
             toast.id = id;
-            toast.className = `animar-toast-in pointer-events-auto border-2 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl relative overflow-hidden flex flex-col gap-3 text-xs sm:text-sm w-full ring-4 ring-black/80 ${bgEstilo}`;
+            toast.className = `animar-toast-in pointer-events-auto border-2 rounded-2xl ${exigeConfirmacao ? 'p-4 sm:p-5 ring-4 ring-black/80' : 'p-3.5 sm:p-4 shadow-xl'} shadow-2xl backdrop-blur-2xl relative overflow-hidden flex flex-col gap-2.5 text-xs sm:text-sm w-full ${bgEstilo}`;
 
             toast.innerHTML = `
-                <div class="flex items-start gap-3.5">
-                    <div class="text-2xl mt-0.5 flex-shrink-0 drop-shadow">
+                <div class="flex items-start gap-3">
+                    <div class="${exigeConfirmacao ? 'text-2xl' : 'text-lg'} mt-0.5 flex-shrink-0 drop-shadow">
                         <i class="fa-solid ${icone}"></i>
                     </div>
-                    <div class="flex-1 pr-2 space-y-1">
-                        <h5 class="font-black text-white text-sm sm:text-base tracking-wide uppercase flex items-center gap-1.5">${titulo}</h5>
+                    <div class="flex-1 pr-2 space-y-0.5">
+                        <h5 class="font-black text-white text-xs sm:text-sm tracking-wide uppercase flex items-center gap-1.5">${titulo}</h5>
                         <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-medium">${mensagem}</p>
                     </div>
-                    <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar aviso">
-                        <i class="fa-solid fa-xmark text-lg"></i>
+                    <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar">
+                        <i class="fa-solid fa-xmark ${exigeConfirmacao ? 'text-lg' : 'text-sm'}"></i>
                     </button>
                 </div>
 
-                <!-- BOTÃO OBRIGATÓRIO DE LEITURA (SEM TEMPORIZADOR) -->
-                <div class="pt-2 border-t border-slate-800/80 flex items-center justify-end">
-                    <button type="button" onclick="removerToast('${id}')" 
-                            class="px-5 py-2 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 transition cursor-pointer shadow-lg active:scale-95 ${btnEstilo}">
-                        <i class="fa-solid fa-check text-xs"></i>
-                        <span>OK, Entendido</span>
-                    </button>
-                </div>
+                ${exigeConfirmacao ? `
+                    <!-- BOTÃO OBRIGATÓRIO APENAS PARA AÇÕES CRÍTICAS (FORMULÁRIOS) -->
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center justify-end">
+                        <button type="button" onclick="removerToast('${id}')" 
+                                class="px-5 py-2 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 transition cursor-pointer shadow-lg active:scale-95 ${btnEstilo}">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>OK, Entendido</span>
+                        </button>
+                    </div>
+                ` : ''}
             `;
 
             container.appendChild(toast);
+
+            // SE NÃO EXIGE CONFIRMAÇÃO (ex: filtros nos cards), SOME SOZINHO EM 2,5 SEGUNDOS
+            if (!exigeConfirmacao) {
+                setTimeout(() => {
+                    removerToast(id);
+                }, duracaoMs);
+            }
         }
 
         function removerToast(id) {
@@ -1910,7 +1919,7 @@
         // ====================================================================
         // MOTOR DE TRANSIÇÃO COM FEEDBACK PERCEPTÍVEL E CONFIRMAÇÕES
         // ====================================================================
-        function aoMudarEtapaPeloPipeline(novaEtapa) {
+  function aoMudarEtapaPeloPipeline(novaEtapa) {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit) return;
 
@@ -1921,14 +1930,15 @@
             const ehLocacao = (modalidade === 'LOCACAO');
             const tipoNegocioTexto = ehLocacao ? 'Locação' : 'Venda';
 
-            // 1. SE CLICOU EM "CONCLUÍDO": ABRE A ABA E GUIA O OPERADOR
+            // 1. SE CLICOU EM "CONCLUÍDO": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
             if (novaEtapa === 'Fechado') {
                 trocarAbaCockpit('fechamento');
                 
                 notificar(
                     'aviso', 
                     `Formulário de Conclusão de ${tipoNegocioTexto}`, 
-                    `Aba de fechamento aberta com sucesso! Por favor, confira os valores reais e porcentagens nos campos abaixo para formalizar a ${tipoNegocioTexto.toLowerCase()}.`
+                    `Aba de fechamento aberta com sucesso! Por favor, confira os valores reais e porcentagens nos campos abaixo para formalizar a ${tipoNegocioTexto.toLowerCase()}.`,
+                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
                 );
 
                 const boxFechamento = document.getElementById('cockpit-box-fechamento');
@@ -1940,14 +1950,15 @@
                 return;
             }
 
-            // 2. SE CLICOU EM "VISITA AGENDADA": ABRE A ABA E AVISA O QUE FAZER
+            // 2. SE CLICOU EM "VISITA AGENDADA": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
             if (novaEtapa === 'Visita Agendada') {
                 trocarAbaCockpit('visita');
                 
                 notificar(
                     'info', 
                     'Programação da Visita', 
-                    'Aba de agenda aberta! Por favor, selecione a data, horário e instruções de portaria/chaves nos campos abaixo para salvar.'
+                    'Aba de agenda aberta! Por favor, selecione a data, horário e instruções de portaria/chaves nos campos abaixo para salvar.',
+                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
                 );
 
                 const campoDataVisita = document.getElementById('cockpit-visita-data');
@@ -1955,14 +1966,15 @@
                 return;
             }
 
-            // 3. SE CLICOU EM "PROPOSTA": ABRE A ABA E AVISA O QUE FAZER
+            // 3. SE CLICOU EM "PROPOSTA": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
             if (novaEtapa === 'Proposta') {
                 trocarAbaCockpit('proposta');
                 
                 notificar(
                     'info', 
                     'Registro de Proposta Comercial', 
-                    'Aba de proposta aberta! Por favor, preencha o valor ofertado e as condições de pagamento (sinal/financiamento) nos campos abaixo.'
+                    'Aba de proposta aberta! Por favor, preencha o valor ofertado e as condições de pagamento (sinal/financiamento) nos campos abaixo.',
+                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
                 );
 
                 const campoValorProp = document.getElementById('cockpit-proposta-valor');
