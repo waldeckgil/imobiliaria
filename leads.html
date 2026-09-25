@@ -1012,60 +1012,60 @@
         // ====================================================================
         // SISTEMA DE NOTIFICAÇÕES NATIVAS (TOASTS)
         // ====================================================================
-        function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', duracaoMs = 4000) {
+  function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '') {
             const container = document.getElementById('container-toasts');
             if (!container) return;
 
             const id = 'toast-' + Math.random().toString(36).substr(2, 9);
             
-            let bgEstilo = 'bg-slate-900/95 border-cyan-500/80 text-cyan-300';
+            let bgEstilo = 'bg-slate-950/98 border-cyan-500 shadow-cyan-950/80';
             let icone = 'fa-circle-info text-cyan-400';
-            let barCor = 'bg-cyan-400';
+            let btnEstilo = 'bg-cyan-500 hover:bg-cyan-400 text-slate-950';
 
             if (tipo === 'sucesso') {
-                bgEstilo = 'bg-slate-900/95 border-emerald-500/80 text-emerald-300';
+                bgEstilo = 'bg-slate-950/98 border-emerald-500 shadow-emerald-950/80';
                 icone = 'fa-circle-check text-emerald-400';
-                barCor = 'bg-emerald-400';
+                btnEstilo = 'bg-emerald-500 hover:bg-emerald-400 text-slate-950';
             } else if (tipo === 'aviso') {
-                bgEstilo = 'bg-slate-900/95 border-amber-500/80 text-amber-300';
+                bgEstilo = 'bg-slate-950/98 border-amber-400 shadow-amber-950/80';
                 icone = 'fa-triangle-exclamation text-amber-400';
-                barCor = 'bg-amber-400';
+                btnEstilo = 'bg-amber-400 hover:bg-amber-300 text-slate-950';
             } else if (tipo === 'erro') {
-                bgEstilo = 'bg-slate-900/95 border-red-500/80 text-red-300';
-                icone = 'fa-circle-xmark text-red-400';
-                barCor = 'bg-red-400';
+                bgEstilo = 'bg-slate-950/98 border-rose-500 shadow-rose-950/80';
+                icone = 'fa-circle-xmark text-rose-400';
+                btnEstilo = 'bg-rose-500 hover:bg-rose-400 text-white';
             }
-const toast = document.createElement('div');
+
+            const toast = document.createElement('div');
             toast.id = id;
-            toast.className = `animar-toast-in pointer-events-auto border-2 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-xl relative overflow-hidden flex items-start gap-3.5 text-xs sm:text-sm w-full ring-2 ring-black/40 ${bgEstilo}`;
+            toast.className = `animar-toast-in pointer-events-auto border-2 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-2xl relative overflow-hidden flex flex-col gap-3 text-xs sm:text-sm w-full ring-4 ring-black/80 ${bgEstilo}`;
 
             toast.innerHTML = `
-                <div class="text-xl sm:text-2xl mt-0.5 flex-shrink-0 drop-shadow">
-                    <i class="fa-solid ${icone}"></i>
+                <div class="flex items-start gap-3.5">
+                    <div class="text-2xl mt-0.5 flex-shrink-0 drop-shadow">
+                        <i class="fa-solid ${icone}"></i>
+                    </div>
+                    <div class="flex-1 pr-2 space-y-1">
+                        <h5 class="font-black text-white text-sm sm:text-base tracking-wide uppercase flex items-center gap-1.5">${titulo}</h5>
+                        <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-medium">${mensagem}</p>
+                    </div>
+                    <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar aviso">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
                 </div>
-                <div class="flex-1 pr-2 space-y-1">
-                    <h5 class="font-black text-white text-sm sm:text-base tracking-wide uppercase flex items-center gap-1.5">${titulo}</h5>
-                    <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-medium">${mensagem}</p>
+
+                <!-- BOTÃO OBRIGATÓRIO DE LEITURA (SEM TEMPORIZADOR) -->
+                <div class="pt-2 border-t border-slate-800/80 flex items-center justify-end">
+                    <button type="button" onclick="removerToast('${id}')" 
+                            class="px-5 py-2 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 transition cursor-pointer shadow-lg active:scale-95 ${btnEstilo}">
+                        <i class="fa-solid fa-check text-xs"></i>
+                        <span>OK, Entendido</span>
+                    </button>
                 </div>
-                <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar aviso">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
-                <div class="absolute bottom-0 left-0 h-1.5 ${barCor} transition-all duration-[${duracaoMs}ms] w-full" id="bar-${id}"></div>
             `;
 
             container.appendChild(toast);
-
-            setTimeout(() => {
-                const bar = document.getElementById(`bar-${id}`);
-                if (bar) {
-                    bar.style.transition = `width ${duracaoMs}ms linear`;
-                    bar.style.width = '0%';
-                }
-            }, 50);
-
-            setTimeout(() => {
-                removerToast(id);
-            }, duracaoMs);
+            // Mensagem NÃO possui timer automático: fica fixa até o operador clicar em "OK, Entendido"
         }
 
         function removerToast(id) {
