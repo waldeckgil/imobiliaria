@@ -106,17 +106,19 @@
             </div>
 
        
+     
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
-                <a href="configurar-imobiliaria.html#conf-sobre" 
-                   class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-signature text-xs"></i>
-                    <span>Editar "A Empresa"</span>
-                </a>
+                <!-- BOTÃO INTELIGENTE: COMPARTILHAR VITRINE / COPIAR LINK / WHATSAPP -->
+                <button type="button" onclick="abrirModalCompartilharVitrine()" 
+                        class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-share-nodes text-xs"></i>
+                    <span>Link da Vitrine / WhatsApp</span>
+                </button>
 
                 <a id="btn-ver-vitrine" href="index.html" target="_blank" 
-                   class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
+                   class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition" title="Abrir vitrine em nova aba">
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    <span>Ver Minha Vitrine</span>
+                    <span class="hidden sm:inline">Ver Vitrine</span>
                 </a>
 
                 <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
@@ -5871,8 +5873,152 @@ window.abrirModalPagarCorretor = abrirModalPagarCorretor;
 
         window.abrirAjudaCardFin = abrirAjudaCardFin;
         window.fecharAjudaCardFin = fecharAjudaCardFin;
+// =========================================================================
+        // MOTOR DE COMPARTILHAMENTO DA VITRINE (COPIAR LINK & WHATSAPP)
+        // =========================================================================
+        function obterUrlVitrineOficial() {
+            const slug = dadosImobiliaria?.slug || '';
+            const baseUrl = window.location.origin + window.location.pathname.replace('dashboard.html', 'index.html');
+            return slug ? `${baseUrl}?imob=${slug}` : baseUrl;
+        }
+
+        function abrirModalCompartilharVitrine() {
+            const url = obterUrlVitrineOficial();
+            const inputLink = document.getElementById('modal-share-link-input');
+            const linkAcessoDireto = document.getElementById('modal-share-link-abrir');
+            const inputZap = document.getElementById('modal-share-whatsapp-input');
+
+            if (inputLink) inputLink.value = url;
+            if (linkAcessoDireto) linkAcessoDireto.href = url;
+            if (inputZap) inputZap.value = '';
+
+            document.getElementById('modal-compartilhar-vitrine').classList.remove('hidden');
+        }
+
+        function fecharModalCompartilharVitrine() {
+            document.getElementById('modal-compartilhar-vitrine').classList.add('hidden');
+        }
+
+        function copiarLinkVitrineClipboard() {
+            const url = obterUrlVitrineOficial();
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    exibirToast('sucesso', 'Link da vitrine copiado para a área de transferência!');
+                }).catch(() => fallbackCopiarLink(url));
+            } else {
+                fallbackCopiarLink(url);
+            }
+        }
+
+        function fallbackCopiarLink(texto) {
+            const input = document.getElementById('modal-share-link-input');
+            if (input) {
+                input.select();
+                document.execCommand('copy');
+                exibirToast('sucesso', 'Link da vitrine copiado com sucesso!');
+            }
+        }
+
+        function dispararVitrineClienteWhatsApp() {
+            const inputZap = document.getElementById('modal-share-whatsapp-input');
+            const zapRaw = (inputZap?.value || '').replace(/\D/g, '');
+
+            if (!zapRaw || zapRaw.length < 10) {
+                exibirToast('aviso', 'Por favor, informe o WhatsApp do cliente com DDD (mínimo 10 dígitos).');
+                return;
+            }
+
+            const zapCompleto = zapRaw.startsWith('55') ? zapRaw : '55' + zapRaw;
+            const url = obterUrlVitrineOficial();
+            const nomeImob = dadosImobiliaria?.nome_fantasia || 'nossa imobiliária';
+
+            const mensagem = 
+`Olá! Tudo bem?
+
+Segue o link da nossa vitrine completa de imóveis da *${nomeImob}*:
+
+🌐 *Acesse aqui:* ${url}
+
+Fique à vontade para pesquisar as opções disponíveis para venda e locação. Qualquer dúvida sobre algum imóvel, me avise por aqui!`;
+
+            const linkWa = `https://wa.me/${zapCompleto}?text=${encodeURIComponent(mensagem)}`;
+            window.open(linkWa, '_blank');
+            fecharModalCompartilharVitrine();
+            exibirToast('sucesso', 'WhatsApp aberto com a mensagem da vitrine pronta!');
+        }
+
+        window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
+        window.fecharModalCompartilharVitrine = fecharModalCompartilharVitrine;
+        window.copiarLinkVitrineClipboard = copiarLinkVitrineClipboard;
+        window.dispararVitrineClienteWhatsApp = dispararVitrineClienteWhatsApp;
 
         window.addEventListener('DOMContentLoaded', inicializarDashboard);
     </script>
+
+    <!-- MODAL DARK TECH: COMPARTILHAR VITRINE / COPIAR LINK / WHATSAPP -->
+    <div id="modal-compartilhar-vitrine" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[95] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-5 sm:p-6 border-2 border-cyan-500/80 shadow-2xl space-y-4 text-xs bg-slate-900">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/40 text-base">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-white uppercase tracking-wide">Compartilhar Vitrine de Imóveis</h3>
+                        <p class="text-[11px] text-slate-400">Copie o link público ou envie diretamente para o WhatsApp de um cliente.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharModalCompartilharVitrine()" class="text-slate-400 hover:text-white cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- OPÇÃO 1: COPIAR LINK COM 1 CLIQUE -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                <label class="block font-bold text-slate-300 uppercase text-[10px] tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-link text-cyan-400"></i>
+                    <span>Link Direto da Vitrine Oficial:</span>
+                </label>
+                <div class="flex gap-2">
+                    <input type="text" id="modal-share-link-input" readonly 
+                           class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none select-all">
+                    <button type="button" onclick="copiarLinkVitrineClipboard()" 
+                            class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 cursor-pointer shadow whitespace-nowrap">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copiar Link</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- OPÇÃO 2: DISPARO DIRETO NO WHATSAPP DO CLIENTE -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-emerald-500/40 space-y-2.5">
+                <label class="block font-bold text-emerald-400 uppercase text-[10px] tracking-wider flex items-center gap-1.5">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Enviar Vitrine para o WhatsApp de um Cliente:</span>
+                </label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="modal-share-whatsapp-input" placeholder="DDD + Número (ex: 21999998888)" 
+                           class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white font-mono text-xs outline-none focus:border-emerald-400">
+                    <button type="button" onclick="dispararVitrineClienteWhatsApp()" 
+                            class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer shadow whitespace-nowrap">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Enviar no Zap</span>
+                    </button>
+                </div>
+                <p class="text-[10px] text-slate-500">O sistema abrirá a conversa com uma mensagem profissional de apresentação e o link da sua vitrine já formatado.</p>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                <a id="modal-share-link-abrir" href="#" target="_blank" class="text-cyan-400 hover:underline flex items-center gap-1 font-bold text-[11px]">
+                    <span>Testar e Abrir Vitrine</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+                <button type="button" onclick="fecharModalCompartilharVitrine()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
