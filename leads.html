@@ -1784,36 +1784,77 @@ const toast = document.createElement('div');
         // ====================================================================
         // MOTOR DE VERIFICAÇÃO E CONFIRMAÇÃO EXPLICATIVA DE TRANSIÇÃO
         // ====================================================================
-        function aoMudarEtapaPeloPipeline(novaEtapa) {
+ 
+
+function aoMudarEtapaPeloPipeline(novaEtapa) {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit) return;
 
             const etapaAntiga = leadAtivoCockpit.status || 'Novo';
             if (etapaAntiga === novaEtapa) return;
 
-            // Se for Fechamento, direciona direto para a aba de fechamento com os rateios
+            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
+            const ehLocacao = (modalidade === 'LOCACAO');
+            const tipoNegocioTexto = ehLocacao ? 'Locação' : 'Venda';
+
+            // 1. SE CLICOU EM "CONCLUÍDO": ABRE A ABA E GUIA O OPERADOR EXPLICANDO O PREENCHIMENTO
             if (novaEtapa === 'Fechado') {
                 trocarAbaCockpit('fechamento');
+                
+                notificar(
+                    'aviso', 
+                    `Formulário de Conclusão de ${tipoNegocioTexto}`, 
+                    `Aba de fechamento aberta com sucesso! Por favor, confira os valores reais e porcentagens nos campos abaixo para formalizar a ${tipoNegocioTexto.toLowerCase()}.`,
+                    6000
+                );
+
+                // Destaque visual suave para o operador sentir que a tela mudou
+                const boxFechamento = document.getElementById('cockpit-box-fechamento');
+                if (boxFechamento) {
+                    boxFechamento.classList.add('ring-2', 'ring-amber-400');
+                    setTimeout(() => boxFechamento.classList.remove('ring-2', 'ring-amber-400'), 1500);
+                    boxFechamento.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
                 return;
             }
 
-            // Se for Visita Agendada e ainda não tem data marcada, abre a aba para o operador preencher
-            if (novaEtapa === 'Visita Agendada' && !leadAtivoCockpit.data_agendamento) {
+            // 2. SE CLICOU EM "VISITA AGENDADA": ABRE A ABA E AVISA O QUE FAZER
+            if (novaEtapa === 'Visita Agendada') {
                 trocarAbaCockpit('visita');
-                notificar('info', 'Defina a Data', 'Por favor, selecione a data e o horário da visita na aba aberta abaixo.');
+                
+                notificar(
+                    'info', 
+                    'Programação da Visita', 
+                    'Aba de agenda aberta! Por favor, selecione a data, horário e instruções de portaria/chaves nos campos abaixo para salvar.',
+                    5000
+                );
+
+                const campoDataVisita = document.getElementById('cockpit-visita-data');
+                if (campoDataVisita) campoDataVisita.focus();
                 return;
             }
 
-            // Se for Proposta e ainda não tem valor, abre a aba de proposta
-            if (novaEtapa === 'Proposta' && !leadAtivoCockpit.valor_proposta) {
+            // 3. SE CLICOU EM "PROPOSTA": ABRE A ABA E AVISA O QUE FAZER
+            if (novaEtapa === 'Proposta') {
                 trocarAbaCockpit('proposta');
-                notificar('info', 'Defina a Proposta', 'Por favor, registre os valores ofertados pelo cliente na aba aberta abaixo.');
+                
+                notificar(
+                    'info', 
+                    'Registro de Proposta Comercial', 
+                    'Aba de proposta aberta! Por favor, preencha o valor ofertado e as condições de pagamento (sinal/financiamento) nos campos abaixo.',
+                    5000
+                );
+
+                const campoValorProp = document.getElementById('cockpit-proposta-valor');
+                if (campoValorProp) campoValorProp.focus();
                 return;
             }
 
-            // Abre o modal de confirmação explicativa com todas as verificações ativas
+            // 4. PARA DEMAIS MUDANÇAS (NOVO, ATENDIMENTO, CANCELADO, PERDIDO): ABRE O MODAL EXPLICATIVO
             abrirModalTransicaoEtapa(etapaAntiga, novaEtapa);
         }
+
+
 
         function abrirModalTransicaoEtapa(etapaAntiga, novaEtapa) {
             etapaPendenteConfirmacao = novaEtapa;
