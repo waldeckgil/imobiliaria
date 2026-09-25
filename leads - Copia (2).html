@@ -458,17 +458,11 @@
                 </div>
             </div>
 
-            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS COM INTERROGAÇÕES & BOTÃO GUIA -->
+            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS -->
             <div class="space-y-1.5">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
-                    <button type="button" onclick="abrirGuiaEtapasFunil()" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1 transition cursor-pointer" title="Ver manual completo de cada etapa">
-                        <i class="fa-solid fa-circle-question text-xs"></i>
-                        <span>Como funciona cada etapa?</span>
-                    </button>
-                </div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
                 <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5" id="cockpit-pipeline-botoes">
-                    <!-- Gerado via JavaScript com botão principal + botão de interrogação (?) -->
+                    <!-- Gerado via JavaScript -->
                 </div>
             </div>
 
@@ -706,99 +700,6 @@
         </div>
     </div>
 
-    <!-- ==================================================================== -->
-    <!-- MODAL NOVO: CONFIRMAÇÃO EXPLICATIVA DE MUDANÇA DE ETAPA DO FUNIL     -->
-    <!-- ==================================================================== -->
-    <div id="modal-confirmar-transicao-etapa" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[90] flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 text-left border-2 border-cyan-500/80 shadow-2xl space-y-4">
-            
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                <div id="modal-transicao-icone-box" class="w-11 h-11 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl flex-shrink-0 font-black border border-cyan-500/30">
-                    <i id="modal-transicao-icone" class="fa-solid fa-arrows-spin"></i>
-                </div>
-                <div>
-                    <h3 class="text-sm font-black text-white uppercase tracking-wide">Confirmar Mudança de Etapa</h3>
-                    <p class="text-xs text-slate-400">Verifique o impacto da operação neste cliente:</p>
-                </div>
-            </div>
-
-            <!-- COMPARATIVO VISUAL (ORIGEM -> DESTINO) -->
-            <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
-                <div class="text-center flex-1">
-                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Etapa Atual</span>
-                    <span id="transicao-badge-origem" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase inline-block">---</span>
-                </div>
-                <div class="px-3 text-slate-500 text-base">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </div>
-                <div class="text-center flex-1">
-                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Nova Etapa</span>
-                    <span id="transicao-badge-destino" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase inline-block">---</span>
-                </div>
-            </div>
-
-            <!-- IMPACTO EXPLICATIVO EM DESTAQUE -->
-            <div id="modal-transicao-impacto-box" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-info"></i> O que acontece ao confirmar:
-                </span>
-                <p id="modal-transicao-impacto-texto" class="text-slate-300 leading-relaxed text-[11px]"></p>
-                <div id="modal-transicao-alerta-visita" class="hidden bg-rose-950/50 border border-rose-800/80 p-2.5 rounded-lg text-rose-300 text-[11px] space-y-1">
-                    <span class="font-bold flex items-center gap-1 text-rose-400">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Visita Agendada Será Cancelada!
-                    </span>
-                    <p id="modal-transicao-alerta-visita-texto" class="leading-relaxed"></p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
-                <button type="button" onclick="fecharModalTransicaoEtapa()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
-                    Cancelar
-                </button>
-                <button type="button" id="btn-executar-transicao-etapa" onclick="executarConfirmacaoFinalTransicao()" 
-                        class="w-1/2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-cyan-950/50 flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-check"></i>
-                    <span>Confirmar</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================================================================== -->
-    <!-- MODAL NOVO: GUIA VISUAL & MANUAL COMPLETO DAS ETAPAS DO FUNIL        -->
-    <!-- ==================================================================== -->
-    <div id="modal-guia-etapas-funil" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[85] flex items-center justify-center p-3 sm:p-5 hidden">
-        <div class="box-tech max-w-3xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col bg-slate-900">
-            
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/30">
-                        <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wide">Manual do Funil Comercial & Regras do CRM</h3>
-                        <p class="text-[11px] text-slate-400">Entenda a finalidade de cada etapa e os impactos automáticos no sistema.</p>
-                    </div>
-                </div>
-                <button onclick="fecharGuiaEtapasFunil()" class="text-slate-400 hover:text-white transition cursor-pointer p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- LISTAGEM DIDÁTICA DAS 7 ETAPAS COM CORES REAIS -->
-            <div class="flex-1 overflow-y-auto pr-1 space-y-3 text-xs" id="guia-etapas-lista-cards">
-                <!-- Inserido dinamicamente via JS com base em ESTAGIOS_FUNIL -->
-            </div>
-
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
-                <span class="font-mono text-[11px]">SGI • CRM & Proteção de Dados Imobiliários</span>
-                <button onclick="fecharGuiaEtapasFunil()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
-                    Entendido, Fechar Guia
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: FECHAMENTO DE VENDA OU LOCAÇÃO -->
     <div id="modal-confirmar-venda-explicativo" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4">
@@ -918,81 +819,14 @@
         let leadAtivoCockpit = null;
         let filtroEstagioAtivoCard = null;
 
-        // ETAPA PENDENTE DE CONFIRMAÇÃO
-        let etapaPendenteConfirmacao = null;
-
-        // MATRIZ COMPLETA DE REGRAS E EXPLICAÇÕES DAS ETAPAS DO FUNIL
         const ESTAGIOS_FUNIL = [
-            { 
-                chave: 'Novo', 
-                rotulo: 'Novo', 
-                cor: 'blue', 
-                icone: 'fa-circle-dot',
-                badgeClasses: 'bg-blue-950/90 text-blue-300 border-blue-700/80',
-                resumo: 'Cliente recém-chegado pelo site ou vitrine pública.',
-                impacto: 'Retorna o atendimento para a fila prioritária de novos contatos.',
-                oQueFazer: 'Abordagem prioritária! O primeiro contato nos primeiros minutos multiplica a chance de fechamento.'
-            },
-            { 
-                chave: 'Em Atendimento', 
-                rotulo: 'Atendimento', 
-                cor: 'amber', 
-                icone: 'fa-headset',
-                badgeClasses: 'bg-amber-950/90 text-amber-300 border-amber-700/80',
-                resumo: 'O corretor já iniciou diálogo ativo com o cliente.',
-                impacto: 'Sai da fila de novos contatos e consta sob negociação ativa da equipe.',
-                oQueFazer: 'Sondar necessidades, entender faixa de preço, preferências e alinhar opções do catálogo.'
-            },
-            { 
-                chave: 'Visita Agendada', 
-                rotulo: 'Visita', 
-                cor: 'cyan', 
-                icone: 'fa-calendar-check',
-                badgeClasses: 'bg-cyan-950/90 text-cyan-300 border-cyan-700/80',
-                resumo: 'Compromisso presencial ou vistoria agendada.',
-                impacto: 'Sincroniza automaticamente na Agenda do Dashboard da imobiliária.',
-                oQueFazer: 'Acesse a aba "Visita & Agenda", defina data/hora e dispare confirmação pelo WhatsApp.'
-            },
-            { 
-                chave: 'Proposta', 
-                rotulo: 'Proposta', 
-                cor: 'purple', 
-                icone: 'fa-hand-holding-dollar',
-                badgeClasses: 'bg-purple-950/90 text-purple-300 border-purple-700/80',
-                resumo: 'Oferta formalizada pelo cliente.',
-                impacto: 'Registra oferta comercial com condições de pagamento.',
-                oQueFazer: 'Acesse a aba "Proposta Comercial", preencha os valores e envie o resumo ao proprietário.'
-            },
-            { 
-                chave: 'Fechado', 
-                rotulo: 'Concluído', 
-                cor: 'emerald', 
-                icone: 'fa-handshake',
-                badgeClasses: 'bg-emerald-950/90 text-emerald-300 border-emerald-700/80',
-                resumo: 'Venda assinada ou contrato de locação formalizado.',
-                impacto: 'Dá baixa automática no imóvel do catálogo e lança as comissões no financeiro.',
-                oQueFazer: 'Acesse a aba "Concluir Negócio" para formalizar os rateios e emitir os recebíveis.'
-            },
-            { 
-                chave: 'Cancelado', 
-                rotulo: 'Cancelado', 
-                cor: 'rose', 
-                icone: 'fa-calendar-xmark',
-                badgeClasses: 'bg-rose-950/90 text-rose-300 border-rose-700/80',
-                resumo: 'Visita desmarcada ou cliente que adiou a busca.',
-                impacto: 'Remove visitas pendentes da agenda e arquiva o motivo do cancelamento.',
-                oQueFazer: 'Registre uma nota interna justificando o motivo para manter o histórico auditado.'
-            },
-            { 
-                chave: 'Perdido', 
-                rotulo: 'Perdido', 
-                cor: 'slate', 
-                icone: 'fa-ban',
-                badgeClasses: 'bg-slate-900 text-slate-400 border-slate-700',
-                resumo: 'Cliente desqualificado ou sem resposta após tentativas.',
-                impacto: 'Encerra o atendimento ativo, mantendo o lead arquivado na carteira de contatos.',
-                oQueFazer: 'Mantenha na base para futuras campanhas de reativação ou captação.'
-            }
+            { chave: 'Novo', rotulo: 'Novo', cor: 'blue', icone: 'fa-circle-dot' },
+            { chave: 'Em Atendimento', rotulo: 'Atendimento', cor: 'amber', icone: 'fa-headset' },
+            { chave: 'Visita Agendada', rotulo: 'Visita', cor: 'cyan', icone: 'fa-calendar-check' },
+            { chave: 'Proposta', rotulo: 'Proposta', cor: 'purple', icone: 'fa-hand-holding-dollar' },
+            { chave: 'Fechado', rotulo: 'Concluído', cor: 'emerald', icone: 'fa-handshake' },
+            { chave: 'Cancelado', rotulo: 'Cancelado', cor: 'rose', icone: 'fa-calendar-xmark' },
+            { chave: 'Perdido', rotulo: 'Perdido', cor: 'slate', icone: 'fa-ban' }
         ];
 
         // ====================================================================
@@ -1700,9 +1534,6 @@
             leadAtivoCockpit = null;
         }
 
-        // ====================================================================
-        // RÉGUA DO PIPELINE COM BOTÃO PRINCIPAL + ÍCONE INTERROGAÇÃO (?)
-        // ====================================================================
         function renderizarPipelineCockpit(statusAtual) {
             const container = document.getElementById('cockpit-pipeline-botoes');
             container.innerHTML = ESTAGIOS_FUNIL.map(est => {
@@ -1720,129 +1551,35 @@
                 }
 
                 return `
-                    <div class="relative group/etapa flex items-center rounded-xl p-0.5 border ${classes}">
-                        <button type="button" onclick="aoMudarEtapaPeloPipeline('${est.chave}')" 
-                                class="flex-1 py-2 px-1 text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer truncate">
-                            <i class="fa-solid ${est.icone} text-xs"></i>
-                            <span class="truncate">${est.rotulo}</span>
-                        </button>
-                        
-                        <!-- BOTÃO DE INTERROGAÇÃO (?) INDIVIDUAL -->
-                        <button type="button" onclick="abrirInfoEtapaEspecifica(event, '${est.chave}')" 
-                                class="w-5 h-5 rounded-full text-[10px] text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition cursor-pointer shrink-0 mr-1"
-                                title="Entenda o que significa '${est.rotulo}'">
-                            <i class="fa-solid fa-circle-question text-[10px]"></i>
-                        </button>
-                    </div>
+                    <button onclick="aoMudarEtapaPeloPipeline('${est.chave}')" 
+                            class="p-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer ${classes}">
+                        <i class="fa-solid ${est.icone} text-xs"></i>
+                        <span class="truncate">${est.rotulo}</span>
+                    </button>
                 `;
             }).join('');
         }
 
-        // ====================================================================
-        // MOTOR DE VERIFICAÇÃO E CONFIRMAÇÃO EXPLICATIVA DE TRANSIÇÃO
-        // ====================================================================
-        function aoMudarEtapaPeloPipeline(novaEtapa) {
+        async function aoMudarEtapaPeloPipeline(novaEtapa) {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit) return;
 
             const etapaAntiga = leadAtivoCockpit.status || 'Novo';
             if (etapaAntiga === novaEtapa) return;
 
-            // Se for Fechamento, direciona direto para a aba de fechamento com os rateios
-            if (novaEtapa === 'Fechado') {
+            if (novaEtapa === 'Visita Agendada') {
+                trocarAbaCockpit('visita');
+            } else if (novaEtapa === 'Proposta') {
+                trocarAbaCockpit('proposta');
+            } else if (novaEtapa === 'Fechado') {
                 trocarAbaCockpit('fechamento');
                 return;
             }
 
-            // Se for Visita Agendada e ainda não tem data marcada, abre a aba para o operador preencher
-            if (novaEtapa === 'Visita Agendada' && !leadAtivoCockpit.data_agendamento) {
-                trocarAbaCockpit('visita');
-                notificar('info', 'Defina a Data', 'Por favor, selecione a data e o horário da visita na aba aberta abaixo.');
-                return;
-            }
-
-            // Se for Proposta e ainda não tem valor, abre a aba de proposta
-            if (novaEtapa === 'Proposta' && !leadAtivoCockpit.valor_proposta) {
-                trocarAbaCockpit('proposta');
-                notificar('info', 'Defina a Proposta', 'Por favor, registre os valores ofertados pelo cliente na aba aberta abaixo.');
-                return;
-            }
-
-            // Abre o modal de confirmação explicativa com todas as verificações ativas
-            abrirModalTransicaoEtapa(etapaAntiga, novaEtapa);
-        }
-
-        function abrirModalTransicaoEtapa(etapaAntiga, novaEtapa) {
-            etapaPendenteConfirmacao = novaEtapa;
-
-            const objOrigem = ESTAGIOS_FUNIL.find(e => e.chave === etapaAntiga) || ESTAGIOS_FUNIL[0];
-            const objDestino = ESTAGIOS_FUNIL.find(e => e.chave === novaEtapa) || ESTAGIOS_FUNIL[1];
-
-            // Badges de Comparação
-            const badgeOrigem = document.getElementById('transicao-badge-origem');
-            const badgeDestino = document.getElementById('transicao-badge-destino');
-            badgeOrigem.className = `px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border ${objOrigem.badgeClasses}`;
-            badgeOrigem.innerHTML = `<i class="fa-solid ${objOrigem.icone} mr-1"></i> ${objOrigem.rotulo}`;
-            badgeDestino.className = `px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border ${objDestino.badgeClasses}`;
-            badgeDestino.innerHTML = `<i class="fa-solid ${objDestino.icone} mr-1"></i> ${objDestino.rotulo}`;
-
-            // Ícone do Modal
-            const icone = document.getElementById('modal-transicao-icone');
-            icone.className = `fa-solid ${objDestino.icone}`;
-
-            // Texto Explicativo de Impacto
-            const textoImpacto = document.getElementById('modal-transicao-impacto-texto');
-            let explicacaoImpacto = objDestino.impacto + ' ' + objDestino.oQueFazer;
-
-            if (etapaAntiga === 'Novo') {
-                explicacaoImpacto = `O lead sairá da fila de "Novos Contatos" e constará como atendimento assumido pela equipe. ${objDestino.impacto}`;
-            } else if (novaEtapa === 'Novo') {
-                explicacaoImpacto = `O lead retornará para o estágio inicial de "Novo Contato" na fila de atendimento da equipe comercial.`;
-            } else if (novaEtapa === 'Cancelado' || novaEtapa === 'Perdido') {
-                explicacaoImpacto = `O lead sairá da esteira ativa de atendimento e será arquivado no histórico como oportunidade encerrada.`;
-            }
-
-            textoImpacto.innerText = explicacaoImpacto;
-
-            // VERIFICAÇÃO CRÍTICA: Se tem visita agendada marcada e está saindo de Visita
-            const boxAlertaVisita = document.getElementById('modal-transicao-alerta-visita');
-            const textoAlertaVisita = document.getElementById('modal-transicao-alerta-visita-texto');
-
-            if (leadAtivoCockpit.data_agendamento && novaEtapa !== 'Visita Agendada') {
-                const dataFmt = formatarDataVisita(leadAtivoCockpit.data_agendamento);
-                textoAlertaVisita.innerHTML = `Este lead possui uma visita agendada para <strong>${dataFmt}</strong>. Ao confirmar a alteração para <strong>"${objDestino.rotulo}"</strong>, o agendamento será <strong>removido da Agenda do Dashboard</strong>.`;
-                boxAlertaVisita.classList.remove('hidden');
-            } else {
-                boxAlertaVisita.classList.add('hidden');
-            }
-
-            document.getElementById('modal-confirmar-transicao-etapa').classList.remove('hidden');
-        }
-
-        function fecharModalTransicaoEtapa() {
-            document.getElementById('modal-confirmar-transicao-etapa').classList.add('hidden');
-            etapaPendenteConfirmacao = null;
-        }
-
-        async function executarConfirmacaoFinalTransicao() {
-            if (!etapaPendenteConfirmacao || !leadAtivoCockpit) return;
-
-            const novaEtapa = etapaPendenteConfirmacao;
-            const etapaAntiga = leadAtivoCockpit.status || 'Novo';
-            const btn = document.getElementById('btn-executar-transicao-etapa');
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Atualizando...';
-
             try {
                 const payloadUpdate = { status: novaEtapa };
 
-                let visitaEstavaMarcada = false;
-                let dataVisitaAntiga = null;
-
-                if (novaEtapa !== 'Visita Agendada' && leadAtivoCockpit.data_agendamento) {
-                    visitaEstavaMarcada = true;
-                    dataVisitaAntiga = leadAtivoCockpit.data_agendamento;
+                if (novaEtapa !== 'Visita Agendada') {
                     payloadUpdate.data_agendamento = null;
                 }
 
@@ -1861,73 +1598,25 @@
 
                 renderizarPipelineCockpit(novaEtapa);
 
-                // Registro auditado no histórico
                 let descricaoHistorico = `Etapa do funil alterada de "${etapaAntiga}" para "${novaEtapa}".`;
-                if (visitaEstavaMarcada) {
-                    descricaoHistorico += ` [AVISO: A visita que estava agendada para ${formatarDataVisita(dataVisitaAntiga)} foi desmarcada da agenda].`;
+                if (novaEtapa === 'Cancelado') {
+                    descricaoHistorico = `Atendimento marcado como Cancelado (Desistência/Agenda) pelo operador.`;
                 }
 
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
-                    (visitaEstavaMarcada ? 'cancelamento_visita' : 'status'),
+                    (novaEtapa === 'Cancelado' ? 'cancelamento_visita' : 'status'),
                     descricaoHistorico
                 );
 
-                fecharModalTransicaoEtapa();
                 notificar('sucesso', 'Etapa Atualizada', `Lead avançou para "${novaEtapa}".`);
-
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
                 notificar('erro', 'Falha ao Mudar Etapa', err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar</span>';
             }
-        }
-
-        // ====================================================================
-        // MANUAL DIDÁTICO DAS ETAPAS DO FUNIL (GUIA VISUAL)
-        // ====================================================================
-        function abrirGuiaEtapasFunil() {
-            const container = document.getElementById('guia-etapas-lista-cards');
-            if (container) {
-                container.innerHTML = ESTAGIOS_FUNIL.map(est => `
-                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 hover:border-slate-700 transition">
-                        <div class="flex items-center justify-between">
-                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border ${est.badgeClasses} inline-flex items-center gap-1.5 shadow-sm">
-                                <i class="fa-solid ${est.icone}"></i>
-                                <span>${est.rotulo}</span>
-                            </span>
-                            <span class="text-[10px] font-mono text-slate-500 uppercase">Estágio Comercial</span>
-                        </div>
-                        <p class="text-white font-semibold text-xs">${est.resumo}</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-800/80">
-                            <div>
-                                <span class="text-slate-500 block text-[10px] uppercase font-bold">O que fazer:</span>
-                                <span class="text-slate-300 leading-snug">${est.oQueFazer}</span>
-                            </div>
-                            <div>
-                                <span class="text-cyan-400 block text-[10px] uppercase font-bold">Impacto no Sistema:</span>
-                                <span class="text-slate-400 leading-snug">${est.impacto}</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            document.getElementById('modal-guia-etapas-funil').classList.remove('hidden');
-        }
-
-        function fecharGuiaEtapasFunil() {
-            document.getElementById('modal-guia-etapas-funil').classList.add('hidden');
-        }
-
-        function abrirInfoEtapaEspecifica(event, chaveEtapa) {
-            if (event) event.stopPropagation();
-            abrirGuiaEtapasFunil();
         }
 
         function trocarAbaCockpit(aba) {
@@ -2206,7 +1895,7 @@
 
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
-                    'cancelamento_visita',
+                    'visita',
                     'A visita combinada foi desmarcada. O lead retornou para o estágio "Em Atendimento".'
                 );
 

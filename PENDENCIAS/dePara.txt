@@ -1,0 +1,18 @@
+
+
+
+
+
+
+nas próximas demandas ,   você pode me enviar o DE:/PARA:
+
+
+
+
+se o ajuste for considerado alterações em blocos pequenos e simples você pode preparar um DE:/PARA
+
+
+colocar  o texto  DE:   exibir na cor cor VERMELHA , esse sera para eu copiar o script e LOCALIZAR  no vscode 
+
+
+coloque o texto corrigido ou ajustado PARA :  exibir na cor VERDE , esse sera para eu SUBSTITUIR   no vscode 
