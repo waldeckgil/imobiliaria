@@ -12,7 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; scroll-behavior: smooth; }
-        .bg-barra-preta { background-color: #0b0f19; }
+        .bg-barra-preta { background-color: #0d0e11; }
+        .bg-filtro-amarelo { background-color: #fae69d; border-color: #edd17d; }
         .azul-preco { color: #1c6ba0; }
         .btn-azul-mensagem { background-color: #1f6497; }
         .btn-azul-mensagem:hover { background-color: #174f77; }
@@ -44,7 +45,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-gray-100 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
     <!-- =========================================================================
          [MODO 1] LANDING PAGE INSTITUCIONAL SAAS (QUANDO ACESSADO SEM ?imob=)
@@ -516,29 +517,29 @@
             </div>
         </header>
 
-        <!-- FAIXA MODERNA DE BUSCA & ATALHOS -->
-        <div class="bg-barra-preta text-white py-6 px-4 sm:px-8 border-b border-slate-800">
+        <!-- FAIXA PRETA DE BUSCA -->
+        <div class="bg-barra-preta text-white py-5 px-4 sm:px-8">
             <div class="max-w-[1340px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 flex-wrap">
                     <div>
-                        <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-black tracking-tight text-white">
+                        <h1 id="titulo-categoria-atual" class="text-xl sm:text-2xl font-bold tracking-tight">
                             Catálogo de Imóveis Disponíveis
                         </h1>
-                        <p class="text-xs text-slate-400 mt-1">
-                            <strong id="contador-imoveis" class="text-cyan-400 font-mono text-sm">0</strong> imóveis encontrados nesta seleção.
+                        <p class="text-xs text-gray-300 mt-1">
+                            <strong id="contador-imoveis" class="text-white">0</strong> imóveis encontrados nesta exibição.
                         </p>
                     </div>
 
-                    <!-- ATALHOS REDES SOCIAIS & WHATSAPP -->
+                    <!-- ATALHOS REDES SOCIAIS & WHATSAPP NA FAIXA PRETA -->
                     <div id="faixa-preta-redes-sociais" class="flex items-center gap-2 pt-1 sm:pt-0"></div>
                 </div>
 
-                <div class="w-full md:w-72">
+                <div class="w-full md:w-64">
                     <div class="relative flex items-center">
-                        <input type="text" id="campoBuscarCodigo" placeholder="Buscar por código (ex: 720)" 
+                        <input type="text" id="campoBuscarCodigo" placeholder="Buscar Código (ex: 720)" 
                                onkeydown="if(event.key === 'Enter') buscarCodigo();"
-                               class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-400 outline-none focus:border-cyan-400 transition shadow-inner">
-                        <button onclick="buscarCodigo()" class="absolute right-3 text-slate-400 hover:text-cyan-300 text-xs cursor-pointer transition">
+                               class="w-full bg-black/40 border border-gray-600 rounded px-3 py-1.5 text-xs text-white placeholder-gray-400 outline-none focus:border-white">
+                        <button onclick="buscarCodigo()" class="absolute right-2 text-gray-300 hover:text-white text-xs cursor-pointer">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
                     </div>
@@ -546,65 +547,33 @@
             </div>
         </div>
 
-        <!-- CONTEÚDO PRINCIPAL (CATÁLOGO + BARRA LATERAL CLEAN WHITE) -->
+        <!-- CONTEÚDO PRINCIPAL (CATÁLOGO + FILTROS) -->
         <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
-                <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO -->
-                <div class="lg:col-span-8 space-y-5">
-                    
-                    <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 flex-wrap">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 mr-1 flex items-center gap-1">
-                                <i class="fa-solid fa-sliders text-cyan-600"></i> Filtro Rápido:
-                            </span>
-                            <button type="button" id="tag-chip-pet" onclick="alternarTag('pet')" 
-                                    class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                                <span>🐾 Aceita Pet</span>
-                            </button>
-                            <button type="button" id="tag-chip-mobiliado" onclick="alternarTag('mobiliado')" 
-                                    class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                                <span>🛋️ Mobiliado</span>
-                            </button>
-                            <button type="button" id="tag-chip-destaque" onclick="alternarTag('destaque')" 
-                                    class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                                <span>⭐ Destaques</span>
-                            </button>
-                        </div>
-
-                        <button type="button" onclick="limparFiltros()" class="text-[11px] font-bold text-slate-500 hover:text-slate-800 transition flex items-center gap-1 cursor-pointer">
-                            <i class="fa-solid fa-rotate-left text-[10px]"></i>
-                            <span>Redefinir</span>
-                        </button>
-                    </div>
-
-                    <!-- CONTAINER DOS CARDS DE IMÓVEIS -->
-                    <div id="container-imoveis" class="space-y-6">
-                        <div class="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
-                            <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
-                            <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
-                        </div>
+                <div id="container-imoveis" class="lg:col-span-8 space-y-6">
+                    <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
+                        <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+                        <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
                     </div>
                 </div>
 
-                <!-- BARRA LATERAL DE FILTROS: PADRÃO CLEAN WHITE / SLATE -->
+                <!-- BARRA LATERAL DE FILTROS -->
                 <div class="lg:col-span-4">
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-5">
-                        
-                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                            <h3 class="font-black text-slate-900 uppercase tracking-wide text-xs flex items-center gap-2">
-                                <i class="fa-solid fa-filter text-blue-600"></i> Filtrar Imóveis
+                    <div class="bg-filtro-amarelo border rounded-lg p-5 shadow-sm">
+                        <div class="flex items-center justify-between pb-3 border-b border-amber-300">
+                            <h3 class="font-black text-slate-900 uppercase tracking-wide text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-filter text-slate-700"></i> Filtrar Imóveis
                             </h3>
-                            <button onclick="limparFiltros()" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 cursor-pointer transition">
-                                Limpar Todos
+                            <button onclick="limparFiltros()" class="text-[11px] font-bold text-slate-700 underline hover:text-black cursor-pointer">
+                                Limpar
                             </button>
                         </div>
 
-                        <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 text-xs">
+                        <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 mt-4 text-xs">
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Finalidade</label>
-                                <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer font-bold">
+                                <label class="block font-bold text-slate-800 mb-1">Finalidade</label>
+                                <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
                                     <option value="" selected>Todas as Finalidades</option>
                                     <option value="Venda">Quero Comprar (Venda)</option>
                                     <option value="Locacao">Quero Alugar (Locação)</option>
@@ -612,41 +581,19 @@
                             </div>
 
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Tipo de Imóvel</label>
-                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer">
+                                <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
+                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
                                     <option value="" selected>Todos os Tipos</option>
                                     <option value="Apartamento">Apartamento</option>
                                     <option value="Casa">Casa</option>
-                                    <option value="Casa em Condomínio">Casa em Condomínio</option>
                                     <option value="Terreno">Terreno</option>
                                     <option value="Comercial">Comercial</option>
-                                    <option value="Cobertura">Cobertura</option>
-                                    <option value="Sítio">Sítio / Chácara</option>
                                 </select>
                             </div>
 
-                            <!-- FILTRO POR FAIXA DE PREÇO (MÍNIMO E MÁXIMO) -->
-                            <div class="space-y-1.5">
-                                <label class="block font-bold text-slate-700">Faixa de Preço (R$)</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div class="relative">
-                                        <span class="absolute left-2.5 top-2.5 text-[10px] font-bold text-slate-400">R$</span>
-                                        <input type="text" inputmode="numeric" id="filtro-preco-min" placeholder="Mínimo" 
-                                               oninput="mascaraMoedaEvento(this); aplicarFiltrosLaterais();"
-                                               class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
-                                    </div>
-                                    <div class="relative">
-                                        <span class="absolute left-2.5 top-2.5 text-[10px] font-bold text-slate-400">R$</span>
-                                        <input type="text" inputmode="numeric" id="filtro-preco-max" placeholder="Máximo" 
-                                               oninput="mascaraMoedaEvento(this); aplicarFiltrosLaterais();"
-                                               class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
-                                    </div>
-                                </div>
-                            </div>
-
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Dormitórios</label>
-                                <select id="filtro-quartos" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer">
+                                <label class="block font-bold text-slate-800 mb-1">Dormitórios</label>
+                                <select id="filtro-quartos" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
                                     <option value="" selected>Todos os Dormitórios</option>
                                     <option value="1">1 dormitório ou mais</option>
                                     <option value="2">2 dormitórios ou mais</option>
@@ -656,34 +603,31 @@
                             </div>
 
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Buscar por Bairro</label>
-                                <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Ex: Centro, Icaraí, Barra..." 
-                                       class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
+                                <label class="block font-bold text-slate-800 mb-1">Buscar por Bairro</label>
+                                <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
                             </div>
 
-                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-xl shadow-sm hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <span>Aplicar Filtros</span>
+                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
+                                <i class="fa-solid fa-magnifying-glass mr-1.5"></i> Filtrar Imóveis
                             </button>
                         </form>
 
                         <!-- ATALHOS DE SERVIÇOS E CAPTAÇÃO -->
-                        <div class="mt-5 pt-4 border-t border-slate-100 space-y-2.5">
-                            <span class="block text-[10px] font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-briefcase text-emerald-600"></i> Serviços & Avaliações
+                        <div class="mt-5 pt-4 border-t border-amber-300 space-y-2.5">
+                            <span class="block text-[10px] font-black uppercase text-slate-700 tracking-wider flex items-center gap-1">
+                                <i class="fa-solid fa-briefcase text-emerald-700"></i> Serviços & Captação
                             </span>
                             <div class="grid grid-cols-2 gap-2">
-                                <a href="#secao-negocie" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
+                                <a href="#secao-negocie" class="bg-white hover:bg-emerald-50 border border-emerald-300 text-slate-800 hover:text-emerald-900 rounded-lg p-2.5 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
                                     <i class="fa-solid fa-calculator text-emerald-600 text-base"></i>
                                     <span>Avalie seu Imóvel</span>
                                 </a>
-                                <a href="#secao-negocie" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
+                                <a href="#secao-negocie" class="bg-white hover:bg-emerald-50 border border-emerald-300 text-slate-800 hover:text-emerald-900 rounded-lg p-2.5 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
                                     <i class="fa-solid fa-handshake text-emerald-600 text-base"></i>
                                     <span>Negocie seu Imóvel</span>
                                 </a>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -1009,13 +953,6 @@
         let listaImoveisCache = [];
         let operacaoPendenteLGPD = null;
         
-        // ESTADO DAS TAGS RÁPIDAS (PILLS)
-        const filtroTags = {
-            pet: false,
-            mobiliado: false,
-            destaque: false
-        };
-
         // CACHE DE GALERIA PARA NAVEGAÇÃO DOS CARDS
         const galeriaImoveisCache = {};
 
@@ -1156,7 +1093,7 @@
                 return url;
             };
 
-            // 1. Redes Oficiais + WhatsApp na FAIXA DE BUSCA
+            // 1. Redes Oficiais + WhatsApp na FAIXA PRETA
             const containerFaixaPreta = document.getElementById('faixa-preta-redes-sociais');
             if (containerFaixaPreta) {
                 let htmlFaixaPreta = '';
@@ -1235,7 +1172,7 @@
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
             document.getElementById('contador-imoveis').innerText = '0';
             document.getElementById('container-imoveis').innerHTML = `
-                <div class="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-sm">
+                <div class="bg-white rounded-xl p-12 text-center text-slate-500 border border-gray-200">
                     <i class="fa-solid fa-circle-exclamation text-4xl text-amber-500 mb-3"></i>
                     <h3 class="text-base font-bold text-slate-800">Vitrine Indisponível ou Não Encontrada</h3>
                     <p class="text-xs text-slate-400 mt-1">Verifique o endereço digitado ou certifique-se de que a imobiliária está ativa na plataforma.</p>
@@ -1243,40 +1180,12 @@
             `;
         }
 
-        // MÁSCARA MONETÁRIA BRASILEIRA (R$)
-        function mascaraMoedaEvento(input) {
-            let valor = input.value.replace(/\D/g, '');
-            if (!valor) { input.value = ''; return; }
-            input.value = Number(parseInt(valor, 10) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        function converterMoedaParaFloat(texto) {
-            if (!texto) return 0;
-            const limpo = String(texto).replace(/\./g, '').replace(',', '.').replace(/[^0-9.]/g, '');
-            const num = parseFloat(limpo);
-            return isNaN(num) ? 0 : num;
-        }
-
-        // CONTROLADOR DE TAGS RÁPIDAS
-        function alternarTag(tipo) {
-            filtroTags[tipo] = !filtroTags[tipo];
-            const btn = document.getElementById(`tag-chip-${tipo}`);
-            if (!btn) return;
-
-            if (filtroTags[tipo]) {
-                btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white border border-blue-600 shadow-sm transition flex items-center gap-1.5 cursor-pointer";
-            } else {
-                btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
-            }
-            aplicarFiltrosLaterais();
-        }
-
         async function carregarImoveisVitrine(filtros = {}) {
             if (!tenantAtual) return;
 
             const container = document.getElementById('container-imoveis');
             container.innerHTML = `
-                <div class="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
+                <div class="bg-white rounded-lg p-12 text-center text-slate-400 border border-gray-200">
                     <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
                     <p class="text-sm font-bold">Buscando imóveis disponíveis...</p>
                 </div>`;
@@ -1302,46 +1211,18 @@
                 if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
                 if (filtros.quartos) query = query.gte('quartos', Number(filtros.quartos));
                 if (filtros.bairro) query = query.ilike('bairro', `%${filtros.bairro}%`);
-                if (filtros.pet) query = query.eq('aceita_pet', true);
-                if (filtros.mobiliado) query = query.eq('mobiliado', true);
-                if (filtros.destaque) query = query.eq('destaque', true);
-
-                const { data, error } = await query.order('created_at', { ascending: false }).limit(60);
+                const { data, error } = await query.order('created_at', { ascending: false }).limit(30);
                 if (error) throw error;
 
-                let filtrados = data || [];
-
-                // FILTRAGEM DINÂMICA POR FAIXA DE PREÇO (MÍNIMO E MÁXIMO)
-                if (filtros.precoMin && filtros.precoMin > 0) {
-                    filtrados = filtrados.filter(im => {
-                        const preco = (filtros.finalidade === 'Locacao' || filtros.finalidade === 'Locação')
-                            ? (im.valor_locacao || im.valor_venda || 0)
-                            : (im.valor_venda || im.valor_locacao || 0);
-                        return Number(preco) >= filtros.precoMin;
-                    });
-                }
-
-                if (filtros.precoMax && filtros.precoMax > 0) {
-                    filtrados = filtrados.filter(im => {
-                        const preco = (filtros.finalidade === 'Locacao' || filtros.finalidade === 'Locação')
-                            ? (im.valor_locacao || im.valor_venda || 0)
-                            : (im.valor_venda || im.valor_locacao || 0);
-                        return Number(preco) <= filtros.precoMax;
-                    });
-                }
-
-                listaImoveisCache = filtrados;
+                listaImoveisCache = data || [];
                 document.getElementById('contador-imoveis').innerText = listaImoveisCache.length;
 
                 if (listaImoveisCache.length === 0) {
                     container.innerHTML = `
-                        <div class="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-sm">
+                        <div class="bg-white rounded-lg p-12 text-center text-slate-500 border border-gray-200">
                             <i class="fa-solid fa-house-chimney-crack text-4xl text-amber-500 mb-3"></i>
-                            <h3 class="text-base font-bold text-slate-800">Nenhum imóvel encontrado com esses critérios</h3>
-                            <p class="text-xs text-slate-400 mt-1">Tente ajustar a faixa de preço, limpar os filtros ou selecionar "Todas as Finalidades".</p>
-                            <button onclick="limparFiltros()" class="mt-4 px-4 py-2 rounded-xl bg-blue-50 text-blue-700 font-bold text-xs hover:bg-blue-100 transition cursor-pointer">
-                                Limpar Todos os Filtros
-                            </button>
+                            <h3 class="text-base font-bold text-slate-800">Nenhum imóvel encontrado nesta categoria</h3>
+                            <p class="text-xs text-slate-400 mt-1">Tente ajustar a finalidade ou selecione "Todas as Finalidades" para ver o catálogo completo.</p>
                         </div>`;
                     return;
                 }
@@ -1351,7 +1232,7 @@
             } catch (err) {
                 console.error('Erro ao consultar imóveis:', err);
                 container.innerHTML = `
-                    <div class="bg-white rounded-2xl p-8 text-center text-red-500 border border-red-200 shadow-sm">
+                    <div class="bg-white rounded-lg p-8 text-center text-red-500 border border-red-200">
                         <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
                         <p class="text-sm font-bold">Erro ao carregar catálogo de imóveis.</p>
                     </div>`;
@@ -1454,7 +1335,7 @@
 
                 const botaoVideoAcao = temVideo ? `
                     <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
-                            class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Assistir Vídeo Tour">
+                            class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Assistir Vídeo Tour">
                         <i class="fa-brands fa-youtube text-sm"></i> Tour
                     </button>` : '';
 
@@ -1487,25 +1368,25 @@
                 ` : '';
 
                 const card = `
-                <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden hover:shadow-md hover:border-slate-300 transition duration-200" id="card-${imovel.codigo_ref}">
+                <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
                     <div class="grid grid-cols-1 md:grid-cols-12">
                         <div class="md:col-span-5 relative bg-slate-900 min-h-[240px] select-none group">
                             <img id="img-card-${imovel.id}" src="${fotoInicial}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px] transition-opacity duration-300">
                             
-                            <div class="absolute top-3 left-3 ${corBadgeFoto} text-white text-[11px] font-black px-2.5 py-0.5 rounded shadow z-10">
+                            <div class="absolute top-3 left-3 ${corBadgeFoto} text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow z-10">
                                 ${badgeFoto}
                             </div>
                             
                             ${badgeVideoHtml}
 
-                            <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-sm z-10">
+                            <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-sm z-10">
                                 Ref: ${imovel.codigo_ref}
                             </div>
 
                             ${controlesGaleriaHtml}
                         </div>
 
-                        <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
+                        <div class="md:col-span-7 p-5 flex flex-col justify-between">
                             <div>
                                 <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${imovel.bairro || 'Localização'} - ${imovel.cidade || ''}/${imovel.uf || ''}</span>
                                 <h3 class="text-base font-bold text-slate-800 leading-snug mt-0.5 flex items-center flex-wrap gap-2">
@@ -1514,7 +1395,7 @@
                                         ${badgeFoto}
                                     </span>
                                 </h3>
-                                <div class="flex items-center gap-4 mt-3 text-xs text-slate-600 border-y border-slate-100 py-2.5">
+                                <div class="flex items-center gap-4 mt-3 text-xs text-slate-600 border-y border-gray-100 py-2.5">
                                     <span><i class="fa-solid fa-bed text-blue-600 mr-1"></i> ${imovel.quartos || 0} Dorms</span>
                                     <span><i class="fa-solid fa-bath text-blue-600 mr-1"></i> ${imovel.banheiros || 1} Banheiro</span>
                                     <span><i class="fa-solid fa-car text-blue-600 mr-1"></i> ${imovel.vagas || 0} Vagas</span>
@@ -1529,7 +1410,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
                                     <span class="text-[10px] text-slate-400 uppercase font-semibold block">${rotuloFinalidade}</span>
                                     <span class="text-xl font-extrabold azul-preco leading-none">${precoFormatado}</span>
@@ -1539,11 +1420,11 @@
                                 <div class="flex items-center gap-2 flex-wrap">
                                     ${botaoVideoAcao}
                                     <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
-                                            class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                            class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                                         <i class="fa-regular fa-envelope"></i> Mensagem
                                     </button>
 
-                                    <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                                    <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded transition flex items-center gap-1.5 shadow-sm">
                                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                                     </a>
                                 </div>
@@ -1618,36 +1499,14 @@
                 finalidade: document.getElementById('filtro-finalidade').value,
                 tipo: document.getElementById('filtro-tipo').value,
                 quartos: document.getElementById('filtro-quartos').value,
-                bairro: document.getElementById('filtro-bairro').value.trim(),
-                precoMin: converterMoedaParaFloat(document.getElementById('filtro-preco-min').value),
-                precoMax: converterMoedaParaFloat(document.getElementById('filtro-preco-max').value),
-                pet: filtroTags.pet,
-                mobiliado: filtroTags.mobiliado,
-                destaque: filtroTags.destaque
+                bairro: document.getElementById('filtro-bairro').value.trim()
             });
         }
 
         function limparFiltros() {
             document.getElementById('form-filtros').reset();
             document.getElementById('filtro-finalidade').value = '';
-            document.getElementById('filtro-tipo').value = '';
             document.getElementById('filtro-quartos').value = '';
-            document.getElementById('filtro-bairro').value = '';
-            document.getElementById('filtro-preco-min').value = '';
-            document.getElementById('filtro-preco-max').value = '';
-            
-            // Redefinir chips rápidos
-            filtroTags.pet = false;
-            filtroTags.mobiliado = false;
-            filtroTags.destaque = false;
-
-            ['pet', 'mobiliado', 'destaque'].forEach(tag => {
-                const btn = document.getElementById(`tag-chip-${tag}`);
-                if (btn) {
-                    btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
-                }
-            });
-
             carregarImoveisVitrine();
         }
 
