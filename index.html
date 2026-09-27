@@ -550,7 +550,7 @@
         <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO -->
+                <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO (SEM ACEITA PET) -->
                 <div class="lg:col-span-8 space-y-5">
                     
                     <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
@@ -559,10 +559,6 @@
                             <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 mr-1 flex items-center gap-1">
                                 <i class="fa-solid fa-sliders text-cyan-600"></i> Filtro Rápido:
                             </span>
-                            <button type="button" id="tag-chip-pet" onclick="alternarTag('pet')" 
-                                    class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                                <span>🐾 Aceita Pet</span>
-                            </button>
                             <button type="button" id="tag-chip-mobiliado" onclick="alternarTag('mobiliado')" 
                                     class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
                                 <span>🛋️ Mobiliado</span>
@@ -1011,7 +1007,6 @@
         
         // ESTADO DAS TAGS RÁPIDAS (PILLS)
         const filtroTags = {
-            pet: false,
             mobiliado: false,
             destaque: false
         };
@@ -1302,7 +1297,6 @@
                 if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
                 if (filtros.quartos) query = query.gte('quartos', Number(filtros.quartos));
                 if (filtros.bairro) query = query.ilike('bairro', `%${filtros.bairro}%`);
-                if (filtros.pet) query = query.eq('aceita_pet', true);
                 if (filtros.mobiliado) query = query.eq('mobiliado', true);
                 if (filtros.destaque) query = query.eq('destaque', true);
 
@@ -1621,7 +1615,6 @@
                 bairro: document.getElementById('filtro-bairro').value.trim(),
                 precoMin: converterMoedaParaFloat(document.getElementById('filtro-preco-min').value),
                 precoMax: converterMoedaParaFloat(document.getElementById('filtro-preco-max').value),
-                pet: filtroTags.pet,
                 mobiliado: filtroTags.mobiliado,
                 destaque: filtroTags.destaque
             });
@@ -1637,11 +1630,10 @@
             document.getElementById('filtro-preco-max').value = '';
             
             // Redefinir chips rápidos
-            filtroTags.pet = false;
             filtroTags.mobiliado = false;
             filtroTags.destaque = false;
 
-            ['pet', 'mobiliado', 'destaque'].forEach(tag => {
+            ['mobiliado', 'destaque'].forEach(tag => {
                 const btn = document.getElementById(`tag-chip-${tag}`);
                 if (btn) {
                     btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
