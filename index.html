@@ -1810,7 +1810,7 @@
             document.getElementById('modal-lgpd').classList.remove('hidden');
         }
 
-        async function executarConfirmacaoComLGPD() {
+  async function executarConfirmacaoComLGPD() {
             if (!operacaoPendenteLGPD) {
                 fecharModalLGPD();
                 return;
@@ -1821,7 +1821,8 @@
             btn.disabled = true;
 
             const dados = operacaoPendenteLGPD;
-            let leadCriadoId = null;
+            // Gera o UUID do lead diretamente no navegador do visitante (INSERT puro, sem exigir SELECT no banco)
+            const leadCriadoId = crypto.randomUUID();
 
             try {
                 if (dados.tipo === 'avaliacao') {
@@ -1831,9 +1832,10 @@
                         `• Descrição do Imóvel: ${dados.desc}\n` +
                         `• E-mail do Proprietário: ${dados.email}`;
 
-                    const { data: leadResp, error: errLead } = await supabaseClient
+                    const { error: errLead } = await supabaseClient
                         .from('leads_contatos')
                         .insert([{
+                            id: leadCriadoId,
                             imobiliaria_id: tenantAtual.id,
                             imovel_id: null,
                             nome: dados.nome,
@@ -1841,11 +1843,9 @@
                             email: dados.email,
                             mensagem: mensagemFormatada,
                             status: 'Novo'
-                        }])
-                        .select('id')
-                        .single();
+                        }]);
 
-                    if (!errLead && leadResp) leadCriadoId = leadResp.id;
+                    if (errLead) throw errLead;
 
                     await supabaseClient.from('termos_aceite_logs').insert([{
                         imobiliaria_id: tenantAtual.id,
@@ -1865,20 +1865,19 @@
                     const mensagemFormatada = `[CANAL: MENSAGEM DO SITE] [INTERESSE: ${dados.modalidade.toUpperCase()} - ${dados.valorRef}]\n\n` +
                         (dados.msg ? dados.msg : `Olá, tenho interesse neste imóvel para ${dados.modalidade.toLowerCase()}. Aguardo contato.`);
 
-                    const { data: leadResp, error: errLead } = await supabaseClient
+                    const { error: errLead } = await supabaseClient
                         .from('leads_contatos')
                         .insert([{
+                            id: leadCriadoId,
                             imobiliaria_id: tenantAtual.id,
                             imovel_id: dados.idImovel,
                             nome: dados.nome,
                             whatsapp: dados.zap,
                             mensagem: mensagemFormatada,
                             status: 'Novo'
-                        }])
-                        .select('id')
-                        .single();
+                        }]);
 
-                    if (!errLead && leadResp) leadCriadoId = leadResp.id;
+                    if (errLead) throw errLead;
 
                     await supabaseClient.from('termos_aceite_logs').insert([{
                         imobiliaria_id: tenantAtual.id,
@@ -1904,7 +1903,6 @@
                 btn.disabled = false;
             }
         }
-
         function sanitizarZap(num) {
             let limpo = ('' + num).replace(/\D/g, '');
             if (!limpo.startsWith('55')) limpo = '55' + limpo;
