@@ -155,16 +155,17 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
                 </div>
 
-                <div class="lg:col-span-3">
-                    <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                        <option value="">Status: Todos</option>
-                        <option value="Disponível">Disponível</option>
+   <div class="lg:col-span-3">
+                    <select id="filtro-status" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400 font-bold">
+                        <option value="Disponível" selected>Status: Disponíveis</option>
+                        <option value="">Status: Todos os Imóveis</option>
                         <option value="Em Proposta">Em Proposta</option>
                         <option value="Alugado">Alugado</option>
                         <option value="Vendido">Vendido</option>
                         <option value="Inativo">Inativo</option>
                     </select>
                 </div>
+
 
                 <div class="lg:col-span-3">
                     <select id="filtro-finalidade" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
@@ -1078,12 +1079,9 @@
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
-
-                listaImoveisCompleta = data || [];
-                listaImoveisFiltrados = [...listaImoveisCompleta];
-                paginaAtual = 1;
-                renderizarTabela();
-
+listaImoveisCompleta = data || [];
+                aplicarFiltros();
+                
             } catch (err) {
                 console.error('Erro ao buscar imóveis:', err);
                 document.getElementById('tabela-imoveis-corpo').innerHTML = `
