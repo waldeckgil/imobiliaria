@@ -929,22 +929,23 @@
                 </div>
             </div>
         </div>
-
-        <!-- NOTIFICAÇÃO FLUTUANTE DE AGRADECIMENTO AUTOMÁTICA (SUBSTITUTO DO MODAL COM BOTÃO) -->
-        <div id="toast-sucesso-agradecimento" class="fixed top-5 right-5 left-5 sm:left-auto sm:max-w-md z-[100] hidden transition-all duration-500 transform -translate-y-5 opacity-0 pointer-events-none">
-            <div class="bg-slate-950/95 border border-emerald-500 text-white p-4 rounded-2xl shadow-2xl backdrop-blur-md flex items-start gap-3.5">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 border border-emerald-500/40">
+<!-- JANELA CENTRALIZADA QUADRADA DE AGRADECIMENTO (COM TEMPORIZADOR AUTOMÁTICO) -->
+        <div id="modal-feedback-central" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden transition-all duration-300 opacity-0">
+            <div id="card-feedback-box" class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl space-y-4 border border-slate-100 transform transition-all duration-300 scale-95 relative overflow-hidden">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <h4 class="text-xs font-black uppercase text-emerald-400 tracking-wide">Mensagem Enviada com Sucesso!</h4>
-                    <p class="text-xs text-slate-200 mt-0.5 leading-relaxed" id="toast-texto-agradecimento">
-                        Agradecemos o seu contato! Em breve nossa equipe retornará através do seu WhatsApp.
-                    </p>
+                <h3 class="text-xl font-black text-slate-900 leading-snug">Mensagem Enviada com Sucesso!</h3>
+                <p class="text-xs text-slate-600 leading-relaxed" id="feedback-texto-central">
+                    Agradecemos o seu contato! Em breve nossa equipe retornará através do seu WhatsApp.
+                </p>
+                <!-- BARRA DE PROGRESSO DO TEMPORIZADOR -->
+                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-3">
+                    <div id="barra-timer-feedback" class="bg-emerald-500 h-full w-full transition-all duration-[4500ms] ease-linear"></div>
                 </div>
+                <span class="text-[10px] text-slate-400 font-bold block">Fechando automaticamente...</span>
             </div>
         </div>
-
         <!-- WHATSAPP FLUTUANTE -->
         <a id="btn-flutuante-zap" href="#" target="_blank" 
            class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40 hidden">
@@ -1748,32 +1749,47 @@
             operacaoPendenteLGPD = null;
         }
 
-        // NOTIFICAÇÃO ELEGANTE AUTOMÁTICA: AGRADECE EM NOME DA IMOBILIÁRIA E DESAPARECE SEM EXIGIR CLIQUES
+   // JANELA CENTRALIZADA DE AGRADECIMENTO: EXIBE NO CENTRO, ANIMA A BARRA E FECHA SOZINHA EM 4.5s
         function exibirToastAgradecimento() {
-            const nomeImob = (tenantAtual && tenantAtual.nome_fantasia) ? tenantAtual.nome_fantasia : 'nossa imobiliária';
-            const toast = document.getElementById('toast-sucesso-agradecimento');
-            const txt = document.getElementById('toast-texto-agradecimento');
-            if (!toast) return;
+            const modal = document.getElementById('modal-feedback-central');
+            const card = document.getElementById('card-feedback-box');
+            const txt = document.getElementById('feedback-texto-central');
+            const barra = document.getElementById('barra-timer-feedback');
+            if (!modal) return;
 
+            const nomeImob = (tenantAtual && tenantAtual.nome_fantasia) ? tenantAtual.nome_fantasia : 'nossa imobiliária';
             if (txt) {
-                txt.innerHTML = `Agradecemos o seu contato com a <strong>${nomeImob}</strong>! Em breve nossa equipe retornará através do seu WhatsApp.`;
+                txt.innerHTML = `Agradecemos o seu contato com a <strong class="text-slate-900">${nomeImob}</strong>! Em breve nossa equipe retornará através do WhatsApp ou telefone informado.`;
             }
 
-            // Exibe suavemente o toast no topo da tela
-            toast.classList.remove('hidden');
+            if (barra) {
+                barra.style.width = '100%';
+            }
+
+            // Exibe a janela no centro com fundo escurecido e zoom suave
+            modal.classList.remove('hidden');
             setTimeout(() => {
-                toast.classList.remove('-translate-y-5', 'opacity-0');
-                toast.classList.add('translate-y-0', 'opacity-100');
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                if (card) {
+                    card.classList.remove('scale-95');
+                    card.classList.add('scale-100');
+                }
+                // Anima a barra de tempo encolhendo ao longo de 4.5s
+                if (barra) barra.style.width = '0%';
             }, 50);
 
-            // Desaparece sozinho após 4.5 segundos sem travar a tela
+            // Fecha automaticamente após 4.5 segundos sem exigir nenhum clique do cliente
             setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('-translate-y-5', 'opacity-0');
-                setTimeout(() => toast.classList.add('hidden'), 500);
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0');
+                if (card) {
+                    card.classList.remove('scale-100');
+                    card.classList.add('scale-95');
+                }
+                setTimeout(() => modal.classList.add('hidden'), 350);
             }, 4500);
         }
-
         function iniciarEnvioAvaliacao(event) {
             event.preventDefault();
             operacaoPendenteLGPD = {
