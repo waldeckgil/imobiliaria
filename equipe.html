@@ -41,8 +41,57 @@
             <span>MODO SOMENTE LEITURA: Assinatura pendente. O cadastro e edição de colaboradores estão desabilitados.</span>
         </div>
     </div>
+<!-- CABEÇALHO TOPBAR LIMPO COM TÍTULO DESTACADO, RETORNO AO DASHBOARD E RELÓGIO -->
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3.5 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
-   
+            <!-- IDENTIFICAÇÃO DO MÓDULO EM TAMANHO GRANDE & DADOS DA IMOBILIÁRIA -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shrink-0">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <h1 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">Equipe & Permissões</h1>
+                        <span id="topbar-cargo-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
+                            DONO
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap text-xs text-slate-400 mt-0.5">
+                        <span id="topbar-imob-nome" class="font-bold text-slate-300">CARREGANDO...</span>
+                        <span class="text-slate-600 hidden sm:inline">•</span>
+                        <span id="topbar-user-nome" class="hidden md:inline">Identificando usuário...</span>
+                        <span class="text-slate-600 hidden sm:inline">•</span>
+                        <span class="text-cyan-300 font-mono text-[11px] inline-flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-0.5 rounded-lg border border-slate-800 shadow-sm">
+                            <i class="fa-regular fa-clock text-cyan-400 text-[10px]"></i>
+                            <span id="topbar-data-hora">Carregando data...</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AÇÕES RÁPIDAS: RETORNO AO DASHBOARD 360, ADICIONAR COLABORADOR E SAIR -->
+            <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-center text-xs">
+                <!-- BOTÃO DE VOLTA AO CENTRO DE COMANDO (DASHBOARD 360) -->
+                <a href="dashboard.html" 
+                   class="bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-bold px-3.5 py-2 rounded-xl border border-slate-700 hover:border-cyan-400 flex items-center gap-2 transition cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
+                    <span>Dashboard 360</span>
+                </a>
+
+                <button onclick="abrirModalColaborador()" id="btn-novo-membro" 
+                        class="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black px-4 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-user-plus text-xs"></i>
+                    <span>Adicionar Colaborador</span>
+                </button>
+
+                <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span class="hidden sm:inline">Sair</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
