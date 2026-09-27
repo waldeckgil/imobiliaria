@@ -553,7 +553,8 @@
                 <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO (SEM ACEITA PET) -->
                 <div class="lg:col-span-8 space-y-5">
                     
-                    <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
+
+<!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
                     <div class="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-sm flex items-center gap-2 flex-wrap">
                         <span class="text-[11px] font-black uppercase tracking-wider text-slate-400 mr-1 flex items-center gap-1">
                             <i class="fa-solid fa-sliders text-cyan-600"></i> Filtro Rápido:
@@ -573,6 +574,8 @@
                             <span>Todos os Imóveis</span>
                         </button>
                     </div>
+
+
 
                     <!-- CONTAINER DOS CARDS DE IMÓVEIS -->
                     <div id="container-imoveis" class="space-y-6">
@@ -930,18 +933,19 @@
             </div>
         </div>
 
-        <!-- NOTIFICAÇÃO FLUTUANTE DE AGRADECIMENTO AUTOMÁTICA (SUBSTITUTO DO MODAL COM BOTÃO) -->
-        <div id="toast-sucesso-agradecimento" class="fixed top-5 right-5 left-5 sm:left-auto sm:max-w-md z-[100] hidden transition-all duration-500 transform -translate-y-5 opacity-0 pointer-events-none">
-            <div class="bg-slate-950/95 border border-emerald-500 text-white p-4 rounded-2xl shadow-2xl backdrop-blur-md flex items-start gap-3.5">
-                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 border border-emerald-500/40">
+        <!-- MODAL FEEDBACK SUCESSO -->
+        <div id="modal-sucesso-mensagem" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+                <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mx-auto shadow-sm">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <h4 class="text-xs font-black uppercase text-emerald-400 tracking-wide">Mensagem Enviada com Sucesso!</h4>
-                    <p class="text-xs text-slate-200 mt-0.5 leading-relaxed" id="toast-texto-agradecimento">
-                        Agradecemos o seu contato! Em breve nossa equipe retornará através do seu WhatsApp.
-                    </p>
-                </div>
+                <h3 class="text-lg font-black text-slate-900">Mensagem Enviada!</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Sua mensagem foi recebida com sucesso pela nossa equipe. Em breve entraremos em contato através do telefone ou WhatsApp informado.
+                </p>
+                <button onclick="fecharModalSucesso()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                    Entendido, Continuar Navegando
+                </button>
             </div>
         </div>
 
@@ -1748,30 +1752,8 @@
             operacaoPendenteLGPD = null;
         }
 
-        // NOTIFICAÇÃO ELEGANTE AUTOMÁTICA: AGRADECE EM NOME DA IMOBILIÁRIA E DESAPARECE SEM EXIGIR CLIQUES
-        function exibirToastAgradecimento() {
-            const nomeImob = (tenantAtual && tenantAtual.nome_fantasia) ? tenantAtual.nome_fantasia : 'nossa imobiliária';
-            const toast = document.getElementById('toast-sucesso-agradecimento');
-            const txt = document.getElementById('toast-texto-agradecimento');
-            if (!toast) return;
-
-            if (txt) {
-                txt.innerHTML = `Agradecemos o seu contato com a <strong>${nomeImob}</strong>! Em breve nossa equipe retornará através do seu WhatsApp.`;
-            }
-
-            // Exibe suavemente o toast no topo da tela
-            toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.remove('-translate-y-5', 'opacity-0');
-                toast.classList.add('translate-y-0', 'opacity-100');
-            }, 50);
-
-            // Desaparece sozinho após 4.5 segundos sem travar a tela
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('-translate-y-5', 'opacity-0');
-                setTimeout(() => toast.classList.add('hidden'), 500);
-            }, 4500);
+        function fecharModalSucesso() {
+            document.getElementById('modal-sucesso-mensagem').classList.add('hidden');
         }
 
         function iniciarEnvioAvaliacao(event) {
@@ -1828,7 +1810,7 @@
             document.getElementById('modal-lgpd').classList.remove('hidden');
         }
 
-        async function executarConfirmacaoComLGPD() {
+  async function executarConfirmacaoComLGPD() {
             if (!operacaoPendenteLGPD) {
                 fecharModalLGPD();
                 return;
@@ -1877,7 +1859,7 @@
 
                     fecharModalLGPD();
                     document.getElementById('form-avaliacao-imovel').reset();
-                    exibirToastAgradecimento();
+                    document.getElementById('modal-sucesso-mensagem').classList.remove('hidden');
 
                 } else if (dados.tipo === 'imovel') {
                     const mensagemFormatada = `[CANAL: MENSAGEM DO SITE] [INTERESSE: ${dados.modalidade.toUpperCase()} - ${dados.valorRef}]\n\n` +
@@ -1910,7 +1892,7 @@
                     fecharModalLead();
                     fecharModalLGPD();
                     document.getElementById('form-lead').reset();
-                    exibirToastAgradecimento();
+                    document.getElementById('modal-sucesso-mensagem').classList.remove('hidden');
                 }
 
             } catch (err) {
@@ -1921,7 +1903,6 @@
                 btn.disabled = false;
             }
         }
-
         function sanitizarZap(num) {
             let limpo = ('' + num).replace(/\D/g, '');
             if (!limpo.startsWith('55')) limpo = '55' + limpo;
