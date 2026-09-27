@@ -592,18 +592,6 @@
                             </div>
 
                             <div>
-<div>
-                                <label class="block font-bold text-slate-800 mb-1">Tipo de Imóvel</label>
-                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
-                                    <option value="" selected>Todos os Tipos</option>
-                                    <option value="Apartamento">Apartamento</option>
-                                    <option value="Casa">Casa</option>
-                                    <option value="Terreno">Terreno</option>
-                                    <option value="Comercial">Comercial</option>
-                                </select>
-                            </div>
-
-                            <div>
                                 <label class="block font-bold text-slate-800 mb-1">Dormitórios</label>
                                 <select id="filtro-quartos" onchange="aplicarFiltrosLaterais()" class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none cursor-pointer">
                                     <option value="" selected>Todos os Dormitórios</option>
@@ -619,7 +607,7 @@
                                 <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Digite o nome do bairro..." class="w-full bg-white border border-amber-300 rounded p-2 text-xs text-slate-800 outline-none">
                             </div>
 
-   <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
+                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded shadow hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer">
                                 <i class="fa-solid fa-magnifying-glass mr-1.5"></i> Filtrar Imóveis
                             </button>
                         </form>
@@ -1220,7 +1208,7 @@
                     }
                 }
 
- if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
+                if (filtros.tipo) query = query.eq('tipo', filtros.tipo);
                 if (filtros.quartos) query = query.gte('quartos', Number(filtros.quartos));
                 if (filtros.bairro) query = query.ilike('bairro', `%${filtros.bairro}%`);
                 const { data, error } = await query.order('created_at', { ascending: false }).limit(30);
@@ -1321,7 +1309,7 @@
                 const totalFotos = fotosUnificadas.length;
                 const fotoInicial = fotosUnificadas[0];
 
-  let badgeFoto = 'Venda';
+                let badgeFoto = 'Venda';
                 let corBadgeFoto = 'bg-emerald-600';
                 if (imovel.finalidade === 'Ambos') {
                     badgeFoto = 'Venda & Locação';
@@ -1369,13 +1357,23 @@
                     </div>
                 ` : '';
 
+                // LÓGICA DE DESCRIÇÃO EXPANSÍVEL (VER MAIS / VER MENOS)
+                const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia ou investimento.';
+                const ehDescricaoLonga = textoDescricao.trim().length > 110;
+                const botaoExpandirDesc = ehDescricaoLonga ? `
+                    <button type="button" id="btn-toggle-desc-${imovel.id}" onclick="alternarDescricaoCard('${imovel.id}')" 
+                            class="text-blue-700 hover:text-blue-900 font-bold text-[11px] mt-1 inline-flex items-center gap-1 cursor-pointer transition">
+                        <span>Ver mais</span> <i class="fa-solid fa-chevron-down text-[9px]"></i>
+                    </button>
+                ` : '';
+
                 const card = `
                 <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition duration-200" id="card-${imovel.codigo_ref}">
                     <div class="grid grid-cols-1 md:grid-cols-12">
                         <div class="md:col-span-5 relative bg-slate-900 min-h-[240px] select-none group">
                             <img id="img-card-${imovel.id}" src="${fotoInicial}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px] transition-opacity duration-300">
                             
-              <div class="absolute top-3 left-3 ${corBadgeFoto} text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow z-10">
+                            <div class="absolute top-3 left-3 ${corBadgeFoto} text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow z-10">
                                 ${badgeFoto}
                             </div>
                             
@@ -1390,7 +1388,7 @@
 
                         <div class="md:col-span-7 p-5 flex flex-col justify-between">
                             <div>
- <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${imovel.bairro || 'Localização'} - ${imovel.cidade || ''}/${imovel.uf || ''}</span>
+                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${imovel.bairro || 'Localização'} - ${imovel.cidade || ''}/${imovel.uf || ''}</span>
                                 <h3 class="text-base font-bold text-slate-800 leading-snug mt-0.5 flex items-center flex-wrap gap-2">
                                     <span>${imovel.titulo}</span>
                                     <span class="${corBadgeFoto} text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider shadow-sm">
@@ -1404,9 +1402,12 @@
                                     <span><i class="fa-solid fa-ruler-combined text-blue-600 mr-1"></i> ${imovel.area_util || 0} m²</span>
                                 </div>
 
-                                <p class="text-xs text-slate-500 mt-2.5 line-clamp-2 leading-relaxed">
-                                    ${imovel.descricao || 'Excelente oportunidade para moradia ou investimento.'}
-                                </p>
+                                <div class="mt-2.5">
+                                    <p id="desc-imovel-${imovel.id}" class="text-xs text-slate-500 line-clamp-2 leading-relaxed whitespace-pre-line">
+                                        ${textoDescricao}
+                                    </p>
+                                    ${botaoExpandirDesc}
+                                </div>
                             </div>
 
                             <div class="mt-4 pt-3 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1434,6 +1435,23 @@
 
                 container.innerHTML += card;
             });
+        }
+
+        // CONTROLADOR DE EXPANSÃO DA DESCRIÇÃO (VER MAIS / VER MENOS)
+        function alternarDescricaoCard(imovelId) {
+            const pDesc = document.getElementById(`desc-imovel-${imovelId}`);
+            const btn = document.getElementById(`btn-toggle-desc-${imovelId}`);
+            if (!pDesc || !btn) return;
+
+            const estaExpandido = !pDesc.classList.contains('line-clamp-2');
+
+            if (estaExpandido) {
+                pDesc.classList.add('line-clamp-2');
+                btn.innerHTML = '<span>Ver mais</span> <i class="fa-solid fa-chevron-down text-[9px]"></i>';
+            } else {
+                pDesc.classList.remove('line-clamp-2');
+                btn.innerHTML = '<span>Ver menos</span> <i class="fa-solid fa-chevron-up text-[9px]"></i>';
+            }
         }
 
         // CONTROLADOR DE NAVEGAÇÃO DA GALERIA NO CARD
@@ -1475,7 +1493,8 @@
             document.getElementById('filtro-tipo').value = tipo;
             aplicarFiltrosLaterais();
         }
-function aplicarFiltrosLaterais() {
+
+        function aplicarFiltrosLaterais() {
             carregarImoveisVitrine({
                 finalidade: document.getElementById('filtro-finalidade').value,
                 tipo: document.getElementById('filtro-tipo').value,

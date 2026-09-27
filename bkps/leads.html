@@ -48,12 +48,12 @@
 
         /* ANIMAÇÃO DAS NOTIFICAÇÕES TOAST */
         @keyframes toastEntrar {
-            from { transform: translateX(110%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         @keyframes toastSair {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(110%); opacity: 0; }
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-30px); opacity: 0; }
         }
         .animar-toast-in { animation: toastEntrar 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animar-toast-out { animation: toastSair 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -68,12 +68,12 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- CONTAINER FLUTUANTE GLOBAL DE TOASTS (NOTIFICAÇÕES DO SISTEMA) -->
-    <div id="container-toasts" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none p-2"></div>
+    <!-- CONTAINER FLUTUANTE GLOBAL DE TOASTS (CENTRALIZADO NO CENTRO DO TOPO DA TELA) -->
+    <div id="container-toasts" class="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 max-w-lg w-full pointer-events-none p-3"></div>
 
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
-        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
+        <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto justify-between">
             <div class="flex items-center gap-2">
                 <span class="text-base">👑</span>
                 <span>MODO SUPORTE MASTER:</span>
@@ -89,7 +89,7 @@
 
     <!-- FAIXA 2: MODO LEITURA (VENCIDO) -->
     <div id="faixa-modo-leitura" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-black flex items-center justify-between shadow-lg sticky top-0 z-40">
-        <div class="flex items-center gap-2 max-w-7xl mx-auto w-full">
+        <div class="flex items-center gap-2 w-full max-w-[1560px] mx-auto">
             <i class="fa-solid fa-triangle-exclamation text-base"></i>
             <span>MODO SOMENTE LEITURA: Assinatura pendente. A alteração de status, agendamentos, propostas e exclusões estão desabilitadas.</span>
         </div>
@@ -97,7 +97,8 @@
 
     <!-- CABEÇALHO TOPBAR -->
     <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="w-full max-w-[1560px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
                     <i class="fa-solid fa-comments"></i>
@@ -113,11 +114,17 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 text-xs">
+            <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap justify-end text-xs">
+                <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
+                <button type="button" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Novo Atendimento</span>
+                </button>
+
                 <a id="btn-ver-vitrine" href="index.html" target="_blank" 
                    class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    <span>Ver Vitrine</span>
+                    <span class="hidden sm:inline">Ver Vitrine</span>
                 </a>
 
                 <button onclick="carregarLeads(true)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition cursor-pointer" title="Atualizar Leads">
@@ -135,7 +142,7 @@
 
     <!-- NAVEGAÇÃO DOS MÓDULOS -->
     <nav class="bg-slate-950/60 border-b border-slate-800/80 px-4 sm:px-8 py-2.5">
-        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3.5 overflow-x-auto text-sm sm:text-base py-1">
+        <div class="w-full max-w-[1560px] mx-auto flex items-center justify-center gap-2 sm:gap-3.5 overflow-x-auto text-sm sm:text-base py-1">
             <a href="dashboard.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
                 <i class="fa-solid fa-chart-pie text-slate-400"></i>
                 <span>Dashboard 360</span>
@@ -159,137 +166,187 @@
         </div>
     </nav>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto w-full p-4 sm:p-8 flex-1 space-y-6">
+    <!-- CORPO PRINCIPAL -->
+    <main class="w-full max-w-[1560px] mx-auto px-4 sm:px-6 py-4 flex-1 space-y-6">
         
-        <!-- CARDS DO FUNIL COMERCIAL (INTERATIVOS, COM TOOLTIPS E FILTRO POR CLIQUE) -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <!-- CARDS DO FUNIL COMERCIAL -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             
             <!-- CARD 1: NOVOS -->
             <div onclick="clicarCardFunil('Novo')" 
                  id="card-funil-Novo"
-                 class="group relative box-tech p-4 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-3.5 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Novos (Sem Retorno)</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Novos</span>
                     <i class="fa-solid fa-circle-dot text-blue-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-novos" class="text-2xl font-black text-white mt-1 block">0</span>
                 <span class="text-[10px] text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-blue-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-blue-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-bell"></i>
                         <span>Estágio: Novo Lead</span>
                     </div>
-                    <p class="leading-relaxed">Clientes que acabaram de enviar formulário pelo site. Requer contato rápido no WhatsApp para não esfriar a oportunidade.</p>
+                    <p class="leading-relaxed">Clientes que acabaram de enviar contato pelo site. Requer abordagem prioritária.</p>
                 </div>
             </div>
 
             <!-- CARD 2: EM ATENDIMENTO -->
             <div onclick="clicarCardFunil('Em Atendimento')" 
                  id="card-funil-Em-Atendimento"
-                 class="group relative box-tech p-4 border-l-4 border-l-amber-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-amber-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-3.5 border-l-4 border-l-amber-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-amber-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Em Atendimento</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Atendimento</span>
                     <i class="fa-solid fa-headset text-amber-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-atendimento" class="text-2xl font-black text-amber-400 mt-1 block">0</span>
                 <span class="text-[10px] text-amber-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-amber-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-amber-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-headset"></i>
                         <span>Estágio: Em Conversa</span>
                     </div>
-                    <p class="leading-relaxed">O corretor já iniciou a sondagem com o cliente via WhatsApp/telefone para entender perfil, crédito e alinhar visitas.</p>
+                    <p class="leading-relaxed">O corretor já iniciou a sondagem com o cliente para entender perfil e alinhar visitas.</p>
                 </div>
             </div>
 
             <!-- CARD 3: VISITAS AGENDADAS -->
             <div onclick="clicarCardFunil('Visita Agendada')" 
                  id="card-funil-Visita-Agendada"
-                 class="group relative box-tech p-4 border-l-4 border-l-cyan-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-3.5 border-l-4 border-l-cyan-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Visitas Agendadas</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Visitas</span>
                     <i class="fa-solid fa-calendar-check text-cyan-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-visitas" class="text-2xl font-black text-cyan-400 mt-1 block">0</span>
                 <span class="text-[10px] text-cyan-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-cyan-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-cyan-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-calendar-days"></i>
                         <span>Estágio: Visita Marcada</span>
                     </div>
-                    <p class="leading-relaxed">Compromissos agendados no imóvel. Use a confirmação de WhatsApp para reduzir faltas e registrar instruções de portaria.</p>
+                    <p class="leading-relaxed">Compromissos agendados no imóvel.</p>
                 </div>
             </div>
 
             <!-- CARD 4: PROPOSTAS FEITAS -->
             <div onclick="clicarCardFunil('Proposta')" 
                  id="card-funil-Proposta"
-                 class="group relative box-tech p-4 border-l-4 border-l-purple-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-purple-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-3.5 border-l-4 border-l-purple-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-purple-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Propostas Feitas</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Propostas</span>
                     <i class="fa-solid fa-hand-holding-dollar text-purple-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-propostas" class="text-2xl font-black text-purple-400 mt-1 block">0</span>
                 <span class="text-[10px] text-purple-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-purple-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-purple-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-file-contract"></i>
                         <span>Estágio: Negociação Ativa</span>
                     </div>
-                    <p class="leading-relaxed">Cliente fez oferta de valor ou condições de pagamento. Fase crítica para alinhamento entre corretor, comprador e proprietário.</p>
+                    <p class="leading-relaxed">Cliente fez oferta de valor ou condições de pagamento.</p>
                 </div>
             </div>
 
-            <!-- CARD 5: VENDAS CONCLUÍDAS -->
+            <!-- CARD 5: CONCLUÍDOS -->
             <div onclick="clicarCardFunil('Fechado')" 
                  id="card-funil-Fechado"
-                 class="group relative box-tech p-4 border-l-4 border-l-emerald-400 col-span-2 sm:col-span-1 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/80 hover:bg-slate-850">
+                 class="group relative box-tech p-3.5 border-l-4 border-l-emerald-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-emerald-300/80 hover:bg-slate-850">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Vendas Concluídas</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Concluídos</span>
                     <i class="fa-solid fa-handshake text-emerald-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
                 </div>
                 <span id="kpi-leads-fechados" class="text-2xl font-black text-emerald-400 mt-1 block">0</span>
                 <span class="text-[10px] text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar estágio
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
                 </span>
 
-                <!-- TOOLTIP EXPLICATIVO FLUTUANTE -->
                 <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-emerald-400/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
                     <div class="font-black text-emerald-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
                         <i class="fa-solid fa-trophy"></i>
-                        <span>Estágio: Venda Fechada</span>
+                        <span>Estágio: Negócio Fechado</span>
                     </div>
-                    <p class="leading-relaxed">Contrato assinado e comissões calculadas. O imóvel é retirado da vitrine pública e registrado no módulo financeiro.</p>
+                    <p class="leading-relaxed">Contrato formalizado e comissões calculadas.</p>
+                </div>
+            </div>
+
+            <!-- CARD 6: CANCELADOS -->
+            <div onclick="clicarCardFunil('Cancelado')" 
+                 id="card-funil-Cancelado"
+                 class="group relative box-tech p-3.5 border-l-4 border-l-rose-500 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-rose-400/80 hover:bg-slate-850">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Cancelados</span>
+                    <i class="fa-solid fa-calendar-xmark text-rose-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
+                </div>
+                <span id="kpi-leads-cancelados" class="text-2xl font-black text-rose-400 mt-1 block">0</span>
+                <span class="text-[10px] text-rose-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                </span>
+
+                <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-rose-500/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
+                    <div class="font-black text-rose-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-calendar-xmark"></i>
+                        <span>Estágio: Visita Cancelada</span>
+                    </div>
+                    <p class="leading-relaxed">Visitas desmarcadas ou canceladas antes do fechamento.</p>
+                </div>
+            </div>
+
+            <!-- CARD 7: PERDIDOS -->
+            <div onclick="clicarCardFunil('Perdido')" 
+                 id="card-funil-Perdido"
+                 class="group relative box-tech p-3.5 border-l-4 border-l-slate-500 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-slate-400/80 hover:bg-slate-850">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Perdidos</span>
+                    <i class="fa-solid fa-ban text-slate-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
+                </div>
+                <span id="kpi-leads-perdidos" class="text-2xl font-black text-slate-400 mt-1 block">0</span>
+                <span class="text-[10px] text-slate-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                </span>
+
+                <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-slate-600/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
+                    <div class="font-black text-slate-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Estágio: Oportunidade Encerrada</span>
+                    </div>
+                    <p class="leading-relaxed">Contatos sem perfil de compra ou sem resposta após tentativas.</p>
                 </div>
             </div>
 
         </div>
 
-        <!-- BARRA DE FILTROS E BUSCA -->
+        <!-- BARRA DE FILTROS E BUSCA COM SELETOR DE MODALIDADE -->
         <div class="box-tech p-4">
-            <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-12 gap-3 text-xs">
-                <div class="lg:col-span-5 relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 text-xs">
+                
+                <div class="lg:col-span-4 relative">
                     <input type="text" id="filtro-busca" placeholder="Buscar por cliente, WhatsApp, ref ou mensagem..." 
                            oninput="aplicarFiltros()"
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white text-xs outline-none focus:border-cyan-400">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500"></i>
+                </div>
+
+                <!-- FILTRO DE MODALIDADE (VENDA / LOCAÇÃO) -->
+                <div class="lg:col-span-2">
+                    <select id="filtro-modalidade" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <option value="">Modalidade: Todas</option>
+                        <option value="VENDA">🏷️ Somente Venda</option>
+                        <option value="LOCACAO">🔑 Somente Locação</option>
+                        <option value="AVALIACAO">📋 Avaliação / Captação</option>
+                    </select>
                 </div>
 
                 <div class="lg:col-span-3">
@@ -299,13 +356,13 @@
                         <option value="Em Atendimento">🟡 Em Atendimento</option>
                         <option value="Visita Agendada">🟣 Visita Agendada</option>
                         <option value="Proposta">🟠 Proposta Feita</option>
-                        <option value="Fechado">🟢 Venda Concluída</option>
+                        <option value="Fechado">🟢 Concluído</option>
                         <option value="Cancelado">🚫 Cancelado</option>
                         <option value="Perdido">⚫ Perdido</option>
                     </select>
                 </div>
 
-                <div class="lg:col-span-3">
+                <div class="lg:col-span-2">
                     <select id="filtro-corretor" onchange="aplicarFiltros()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                         <option value="">Corretor: Todos</option>
                     </select>
@@ -327,7 +384,7 @@
                         <tr>
                             <th class="py-3 px-4">Recebido em</th>
                             <th class="py-3 px-3">Cliente</th>
-                            <th class="py-3 px-3">Origem / Imóvel</th>
+                            <th class="py-3 px-3">Origem / Negócio & Imóvel</th>
                             <th class="py-3 px-3">Mensagem Recebida</th>
                             <th class="py-3 px-3">Estágio do Funil</th>
                             <th class="py-3 px-3">Corretor Responsável</th>
@@ -357,27 +414,42 @@
     <!-- MODAL PRINCIPAL: COCKPIT UNIFICADO DO ATENDIMENTO (FICHA DO LEAD)    -->
     <!-- ==================================================================== -->
     <div id="modal-cockpit-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden">
-        <div class="box-tech max-w-4xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[94vh] flex flex-col bg-slate-900">
+        <div class="box-tech max-w-6xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[94vh] flex flex-col bg-slate-900">
             
-            <!-- CABEÇALHO DO MODAL -->
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-cyan-500 text-slate-950 flex items-center justify-center font-black">
-                        <i class="fa-solid fa-address-card text-sm"></i>
+            <!-- CABEÇALHO DO MODAL COM STATUS E ALERTA DE VISITA EM DESTAQUE NO TOPO -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md shrink-0">
+                        <i class="fa-solid fa-address-card"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm sm:text-base font-black text-white">Ficha de Atendimento do Lead</h3>
-                        <p class="text-[11px] text-slate-400 font-mono" id="cockpit-lead-header-info">Carregando...</p>
+                        <div class="flex items-center gap-2.5 flex-wrap">
+                            <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wide">Ficha de Atendimento do Lead</h3>
+                            <!-- BADGE DE STATUS GRANDE E VISÍVEL -->
+                            <span id="cockpit-header-status-badge" class="px-4 sm:px-5 py-1.5 rounded-xl text-xs sm:text-sm font-black uppercase border-2 shadow-lg tracking-wider inline-flex items-center gap-2.5 font-sans">
+                                STATUS
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-mono mt-0.5" id="cockpit-lead-header-info">Carregando...</p>
                     </div>
                 </div>
-                <button onclick="fecharCockpitLead()" class="text-slate-500 hover:text-white transition cursor-pointer p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <!-- ALERTA DE VISITA AGENDADA DESTACADO NO TOPO -->
+                    <div id="cockpit-header-visita-alert" class="hidden bg-cyan-950/90 border border-cyan-400 text-cyan-200 px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-cyan-950/60 animate-pulse">
+                        <i class="fa-solid fa-calendar-check text-cyan-400 text-sm"></i>
+                        <span id="cockpit-header-visita-texto">VISITA AGENDADA</span>
+                    </div>
+
+                    <button onclick="fecharCockpitLead()" class="text-slate-500 hover:text-white transition cursor-pointer p-1">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
             </div>
 
             <input type="hidden" id="cockpit-lead-id">
 
-            <!-- BLOCO 1: RESUMO DO CLIENTE + CARD DO IMÓVEL + CORRETOR -->
+            <!-- BLOCO 1: RESUMO DO CLIENTE + CARD DO IMÓVEL COM MODALIDADE VISÍVEL + CORRETOR -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 text-xs">
                 
                 <!-- DADOS DO CLIENTE -->
@@ -393,7 +465,7 @@
 
                 <!-- CONTEXTO DO IMÓVEL -->
                 <div class="md:col-span-4 space-y-1 border-b md:border-b-0 md:border-r border-slate-800 pb-2 md:pb-0 md:pr-3" id="cockpit-imovel-card">
-                    <!-- Dinâmico -->
+                    <!-- Dinâmico com badge de modalidade -->
                 </div>
 
                 <!-- CORRETOR RESPONSÁVEL -->
@@ -407,11 +479,17 @@
                 </div>
             </div>
 
-            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS (PIPELINE INTERATIVO COM CANCELADO INCLUSO) -->
+            <!-- BLOCO 2: RÉGUA VISUAL DE ETAPAS COM INTERROGAÇÕES & BOTÃO GUIA -->
             <div class="space-y-1.5">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Progresso do Lead no Funil de Vendas</span>
+                    <button type="button" onclick="abrirGuiaEtapasFunil()" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1 transition cursor-pointer" title="Ver manual completo de cada etapa">
+                        <i class="fa-solid fa-circle-question text-xs"></i>
+                        <span>Como funciona cada etapa?</span>
+                    </button>
+                </div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5" id="cockpit-pipeline-botoes">
-                    <!-- Gerado via JavaScript -->
+                    <!-- Gerado dinamicamente via JavaScript -->
                 </div>
             </div>
 
@@ -437,8 +515,8 @@
 
                 <button onclick="trocarAbaCockpit('fechamento')" id="btn-aba-fechamento" 
                         class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition cursor-pointer">
-                    <i class="fa-solid fa-handshake text-amber-400"></i>
-                    <span>Concluir Venda (Aperto de Mão)</span>
+                    <i id="icone-aba-fechamento" class="fa-solid fa-handshake text-amber-400"></i>
+                    <span id="txt-aba-fechamento">Concluir Negócio</span>
                 </button>
             </div>
 
@@ -450,7 +528,7 @@
                     <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
                         <label class="block text-[11px] font-bold uppercase text-slate-400">Adicionar Nota Interna ou Resumo de Conversa</label>
                         <div class="flex gap-2">
-                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, pediu proposta com 10% de entrada..." 
+                            <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, alinhamos detalhes..." 
                                    class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
                             <button onclick="gravarNotaCockpit()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
                                 <i class="fa-solid fa-paper-plane"></i>
@@ -518,20 +596,33 @@
                     <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-3">
                         <h4 class="font-black text-purple-300 text-xs uppercase flex items-center gap-1.5">
                             <i class="fa-solid fa-hand-holding-dollar"></i>
-                            <span>Registro de Proposta Comercial Ofertada</span>
+                            <span id="cockpit-proposta-titulo-aba">Registro de Proposta Comercial Ofertada</span>
                         </h4>
+
+                        <!-- CARD DE REFERÊNCIA: VALOR DE TABELA DO IMÓVEL -->
+                        <div id="cockpit-proposta-card-referencia" class="bg-slate-900/90 border border-purple-500/40 p-3 rounded-xl flex items-center justify-between flex-wrap gap-2 text-xs">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-purple-300 block">Preço de Tabela do Imóvel:</span>
+                                <strong id="cockpit-proposta-valor-tabela" class="text-white font-mono text-sm">R$ 0,00</strong>
+                            </div>
+                            <button type="button" onclick="preencherPropostaComValorTabela()" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-600 px-3 py-1.5 rounded-lg font-bold text-[11px] transition cursor-pointer flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-copy"></i>
+                                <span>Usar Preço de Tabela</span>
+                            </button>
+                        </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Valor da Proposta (R$)</label>
+                                <label id="cockpit-proposta-valor-lbl" class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Valor da Proposta (R$)</label>
                                 <div class="relative">
-                                    <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
-                                    <input type="number" step="0.01" id="cockpit-proposta-valor" placeholder="0,00" 
-                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white font-mono font-bold text-xs outline-none focus:border-purple-400">
+                                    <span class="absolute left-3 top-2 text-xs font-bold text-purple-400">R$</span>
+                                    <input type="text" id="cockpit-proposta-valor" placeholder="0,00" 
+                                           oninput="aplicarMascaraMoedaInput(this)"
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-10 pr-3 text-emerald-400 font-mono font-black text-sm outline-none focus:border-purple-400">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Forma de Pagamento / Condições</label>
+                                <label id="cockpit-proposta-condicoes-lbl" class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Forma de Pagamento / Condições</label>
                                 <input type="text" id="cockpit-proposta-condicoes" placeholder="Ex: 20% sinal + Financiamento Caixa..." 
                                        class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400">
                             </div>
@@ -553,22 +644,22 @@
                     </div>
                 </div>
 
-                <!-- ABA 4: CONVERSÃO DE VENDA (APERTO DE MÃO) -->
+                <!-- ABA 4: CONVERSÃO DE NEGÓCIO (VENDA OU LOCAÇÃO) -->
                 <div id="aba-conteudo-fechamento" class="hidden space-y-4">
-                    <div class="bg-slate-950/90 p-4 rounded-xl border border-amber-500/40 space-y-3">
-                        <div class="flex items-center gap-2 text-amber-400 font-black text-xs uppercase">
-                            <i class="fa-solid fa-handshake text-base"></i>
-                            <span>Conclusão Formal de Venda & Rateio Financeiro</span>
+                    <div id="cockpit-box-fechamento" class="bg-slate-950/90 p-4 rounded-xl border border-amber-500/40 space-y-3 transition-all duration-300">
+                        <div class="flex items-center gap-2 text-amber-400 font-black text-xs uppercase" id="cockpit-fechamento-header-container">
+                            <i id="cockpit-fechamento-icone-topo" class="fa-solid fa-handshake text-base"></i>
+                            <span id="cockpit-fechamento-titulo-topo">Conclusão Formal de Venda & Rateio Financeiro</span>
                         </div>
 
                         <div id="cockpit-fechar-alerta-sem-imovel" class="hidden p-3 bg-red-950/40 border border-red-800 text-red-300 rounded-xl text-xs">
-                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para gerar a baixa e as comissões, vincule um imóvel primeiro.
+                            Este atendimento é de interesse geral e não possui imóvel do catálogo vinculado. Para formalizar o negócio, vincule um imóvel primeiro.
                         </div>
 
                         <div id="cockpit-fechar-formulario" class="space-y-3">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Valor Real de Fechamento (R$) *</label>
+                                    <label id="lbl-fechamento-valor" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Valor Real de Fechamento (R$) *</label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
                                         <input type="number" step="0.01" id="cockpit-venda-valor-real" oninput="calcularRateioCockpit()" 
@@ -576,7 +667,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Data do Fechamento *</label>
+                                    <label id="lbl-fechamento-data" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Data do Fechamento *</label>
                                     <input type="date" id="cockpit-venda-data" 
                                            class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs">
                                 </div>
@@ -584,7 +675,7 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Comissão Total Negociada (%) *</label>
+                                    <label id="lbl-fechamento-pct-imob" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Comissão Total Negociada (%) *</label>
                                     <div class="relative">
                                         <input type="number" step="0.1" id="cockpit-venda-comissao-total-pct" oninput="calcularRateioCockpit()" 
                                                class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
@@ -592,7 +683,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Fatia do Corretor (%) *</label>
+                                    <label id="lbl-fechamento-pct-corretor" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Fatia do Corretor (%) *</label>
                                     <div class="relative">
                                         <input type="number" step="0.5" id="cockpit-venda-comissao-corretor-pct" oninput="calcularRateioCockpit()" 
                                                class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
@@ -603,20 +694,20 @@
 
                             <!-- CARD DE RATEIO INSTANTÂNEO -->
                             <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2">
-                                <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                                <span id="lbl-rateio-card-titulo" class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
                                     Simulação de Comissões e Repasse ao Proprietário:
                                 </span>
                                 <div class="grid grid-cols-3 gap-2 text-[11px] pt-1">
                                     <div>
-                                        <span class="text-slate-500 block">Comissão Bruta:</span>
+                                        <span id="lbl-rateio-col1" class="text-slate-500 block">Honorários / Taxa:</span>
                                         <strong id="cockpit-sim-comissao-total" class="text-amber-400 font-mono">R$ 0,00</strong>
                                     </div>
                                     <div>
-                                        <span class="text-slate-500 block">Imobiliária:</span>
+                                        <span id="lbl-rateio-col2" class="text-slate-500 block">Imobiliária:</span>
                                         <strong id="cockpit-sim-imob" class="text-emerald-400 font-mono">R$ 0,00</strong>
                                     </div>
                                     <div>
-                                        <span class="text-slate-500 block">Corretor:</span>
+                                        <span id="lbl-rateio-col3" class="text-slate-500 block">Corretor:</span>
                                         <strong id="cockpit-sim-corretor" class="text-cyan-300 font-mono">R$ 0,00</strong>
                                     </div>
                                 </div>
@@ -626,10 +717,10 @@
                                 </div>
                             </div>
 
-                            <button type="button" onclick="iniciarConfirmacaoExplicativaVenda()" 
+                            <button type="button" onclick="iniciarConfirmacaoExplicativaVenda()" id="btn-iniciar-fechamento-negocio"
                                     class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black flex items-center justify-center gap-2 transition shadow cursor-pointer text-xs">
-                                <i class="fa-solid fa-handshake"></i>
-                                <span>Avançar para Conclusão de Venda</span>
+                                <i id="btn-iniciar-fechamento-icone" class="fa-solid fa-handshake"></i>
+                                <span id="btn-iniciar-fechamento-txt">Avançar para Conclusão de Negócio</span>
                             </button>
                         </div>
                     </div>
@@ -650,8 +741,173 @@
     </div>
 
     <!-- ==================================================================== -->
-    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: APERTO DE MÃO (FECHAMENTO DE VENDA) -->
+    <!-- MODAL: CONFIRMAÇÃO EXPLICATIVA DE MUDANÇA DE ETAPA DO FUNIL          -->
     <!-- ==================================================================== -->
+    <div id="modal-confirmar-transicao-etapa" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[90] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 text-left border-2 border-cyan-500/80 shadow-2xl space-y-4">
+            
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div id="modal-transicao-icone-box" class="w-11 h-11 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl flex-shrink-0 font-black border border-cyan-500/30">
+                    <i id="modal-transicao-icone" class="fa-solid fa-arrows-spin"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-white uppercase tracking-wide">Confirmar Mudança de Etapa</h3>
+                    <p class="text-xs text-slate-400">Verifique o impacto da operação neste cliente:</p>
+                </div>
+            </div>
+
+            <!-- COMPARATIVO VISUAL (ORIGEM -> DESTINO) -->
+            <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
+                <div class="text-center flex-1">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Etapa Atual</span>
+                    <span id="transicao-badge-origem" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase inline-block">---</span>
+                </div>
+                <div class="px-3 text-slate-500 text-base">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+                <div class="text-center flex-1">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Nova Etapa</span>
+                    <span id="transicao-badge-destino" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase inline-block">---</span>
+                </div>
+            </div>
+
+            <!-- IMPACTO EXPLICATIVO EM DESTAQUE -->
+            <div id="modal-transicao-impacto-box" class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400 block flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info"></i> O que acontece ao confirmar:
+                </span>
+                <p id="modal-transicao-impacto-texto" class="text-slate-300 leading-relaxed text-[11px]"></p>
+                <div id="modal-transicao-alerta-visita" class="hidden bg-rose-950/50 border border-rose-800/80 p-2.5 rounded-lg text-rose-300 text-[11px] space-y-1">
+                    <span class="font-bold flex items-center gap-1 text-rose-400">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Visita Agendada Será Cancelada!
+                    </span>
+                    <p id="modal-transicao-alerta-visita-texto" class="leading-relaxed"></p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
+                <button type="button" onclick="fecharModalTransicaoEtapa()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                    Cancelar
+                </button>
+                <button type="button" id="btn-executar-transicao-etapa" onclick="executarConfirmacaoFinalTransicao()" 
+                        class="w-1/2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-cyan-950/50 flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Confirmar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL: GUIA VISUAL & MANUAL COMPLETO DAS ETAPAS DO FUNIL             -->
+    <!-- ==================================================================== -->
+    <div id="modal-guia-etapas-funil" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[85] flex items-center justify-center p-3 sm:p-5 hidden">
+        <div class="box-tech max-w-3xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[92vh] flex flex-col bg-slate-900">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/30">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm sm:text-base font-black text-white uppercase tracking-wide">Manual do Funil Comercial & Regras do CRM</h3>
+                        <p class="text-[11px] text-slate-400">Entenda a finalidade de cada etapa e os impactos automáticos no sistema.</p>
+                    </div>
+                </div>
+                <button onclick="fecharGuiaEtapasFunil()" class="text-slate-400 hover:text-white transition cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- LISTAGEM DIDÁTICA DAS 7 ETAPAS COM CORES REAIS -->
+            <div class="flex-1 overflow-y-auto pr-1 space-y-3 text-xs" id="guia-etapas-lista-cards">
+                <!-- Inserido dinamicamente via JS com base em ESTAGIOS_FUNIL -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                <span class="font-mono text-[11px]">SGI • CRM & Proteção de Dados Imobiliários</span>
+                <button onclick="fecharGuiaEtapasFunil()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition cursor-pointer">
+                    Entendido, Fechar Guia
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL: CADASTRAR NOVO ATENDIMENTO MANUAL (TELEFONE / BALCÃO)         -->
+    <!-- ==================================================================== -->
+    <div id="modal-novo-lead-manual" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[80] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 border border-cyan-500/50 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg border border-cyan-500/30">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-white uppercase tracking-wide">Novo Atendimento Manual</h3>
+                        <p class="text-[11px] text-slate-400">Cadastre um cliente vindo por telefone, indicação ou balcão.</p>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharModalNovoLeadManual()" class="text-slate-400 hover:text-white cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="form-cadastrar-lead-manual" onsubmit="salvarLeadManual(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nome do Cliente *</label>
+                    <input type="text" id="manual-lead-nome" required placeholder="Ex: Roberto Silva"
+                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">WhatsApp / Telefone *</label>
+                        <input type="text" id="manual-lead-whatsapp" required placeholder="(00) 00000-0000"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">E-mail (Opcional)</label>
+                        <input type="email" id="manual-lead-email" placeholder="cliente@email.com"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Imóvel de Interesse (Opcional)</label>
+                        <select id="manual-lead-imovel" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                            <option value="">Interesse Geral (Sem imóvel)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Atribuir a Corretor</label>
+                        <select id="manual-lead-corretor" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400">
+                            <option value="">Sem corretor inicial</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Mensagem Inicial / Resumo da Procura</label>
+                    <textarea id="manual-lead-mensagem" rows="2" placeholder="Ex: Cliente ligou procurando casa de 3 quartos para alugar..."
+                              class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-cyan-400"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalNovoLeadManual()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-salvar-lead-manual" class="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black flex items-center gap-1.5 shadow-lg shadow-cyan-950 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Cadastrar Atendimento</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMAÇÃO EXPLICATIVA: FECHAMENTO DE VENDA OU LOCAÇÃO -->
     <div id="modal-confirmar-venda-explicativo" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4">
             
@@ -660,12 +916,11 @@
                     <i class="fa-solid fa-handshake"></i>
                 </div>
                 <div>
-                    <h3 class="text-base font-black text-white">Confirmação de Venda Fechada</h3>
+                    <h3 class="text-base font-black text-white">Confirmação de Negócio Fechado</h3>
                     <p class="text-xs text-amber-400 font-bold">Por favor, revise os impactos desta operação:</p>
                 </div>
             </div>
 
-            <!-- QUADRO EXPLICATIVO DIDÁTICO PARA O GESTOR -->
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5 text-xs text-slate-300">
                 <p class="font-bold text-white text-[11px] uppercase tracking-wider">
                     Ao confirmar, o sistema realizará automaticamente:
@@ -673,12 +928,12 @@
                 
                 <div class="flex items-start gap-2 text-slate-300">
                     <i class="fa-solid fa-house-circle-xmark text-red-400 text-sm mt-0.5"></i>
-                    <span><strong>Baixa do Catálogo:</strong> O imóvel <span class="text-cyan-300 font-mono font-bold" id="conf-imovel-ref">Ref: ---</span> será marcado como <strong>"Vendido"</strong> e desativado da vitrine pública.</span>
+                    <span><strong>Baixa do Catálogo:</strong> O imóvel <span class="text-cyan-300 font-mono font-bold" id="conf-imovel-ref">Ref: ---</span> será baixado da vitrine pública com status correspondente.</span>
                 </div>
 
                 <div class="flex items-start gap-2 text-slate-300">
                     <i class="fa-solid fa-file-invoice-dollar text-emerald-400 text-sm mt-0.5"></i>
-                    <span><strong>Lançamento Financeiro:</strong> A venda de <strong class="text-emerald-400 font-mono" id="conf-valor-venda">R$ 0,00</strong> gerará o recebível de comissão para a imobiliária (<span class="text-emerald-300 font-mono font-bold" id="conf-valor-imob">R$ 0,00</span>) e comissão do corretor (<span class="text-cyan-300 font-mono font-bold" id="conf-valor-corretor">R$ 0,00</span>).</span>
+                    <span><strong>Lançamento Financeiro:</strong> O negócio no valor de <strong class="text-emerald-400 font-mono" id="conf-valor-venda">R$ 0,00</strong> gerará o recebível da imobiliária (<span class="text-emerald-300 font-mono font-bold" id="conf-valor-imob">R$ 0,00</span>) e comissão do corretor (<span class="text-cyan-300 font-mono font-bold" id="conf-valor-corretor">R$ 0,00</span>).</span>
                 </div>
 
                 <div class="flex items-start gap-2 text-slate-300">
@@ -694,7 +949,7 @@
                 <button onclick="executarConfirmacaoFinalVenda()" id="btn-executar-venda-final" 
                         class="w-1/2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl text-xs transition cursor-pointer shadow-lg shadow-amber-950/50 flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-check"></i>
-                    <span>Sim, Concluir Venda</span>
+                    <span>Sim, Concluir</span>
                 </button>
             </div>
         </div>
@@ -751,7 +1006,7 @@
         SGI • Sistema de Gestão Imobiliária SaaS • Central de Atendimento Cockpit
     </footer>
 
-    <!-- JAVASCRIPT COMPLETO COM TOASTS NATIVOS E FUNIL INTERATIVO -->
+    <!-- JAVASCRIPT COMPLETO -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -769,79 +1024,150 @@
         let isMasterSuporte = false;
 
         let leadAtivoCockpit = null;
-        let filtroEstagioAtivoCard = null; // Guarda se há um card ativo filtrando
+        let filtroEstagioAtivoCard = null;
 
-        // ESTÁGIOS DO FUNIL COM O ESTÁGIO "CANCELADO" OFICIALIZADO E INTEGRADO
+        // ETAPA PENDENTE DE CONFIRMAÇÃO
+        let etapaPendenteConfirmacao = null;
+
+        // MATRIZ COMPLETA DE REGRAS E EXPLICAÇÕES DAS ETAPAS DO FUNIL
         const ESTAGIOS_FUNIL = [
-            { chave: 'Novo', rotulo: 'Novo', cor: 'blue', icone: 'fa-circle-dot' },
-            { chave: 'Em Atendimento', rotulo: 'Atendimento', cor: 'amber', icone: 'fa-headset' },
-            { chave: 'Visita Agendada', rotulo: 'Visita', cor: 'cyan', icone: 'fa-calendar-check' },
-            { chave: 'Proposta', rotulo: 'Proposta', cor: 'purple', icone: 'fa-hand-holding-dollar' },
-            { chave: 'Fechado', rotulo: 'Concluído', cor: 'emerald', icone: 'fa-handshake' },
-            { chave: 'Cancelado', rotulo: 'Cancelado', cor: 'rose', icone: 'fa-calendar-xmark' },
-            { chave: 'Perdido', rotulo: 'Perdido', cor: 'slate', icone: 'fa-ban' }
+            { 
+                chave: 'Novo', 
+                rotulo: 'Novo', 
+                cor: 'blue', 
+                icone: 'fa-circle-dot',
+                badgeClasses: 'bg-blue-950/90 text-blue-300 border-blue-700/80',
+                resumo: 'Cliente recém-chegado pelo site ou vitrine pública.',
+                impacto: 'Retorna o atendimento para a fila prioritária de novos contatos.',
+                oQueFazer: 'Abordagem prioritária! O primeiro contato nos primeiros minutos multiplica a chance de fechamento.'
+            },
+            { 
+                chave: 'Em Atendimento', 
+                rotulo: 'Atendimento', 
+                cor: 'amber', 
+                icone: 'fa-headset',
+                badgeClasses: 'bg-amber-950/90 text-amber-300 border-amber-700/80',
+                resumo: 'O corretor já iniciou diálogo ativo com o cliente.',
+                impacto: 'Sai da fila de novos contatos e consta sob negociação ativa da equipe.',
+                oQueFazer: 'Sondar necessidades, entender faixa de preço, preferências e alinhar opções do catálogo.'
+            },
+            { 
+                chave: 'Visita Agendada', 
+                rotulo: 'Visita', 
+                cor: 'cyan', 
+                icone: 'fa-calendar-check',
+                badgeClasses: 'bg-cyan-950/90 text-cyan-300 border-cyan-700/80',
+                resumo: 'Compromisso presencial ou vistoria agendada.',
+                impacto: 'Sincroniza automaticamente na Agenda do Dashboard da imobiliária.',
+                oQueFazer: 'Acesse a aba "Visita & Agenda", defina data/hora e dispare confirmação pelo WhatsApp.'
+            },
+            { 
+                chave: 'Proposta', 
+                rotulo: 'Proposta', 
+                cor: 'purple', 
+                icone: 'fa-hand-holding-dollar',
+                badgeClasses: 'bg-purple-950/90 text-purple-300 border-purple-700/80',
+                resumo: 'Oferta formalizada pelo cliente.',
+                impacto: 'Registra oferta comercial com condições de pagamento.',
+                oQueFazer: 'Acesse a aba "Proposta Comercial", preencha os valores e envie o resumo ao proprietário.'
+            },
+            { 
+                chave: 'Fechado', 
+                rotulo: 'Concluído', 
+                cor: 'emerald', 
+                icone: 'fa-handshake',
+                badgeClasses: 'bg-emerald-950/90 text-emerald-300 border-emerald-700/80',
+                resumo: 'Venda assinada ou contrato de locação formalizado.',
+                impacto: 'Dá baixa automática no imóvel do catálogo e lança as comissões no financeiro.',
+                oQueFazer: 'Acesse a aba "Concluir Negócio" para formalizar os rateios e emitir os recebíveis.'
+            },
+            { 
+                chave: 'Cancelado', 
+                rotulo: 'Cancelado', 
+                cor: 'rose', 
+                icone: 'fa-calendar-xmark',
+                badgeClasses: 'bg-rose-950/90 text-rose-300 border-rose-700/80',
+                resumo: 'Visita desmarcada ou cliente que adiou a busca.',
+                impacto: 'Remove visitas pendentes da agenda e arquiva o motivo do cancelamento.',
+                oQueFazer: 'Registre uma nota interna justificando o motivo para manter o histórico auditado.'
+            },
+            { 
+                chave: 'Perdido', 
+                rotulo: 'Perdido', 
+                cor: 'slate', 
+                icone: 'fa-ban',
+                badgeClasses: 'bg-slate-900 text-slate-400 border-slate-700',
+                resumo: 'Cliente desqualificado ou sem resposta após tentativas.',
+                impacto: 'Encerra o atendimento ativo, mantendo o lead arquivado na carteira de contatos.',
+                oQueFazer: 'Mantenha na base para futuras campanhas de reativação ou captação.'
+            }
         ];
 
         // ====================================================================
-        // SISTEMA DE NOTIFICAÇÕES NATIVAS (TOASTS ELEGANTES DARK TECH)
+        // SISTEMA DE NOTIFICAÇÕES NATIVAS (CENTRALIZADAS, SEM TIMER, COM "OK")
         // ====================================================================
-        function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', duracaoMs = 4000) {
+    function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', exigeConfirmacao = false, duracaoMs = 2500) {
             const container = document.getElementById('container-toasts');
             if (!container) return;
 
             const id = 'toast-' + Math.random().toString(36).substr(2, 9);
             
-            let bgEstilo = 'bg-slate-900/95 border-cyan-500/80 text-cyan-300';
+            let bgEstilo = 'bg-slate-950/98 border-cyan-500 shadow-cyan-950/80';
             let icone = 'fa-circle-info text-cyan-400';
-            let barCor = 'bg-cyan-400';
+            let btnEstilo = 'bg-cyan-500 hover:bg-cyan-400 text-slate-950';
 
             if (tipo === 'sucesso') {
-                bgEstilo = 'bg-slate-900/95 border-emerald-500/80 text-emerald-300';
+                bgEstilo = 'bg-slate-950/98 border-emerald-500 shadow-emerald-950/80';
                 icone = 'fa-circle-check text-emerald-400';
-                barCor = 'bg-emerald-400';
+                btnEstilo = 'bg-emerald-500 hover:bg-emerald-400 text-slate-950';
             } else if (tipo === 'aviso') {
-                bgEstilo = 'bg-slate-900/95 border-amber-500/80 text-amber-300';
+                bgEstilo = 'bg-slate-950/98 border-amber-400 shadow-amber-950/80';
                 icone = 'fa-triangle-exclamation text-amber-400';
-                barCor = 'bg-amber-400';
+                btnEstilo = 'bg-amber-400 hover:bg-amber-300 text-slate-950';
             } else if (tipo === 'erro') {
-                bgEstilo = 'bg-slate-900/95 border-red-500/80 text-red-300';
-                icone = 'fa-circle-xmark text-red-400';
-                barCor = 'bg-red-400';
+                bgEstilo = 'bg-slate-950/98 border-rose-500 shadow-rose-950/80';
+                icone = 'fa-circle-xmark text-rose-400';
+                btnEstilo = 'bg-rose-500 hover:bg-rose-400 text-white';
             }
 
             const toast = document.createElement('div');
             toast.id = id;
-            toast.className = `animar-toast-in pointer-events-auto border rounded-xl p-3.5 shadow-2xl backdrop-blur-md relative overflow-hidden flex items-start gap-3 text-xs ${bgEstilo}`;
+            toast.className = `animar-toast-in pointer-events-auto border-2 rounded-2xl ${exigeConfirmacao ? 'p-4 sm:p-5 ring-4 ring-black/80' : 'p-3.5 sm:p-4 shadow-xl'} shadow-2xl backdrop-blur-2xl relative overflow-hidden flex flex-col gap-2.5 text-xs sm:text-sm w-full ${bgEstilo}`;
 
             toast.innerHTML = `
-                <div class="text-base mt-0.5 flex-shrink-0">
-                    <i class="fa-solid ${icone}"></i>
+                <div class="flex items-start gap-3">
+                    <div class="${exigeConfirmacao ? 'text-2xl' : 'text-lg'} mt-0.5 flex-shrink-0 drop-shadow">
+                        <i class="fa-solid ${icone}"></i>
+                    </div>
+                    <div class="flex-1 pr-2 space-y-0.5">
+                        <h5 class="font-black text-white text-xs sm:text-sm tracking-wide uppercase flex items-center gap-1.5">${titulo}</h5>
+                        <p class="text-slate-200 text-xs sm:text-sm leading-relaxed font-medium">${mensagem}</p>
+                    </div>
+                    <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar">
+                        <i class="fa-solid fa-xmark ${exigeConfirmacao ? 'text-lg' : 'text-sm'}"></i>
+                    </button>
                 </div>
-                <div class="flex-1 pr-2 space-y-0.5">
-                    <h5 class="font-black text-white text-xs tracking-wide">${titulo}</h5>
-                    <p class="text-slate-300 text-[11px] leading-relaxed">${mensagem}</p>
-                </div>
-                <button onclick="removerToast('${id}')" class="text-slate-400 hover:text-white transition p-0.5 cursor-pointer">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-                <div class="absolute bottom-0 left-0 h-1 ${barCor} transition-all duration-[${duracaoMs}ms] w-full" id="bar-${id}"></div>
+
+                ${exigeConfirmacao ? `
+                    <!-- BOTÃO OBRIGATÓRIO APENAS PARA AÇÕES CRÍTICAS (FORMULÁRIOS) -->
+                    <div class="pt-2 border-t border-slate-800/80 flex items-center justify-end">
+                        <button type="button" onclick="removerToast('${id}')" 
+                                class="px-5 py-2 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-2 transition cursor-pointer shadow-lg active:scale-95 ${btnEstilo}">
+                            <i class="fa-solid fa-check text-xs"></i>
+                            <span>OK, Entendido</span>
+                        </button>
+                    </div>
+                ` : ''}
             `;
 
             container.appendChild(toast);
 
-            // Anima barra de progresso
-            setTimeout(() => {
-                const bar = document.getElementById(`bar-${id}`);
-                if (bar) {
-                    bar.style.transition = `width ${duracaoMs}ms linear`;
-                    bar.style.width = '0%';
-                }
-            }, 50);
-
-            // Auto-remover
-            setTimeout(() => {
-                removerToast(id);
-            }, duracaoMs);
+            // SE NÃO EXIGE CONFIRMAÇÃO (ex: filtros nos cards), SOME SOZINHO EM 2,5 SEGUNDOS
+            if (!exigeConfirmacao) {
+                setTimeout(() => {
+                    removerToast(id);
+                }, duracaoMs);
+            }
         }
 
         function removerToast(id) {
@@ -852,6 +1178,58 @@
             setTimeout(() => {
                 if (toast.parentNode) toast.parentNode.removeChild(toast);
             }, 250);
+        }
+
+        // ====================================================================
+        // PARSER INTELIGENTE: MODALIDADE, ORIGEM E VALOR DO LEAD
+        // ====================================================================
+        function extrairContextoLead(lead) {
+            const msg = lead.mensagem || '';
+            let canal = 'Mensagem no Site';
+            let modalidade = 'GERAL';
+            let valorExibicao = '';
+
+            if (msg.includes('[SOLICITAÇÃO DE AVALIAÇÃO')) {
+                modalidade = 'AVALIACAO';
+                canal = 'Avaliação no Site';
+                return { modalidade, canal, valorExibicao: 'Avaliação' };
+            }
+
+            if (msg.includes('[INTERESSE: LOCAÇÃO') || msg.includes('[INTERESSE: LOCACAO') || msg.toLowerCase().includes('locação')) {
+                modalidade = 'LOCACAO';
+            } else if (msg.includes('[INTERESSE: VENDA') || msg.toLowerCase().includes('comprar') || msg.toLowerCase().includes('venda')) {
+                modalidade = 'VENDA';
+            } else if (lead.imovel) {
+                if (lead.imovel.finalidade === 'Locacao' || lead.imovel.finalidade === 'Locação') {
+                    modalidade = 'LOCACAO';
+                } else if (lead.imovel.finalidade === 'Venda') {
+                    modalidade = 'VENDA';
+                } else {
+                    modalidade = 'AMBOS';
+                }
+            }
+
+            if (lead.imovel) {
+                if (modalidade === 'LOCACAO') {
+                    const vl = lead.imovel.valor_locacao || 0;
+                    valorExibicao = vl ? Number(vl).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês' : 'Sob consulta';
+                } else if (modalidade === 'VENDA') {
+                    const vv = lead.imovel.valor_venda || 0;
+                    valorExibicao = vv ? Number(vv).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sob consulta';
+                } else {
+                    const vv = lead.imovel.valor_venda ? Number(lead.imovel.valor_venda).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+                    const vl = lead.imovel.valor_locacao ? Number(lead.imovel.valor_locacao).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '/mês' : '';
+                    valorExibicao = [vv, vl].filter(Boolean).join(' | ');
+                }
+            }
+
+            if (msg.includes('[CANAL: MENSAGEM DO SITE]')) {
+                canal = 'Mensagem no Site';
+            } else if (msg.toLowerCase().includes('whatsapp')) {
+                canal = 'WhatsApp Direto';
+            }
+
+            return { modalidade, canal, valorExibicao };
         }
 
         // ====================================================================
@@ -867,7 +1245,6 @@
             const email = session.user.email.toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
 
-            // 1. MODO MASTER SUPORTE OPERACIONAL
             if (email === 'waldeckgil@gmail.com') {
                 isMasterSuporte = true;
                 modoLeitura = false;
@@ -905,7 +1282,6 @@
                 return;
             }
 
-            // 2. GESTOR / CORRETOR LOGADO
             try {
                 const { data: usuario, error: errUser } = await supabaseClient
                     .from('usuarios')
@@ -956,7 +1332,7 @@
             try {
                 const { data, error } = await supabaseClient
                     .from('usuarios')
-                    .select('id, nome_completo, cargo, comissao_venda_pct')
+                    .select('id, nome_completo, cargo, comissao_venda_pct, comissao_locacao_pct')
                     .eq('imobiliaria_id', imobiliariaId)
                     .eq('ativo', true);
 
@@ -1003,7 +1379,7 @@
                 if (imoveisIds.length > 0) {
                     const { data: imoveisData, error: errImoveis } = await supabaseClient
                         .from('imoveis')
-                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao, status')
+                        .select('id, codigo_ref, titulo, foto_capa, valor_venda, valor_locacao, finalidade, tipo, status')
                         .in('id', imoveisIds);
 
                     if (!errImoveis && imoveisData) {
@@ -1046,6 +1422,13 @@
             document.getElementById('kpi-leads-visitas').innerText = leads.filter(l => l.status === 'Visita Agendada').length;
             document.getElementById('kpi-leads-propostas').innerText = leads.filter(l => l.status === 'Proposta').length;
             document.getElementById('kpi-leads-fechados').innerText = leads.filter(l => l.status === 'Fechado').length;
+
+            const elCancelados = document.getElementById('kpi-leads-cancelados');
+            if (elCancelados) elCancelados.innerText = leads.filter(l => l.status === 'Cancelado').length;
+
+            const elPerdidos = document.getElementById('kpi-leads-perdidos');
+            if (elPerdidos) elPerdidos.innerText = leads.filter(l => l.status === 'Perdido').length;
+
             document.getElementById('contador-leads').innerText = leads.length;
         }
 
@@ -1088,13 +1471,9 @@
             }
         }
 
-        // ====================================================================
-        // INTERAÇÃO DOS CARDS DO FUNIL (FILTRO POR CLIQUE)
-        // ====================================================================
         function clicarCardFunil(status) {
             const select = document.getElementById('filtro-status');
 
-            // Se clicar no card que já está ativo, desmarca e volta a mostrar todos
             if (filtroEstagioAtivoCard === status) {
                 filtroEstagioAtivoCard = null;
                 select.value = '';
@@ -1122,7 +1501,9 @@
                 'Em Atendimento': 'card-funil-Em-Atendimento',
                 'Visita Agendada': 'card-funil-Visita-Agendada',
                 'Proposta': 'card-funil-Proposta',
-                'Fechado': 'card-funil-Fechado'
+                'Fechado': 'card-funil-Fechado',
+                'Cancelado': 'card-funil-Cancelado',
+                'Perdido': 'card-funil-Perdido'
             };
 
             Object.keys(cardsIds).forEach(st => {
@@ -1136,6 +1517,7 @@
             });
         }
 
+        // RENDERIZAÇÃO DA TABELA COM IDENTIFICAÇÃO VISUAL EXPLÍCITA [VENDA] / [LOCAÇÃO] E CANAL
         function renderizarTabelaLeads(leads) {
             const tbody = document.getElementById('tabela-leads-corpo');
 
@@ -1155,31 +1537,72 @@
                 const dataCriacao = new Date(l.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                 const zapLimpo = ('' + l.whatsapp).replace(/\D/g, '');
                 
-                const ehAvaliacao = (l.mensagem && l.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+                const { modalidade, canal, valorExibicao } = extrairContextoLead(l);
+                
                 let imovelBloco = '<span class="text-slate-500 italic">Interesse Geral</span>';
                 let refImovelTexto = 'Geral';
 
-                if (ehAvaliacao) {
+                if (modalidade === 'AVALIACAO') {
                     imovelBloco = `
                         <div class="flex items-center gap-2">
                             <div class="w-10 h-10 rounded-lg bg-emerald-950/80 border border-emerald-600/60 text-emerald-400 flex items-center justify-center text-base flex-shrink-0 shadow-sm">
                                 <i class="fa-solid fa-calculator"></i>
                             </div>
-                            <div class="truncate max-w-[180px]">
-                                <span class="font-mono text-[10px] text-emerald-400 font-bold uppercase block">Captação / Avaliação</span>
-                                <span class="font-bold text-white block truncate">Novo Imóvel do Cliente</span>
+                            <div class="truncate max-w-[200px]">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-600/60 inline-flex items-center gap-1">
+                                        <i class="fa-solid fa-calculator"></i> AVALIAÇÃO
+                                    </span>
+                                </div>
+                                <span class="font-bold text-white block truncate">Captação de Novo Imóvel</span>
+                                <span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                    <i class="fa-regular fa-envelope text-cyan-400 text-[9px]"></i> Formulário no Site
+                                </span>
                             </div>
                         </div>
                     `;
                 } else if (l.imovel) {
                     refImovelTexto = l.imovel.codigo_ref;
                     const foto = l.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
+                    
+                    let badgeModalidadeHtml = '';
+                    if (modalidade === 'LOCACAO') {
+                        badgeModalidadeHtml = `
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950/90 text-purple-300 border border-purple-600/60 inline-flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-key text-[9px]"></i> LOCAÇÃO
+                            </span>
+                            <span class="font-mono text-[10px] text-purple-300 font-bold ml-1">${valorExibicao}</span>
+                        `;
+                    } else if (modalidade === 'VENDA') {
+                        badgeModalidadeHtml = `
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-cyan-950/90 text-cyan-300 border border-cyan-600/60 inline-flex items-center gap-1 shadow-sm">
+                                <i class="fa-solid fa-tag text-[9px]"></i> VENDA
+                            </span>
+                            <span class="font-mono text-[10px] text-cyan-300 font-bold ml-1">${valorExibicao}</span>
+                        `;
+                    } else {
+                        badgeModalidadeHtml = `
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-blue-950/90 text-blue-300 border border-blue-600/60 inline-flex items-center gap-1">
+                                <i class="fa-solid fa-arrows-split-up-and-left text-[9px]"></i> VENDA / LOCAÇÃO
+                            </span>
+                        `;
+                    }
+
                     imovelBloco = `
                         <div class="flex items-center gap-2">
                             <img src="${foto}" class="w-10 h-10 rounded object-cover border border-slate-700 flex-shrink-0">
-                            <div class="truncate max-w-[180px]">
-                                <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${l.imovel.codigo_ref}</span>
-                                <span class="font-bold text-white block truncate" title="${l.imovel.titulo}">${l.imovel.titulo}</span>
+                            <div class="truncate max-w-[210px]">
+                                <div class="flex items-center flex-wrap gap-1 mb-0.5">
+                                    ${badgeModalidadeHtml}
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <span class="font-mono text-[10px] text-slate-400 font-bold">Ref: ${l.imovel.codigo_ref}</span>
+                                    <span class="text-slate-600">•</span>
+                                    <span class="font-bold text-white truncate max-w-[130px]" title="${l.imovel.titulo}">${l.imovel.titulo}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                    <i class="fa-regular fa-envelope text-cyan-400 text-[9px]"></i> ${canal}
+                                </span>
                             </div>
                         </div>
                     `;
@@ -1191,7 +1614,6 @@
                     opcoesCorretores += `<option value="${c.id}" ${selected}>${c.nome_completo}</option>`;
                 });
 
-                // Badges da Etapa Atual (Com badge explícita para CANCELADO)
                 const statusAtual = l.status || 'Novo';
                 let badgeStatusHtml = '';
                 if (statusAtual === 'Novo') {
@@ -1211,14 +1633,13 @@
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
 
-                // Montagem da URL de WhatsApp
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
-                    if (ehAvaliacao) {
-                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação de imóvel através do nosso site. Podemos conversar sobre os detalhes do seu imóvel?`;
+                    if (modalidade === 'AVALIACAO') {
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua solicitação de avaliação de imóvel pelo site. Podemos conversar sobre os detalhes do seu imóvel?`;
                         urlWa += `?text=${encodeURIComponent(texto)}`;
                     } else {
                         const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
@@ -1226,7 +1647,8 @@
                             ? `\n\n🏡 *Link do Imóvel:* ${baseUrl}?imob=${imobiliariaSlug}&imovel=${l.imovel.id}`
                             : '';
 
-                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebi seu interesse no imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
+                        const modalidadeTexto = (modalidade === 'LOCACAO') ? 'LOCAÇÃO' : (modalidade === 'VENDA' ? 'COMPRA' : 'negociação');
+                        const texto = `Olá ${l.nome}! Me chamo ${usuarioLogadoNome}, da equipe de atendimento${nomeEmpresa}. Recebemos sua mensagem de interesse na ${modalidadeTexto} do imóvel Ref: ${refImovelTexto} através do nosso site.${linkImovel}\n\nComo posso te ajudar hoje?`;
                         urlWa += `?text=${encodeURIComponent(texto)}`;
                     }
                 }
@@ -1263,17 +1685,13 @@
                         </select>
                     </td>
 
-                    <!-- AÇÃO DIRETA LIMPA & EFICIENTE -->
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-2">
-                            
-                            <!-- BOTAO WHATSAPP PRIMÁRIO -->
                             <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Chamar</span>
                             </a>
 
-                            <!-- BOTAO COCKPIT UNIFICADO -->
                             <button onclick="abrirCockpitLead('${l.id}')" 
                                     class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 hover:border-cyan-400 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                                     title="Abrir Ficha e Gerenciar Atendimento">
@@ -1281,14 +1699,12 @@
                                 <span>Gerenciar</span>
                             </button>
 
-                            <!-- BOTAO DESCARTAR LEAD -->
                             <button onclick="abrirModalExcluirLead('${l.id}', '${l.nome.replace(/'/g, "\\'")}')" 
                                     ${(modoLeitura && !isMasterSuporte) ? 'disabled' : ''}
                                     class="p-1.5 rounded-lg bg-slate-800 hover:bg-red-950/80 text-red-400 hover:text-red-300 transition cursor-pointer ${(modoLeitura && !isMasterSuporte) ? 'opacity-40 cursor-not-allowed' : ''}" 
                                     title="Descartar Atendimento">
                                 <i class="fa-regular fa-trash-can text-xs"></i>
                             </button>
-
                         </div>
                     </td>
                 </tr>`;
@@ -1308,48 +1724,61 @@
             document.getElementById('cockpit-lead-id-label').innerText = lead.id;
             document.getElementById('cockpit-lead-header-info').innerText = `Criado em ${new Date(lead.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
 
+            // ALIMENTA O STATUS GRANDE E ALERTA DE VISITA NO CABEÇALHO DO TOPO
+            atualizarStatusTopoCockpit(lead);
+
             document.getElementById('cockpit-cliente-nome').innerText = lead.nome;
             document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
             document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
 
-            // Card do Imóvel no Cockpit
             const cardImovel = document.getElementById('cockpit-imovel-card');
-            const ehAvaliacao = (lead.mensagem && lead.mensagem.includes('[SOLICITAÇÃO DE AVALIAÇÃO'));
+            const { modalidade, valorExibicao } = extrairContextoLead(lead);
 
-            if (ehAvaliacao) {
+            if (modalidade === 'AVALIACAO') {
                 cardImovel.innerHTML = `
-                    <span class="text-[10px] font-bold text-emerald-400 uppercase block tracking-wider">Origem do Atendimento</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase block tracking-wider">Origem do Atendimento</span>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-300 border border-emerald-600">AVALIAÇÃO</span>
+                    </div>
                     <div class="flex items-center gap-2 mt-0.5">
                         <div class="w-8 h-8 rounded-lg bg-emerald-950 border border-emerald-600 text-emerald-400 flex items-center justify-center text-sm">
                             <i class="fa-solid fa-calculator"></i>
                         </div>
                         <div>
                             <span class="font-bold text-white block">Captação & Avaliação</span>
-                            <span class="text-slate-400 text-[10px]">Cliente solicitou precificação</span>
+                            <span class="text-slate-400 text-[10px]">Cliente solicitou precificação pelo portal</span>
                         </div>
                     </div>
                 `;
             } else if (lead.imovel) {
                 const foto = lead.imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80';
-                const preco = lead.imovel.valor_venda 
-                    ? Number(lead.imovel.valor_venda).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                    : (lead.imovel.valor_locacao ? Number(lead.imovel.valor_locacao).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Sob consulta');
-
                 const baseUrl = window.location.origin + window.location.pathname.replace('leads.html', 'index.html');
                 const urlVitrine = `${baseUrl}?imob=${imobiliariaSlug}&imovel=${lead.imovel.id}`;
+
+                let badgeModalidade = '';
+                if (modalidade === 'LOCACAO') {
+                    badgeModalidade = `<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950 text-purple-300 border border-purple-600"><i class="fa-solid fa-key mr-1"></i> LOCAÇÃO</span>`;
+                } else if (modalidade === 'VENDA') {
+                    badgeModalidade = `<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-600"><i class="fa-solid fa-tag mr-1"></i> VENDA</span>`;
+                } else {
+                    badgeModalidade = `<span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-blue-950 text-blue-300 border border-blue-600">VENDA / LOCAÇÃO</span>`;
+                }
 
                 cardImovel.innerHTML = `
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] font-bold text-slate-500 uppercase block tracking-wider">Imóvel de Interesse</span>
-                        <a href="${urlVitrine}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1">
-                            <span>Ver na vitrine</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                        </a>
+                        <div class="flex items-center gap-1.5">
+                            ${badgeModalidade}
+                            <a href="${urlVitrine}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[10px] font-bold flex items-center gap-1 ml-1">
+                                <span>Vitrine</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2 mt-0.5">
                         <img src="${foto}" class="w-8 h-8 rounded object-cover border border-slate-700 flex-shrink-0">
                         <div class="truncate">
-                            <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${lead.imovel.codigo_ref} • ${preco}</span>
+                            <span class="font-mono text-[10px] text-cyan-400 font-bold block">Ref: ${lead.imovel.codigo_ref} • ${valorExibicao}</span>
                             <span class="font-bold text-white block truncate" title="${lead.imovel.titulo}">${lead.imovel.titulo}</span>
                         </div>
                     </div>
@@ -1361,13 +1790,9 @@
                 `;
             }
 
-            // Seleciona o corretor no Cockpit
             document.getElementById('cockpit-corretor-select').value = lead.corretor_atribuido_id || '';
-
-            // Renderiza os botões do Pipeline com o status atual
             renderizarPipelineCockpit(lead.status || 'Novo');
 
-            // Carrega valores na aba de Visita
             if (lead.data_agendamento) {
                 const d = new Date(lead.data_agendamento);
                 d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -1377,18 +1802,39 @@
             }
             document.getElementById('cockpit-visita-notas').value = lead.notas_agendamento || '';
 
-            // Carrega valores na aba de Proposta
-            document.getElementById('cockpit-proposta-valor').value = lead.valor_proposta || '';
+            // CARREGA E FORMATA O VALOR DA PROPOSTA OU SUGERE O VALOR DE TABELA DO IMÓVEL
+            const inputPropValor = document.getElementById('cockpit-proposta-valor');
+            const elValorTabela = document.getElementById('cockpit-proposta-valor-tabela');
+
+            let valorTabelaNumero = 0;
+            if (lead.imovel) {
+                const { modalidade } = extrairContextoLead(lead);
+                valorTabelaNumero = (modalidade === 'LOCACAO') 
+                    ? Number(lead.imovel.valor_locacao || 0)
+                    : Number(lead.imovel.valor_venda || 0);
+            }
+
+            if (elValorTabela) {
+                elValorTabela.innerText = valorTabelaNumero > 0 
+                    ? valorTabelaNumero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                    : 'Sob Consulta';
+            }
+
+            if (lead.valor_proposta) {
+                inputPropValor.value = Number(lead.valor_proposta).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } else if (valorTabelaNumero > 0) {
+                inputPropValor.value = valorTabelaNumero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } else {
+                inputPropValor.value = '';
+            }
+
             document.getElementById('cockpit-proposta-condicoes').value = lead.condicoes_proposta || '';
 
-            // Configura a aba de Fechamento de Venda
             configurarAbaFechamentoCockpit(lead);
 
-            // Abre o modal e a aba desejada
             trocarAbaCockpit(abaInicial);
             document.getElementById('modal-cockpit-lead').classList.remove('hidden');
 
-            // Carrega a linha do tempo
             carregarEventosTimelineCockpit(lead.id);
         }
 
@@ -1397,9 +1843,47 @@
             leadAtivoCockpit = null;
         }
 
+        // ====================================================================
+        // CONTROLE VISUAL DO STATUS NO TOPO & RÉGUA DO PIPELINE
+        // ====================================================================
+        function atualizarStatusTopoCockpit(lead) {
+            const badgeTopo = document.getElementById('cockpit-header-status-badge');
+            const alertVisita = document.getElementById('cockpit-header-visita-alert');
+            const textoVisita = document.getElementById('cockpit-header-visita-texto');
+            if (!badgeTopo || !lead) return;
+
+            const statusAtual = lead.status || 'Novo';
+            const estObj = ESTAGIOS_FUNIL.find(e => e.chave === statusAtual) || ESTAGIOS_FUNIL[0];
+
+            // Renderiza badge imponente no topo
+            badgeTopo.className = `px-4 sm:px-5 py-1.5 rounded-xl text-xs sm:text-sm font-black uppercase border-2 shadow-lg tracking-wider inline-flex items-center gap-2.5 ${estObj.badgeClasses}`;
+            badgeTopo.innerHTML = `<i class="fa-solid ${estObj.icone} text-base"></i> <span class="tracking-wide">${estObj.rotulo.toUpperCase()}</span>`;
+
+            // Se tiver visita agendada, destaca no topo com data e hora
+            if (lead.data_agendamento && alertVisita && textoVisita) {
+                textoVisita.innerHTML = `VISITA MARCADA: <strong class="text-white ml-1 font-mono">${formatarDataVisita(lead.data_agendamento)}</strong>`;
+                alertVisita.classList.remove('hidden');
+            } else if (alertVisita) {
+                alertVisita.classList.add('hidden');
+            }
+        }
+
         function renderizarPipelineCockpit(statusAtual) {
+            if (leadAtivoCockpit) {
+                leadAtivoCockpit.status = statusAtual;
+                atualizarStatusTopoCockpit(leadAtivoCockpit);
+            }
+
+            // REGRA: Se o lead já avançou para Atendimento/Visita/etc, o botão "Novo" é ocultado da régua
+            const estagiosExibicao = ESTAGIOS_FUNIL.filter(est => {
+                if (est.chave === 'Novo' && statusAtual !== 'Novo') {
+                    return false;
+                }
+                return true;
+            });
+
             const container = document.getElementById('cockpit-pipeline-botoes');
-            container.innerHTML = ESTAGIOS_FUNIL.map(est => {
+            container.innerHTML = estagiosExibicao.map(est => {
                 const ativo = (statusAtual === est.chave);
                 
                 let classes = 'border border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700 hover:text-white';
@@ -1414,37 +1898,162 @@
                 }
 
                 return `
-                    <button onclick="aoMudarEtapaPeloPipeline('${est.chave}')" 
-                            class="p-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer ${classes}">
-                        <i class="fa-solid ${est.icone} text-xs"></i>
-                        <span class="truncate">${est.rotulo}</span>
-                    </button>
+                    <div class="relative group/etapa flex items-center rounded-xl p-0.5 border ${classes}">
+                        <button type="button" onclick="aoMudarEtapaPeloPipeline('${est.chave}')" 
+                                class="flex-1 py-2 px-1 text-[11px] flex items-center justify-center gap-1.5 transition cursor-pointer truncate">
+                            <i class="fa-solid ${est.icone} text-xs"></i>
+                            <span class="truncate">${est.rotulo}</span>
+                        </button>
+                        
+                        <!-- BOTÃO DE INTERROGAÇÃO (?) INDIVIDUAL -->
+                        <button type="button" onclick="abrirInfoEtapaEspecifica(event, '${est.chave}')" 
+                                class="w-5 h-5 rounded-full text-[10px] text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition cursor-pointer shrink-0 mr-1"
+                                title="Entenda o que significa '${est.rotulo}'">
+                            <i class="fa-solid fa-circle-question text-[10px]"></i>
+                        </button>
+                    </div>
                 `;
             }).join('');
         }
 
-        async function aoMudarEtapaPeloPipeline(novaEtapa) {
+        // ====================================================================
+        // MOTOR DE TRANSIÇÃO COM FEEDBACK PERCEPTÍVEL E CONFIRMAÇÕES
+        // ====================================================================
+  function aoMudarEtapaPeloPipeline(novaEtapa) {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit) return;
 
             const etapaAntiga = leadAtivoCockpit.status || 'Novo';
             if (etapaAntiga === novaEtapa) return;
 
-            // Se for mudar para Visita Agendada, direciona para a aba de visita
-            if (novaEtapa === 'Visita Agendada') {
-                trocarAbaCockpit('visita');
-            } else if (novaEtapa === 'Proposta') {
-                trocarAbaCockpit('proposta');
-            } else if (novaEtapa === 'Fechado') {
+            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
+            const ehLocacao = (modalidade === 'LOCACAO');
+            const tipoNegocioTexto = ehLocacao ? 'Locação' : 'Venda';
+
+            // 1. SE CLICOU EM "CONCLUÍDO": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
+            if (novaEtapa === 'Fechado') {
                 trocarAbaCockpit('fechamento');
+                
+                notificar(
+                    'aviso', 
+                    `Formulário de Conclusão de ${tipoNegocioTexto}`, 
+                    `Aba de fechamento aberta com sucesso! Por favor, confira os valores reais e porcentagens nos campos abaixo para formalizar a ${tipoNegocioTexto.toLowerCase()}.`,
+                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
+                );
+
+                const boxFechamento = document.getElementById('cockpit-box-fechamento');
+                if (boxFechamento) {
+                    boxFechamento.classList.add('ring-2', 'ring-amber-400');
+                    setTimeout(() => boxFechamento.classList.remove('ring-2', 'ring-amber-400'), 1500);
+                    boxFechamento.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
                 return;
             }
+
+            // 2. SE CLICOU EM "VISITA AGENDADA": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
+            if (novaEtapa === 'Visita Agendada') {
+                trocarAbaCockpit('visita');
+                
+                notificar(
+                    'info', 
+                    'Programação da Visita', 
+                    'Aba de agenda aberta! Por favor, selecione a data, horário e instruções de portaria/chaves nos campos abaixo para salvar.',
+                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
+                );
+
+                const campoDataVisita = document.getElementById('cockpit-visita-data');
+                if (campoDataVisita) campoDataVisita.focus();
+                return;
+            }
+
+            // 3. SE CLICOU EM "PROPOSTA": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
+            if (novaEtapa === 'Proposta') {
+                trocarAbaCockpit('proposta');
+                
+                notificar(
+                    'info', 
+                    'Registro de Proposta Comercial', 
+                    'Aba de proposta aberta! Por favor, preencha o valor ofertado e as condições de pagamento (sinal/financiamento) nos campos abaixo.',
+                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
+                );
+
+                const campoValorProp = document.getElementById('cockpit-proposta-valor');
+                if (campoValorProp) campoValorProp.focus();
+                return;
+            }
+
+            // 4. PARA DEMAIS MUDANÇAS (NOVO, ATENDIMENTO, CANCELADO, PERDIDO): ABRE O MODAL EXPLICATIVO
+            abrirModalTransicaoEtapa(etapaAntiga, novaEtapa);
+        }
+
+        function abrirModalTransicaoEtapa(etapaAntiga, novaEtapa) {
+            etapaPendenteConfirmacao = novaEtapa;
+
+            const objOrigem = ESTAGIOS_FUNIL.find(e => e.chave === etapaAntiga) || ESTAGIOS_FUNIL[0];
+            const objDestino = ESTAGIOS_FUNIL.find(e => e.chave === novaEtapa) || ESTAGIOS_FUNIL[1];
+
+            const badgeOrigem = document.getElementById('transicao-badge-origem');
+            const badgeDestino = document.getElementById('transicao-badge-destino');
+            badgeOrigem.className = `px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border ${objOrigem.badgeClasses}`;
+            badgeOrigem.innerHTML = `<i class="fa-solid ${objOrigem.icone} mr-1"></i> ${objOrigem.rotulo}`;
+            badgeDestino.className = `px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border ${objDestino.badgeClasses}`;
+            badgeDestino.innerHTML = `<i class="fa-solid ${objDestino.icone} mr-1"></i> ${objDestino.rotulo}`;
+
+            const icone = document.getElementById('modal-transicao-icone');
+            icone.className = `fa-solid ${objDestino.icone}`;
+
+            const textoImpacto = document.getElementById('modal-transicao-impacto-texto');
+            let explicacaoImpacto = objDestino.impacto + ' ' + objDestino.oQueFazer;
+
+            if (etapaAntiga === 'Novo') {
+                explicacaoImpacto = `O lead sairá da fila de "Novos Contatos" e constará como atendimento assumido pela equipe. ${objDestino.impacto}`;
+            } else if (novaEtapa === 'Novo') {
+                explicacaoImpacto = `O lead retornará para o estágio inicial de "Novo Contato" na fila de atendimento da equipe comercial.`;
+            } else if (novaEtapa === 'Cancelado' || novaEtapa === 'Perdido') {
+                explicacaoImpacto = `O lead sairá da esteira ativa de atendimento e será arquivado no histórico como oportunidade encerrada.`;
+            }
+
+            textoImpacto.innerText = explicacaoImpacto;
+
+            // VERIFICAÇÃO CRÍTICA: Se tem visita agendada marcada
+            const boxAlertaVisita = document.getElementById('modal-transicao-alerta-visita');
+            const textoAlertaVisita = document.getElementById('modal-transicao-alerta-visita-texto');
+
+            if (leadAtivoCockpit.data_agendamento && novaEtapa !== 'Visita Agendada') {
+                const dataFmt = formatarDataVisita(leadAtivoCockpit.data_agendamento);
+                textoAlertaVisita.innerHTML = `Este lead possui uma visita agendada para <strong>${dataFmt}</strong>. Ao confirmar a alteração para <strong>"${objDestino.rotulo}"</strong>, o agendamento será <strong>removido da Agenda do Dashboard</strong>.`;
+                boxAlertaVisita.classList.remove('hidden');
+            } else {
+                boxAlertaVisita.classList.add('hidden');
+            }
+
+            document.getElementById('modal-confirmar-transicao-etapa').classList.remove('hidden');
+        }
+
+        function fecharModalTransicaoEtapa() {
+            document.getElementById('modal-confirmar-transicao-etapa').classList.add('hidden');
+            etapaPendenteConfirmacao = null;
+        }
+
+        async function executarConfirmacaoFinalTransicao() {
+            if (!etapaPendenteConfirmacao || !leadAtivoCockpit) return;
+
+            const novaEtapa = etapaPendenteConfirmacao;
+            const etapaAntiga = leadAtivoCockpit.status || 'Novo';
+            const btn = document.getElementById('btn-executar-transicao-etapa');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Atualizando...';
 
             try {
                 const payloadUpdate = { status: novaEtapa };
 
-                // Se o lead for cancelado ou perdido, remove agendamento ativo
-                if (novaEtapa === 'Cancelado' || novaEtapa === 'Perdido') {
+                let visitaEstavaMarcada = false;
+                let dataVisitaAntiga = null;
+
+                if (novaEtapa !== 'Visita Agendada' && leadAtivoCockpit.data_agendamento) {
+                    visitaEstavaMarcada = true;
+                    dataVisitaAntiga = leadAtivoCockpit.data_agendamento;
                     payloadUpdate.data_agendamento = null;
                 }
 
@@ -1464,24 +2073,71 @@
                 renderizarPipelineCockpit(novaEtapa);
 
                 let descricaoHistorico = `Etapa do funil alterada de "${etapaAntiga}" para "${novaEtapa}".`;
-                if (novaEtapa === 'Cancelado') {
-                    descricaoHistorico = `Atendimento marcado como Cancelado (Desistência/Agenda) pelo operador.`;
+                if (visitaEstavaMarcada) {
+                    descricaoHistorico += ` [AVISO: A visita agendada para ${formatarDataVisita(dataVisitaAntiga)} foi desmarcada da agenda].`;
                 }
 
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
-                    (novaEtapa === 'Cancelado' ? 'cancelamento_visita' : 'status'),
+                    (visitaEstavaMarcada ? 'cancelamento_visita' : 'status'),
                     descricaoHistorico
                 );
 
-                notificar('sucesso', 'Etapa Atualizada', `Lead avançou para "${novaEtapa}".`);
+                fecharModalTransicaoEtapa();
+                notificar('sucesso', 'Etapa Atualizada', `Lead avançou para "${novaEtapa}" com sucesso!`);
+
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
             } catch (err) {
                 console.error(err);
                 notificar('erro', 'Falha ao Mudar Etapa', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Confirmar</span>';
             }
+        }
+
+        // ====================================================================
+        // MANUAL DIDÁTICO DAS ETAPAS DO FUNIL (GUIA VISUAL)
+        // ====================================================================
+        function abrirGuiaEtapasFunil() {
+            const container = document.getElementById('guia-etapas-lista-cards');
+            if (container) {
+                container.innerHTML = ESTAGIOS_FUNIL.map(est => `
+                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 hover:border-slate-700 transition">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border ${est.badgeClasses} inline-flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid ${est.icone}"></i>
+                                <span>${est.rotulo}</span>
+                            </span>
+                            <span class="text-[10px] font-mono text-slate-500 uppercase">Estágio Comercial</span>
+                        </div>
+                        <p class="text-white font-semibold text-xs">${est.resumo}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-800/80">
+                            <div>
+                                <span class="text-slate-500 block text-[10px] uppercase font-bold">O que fazer:</span>
+                                <span class="text-slate-300 leading-snug">${est.oQueFazer}</span>
+                            </div>
+                            <div>
+                                <span class="text-cyan-400 block text-[10px] uppercase font-bold">Impacto no Sistema:</span>
+                                <span class="text-slate-400 leading-snug">${est.impacto}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('modal-guia-etapas-funil').classList.remove('hidden');
+        }
+
+        function fecharGuiaEtapasFunil() {
+            document.getElementById('modal-guia-etapas-funil').classList.add('hidden');
+        }
+
+        function abrirInfoEtapaEspecifica(event, chaveEtapa) {
+            if (event) event.stopPropagation();
+            abrirGuiaEtapasFunil();
         }
 
         function trocarAbaCockpit(aba) {
@@ -1760,7 +2416,7 @@
 
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
-                    'visita',
+                    'cancelamento_visita',
                     'A visita combinada foi desmarcada. O lead retornou para o estágio "Em Atendimento".'
                 );
 
@@ -1779,13 +2435,46 @@
         }
 
         // ====================================================================
-        // LÓGICA DE PROPOSTA COMERCIAL NO COCKPIT
+        // LÓGICA DE PROPOSTA COMERCIAL NO COCKPIT COM MÁSCARA EM REAIS
         // ====================================================================
+        function aplicarMascaraMoedaInput(input) {
+            let v = input.value.replace(/\D/g, '');
+            if (!v) {
+                input.value = '';
+                return;
+            }
+            v = (Number(v) / 100).toFixed(2) + '';
+            let partes = v.split('.');
+            partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            input.value = partes.join(',');
+        }
+
+        function converterTextoMoedaParaNumero(valorFormatado) {
+            if (!valorFormatado) return null;
+            const limpo = valorFormatado.replace(/\./g, '').replace(',', '.');
+            const num = parseFloat(limpo);
+            return isNaN(num) ? null : num;
+        }
+
+        function preencherPropostaComValorTabela() {
+            if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
+            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
+            const valorImovel = (modalidade === 'LOCACAO') 
+                ? Number(leadAtivoCockpit.imovel.valor_locacao || 0)
+                : Number(leadAtivoCockpit.imovel.valor_venda || 0);
+
+            if (valorImovel > 0) {
+                const input = document.getElementById('cockpit-proposta-valor');
+                input.value = valorImovel.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
+
         async function salvarPropostaCockpit() {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit) return;
 
-            const valor = document.getElementById('cockpit-proposta-valor').value;
+            const valorFormatado = document.getElementById('cockpit-proposta-valor').value;
+            const valorNumerico = converterTextoMoedaParaNumero(valorFormatado);
             const condicoes = document.getElementById('cockpit-proposta-condicoes').value.trim();
 
             const btn = document.getElementById('btn-cockpit-salvar-proposta');
@@ -1797,7 +2486,7 @@
                     .from('leads_contatos')
                     .update({
                         status: 'Proposta',
-                        valor_proposta: valor ? Number(valor) : null,
+                        valor_proposta: valorNumerico,
                         condicoes_proposta: condicoes || null
                     })
                     .eq('id', leadAtivoCockpit.id);
@@ -1805,20 +2494,20 @@
                 if (error) throw error;
 
                 leadAtivoCockpit.status = 'Proposta';
-                leadAtivoCockpit.valor_proposta = valor ? Number(valor) : null;
+                leadAtivoCockpit.valor_proposta = valorNumerico;
                 leadAtivoCockpit.condicoes_proposta = condicoes || null;
 
                 renderizarPipelineCockpit('Proposta');
 
-                const valorFmt = valor ? 'R$ ' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : 'não informado';
+                const valorFmt = valorNumerico ? 'R$ ' + valorNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'não informado';
                 await registrarEventoHistorico(
                     leadAtivoCockpit.id,
                     'proposta',
                     `Proposta comercial formalizada no valor de ${valorFmt}` + (condicoes ? `. Condições: "${condicoes}"` : ''),
-                    { valor: valor, condicoes: condicoes }
+                    { valor: valorNumerico, condicoes: condicoes }
                 );
 
-                notificar('sucesso', 'Proposta Salva', `Registrada proposta de ${valorFmt}.`);
+                notificar('sucesso', 'Proposta Salva', `Registrada proposta de ${valorFmt} com sucesso!`);
                 await carregarLeads();
                 await carregarEventosTimelineCockpit(leadAtivoCockpit.id);
 
@@ -1834,22 +2523,25 @@
         function enviarPropostaWhatsAppCockpit() {
             if (!leadAtivoCockpit) return;
 
-            const valor = document.getElementById('cockpit-proposta-valor').value;
+            const valorFormatado = document.getElementById('cockpit-proposta-valor').value;
+            const valorNumerico = converterTextoMoedaParaNumero(valorFormatado);
             const condicoes = document.getElementById('cockpit-proposta-condicoes').value.trim();
 
-            if (!valor) {
+            if (!valorNumerico) {
                 notificar('aviso', 'Valor Obrigatório', 'Informe o valor da proposta para compor a mensagem.');
                 return;
             }
 
-            const valorFormatado = Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
+            const sufixo = (modalidade === 'LOCACAO') ? '/mês' : '';
+            const valorExibicao = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + sufixo;
             const refImovel = leadAtivoCockpit.imovel ? `para o imóvel Ref: ${leadAtivoCockpit.imovel.codigo_ref}` : 'para a negociação em andamento';
                 
             const zapLimpo = ('' + leadAtivoCockpit.whatsapp).replace(/\D/g, '');
             const numeroCompleto = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
 
             let mensagem = `Olá ${leadAtivoCockpit.nome}! Registramos formalmente sua proposta comercial ${refImovel}:\n\n` +
-                           `💰 *Valor:* ${valorFormatado}\n` +
+                           `💰 *Valor:* ${valorExibicao}\n` +
                            (condicoes ? `📋 *Condições:* ${condicoes}\n\n` : '\n') +
                            `Nossa diretoria já foi notificada e qualquer retorno te aviso imediatamente!`;
 
@@ -1858,11 +2550,39 @@
         }
 
         // ====================================================================
-        // LÓGICA DE CONVERSÃO EM VENDA FECHADA (APERTO DE MÃO)
+        // LÓGICA DE CONVERSÃO CONTEXTUALIZADA (LOCAÇÃO vs. VENDA)
         // ====================================================================
         function configurarAbaFechamentoCockpit(lead) {
             const containerAlerta = document.getElementById('cockpit-fechar-alerta-sem-imovel');
             const containerForm = document.getElementById('cockpit-fechar-formulario');
+            const { modalidade } = extrairContextoLead(lead);
+            const ehLocacao = (modalidade === 'LOCACAO');
+
+            // Ajuste dos rótulos da aba de Proposta Comercial
+            const lblPropValor = document.getElementById('cockpit-proposta-valor-lbl');
+            const inputPropCond = document.getElementById('cockpit-proposta-condicoes');
+            if (lblPropValor && inputPropCond) {
+                if (ehLocacao) {
+                    lblPropValor.innerText = 'Valor do Aluguel Proposto (R$/mês)';
+                    inputPropCond.placeholder = 'Ex: 3 meses caução, seguro fiança, fiador, carência...';
+                } else {
+                    lblPropValor.innerText = 'Valor da Proposta (R$)';
+                    inputPropCond.placeholder = 'Ex: 20% sinal + Financiamento Caixa, FGTS...';
+                }
+            }
+
+            // Ajuste do botão da Aba 4 no Topo do Cockpit
+            const btnAbaTxt = document.getElementById('txt-aba-fechamento');
+            const btnAbaIcon = document.getElementById('icone-aba-fechamento');
+            if (btnAbaTxt && btnAbaIcon) {
+                if (ehLocacao) {
+                    btnAbaTxt.innerText = 'Concluir Locação (Contrato)';
+                    btnAbaIcon.className = 'fa-solid fa-file-signature text-purple-400';
+                } else {
+                    btnAbaTxt.innerText = 'Concluir Venda (Aperto de Mão)';
+                    btnAbaIcon.className = 'fa-solid fa-handshake text-amber-400';
+                }
+            }
 
             if (!lead.imovel) {
                 containerAlerta.classList.remove('hidden');
@@ -1873,35 +2593,90 @@
             containerAlerta.classList.add('hidden');
             containerForm.classList.remove('hidden');
 
-            const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
-            document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
-            document.getElementById('cockpit-venda-data').value = new Date().toISOString().split('T')[0];
+            const headerContainer = document.getElementById('cockpit-fechamento-header-container');
+            const tituloTopo = document.getElementById('cockpit-fechamento-titulo-topo');
+            const iconeTopo = document.getElementById('cockpit-fechamento-icone-topo');
+            const lblValor = document.getElementById('lbl-fechamento-valor');
+            const lblData = document.getElementById('lbl-fechamento-data');
+            const lblPctImob = document.getElementById('lbl-fechamento-pct-imob');
+            const lblPctCorretor = document.getElementById('lbl-fechamento-pct-corretor');
+            const btnTxt = document.getElementById('btn-iniciar-fechamento-txt');
+            const btnIcon = document.getElementById('btn-iniciar-fechamento-icone');
 
-            const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) ? dadosImobiliaria.comissao_venda_padrao_pct : 6.0;
-            document.getElementById('cockpit-venda-comissao-total-pct').value = comissaoPadrao;
+            if (ehLocacao) {
+                if (headerContainer) headerContainer.className = 'flex items-center gap-2 text-purple-400 font-black text-xs uppercase';
+                if (tituloTopo) tituloTopo.innerText = 'Formalização de Contrato de Locação';
+                if (iconeTopo) iconeTopo.className = 'fa-solid fa-file-signature text-base';
+                if (lblValor) lblValor.innerText = 'Valor do Aluguel Mensal Fechado (R$/mês) *';
+                if (lblData) lblData.innerText = 'Data de Início do Contrato *';
+                if (lblPctImob) lblPctImob.innerText = 'Taxa de Adm. da Imobiliária (%) *';
+                if (lblPctCorretor) lblPctCorretor.innerText = 'Comissão do Corretor na Locação (%) *';
+                if (btnTxt) btnTxt.innerText = 'Avançar para Conclusão de Locação';
+                if (btnIcon) btnIcon.className = 'fa-solid fa-file-signature';
 
-            // Busca fatia do corretor
-            let fatiaCorretor = 30.0;
-            if (lead.corretor_atribuido_id) {
-                const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
-                if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
-                    fatiaCorretor = corretor.comissao_venda_pct;
+                const valorSugerido = lead.valor_proposta || lead.imovel.valor_locacao || '';
+                document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
+
+                const taxaAdmPadrao = (dadosImobiliaria && dadosImobiliaria.taxa_locacao_padrao_pct) 
+                    ? dadosImobiliaria.taxa_locacao_padrao_pct 
+                    : 10.0;
+                document.getElementById('cockpit-venda-comissao-total-pct').value = taxaAdmPadrao;
+
+                let comissaoCorretor = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_locacao_padrao_pct) 
+                    ? dadosImobiliaria.repasse_corretor_locacao_padrao_pct 
+                    : 0.0;
+                if (lead.corretor_atribuido_id) {
+                    const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
+                    if (corretor && corretor.comissao_locacao_pct !== null && corretor.comissao_locacao_pct !== undefined) {
+                        comissaoCorretor = corretor.comissao_locacao_pct;
+                    }
                 }
-            }
-            document.getElementById('cockpit-venda-comissao-corretor-pct').value = fatiaCorretor;
+                document.getElementById('cockpit-venda-comissao-corretor-pct').value = comissaoCorretor;
 
+            } else {
+                if (headerContainer) headerContainer.className = 'flex items-center gap-2 text-amber-400 font-black text-xs uppercase';
+                if (tituloTopo) tituloTopo.innerText = 'Conclusão Formal de Venda & Rateio Financeiro';
+                if (iconeTopo) iconeTopo.className = 'fa-solid fa-handshake text-base';
+                if (lblValor) lblValor.innerText = 'Valor Real de Fechamento (R$) *';
+                if (lblData) lblData.innerText = 'Data do Fechamento *';
+                if (lblPctImob) lblPctImob.innerText = 'Comissão Total Negociada (%) *';
+                if (lblPctCorretor) lblPctCorretor.innerText = 'Fatia do Corretor (%) *';
+                if (btnTxt) btnTxt.innerText = 'Avançar para Conclusão de Venda';
+                if (btnIcon) btnIcon.className = 'fa-solid fa-handshake';
+
+                const valorSugerido = lead.valor_proposta || lead.imovel.valor_venda || '';
+                document.getElementById('cockpit-venda-valor-real').value = valorSugerido;
+
+                const comissaoPadrao = (dadosImobiliaria && dadosImobiliaria.comissao_venda_padrao_pct) 
+                    ? dadosImobiliaria.comissao_venda_padrao_pct 
+                    : 6.0;
+                document.getElementById('cockpit-venda-comissao-total-pct').value = comissaoPadrao;
+
+                let fatiaCorretor = (dadosImobiliaria && dadosImobiliaria.repasse_corretor_venda_padrao_pct) 
+                    ? dadosImobiliaria.repasse_corretor_venda_padrao_pct 
+                    : 30.0;
+                if (lead.corretor_atribuido_id) {
+                    const corretor = listaCorretores.find(c => c.id === lead.corretor_atribuido_id);
+                    if (corretor && corretor.comissao_venda_pct !== null && corretor.comissao_venda_pct !== undefined) {
+                        fatiaCorretor = corretor.comissao_venda_pct;
+                    }
+                }
+                document.getElementById('cockpit-venda-comissao-corretor-pct').value = fatiaCorretor;
+            }
+
+            document.getElementById('cockpit-venda-data').value = new Date().toISOString().split('T')[0];
             calcularRateioCockpit();
         }
 
         function calcularRateioCockpit() {
-            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value) || 0;
+            const valorNegocio = Number(document.getElementById('cockpit-venda-valor-real').value) || 0;
             const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
             const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
 
-            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
+            const valorComissaoTotal = (valorNegocio * comissaoTotalPct) / 100;
             const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
             const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+            const valorRepasseProprietario = valorNegocio - valorComissaoTotal;
 
             document.getElementById('cockpit-sim-comissao-total').innerText = valorComissaoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('cockpit-sim-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -1909,29 +2684,30 @@
             document.getElementById('cockpit-sim-repasse').innerText = valorRepasseProprietario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
-        // DISPARA O MODAL EXPLICATIVO DE CONFIRMAÇÃO DA VENDA
         function iniciarConfirmacaoExplicativaVenda() {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
 
-            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
-            if (!valorVenda || valorVenda <= 0) {
-                notificar('aviso', 'Valor Inválido', 'Informe um valor de fechamento maior que zero.');
+            const valorNegocio = Number(document.getElementById('cockpit-venda-valor-real').value);
+            if (!valorNegocio || valorNegocio <= 0) {
+                notificar('aviso', 'Valor Inválido', 'Informe um valor maior que zero para formalizar o negócio.');
                 return;
             }
 
-            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
-            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
+            const pctTotal = Number(document.getElementById('cockpit-venda-comissao-total-pct').value) || 0;
+            const pctCorretor = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value) || 0;
 
-            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
-            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
-            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
+            const valorTotalCalculado = (valorNegocio * pctTotal) / 100;
+            const valorCorretorCalculado = (valorTotalCalculado * pctCorretor) / 100;
+            const valorImobCalculado = valorTotalCalculado - valorCorretorCalculado;
 
-            // Alimenta os dados no modal explicativo de confirmação
+            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
+            const ehLocacao = (modalidade === 'LOCACAO');
+
             document.getElementById('conf-imovel-ref').innerText = `Ref: ${leadAtivoCockpit.imovel.codigo_ref}`;
-            document.getElementById('conf-valor-venda').innerText = valorVenda.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('conf-valor-imob').innerText = valorComissaoImobiliaria.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('conf-valor-corretor').innerText = valorComissaoCorretor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-venda').innerText = valorNegocio.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + (ehLocacao ? '/mês' : '');
+            document.getElementById('conf-valor-imob').innerText = valorImobCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('conf-valor-corretor').innerText = valorCorretorCalculado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('conf-lead-nome').innerText = leadAtivoCockpit.nome;
 
             document.getElementById('modal-confirmar-venda-explicativo').classList.remove('hidden');
@@ -1945,84 +2721,128 @@
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit || !leadAtivoCockpit.imovel) return;
 
+            const { modalidade } = extrairContextoLead(leadAtivoCockpit);
+            const ehLocacao = (modalidade === 'LOCACAO');
+
             const btn = document.getElementById('btn-executar-venda-final');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Concluindo venda...';
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Concluindo ${ehLocacao ? 'locação' : 'venda'}...`;
             btn.disabled = true;
 
-            const valorVenda = Number(document.getElementById('cockpit-venda-valor-real').value);
-            const dataVenda = document.getElementById('cockpit-venda-data').value;
-            const comissaoTotalPct = Number(document.getElementById('cockpit-venda-comissao-total-pct').value);
-            const comissaoCorretorPct = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value);
+            const valorNegocio = Number(document.getElementById('cockpit-venda-valor-real').value);
+            const dataNegocio = document.getElementById('cockpit-venda-data').value;
+            const pctTotal = Number(document.getElementById('cockpit-venda-comissao-total-pct').value);
+            const pctCorretor = Number(document.getElementById('cockpit-venda-comissao-corretor-pct').value);
 
-            const valorComissaoTotal = (valorVenda * comissaoTotalPct) / 100;
-            const valorComissaoCorretor = (valorComissaoTotal * comissaoCorretorPct) / 100;
-            const valorComissaoImobiliaria = valorComissaoTotal - valorComissaoCorretor;
-            const valorRepasseProprietario = valorVenda - valorComissaoTotal;
+            const valorTotalCalculado = (valorNegocio * pctTotal) / 100;
+            const valorCorretorCalculado = (valorTotalCalculado * pctCorretor) / 100;
+            const valorImobCalculado = valorTotalCalculado - valorCorretorCalculado;
+            const valorRepasseProprietario = valorNegocio - valorTotalCalculado;
 
             const corretorObj = listaCorretores.find(c => c.id === leadAtivoCockpit.corretor_atribuido_id);
             const corretorNome = corretorObj ? corretorObj.nome_completo : null;
 
             try {
-                // 1. Registra a venda na tabela de vendas fechadas
-                const { error: errVenda } = await supabaseClient
-                    .from('vendas_fechadas')
-                    .insert([{
-                        imobiliaria_id: imobiliariaId,
-                        imovel_id: leadAtivoCockpit.imovel.id,
-                        cliente_comprador_nome: leadAtivoCockpit.nome,
-                        corretor_id: leadAtivoCockpit.corretor_atribuido_id || null,
-                        corretor_nome: corretorNome,
-                        valor_venda_real: valorVenda,
-                        comissao_total_pct: comissaoTotalPct,
-                        valor_comissao_total: valorComissaoTotal,
-                        comissao_corretor_pct: comissaoCorretorPct,
-                        valor_comissao_corretor: valorComissaoCorretor,
-                        valor_comissao_imobiliaria: valorComissaoImobiliaria,
-                        valor_repasse_proprietario: valorRepasseProprietario,
-                        data_venda: dataVenda,
-                        status_pagamento: 'Recebido'
-                    }]);
+                if (ehLocacao) {
+                    const dInicio = new Date(dataNegocio);
+                    const dFim = new Date(dInicio);
+                    dFim.setFullYear(dFim.getFullYear() + 1);
+                    const dataFimFormatada = dFim.toISOString().split('T')[0];
 
-                if (errVenda) throw errVenda;
+                    const { error: errLocacao } = await supabaseClient
+                        .from('contratos_locacao')
+                        .insert([{
+                            imobiliaria_id: imobiliariaId,
+                            imovel_id: leadAtivoCockpit.imovel.id,
+                            lead_id: leadAtivoCockpit.id,
+                            cliente_nome: leadAtivoCockpit.nome,
+                            cliente_whatsapp: leadAtivoCockpit.whatsapp,
+                            cliente_email: leadAtivoCockpit.email || null,
+                            valor_aluguel_bruto: valorNegocio,
+                            taxa_administracao_pct: pctTotal,
+                            valor_comissao_imobiliaria: valorImobCalculado,
+                            valor_repasse_proprietario: valorRepasseProprietario,
+                            dia_vencimento_aluguel: 10,
+                            data_inicio: dataNegocio,
+                            data_fim: dataFimFormatada,
+                            status: 'Ativo'
+                        }]);
 
-                // 2. Atualiza o imóvel para Vendido e desativa da vitrine pública
-                await supabaseClient
-                    .from('imoveis')
-                    .update({ status: 'Vendido', ativa: false })
-                    .eq('id', leadAtivoCockpit.imovel.id);
+                    if (errLocacao) throw errLocacao;
 
-                // 3. Atualiza o status do lead para Concluído / Fechado
-                await supabaseClient
-                    .from('leads_contatos')
-                    .update({ status: 'Fechado' })
-                    .eq('id', leadAtivoCockpit.id);
+                    await supabaseClient
+                        .from('imoveis')
+                        .update({ status: 'Alugado', ativa: false })
+                        .eq('id', leadAtivoCockpit.imovel.id);
 
-                // 4. Registra histórico oficial de auditoria
-                await registrarEventoHistorico(
-                    leadAtivoCockpit.id,
-                    'fechamento',
-                    `Venda formal concluída com sucesso! Imóvel vendido por R$ ${valorVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Imobiliária'}. Imóvel baixado da vitrine.`,
-                    { valor_venda: valorVenda, comissao_total: valorComissaoTotal }
-                );
+                    await supabaseClient
+                        .from('leads_contatos')
+                        .update({ status: 'Fechado' })
+                        .eq('id', leadAtivoCockpit.id);
+
+                    await registrarEventoHistorico(
+                        leadAtivoCockpit.id,
+                        'fechamento',
+                        `Contrato de locação firmado com sucesso! Aluguel de R$ ${valorNegocio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês com taxa de adm de ${pctTotal}%. Imóvel baixado como "Alugado".`,
+                        { valor_aluguel: valorNegocio, taxa_adm: pctTotal }
+                    );
+
+                    notificar('sucesso', 'Locação Concluída com Sucesso!', `Imóvel marcado como Alugado e contrato gerado no financeiro.`);
+
+                } else {
+                    const { error: errVenda } = await supabaseClient
+                        .from('vendas_fechadas')
+                        .insert([{
+                            imobiliaria_id: imobiliariaId,
+                            imovel_id: leadAtivoCockpit.imovel.id,
+                            cliente_comprador_nome: leadAtivoCockpit.nome,
+                            corretor_id: leadAtivoCockpit.corretor_atribuido_id || null,
+                            corretor_nome: corretorNome,
+                            valor_venda_real: valorNegocio,
+                            comissao_total_pct: pctTotal,
+                            valor_comissao_total: valorTotalCalculado,
+                            comissao_corretor_pct: pctCorretor,
+                            valor_comissao_corretor: valorCorretorCalculado,
+                            valor_comissao_imobiliaria: valorImobCalculado,
+                            valor_repasse_proprietario: valorRepasseProprietario,
+                            data_venda: dataNegocio,
+                            status_pagamento: 'Recebido'
+                        }]);
+
+                    if (errVenda) throw errVenda;
+
+                    await supabaseClient
+                        .from('imoveis')
+                        .update({ status: 'Vendido', ativa: false })
+                        .eq('id', leadAtivoCockpit.imovel.id);
+
+                    await supabaseClient
+                        .from('leads_contatos')
+                        .update({ status: 'Fechado' })
+                        .eq('id', leadAtivoCockpit.id);
+
+                    await registrarEventoHistorico(
+                        leadAtivoCockpit.id,
+                        'fechamento',
+                        `Venda formal concluída com sucesso! Imóvel vendido por R$ ${valorNegocio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} pelo corretor ${corretorNome || 'Imobiliária'}. Imóvel baixado da vitrine.`,
+                        { valor_venda: valorNegocio, comissao_total: valorTotalCalculado }
+                    );
+
+                    notificar('sucesso', 'Venda Fechada com Sucesso!', `Imóvel baixado da vitrine e comissões lançadas no financeiro.`);
+                }
 
                 fecharConfirmacaoExplicativaVenda();
                 fecharCockpitLead();
-
-                notificar('sucesso', 'Venda Fechada com Sucesso!', `Imóvel baixado da vitrine e comissões lançadas no financeiro.`, 6000);
                 await carregarLeads();
 
             } catch (err) {
-                console.error('Erro no fechamento:', err);
+                console.error('Erro no fechamento do negócio:', err);
                 notificar('erro', 'Falha no Fechamento', err.message);
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Sim, Concluir Venda</span>';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Sim, Concluir</span>';
                 btn.disabled = false;
             }
         }
 
-        // ====================================================================
-        // ATRIBUIÇÃO DIRETA DE CORRETOR NA TABELA
-        // ====================================================================
         async function atribuirCorretorLead(leadId, corretorId) {
             if (modoLeitura && !isMasterSuporte) return;
             try {
@@ -2063,9 +2883,12 @@
         function aplicarFiltros() {
             const busca = document.getElementById('filtro-busca').value.toLowerCase().trim();
             const status = document.getElementById('filtro-status').value;
+            const modalidadeFiltro = document.getElementById('filtro-modalidade').value;
             const corretor = document.getElementById('filtro-corretor').value;
 
             let filtrados = listaLeadsCompleta.filter(l => {
+                const { modalidade } = extrairContextoLead(l);
+
                 const matchBusca = !busca || 
                     (l.nome && l.nome.toLowerCase().includes(busca)) ||
                     (l.whatsapp && l.whatsapp.includes(busca)) ||
@@ -2075,7 +2898,14 @@
                 const matchStatus = !status || (l.status || 'Novo') === status;
                 const matchCorretor = !corretor || String(l.corretor_atribuido_id) === String(corretor);
 
-                return matchBusca && matchStatus && matchCorretor;
+                let matchModalidade = true;
+                if (modalidadeFiltro) {
+                    if (modalidadeFiltro === 'VENDA') matchModalidade = (modalidade === 'VENDA' || modalidade === 'AMBOS');
+                    else if (modalidadeFiltro === 'LOCACAO') matchModalidade = (modalidade === 'LOCACAO' || modalidade === 'AMBOS');
+                    else if (modalidadeFiltro === 'AVALIACAO') matchModalidade = (modalidade === 'AVALIACAO');
+                }
+
+                return matchBusca && matchStatus && matchCorretor && matchModalidade;
             });
 
             renderizarTabelaLeads(filtrados);
@@ -2085,6 +2915,7 @@
             filtroEstagioAtivoCard = null;
             document.getElementById('filtro-busca').value = '';
             document.getElementById('filtro-status').value = '';
+            document.getElementById('filtro-modalidade').value = '';
             document.getElementById('filtro-corretor').value = '';
             atualizarDestaqueCardsFunil();
             renderizarTabelaLeads(listaLeadsCompleta);
@@ -2094,9 +2925,6 @@
             }
         }
 
-        // ====================================================================
-        // EXCLUSÃO DE LEAD
-        // ====================================================================
         function abrirModalExcluirLead(id, nome) {
             if (modoLeitura && !isMasterSuporte) return;
             document.getElementById('modal-excluir-lead-id').value = id;
@@ -2131,6 +2959,87 @@
             } finally {
                 btn.innerHTML = 'Sim, Descartar';
                 btn.disabled = false;
+            }
+        }
+
+        // ====================================================================
+        // CADASTRO MANUAL DE LEAD (BALCÃO / TELEFONE)
+        // ====================================================================
+        function abrirModalNovoLeadManual() {
+            const selectCorretor = document.getElementById('manual-lead-corretor');
+            selectCorretor.innerHTML = '<option value="">Sem corretor inicial</option>';
+            listaCorretores.forEach(c => {
+                selectCorretor.innerHTML += `<option value="${c.id}">${c.nome_completo}</option>`;
+            });
+
+            const selectImovel = document.getElementById('manual-lead-imovel');
+            selectImovel.innerHTML = '<option value="">Interesse Geral (Sem imóvel)</option>';
+            
+            supabaseClient.from('imoveis')
+                .select('id, codigo_ref, titulo')
+                .eq('imobiliaria_id', imobiliariaId)
+                .eq('status', 'Disponível')
+                .order('codigo_ref', { ascending: true })
+                .then(({ data }) => {
+                    (data || []).forEach(im => {
+                        selectImovel.innerHTML += `<option value="${im.id}">Ref: ${im.codigo_ref} - ${im.titulo}</option>`;
+                    });
+                });
+
+            document.getElementById('form-cadastrar-lead-manual').reset();
+            document.getElementById('modal-novo-lead-manual').classList.remove('hidden');
+        }
+
+        function fecharModalNovoLeadManual() {
+            document.getElementById('modal-novo-lead-manual').classList.add('hidden');
+        }
+
+        async function salvarLeadManual(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-salvar-lead-manual');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
+
+            const nome = document.getElementById('manual-lead-nome').value.trim();
+            const zap = document.getElementById('manual-lead-whatsapp').value.trim();
+            const email = document.getElementById('manual-lead-email').value.trim();
+            const imovelId = document.getElementById('manual-lead-imovel').value || null;
+            const corretorId = document.getElementById('manual-lead-corretor').value ? Number(document.getElementById('manual-lead-corretor').value) : null;
+            const mensagem = document.getElementById('manual-lead-mensagem').value.trim();
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leads_contatos')
+                    .insert([{
+                        imobiliaria_id: imobiliariaId,
+                        nome: nome,
+                        whatsapp: zap,
+                        email: email || null,
+                        imovel_id: imovelId,
+                        corretor_atribuido_id: corretorId,
+                        mensagem: mensagem ? `[ATENDIMENTO MANUAL]: ${mensagem}` : '[ATENDIMENTO MANUAL CADASTRADO NO BALCÃO/FONE]',
+                        status: 'Em Atendimento'
+                    }])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                await registrarEventoHistorico(
+                    data.id, 
+                    'status', 
+                    `Atendimento cadastrado manualmente pelo gestor/corretor (${usuarioLogadoNome}).`
+                );
+
+                fecharModalNovoLeadManual();
+                notificar('sucesso', 'Atendimento Cadastrado!', `Cliente ${nome} adicionado com sucesso em "Em Atendimento".`);
+                await carregarLeads();
+            } catch (err) {
+                console.error(err);
+                notificar('erro', 'Falha ao Cadastrar', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Cadastrar Atendimento</span>';
             }
         }
 

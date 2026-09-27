@@ -210,11 +210,19 @@
                     <i class="fa-solid fa-paintbrush"></i> 1. Identidade Visual & Imagens
                 </h3>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+   
+
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="block font-bold text-slate-300">Logotipo da Imobiliária</label>
                         <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-700">
-                            <img id="preview-logo" src="https://via.placeholder.com/80?text=Logo" alt="Logotipo" class="w-16 h-16 rounded-lg object-contain bg-white/5 border border-slate-700 p-1">
+                            <div class="relative flex-shrink-0">
+                                <img id="preview-logo" src="https://via.placeholder.com/80?text=Logo" alt="Logotipo" class="w-16 h-16 rounded-lg object-contain bg-white/5 border border-slate-700 p-1">
+                                <button type="button" id="btn-remover-logo" onclick="removerFotoLogo()" title="Remover Logotipo" class="hidden absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-[10px] flex items-center justify-center shadow-lg transition cursor-pointer border border-rose-400">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
                             <div class="flex-1">
                                 <input type="file" id="upload-logo" accept="image/*" onchange="previewUploadLogo(event)" class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 cursor-pointer">
                                 <p class="text-[10px] text-slate-500 mt-1">Recomendado: Formato PNG transparente (300x100px). Exibido na vitrine pública.</p>
@@ -225,7 +233,12 @@
                     <div class="space-y-2">
                         <label class="block font-bold text-slate-300">Banner Institucional / Fachada</label>
                         <div class="flex items-center gap-4 bg-slate-950 p-3 rounded-xl border border-slate-700">
-                            <img id="preview-banner" src="https://via.placeholder.com/120x60?text=Banner" alt="Banner" class="w-24 h-16 rounded-lg object-cover bg-white/5 border border-slate-700">
+                            <div class="relative flex-shrink-0">
+                                <img id="preview-banner" src="https://via.placeholder.com/120x60?text=Banner" alt="Banner" class="w-24 h-16 rounded-lg object-cover bg-white/5 border border-slate-700">
+                                <button type="button" id="btn-remover-banner" onclick="removerFotoBanner()" title="Remover Banner" class="hidden absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-[10px] flex items-center justify-center shadow-lg transition cursor-pointer border border-rose-400">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
                             <div class="flex-1">
                                 <input type="file" id="upload-banner" accept="image/*" onchange="previewUploadBanner(event)" class="w-full text-slate-400 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 cursor-pointer">
                                 <p class="text-[10px] text-slate-500 mt-1">Recomendado: Formato JPG/WebP (1920x600px)</p>
@@ -233,6 +246,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <!-- SEÇÃO 2: DADOS CADASTRAIS E LEGAIS -->
@@ -429,8 +443,10 @@
         let isMasterSuporte = false;
         let diasAvisoGlobal = 5;
 
-        let arquivoLogo = null;
+      let arquivoLogo = null;
         let arquivoBanner = null;
+        let removerLogo = false;
+        let removerBanner = false;
 
         async function inicializarConfiguracoes() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -668,10 +684,24 @@
             // Bloco B: Repasse Padrão aos Corretores
             document.getElementById('conf-repasse-venda-corretor').value = (imob.repasse_corretor_venda_padrao_pct !== null && imob.repasse_corretor_venda_padrao_pct !== undefined) ? imob.repasse_corretor_venda_padrao_pct : 30.0;
             document.getElementById('conf-repasse-locacao-corretor').value = (imob.repasse_corretor_locacao_padrao_pct !== null && imob.repasse_corretor_locacao_padrao_pct !== undefined) ? imob.repasse_corretor_locacao_padrao_pct : 0.0;
+removerLogo = false;
+            removerBanner = false;
 
-            if (imob.logo_url) document.getElementById('preview-logo').src = imob.logo_url;
-            if (imob.banner_url) document.getElementById('preview-banner').src = imob.banner_url;
+            if (imob.logo_url && imob.logo_url.trim() !== '') {
+                document.getElementById('preview-logo').src = imob.logo_url;
+                document.getElementById('btn-remover-logo').classList.remove('hidden');
+            } else {
+                document.getElementById('preview-logo').src = 'https://via.placeholder.com/80?text=Logo';
+                document.getElementById('btn-remover-logo').classList.add('hidden');
+            }
 
+            if (imob.banner_url && imob.banner_url.trim() !== '') {
+                document.getElementById('preview-banner').src = imob.banner_url;
+                document.getElementById('btn-remover-banner').classList.remove('hidden');
+            } else {
+                document.getElementById('preview-banner').src = 'https://via.placeholder.com/120x60?text=Banner';
+                document.getElementById('btn-remover-banner').classList.add('hidden');
+            }
             const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
 
@@ -683,21 +713,39 @@
                 document.getElementById('txt-plano-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
         }
-
-        function previewUploadLogo(e) {
+function previewUploadLogo(e) {
             if (e.target.files && e.target.files[0]) {
                 arquivoLogo = e.target.files[0];
+                removerLogo = false;
                 document.getElementById('preview-logo').src = URL.createObjectURL(arquivoLogo);
+                document.getElementById('btn-remover-logo').classList.remove('hidden');
             }
+        }
+
+        function removerFotoLogo() {
+            arquivoLogo = null;
+            removerLogo = true;
+            document.getElementById('upload-logo').value = '';
+            document.getElementById('preview-logo').src = 'https://via.placeholder.com/80?text=Logo';
+            document.getElementById('btn-remover-logo').classList.add('hidden');
         }
 
         function previewUploadBanner(e) {
             if (e.target.files && e.target.files[0]) {
                 arquivoBanner = e.target.files[0];
+                removerBanner = false;
                 document.getElementById('preview-banner').src = URL.createObjectURL(arquivoBanner);
+                document.getElementById('btn-remover-banner').classList.remove('hidden');
             }
         }
 
+        function removerFotoBanner() {
+            arquivoBanner = null;
+            removerBanner = true;
+            document.getElementById('upload-banner').value = '';
+            document.getElementById('preview-banner').src = 'https://via.placeholder.com/120x60?text=Banner';
+            document.getElementById('btn-remover-banner').classList.add('hidden');
+        }
         async function salvarConfiguracoes(event) {
             event.preventDefault();
             if (modoLeitura && !isMasterSuporte) return;
@@ -710,13 +758,17 @@
             alerta.classList.add('hidden');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Gravando configurações e mídias...';
             btn.disabled = true;
-
-            try {
+try {
                 let novaLogoUrl = dadosImobAtual ? dadosImobAtual.logo_url : null;
                 let novaBannerUrl = dadosImobAtual ? dadosImobAtual.banner_url : null;
 
+                // Aplica exclusão explícita (seta null se clicou na lixeira)
+                if (removerLogo) novaLogoUrl = null;
+                if (removerBanner) novaBannerUrl = null;
+
                 if (arquivoLogo) {
-                    const ext = arquivoLogo.name.split('.').pop();
+
+            const ext = arquivoLogo.name.split('.').pop();
                     const path = `${imobiliariaId}/identidade/logo_${Date.now()}.${ext}`;
                     const { error: upErr } = await supabaseClient.storage.from('imoveis-midias').upload(path, arquivoLogo, { upsert: true });
                     if (!upErr) {
@@ -772,10 +824,14 @@
 
                 const { error } = await supabaseClient.from('imobiliarias').update(payload).eq('id', imobiliariaId);
                 if (error) throw error;
-
-                dadosImobAtual = { ...dadosImobAtual, ...payload };
+dadosImobAtual = { ...dadosImobAtual, ...payload };
+                removerLogo = false;
+                removerBanner = false;
+                arquivoLogo = null;
+                arquivoBanner = null;
 
                 alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
+  
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
                 alertaTexto.innerText = 'Configurações corporativas, taxas da imobiliária e regras da equipe salvas com sucesso!';
                 alerta.classList.remove('hidden');
