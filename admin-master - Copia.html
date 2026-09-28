@@ -84,38 +84,13 @@
                     <span>Instalar Master</span>
                 </button>
 
-  <!-- RÉGUA DE COBRANÇA E BLOQUEIO GRADUAL -->
-                <div class="flex items-center gap-2 bg-slate-900 px-3 py-1 rounded-xl border border-slate-700 flex-wrap">
-                    <!-- 1. Alerta prévio -->
-                    <div class="flex items-center gap-1.5" title="Dias antes do vencimento para alertar o gestor">
-                        <i class="fa-solid fa-bell text-amber-400 text-xs"></i>
-                        <span class="text-slate-400 text-[11px]">Aviso:</span>
-                        <input type="number" id="input-dias-aviso" min="1" max="30" onchange="salvarDiasAviso(this.value)" 
-                               class="w-9 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-amber-400 font-bold outline-none text-xs">
-                        <span class="text-slate-500 text-[10px]">dias antes</span>
-                    </div>
-
-                    <span class="text-slate-700 hidden sm:inline">|</span>
-
-                    <!-- 2. Tolerância para Modo Somente Leitura -->
-                    <div class="flex items-center gap-1.5" title="Dias após o vencimento antes de travar em Somente Leitura">
-                        <i class="fa-solid fa-eye text-cyan-400 text-xs"></i>
-                        <span class="text-slate-400 text-[11px]">Leitura:</span>
-                        <input type="number" id="input-dias-leitura" min="0" max="60" onchange="salvarDiasLeitura(this.value)" 
-                               class="w-9 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-cyan-400 font-bold outline-none text-xs">
-                        <span class="text-slate-500 text-[10px]">dias pós</span>
-                    </div>
-
-                    <span class="text-slate-700 hidden sm:inline">|</span>
-
-                    <!-- 3. Dias para Bloqueio Total -->
-                    <div class="flex items-center gap-1.5" title="Dias após o vencimento para cortar o acesso completamente">
-                        <i class="fa-solid fa-ban text-rose-400 text-xs"></i>
-                        <span class="text-slate-400 text-[11px]">Bloqueio:</span>
-                        <input type="number" id="input-dias-bloqueio" min="1" max="90" onchange="salvarDiasBloqueio(this.value)" 
-                               class="w-9 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-rose-400 font-bold outline-none text-xs">
-                        <span class="text-slate-500 text-[10px]">dias pós</span>
-                    </div>
+                <!-- ALERTA DE DIAS DE VENCIMENTO -->
+                <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700">
+                    <i class="fa-solid fa-bell text-amber-400 text-xs"></i>
+                    <span class="text-slate-400 text-[11px]">Alerta pgto:</span>
+                    <input type="number" id="input-dias-aviso" min="1" max="30" onchange="salvarDiasAviso(this.value)" 
+                           class="w-10 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-amber-400 font-bold outline-none text-xs" title="Dias antes do vencimento para alertar o gestor">
+                    <span class="text-slate-400 text-[11px]">dias antes</span>
                 </div>
 
   <!-- BOTÃO DE TUTORIAIS EM VÍDEO (CMS) -->
@@ -1495,26 +1470,17 @@
             await carregarAvisos();
         }
 
-     let configGlobalSistema = {
-            dias_aviso_vencimento: 5,
-            dias_carencia_leitura: 3,
-            dias_bloqueio_total: 7
-        };
-
         async function carregarConfigSistema() {
             try {
-                const { data } = await supabaseClient.from('config_sistema').select('*').eq('id', 1).maybeSingle();
-                if (data) {
-                    configGlobalSistema.dias_aviso_vencimento = data.dias_aviso_vencimento ?? 5;
-                    configGlobalSistema.dias_carencia_leitura = data.dias_carencia_leitura ?? 3;
-                    configGlobalSistema.dias_bloqueio_total = data.dias_bloqueio_total ?? 7;
+                const { data } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
+                if (data && data.dias_aviso_vencimento) {
+                    document.getElementById('input-dias-aviso').value = data.dias_aviso_vencimento;
+                } else {
+                    document.getElementById('input-dias-aviso').value = 5;
                 }
             } catch (err) {
-                console.warn('[CONFIG] Usando padrões de carência:', err);
+                document.getElementById('input-dias-aviso').value = 5;
             }
-            document.getElementById('input-dias-aviso').value = configGlobalSistema.dias_aviso_vencimento;
-            document.getElementById('input-dias-leitura').value = configGlobalSistema.dias_carencia_leitura;
-            document.getElementById('input-dias-bloqueio').value = configGlobalSistema.dias_bloqueio_total;
         }
 
         async function salvarDiasAviso(dias) {
@@ -1522,66 +1488,10 @@
             if (isNaN(num) || num < 1) return;
             try {
                 await supabaseClient.from('config_sistema').upsert({ id: 1, dias_aviso_vencimento: num });
-                configGlobalSistema.dias_aviso_vencimento = num;
-                mostrarToast('Regra de alerta prévio salva!', 'sucesso');
+                mostrarToast('Regra de alerta de vencimento atualizada!', 'sucesso');
             } catch (err) {
                 mostrarToast('Falha ao atualizar regra de aviso.', 'erro');
             }
-        }
-
-        async function salvarDiasLeitura(dias) {
-            const num = parseInt(dias, 10);
-            if (isNaN(num) || num < 0) return;
-            try {
-                await supabaseClient.from('config_sistema').upsert({ id: 1, dias_carencia_leitura: num });
-                configGlobalSistema.dias_carencia_leitura = num;
-                mostrarToast('Prazo para Modo Leitura atualizado!', 'sucesso');
-                atualizarMetricasMaster();
-                renderizarTabelaImobiliarias(listaImobiliarias);
-            } catch (err) {
-                mostrarToast('Falha ao atualizar carência de leitura.', 'erro');
-            }
-        }
-
-        async function salvarDiasBloqueio(dias) {
-            const num = parseInt(dias, 10);
-            if (isNaN(num) || num < 1) return;
-            try {
-                await supabaseClient.from('config_sistema').upsert({ id: 1, dias_bloqueio_total: num });
-                configGlobalSistema.dias_bloqueio_total = num;
-                mostrarToast('Prazo de Bloqueio Total atualizado!', 'sucesso');
-                atualizarMetricasMaster();
-                renderizarTabelaImobiliarias(listaImobiliarias);
-            } catch (err) {
-                mostrarToast('Falha ao atualizar prazo de bloqueio total.', 'erro');
-            }
-        }
-
-        // MOTOR DE CÁLCULO DE STATUS: MANUAL + AUTOMÁTICO POR DIAS
-        function calcularStatusEfetivoImobiliaria(imob) {
-            // Se o Administrador definiu manualmente no banco
-            if (imob.status === 'blocked') return 'blocked';
-            if (imob.status === 'read_only') return 'read_only';
-
-            // Avaliação por data de vencimento
-            if (!imob.data_vencimento) return 'active';
-
-            const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-
-            const [ano, mes, dia] = imob.data_vencimento.split('-').map(Number);
-            const dataVenc = new Date(ano, mes - 1, dia);
-
-            const diffDias = Math.floor((hoje - dataVenc) / (1000 * 60 * 60 * 24));
-
-            if (diffDias > (configGlobalSistema.dias_bloqueio_total ?? 7)) {
-                return 'blocked'; // Bloqueio total após estourar carência máxima
-            } else if (diffDias > (configGlobalSistema.dias_carencia_leitura ?? 3)) {
-                return 'read_only'; // Modo Consulta: não pode inserir nem alterar
-            } else if (diffDias > 0) {
-                return 'overdue'; // Vencido recente, ainda em operação plena
-            }
-            return 'active';
         }
 async function carregarDadosMaster() {
             try {
@@ -2317,21 +2227,24 @@ function filtrarTicketsMaster() {
             }
         }
 
-   function atualizarMetricasMaster() {
+        function atualizarMetricasMaster() {
             const totalImobs = listaImobiliarias.length;
+            const hoje = new Date().toISOString().split('T')[0];
+
             let mrrTotal = 0;
             let ativasCount = 0;
-            let pendenciasCount = 0;
+            let bloqueadasCount = 0;
 
             listaImobiliarias.forEach(im => {
                 const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
-                const statusEfetivo = calcularStatusEfetivoImobiliaria(im);
+                const vencido = im.data_vencimento && im.data_vencimento < hoje;
+                const estaAtiva = (im.status === 'active' && !vencido);
 
-                if (statusEfetivo === 'active') {
+                if (estaAtiva) {
                     mrrTotal += valorPlano;
                     ativasCount++;
                 } else {
-                    pendenciasCount++;
+                    bloqueadasCount++;
                 }
             });
 
@@ -2339,7 +2252,7 @@ function filtrarTicketsMaster() {
             document.getElementById('kpi-imobiliarias-ativas').innerText = ativasCount;
             document.getElementById('kpi-imobiliarias-total').innerText = `de ${totalImobs}`;
             document.getElementById('kpi-imoveis-global').innerText = listaImoveisGlobal.length;
-            document.getElementById('kpi-bloqueadas').innerText = pendenciasCount;
+            document.getElementById('kpi-bloqueadas').innerText = bloqueadasCount;
             document.getElementById('contador-imob').innerText = totalImobs;
         }
 
@@ -2360,19 +2273,17 @@ function filtrarTicketsMaster() {
 
             // 1. TABELA DESKTOP
             tbody.innerHTML = imobs.map(im => {
- const qtdImoveis = listaImoveisGlobal.filter(i => i.imobiliaria_id === im.id).length;
-                const statusEfetivo = calcularStatusEfetivoImobiliaria(im);
-                const vencido = statusEfetivo !== 'active';
+                const qtdImoveis = listaImoveisGlobal.filter(i => i.imobiliaria_id === im.id).length;
+                const vencido = im.data_vencimento && im.data_vencimento < hoje;
+                const estaBloqueada = im.status === 'blocked' || vencido;
                 const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
                 const ehGratuito = valorPlano === 0;
 
                 let badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Ativa</span>';
-                if (statusEfetivo === 'blocked') {
-                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 flex items-center gap-1 justify-center"><i class="fa-solid fa-ban text-[9px]"></i> Bloqueada</span>';
-                } else if (statusEfetivo === 'read_only') {
-                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-400 border border-amber-700 flex items-center gap-1 justify-center animate-pulse"><i class="fa-solid fa-eye text-[9px]"></i> Só Consulta</span>';
-                } else if (statusEfetivo === 'overdue') {
-                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800">Vencida</span>';
+                if (im.status === 'blocked') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800">Bloqueada</span>';
+                } else if (vencido) {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800">Vencida</span>';
                 }
 
                 const dataVencFormatada = im.data_vencimento ? im.data_vencimento.split('-').reverse().join('/') : '--/--/----';
@@ -2960,29 +2871,17 @@ function abrirModalEditarPlano(imobId) {
             }
         }
 
-      async function alternarBloqueio(imobId, statusAtual) {
-            // Ciclo de alternância Soberana: Ativa -> Somente Leitura -> Bloqueada -> Ativa
-            let novoStatus = 'read_only';
-            let titulo = 'Colocar em Somente Leitura';
-            let mensagem = 'O gestor poderá APENAS CONSULTAR dados. Não poderá cadastrar ou alterar nada.';
-            let textoBtn = 'Ativar Modo Consulta';
-            let cor = 'amber';
+        async function alternarBloqueio(imobId, statusAtual) {
+            const novoStatus = (statusAtual === 'blocked') ? 'active' : 'blocked';
+            const acaoTexto = (novoStatus === 'blocked') ? 'bloquear o acesso da' : 'reativar a';
+            const corBotao = (novoStatus === 'blocked') ? 'rose' : 'emerald';
 
-            if (statusAtual === 'read_only') {
-                novoStatus = 'blocked';
-                titulo = 'Bloqueio Total de Acesso';
-                mensagem = 'O gestor e toda a equipe terão o acesso COMPLETAMENTE CORTADO ao sistema.';
-                textoBtn = 'Bloquear Total';
-                cor = 'rose';
-            } else if (statusAtual === 'blocked') {
-                novoStatus = 'active';
-                titulo = 'Liberar Acesso Total';
-                mensagem = 'Reativar a imobiliária com permissão total de consulta e cadastro.';
-                textoBtn = 'Liberar Acesso';
-                cor = 'emerald';
-            }
-
-            const confirmou = await solicitarConfirmacaoMaster(titulo, mensagem, textoBtn, cor);
+            const confirmou = await solicitarConfirmacaoMaster(
+                `${novoStatus === 'blocked' ? 'Bloquear' : 'Desbloquear'} Imobiliária`,
+                `Tem certeza de que deseja ${acaoTexto} imobiliária selecionada?`,
+                `${novoStatus === 'blocked' ? 'Bloquear Acesso' : 'Reativar Acesso'}`,
+                corBotao
+            );
 
             if (confirmou) {
                 try {
@@ -2992,13 +2891,7 @@ function abrirModalEditarPlano(imobId) {
                         .eq('id', imobId);
 
                     if (error) throw error;
-                    
-                    const labels = {
-                        active: 'Acesso Total Liberado',
-                        read_only: 'Modo Somente Leitura Ativado',
-                        blocked: 'Acesso Bloqueado Totalmente'
-                    };
-                    mostrarToast(labels[novoStatus], 'sucesso');
+                    mostrarToast(`Status alterado para ${novoStatus === 'blocked' ? 'Bloqueada' : 'Ativa'}.`, 'sucesso');
                     await carregarDadosMaster();
 
                 } catch (err) {
