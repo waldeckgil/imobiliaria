@@ -64,6 +64,25 @@
             border-color: #38bdf8 !important;
             transform: translateY(-2px);
         }
+
+        /* ANIMAÇÃO PULSANTE CHAMATIVA PARA O CARD "NOVOS" QUANDO HOUVER LEADS (> 0) */
+        @keyframes pulsoAlertaNovos {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+                border-color: #38bdf8;
+                transform: translateY(0);
+            }
+            50% {
+                box-shadow: 0 0 30px 6px rgba(56, 189, 248, 0.85), inset 0 0 16px rgba(56, 189, 248, 0.25);
+                border-color: #7dd3fc;
+                transform: translateY(-3px);
+            }
+        }
+        .card-novos-alerta {
+            animation: pulsoAlertaNovos 1.8s infinite ease-in-out !important;
+            border: 2px solid #38bdf8 !important;
+            background: linear-gradient(135deg, rgba(8, 47, 73, 0.95), rgba(15, 23, 42, 0.95)) !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -95,26 +114,44 @@
         </div>
     </div>
 
-    <!-- CABEÇALHO TOPBAR -->
-    <header class="bg-slate-950/80 border-b border-slate-800 py-3 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
+    <!-- CABEÇALHO TOPBAR LIMPO COM TÍTULO DESTACADO, RETORNO AO DASHBOARD E RELÓGIO -->
+    <header class="bg-slate-950/80 border-b border-slate-800 py-3.5 px-4 sm:px-8 sticky top-0 z-30 backdrop-blur-md">
         <div class="w-full max-w-[1560px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
+            <!-- IDENTIFICAÇÃO DO MÓDULO EM TAMANHO GRANDE & DADOS DA IMOBILIÁRIA -->
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
+                <div class="w-11 h-11 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-md shrink-0">
                     <i class="fa-solid fa-comments"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <h1 id="topbar-imob-nome" class="text-sm font-black text-white tracking-wide">CARREGANDO...</h1>
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <h1 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">Central de Atendimentos</h1>
                         <span id="topbar-cargo-badge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
                             DONO
                         </span>
                     </div>
-                    <p id="topbar-user-nome" class="text-xs text-slate-400">Identificando usuário...</p>
+                    <div class="flex items-center gap-2 flex-wrap text-xs text-slate-400 mt-0.5">
+                        <span id="topbar-imob-nome" class="font-bold text-slate-300">CARREGANDO...</span>
+                        <span class="text-slate-600 hidden sm:inline">•</span>
+                        <span id="topbar-user-nome" class="hidden md:inline">Identificando usuário...</span>
+                        <span class="text-slate-600 hidden sm:inline">•</span>
+                        <span class="text-cyan-300 font-mono text-[11px] inline-flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-0.5 rounded-lg border border-slate-800 shadow-sm">
+                            <i class="fa-regular fa-clock text-cyan-400 text-[10px]"></i>
+                            <span id="topbar-data-hora">Carregando data...</span>
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2.5 sm:gap-3 flex-wrap justify-end text-xs">
+            <!-- AÇÕES RÁPIDAS: RETORNO AO DASHBOARD 360, NOVO LEAD, VITRINE, ATUALIZAR E SAIR -->
+            <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap justify-center text-xs">
+                <!-- BOTÃO DE VOLTA AO CENTRO DE COMANDO (DASHBOARD 360) -->
+                <a href="dashboard.html" 
+                   class="bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-bold px-3.5 py-2 rounded-xl border border-slate-700 hover:border-cyan-400 flex items-center gap-2 transition cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
+                    <span>Dashboard 360</span>
+                </a>
+
                 <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
                 <button type="button" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
                     <i class="fa-solid fa-plus text-xs"></i>
@@ -122,7 +159,7 @@
                 </button>
 
                 <a id="btn-ver-vitrine" href="index.html" target="_blank" 
-                   class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition">
+                   class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 transition" title="Ver vitrine pública de anúncios">
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     <span class="hidden sm:inline">Ver Vitrine</span>
                 </a>
@@ -134,67 +171,19 @@
 
                 <button onclick="executarLogout()" class="bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold px-3 py-2 rounded-xl border border-red-800/60 flex items-center gap-1.5 transition cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
-                    <span>Sair</span>
+                    <span class="hidden sm:inline">Sair</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- NAVEGAÇÃO DOS MÓDULOS -->
-    <nav class="bg-slate-950/60 border-b border-slate-800/80 px-4 sm:px-8 py-2.5">
-        <div class="w-full max-w-[1560px] mx-auto flex items-center justify-center gap-2 sm:gap-3.5 overflow-x-auto text-sm sm:text-base py-1">
-            <a href="dashboard.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
-                <i class="fa-solid fa-chart-pie text-slate-400"></i>
-                <span>Dashboard 360</span>
-            </a>
-            <a href="imoveis-lista.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
-                <i class="fa-solid fa-house-chimney text-slate-400"></i>
-                <span>Catálogo de Imóveis</span>
-            </a>
-            <a href="leads.html" class="px-4 py-2 rounded-xl font-black bg-slate-800 text-cyan-300 border border-cyan-400/60 shadow-lg shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
-                <i class="fa-solid fa-comments text-cyan-400"></i>
-                <span>Central de Atendimentos</span>
-            </a>
-            <a href="equipe.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
-                <i class="fa-solid fa-users text-slate-400"></i>
-                <span>Equipe & Permissões</span>
-            </a>
-            <a href="configurar-imobiliaria.html" class="px-4 py-2 rounded-xl font-bold bg-slate-900/90 text-slate-200 border border-slate-700/80 hover:border-cyan-400/50 hover:bg-slate-800 hover:text-white whitespace-nowrap flex items-center gap-2 transition shadow-sm">
-                <i class="fa-solid fa-gear text-slate-400"></i>
-                <span>Configurações & Publicidade</span>
-            </a>
-        </div>
-    </nav>
-
     <!-- CORPO PRINCIPAL -->
     <main class="w-full max-w-[1560px] mx-auto px-4 sm:px-6 py-4 flex-1 space-y-6">
         
-        <!-- CARDS DO FUNIL COMERCIAL -->
+        <!-- CARDS DO FUNIL COMERCIAL: "NOVOS" NO CENTRO EXATO (COLUNA 4) COM EFEITO PISCANTE -->
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             
-            <!-- CARD 1: NOVOS -->
-            <div onclick="clicarCardFunil('Novo')" 
-                 id="card-funil-Novo"
-                 class="group relative box-tech p-3.5 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Novos</span>
-                    <i class="fa-solid fa-circle-dot text-blue-400 text-xs opacity-70 group-hover:scale-125 transition-transform"></i>
-                </div>
-                <span id="kpi-leads-novos" class="text-2xl font-black text-white mt-1 block">0</span>
-                <span class="text-[10px] text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
-                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
-                </span>
-
-                <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-blue-500/40 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
-                    <div class="font-black text-blue-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
-                        <i class="fa-solid fa-bell"></i>
-                        <span>Estágio: Novo Lead</span>
-                    </div>
-                    <p class="leading-relaxed">Clientes que acabaram de enviar contato pelo site. Requer abordagem prioritária.</p>
-                </div>
-            </div>
-
-            <!-- CARD 2: EM ATENDIMENTO -->
+            <!-- CARD 1: EM ATENDIMENTO -->
             <div onclick="clicarCardFunil('Em Atendimento')" 
                  id="card-funil-Em-Atendimento"
                  class="group relative box-tech p-3.5 border-l-4 border-l-amber-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-amber-300/80 hover:bg-slate-850">
@@ -216,7 +205,7 @@
                 </div>
             </div>
 
-            <!-- CARD 3: VISITAS AGENDADAS -->
+            <!-- CARD 2: VISITAS AGENDADAS -->
             <div onclick="clicarCardFunil('Visita Agendada')" 
                  id="card-funil-Visita-Agendada"
                  class="group relative box-tech p-3.5 border-l-4 border-l-cyan-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-cyan-300/80 hover:bg-slate-850">
@@ -238,7 +227,7 @@
                 </div>
             </div>
 
-            <!-- CARD 4: PROPOSTAS FEITAS -->
+            <!-- CARD 3: PROPOSTAS FEITAS -->
             <div onclick="clicarCardFunil('Proposta')" 
                  id="card-funil-Proposta"
                  class="group relative box-tech p-3.5 border-l-4 border-l-purple-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-purple-300/80 hover:bg-slate-850">
@@ -257,6 +246,30 @@
                         <span>Estágio: Negociação Ativa</span>
                     </div>
                     <p class="leading-relaxed">Cliente fez oferta de valor ou condições de pagamento.</p>
+                </div>
+            </div>
+
+            <!-- CARD 4: NOVOS (NO CENTRO DA TELA - DESTAQUE COM PULSO AUTOMÁTICO QUANDO > 0) -->
+            <div onclick="clicarCardFunil('Novo')" 
+                 id="card-funil-Novo"
+                 class="group relative box-tech p-3.5 border-l-4 border-l-blue-400 cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:border-blue-300/80 hover:bg-slate-850">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-black text-blue-300 block tracking-wider flex items-center gap-1">
+                        <i class="fa-solid fa-bell text-[9px] text-blue-400"></i> Novos Leads
+                    </span>
+                    <i class="fa-solid fa-circle-dot text-blue-400 text-xs opacity-80 group-hover:scale-125 transition-transform"></i>
+                </div>
+                <span id="kpi-leads-novos" class="text-2xl font-black text-white mt-1 block">0</span>
+                <span class="text-[10px] text-blue-400 font-bold opacity-0 group-hover:opacity-100 transition-opacity block mt-1">
+                    <i class="fa-solid fa-filter text-[9px]"></i> Filtrar
+                </span>
+
+                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-40 w-64 p-3 bg-slate-950 border border-blue-500/50 rounded-xl shadow-2xl text-[11px] text-slate-300 pointer-events-none backdrop-blur-md">
+                    <div class="font-black text-blue-400 uppercase text-[10px] flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-bell"></i>
+                        <span>Estágio: Novo Lead Prioritário</span>
+                    </div>
+                    <p class="leading-relaxed">Clientes que acabaram de enviar contato pelo site. Requer abordagem prioritária.</p>
                 </div>
             </div>
 
@@ -1106,7 +1119,7 @@
         // ====================================================================
         // SISTEMA DE NOTIFICAÇÕES NATIVAS (CENTRALIZADAS, SEM TIMER, COM "OK")
         // ====================================================================
-    function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', exigeConfirmacao = false, duracaoMs = 2500) {
+        function notificar(tipo = 'info', titulo = 'Aviso', mensagem = '', exigeConfirmacao = false, duracaoMs = 2500) {
             const container = document.getElementById('container-toasts');
             if (!container) return;
 
@@ -1162,7 +1175,6 @@
 
             container.appendChild(toast);
 
-            // SE NÃO EXIGE CONFIRMAÇÃO (ex: filtros nos cards), SOME SOZINHO EM 2,5 SEGUNDOS
             if (!exigeConfirmacao) {
                 setTimeout(() => {
                     removerToast(id);
@@ -1233,7 +1245,7 @@
         }
 
         // ====================================================================
-        // INICIALIZAÇÃO DA PÁGINA
+        // INICIALIZAÇÃO DA PÁGINA COM AUTO-REFRESH DE 30 SEGUNDOS
         // ====================================================================
         async function inicializarLeads() {
             const { data: { session }, error } = await supabaseClient.auth.getSession();
@@ -1278,6 +1290,7 @@
 
                     await carregarEquipeCorretores();
                     await carregarLeads();
+                    iniciarAutoRefreshLeads();
                 }
                 return;
             }
@@ -1320,12 +1333,35 @@
 
                 await carregarEquipeCorretores();
                 await carregarLeads();
+                iniciarAutoRefreshLeads();
 
             } catch (err) {
                 console.error(err);
                 notificar('erro', 'Acesso Negado', 'Erro ao validar perfil de acesso.');
                 setTimeout(() => window.location.href = 'login.html', 1500);
             }
+        }
+
+        // ====================================================================
+        // MOTOR DE AUTO-REFRESH (PULSO A CADA 30 SEGUNDOS COM PROTEÇÃO DE MODAIS)
+        // ====================================================================
+        function iniciarAutoRefreshLeads() {
+            setInterval(async () => {
+                // Checa se algum modal de trabalho está ativo para não resetar ações do usuário
+                const cockpitAberto = !document.getElementById('modal-cockpit-lead')?.classList.contains('hidden');
+                const modalTransicaoAberto = !document.getElementById('modal-confirmar-transicao-etapa')?.classList.contains('hidden');
+                const modalManualAberto = !document.getElementById('modal-novo-lead-manual')?.classList.contains('hidden');
+                const modalVendaAberto = !document.getElementById('modal-confirmar-venda-explicativo')?.classList.contains('hidden');
+                const modalExcluirAberto = !document.getElementById('modal-excluir-lead')?.classList.contains('hidden');
+
+                if (cockpitAberto || modalTransicaoAberto || modalManualAberto || modalVendaAberto || modalExcluirAberto) {
+                    return; // Protege formulários abertos
+                }
+
+                if (imobiliariaId) {
+                    await carregarLeads(false); // Sincronização silenciosa (sem toast)
+                }
+            }, 30000); // 30 segundos
         }
 
         async function carregarEquipeCorretores() {
@@ -1356,13 +1392,6 @@
 
         async function carregarLeads(notificarUsuario = false) {
             const tbody = document.getElementById('tabela-leads-corpo');
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" class="py-12 text-center text-slate-500">
-                        <i class="fa-solid fa-spinner fa-spin text-cyan-400 text-2xl mb-2"></i>
-                        <p>Buscando atendimentos, visitas e histórico...</p>
-                    </td>
-                </tr>`;
 
             try {
                 const { data: leadsData, error: errLeads } = await supabaseClient
@@ -1410,14 +1439,28 @@
 
             } catch (err) {
                 console.error('Erro ao consultar leads:', err.message || err);
-                tbody.innerHTML = `
-                    <tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar lista de leads.</td></tr>`;
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-red-400">Erro ao carregar lista de leads.</td></tr>`;
+                }
                 notificar('erro', 'Falha na Consulta', 'Não foi possível obter a lista de atendimentos.');
             }
         }
 
         function atualizarMetricasFunil(leads) {
-            document.getElementById('kpi-leads-novos').innerText = leads.filter(l => (l.status || 'Novo') === 'Novo').length;
+            const totalNovos = leads.filter(l => (l.status || 'Novo') === 'Novo').length;
+            const elNovos = document.getElementById('kpi-leads-novos');
+            if (elNovos) elNovos.innerText = totalNovos;
+
+            // ATIVA OU DESATIVA O EFEITO PISCANTE DO CARD "NOVOS" SE HOUVER LEADS PENDENTES (> 0)
+            const cardNovos = document.getElementById('card-funil-Novo');
+            if (cardNovos) {
+                if (totalNovos > 0) {
+                    cardNovos.classList.add('card-novos-alerta');
+                } else {
+                    cardNovos.classList.remove('card-novos-alerta');
+                }
+            }
+
             document.getElementById('kpi-leads-atendimento').innerText = leads.filter(l => l.status === 'Em Atendimento').length;
             document.getElementById('kpi-leads-visitas').innerText = leads.filter(l => l.status === 'Visita Agendada').length;
             document.getElementById('kpi-leads-propostas').innerText = leads.filter(l => l.status === 'Proposta').length;
@@ -1724,7 +1767,6 @@
             document.getElementById('cockpit-lead-id-label').innerText = lead.id;
             document.getElementById('cockpit-lead-header-info').innerText = `Criado em ${new Date(lead.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
 
-            // ALIMENTA O STATUS GRANDE E ALERTA DE VISITA NO CABEÇALHO DO TOPO
             atualizarStatusTopoCockpit(lead);
 
             document.getElementById('cockpit-cliente-nome').innerText = lead.nome;
@@ -1802,7 +1844,6 @@
             }
             document.getElementById('cockpit-visita-notas').value = lead.notas_agendamento || '';
 
-            // CARREGA E FORMATA O VALOR DA PROPOSTA OU SUGERE O VALOR DE TABELA DO IMÓVEL
             const inputPropValor = document.getElementById('cockpit-proposta-valor');
             const elValorTabela = document.getElementById('cockpit-proposta-valor-tabela');
 
@@ -1855,11 +1896,9 @@
             const statusAtual = lead.status || 'Novo';
             const estObj = ESTAGIOS_FUNIL.find(e => e.chave === statusAtual) || ESTAGIOS_FUNIL[0];
 
-            // Renderiza badge imponente no topo
             badgeTopo.className = `px-4 sm:px-5 py-1.5 rounded-xl text-xs sm:text-sm font-black uppercase border-2 shadow-lg tracking-wider inline-flex items-center gap-2.5 ${estObj.badgeClasses}`;
             badgeTopo.innerHTML = `<i class="fa-solid ${estObj.icone} text-base"></i> <span class="tracking-wide">${estObj.rotulo.toUpperCase()}</span>`;
 
-            // Se tiver visita agendada, destaca no topo com data e hora
             if (lead.data_agendamento && alertVisita && textoVisita) {
                 textoVisita.innerHTML = `VISITA MARCADA: <strong class="text-white ml-1 font-mono">${formatarDataVisita(lead.data_agendamento)}</strong>`;
                 alertVisita.classList.remove('hidden');
@@ -1874,7 +1913,6 @@
                 atualizarStatusTopoCockpit(leadAtivoCockpit);
             }
 
-            // REGRA: Se o lead já avançou para Atendimento/Visita/etc, o botão "Novo" é ocultado da régua
             const estagiosExibicao = ESTAGIOS_FUNIL.filter(est => {
                 if (est.chave === 'Novo' && statusAtual !== 'Novo') {
                     return false;
@@ -1905,7 +1943,6 @@
                             <span class="truncate">${est.rotulo}</span>
                         </button>
                         
-                        <!-- BOTÃO DE INTERROGAÇÃO (?) INDIVIDUAL -->
                         <button type="button" onclick="abrirInfoEtapaEspecifica(event, '${est.chave}')" 
                                 class="w-5 h-5 rounded-full text-[10px] text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition cursor-pointer shrink-0 mr-1"
                                 title="Entenda o que significa '${est.rotulo}'">
@@ -1919,7 +1956,7 @@
         // ====================================================================
         // MOTOR DE TRANSIÇÃO COM FEEDBACK PERCEPTÍVEL E CONFIRMAÇÕES
         // ====================================================================
-  function aoMudarEtapaPeloPipeline(novaEtapa) {
+        function aoMudarEtapaPeloPipeline(novaEtapa) {
             if (modoLeitura && !isMasterSuporte) return;
             if (!leadAtivoCockpit) return;
 
@@ -1930,7 +1967,6 @@
             const ehLocacao = (modalidade === 'LOCACAO');
             const tipoNegocioTexto = ehLocacao ? 'Locação' : 'Venda';
 
-            // 1. SE CLICOU EM "CONCLUÍDO": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
             if (novaEtapa === 'Fechado') {
                 trocarAbaCockpit('fechamento');
                 
@@ -1938,7 +1974,7 @@
                     'aviso', 
                     `Formulário de Conclusão de ${tipoNegocioTexto}`, 
                     `Aba de fechamento aberta com sucesso! Por favor, confira os valores reais e porcentagens nos campos abaixo para formalizar a ${tipoNegocioTexto.toLowerCase()}.`,
-                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
+                    true
                 );
 
                 const boxFechamento = document.getElementById('cockpit-box-fechamento');
@@ -1950,7 +1986,6 @@
                 return;
             }
 
-            // 2. SE CLICOU EM "VISITA AGENDADA": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
             if (novaEtapa === 'Visita Agendada') {
                 trocarAbaCockpit('visita');
                 
@@ -1958,7 +1993,7 @@
                     'info', 
                     'Programação da Visita', 
                     'Aba de agenda aberta! Por favor, selecione a data, horário e instruções de portaria/chaves nos campos abaixo para salvar.',
-                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
+                    true
                 );
 
                 const campoDataVisita = document.getElementById('cockpit-visita-data');
@@ -1966,7 +2001,6 @@
                 return;
             }
 
-            // 3. SE CLICOU EM "PROPOSTA": ABRE A ABA E EXIGE CONFIRMAÇÃO COM [OK, ENTENDIDO]
             if (novaEtapa === 'Proposta') {
                 trocarAbaCockpit('proposta');
                 
@@ -1974,7 +2008,7 @@
                     'info', 
                     'Registro de Proposta Comercial', 
                     'Aba de proposta aberta! Por favor, preencha o valor ofertado e as condições de pagamento (sinal/financiamento) nos campos abaixo.',
-                    true // EXIGE CLIQUE EM "OK, ENTENDIDO"
+                    true
                 );
 
                 const campoValorProp = document.getElementById('cockpit-proposta-valor');
@@ -1982,7 +2016,6 @@
                 return;
             }
 
-            // 4. PARA DEMAIS MUDANÇAS (NOVO, ATENDIMENTO, CANCELADO, PERDIDO): ABRE O MODAL EXPLICATIVO
             abrirModalTransicaoEtapa(etapaAntiga, novaEtapa);
         }
 
@@ -2015,7 +2048,6 @@
 
             textoImpacto.innerText = explicacaoImpacto;
 
-            // VERIFICAÇÃO CRÍTICA: Se tem visita agendada marcada
             const boxAlertaVisita = document.getElementById('modal-transicao-alerta-visita');
             const textoAlertaVisita = document.getElementById('modal-transicao-alerta-visita-texto');
 
@@ -2558,7 +2590,6 @@
             const { modalidade } = extrairContextoLead(lead);
             const ehLocacao = (modalidade === 'LOCACAO');
 
-            // Ajuste dos rótulos da aba de Proposta Comercial
             const lblPropValor = document.getElementById('cockpit-proposta-valor-lbl');
             const inputPropCond = document.getElementById('cockpit-proposta-condicoes');
             if (lblPropValor && inputPropCond) {
@@ -2571,7 +2602,6 @@
                 }
             }
 
-            // Ajuste do botão da Aba 4 no Topo do Cockpit
             const btnAbaTxt = document.getElementById('txt-aba-fechamento');
             const btnAbaIcon = document.getElementById('icone-aba-fechamento');
             if (btnAbaTxt && btnAbaIcon) {
@@ -3043,7 +3073,7 @@
             }
         }
 
-        async function executarLogout() {
+  async function executarLogout() {
             if (isMasterSuporte) {
                 window.close();
                 return;
@@ -3055,7 +3085,32 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', inicializarLeads);
+        // ====================================================================
+        // RELÓGIO & DATA EM TEMPO REAL NO TOPO (DIA DA SEMANA, DATA E HORA)
+        // ====================================================================
+        function atualizarRelogioTopo() {
+            const el = document.getElementById('topbar-data-hora');
+            if (!el) return;
+
+            const agora = new Date();
+            const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            const diaSemana = diasSemana[agora.getDay()];
+            
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const ano = agora.getFullYear();
+
+            const hora = String(agora.getHours()).padStart(2, '0');
+            const min = String(agora.getMinutes()).padStart(2, '0');
+
+            el.innerText = `${diaSemana}, ${dia}/${mes}/${ano} • ${hora}:${min}`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            atualizarRelogioTopo();
+            setInterval(atualizarRelogioTopo, 1000);
+            inicializarLeads();
+        });
     </script>
 </body>
 </html>

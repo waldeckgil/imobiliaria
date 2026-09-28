@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGI • Gestão Imobiliária</title>
+    
+    <!-- =========================================================================
+         METATAGS PWA MOBILE-FIRST (ANDROID & IOS/SAFARI COMPLIANT)
+         ========================================================================= -->
+    <meta name="theme-color" content="#0b0f19" id="meta-theme-color">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Configurações específicas para Apple / iPhone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SGI Imóveis" id="meta-apple-title">
+    <link rel="apple-touch-icon" id="link-apple-icon" href="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=192&h=192&q=80">
+    
+    <!-- Manifesto dinâmico injetado via JS (White-Label por Tenant) -->
+    <link rel="manifest" id="link-manifest-pwa">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
@@ -508,6 +524,12 @@
                         Fale Conosco
                     </a>
 
+                    <!-- BOTÃO DE INSTALAÇÃO DO APP (APARECE QUANDO SUPORTADO) -->
+                    <button type="button" id="btn-instalar-app" onclick="dispararInstalacaoApp()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-2 rounded-md text-xs flex items-center gap-1.5 shadow-sm transition">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Instalar App</span>
+                    </button>
+
                     <a id="btn-telefone-header" href="tel:" class="btn-azul-topo text-white font-bold px-4 py-2.5 rounded-md text-sm flex items-center gap-2 shadow-sm hover:opacity-95 transition">
                         <i class="fa-solid fa-phone text-xs"></i>
                         <span id="txt-telefone-header">Atendimento</span>
@@ -550,7 +572,7 @@
         <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO (SEM ACEITA PET) -->
+                <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO -->
                 <div class="lg:col-span-8 space-y-5">
                     
                     <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
@@ -929,7 +951,8 @@
                 </div>
             </div>
         </div>
-<!-- JANELA CENTRALIZADA QUADRADA DE AGRADECIMENTO (COM TEMPORIZADOR AUTOMÁTICO) -->
+
+        <!-- JANELA CENTRALIZADA QUADRADA DE AGRADECIMENTO (COM TEMPORIZADOR AUTOMÁTICO) -->
         <div id="modal-feedback-central" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden transition-all duration-300 opacity-0">
             <div id="card-feedback-box" class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl space-y-4 border border-slate-100 transform transition-all duration-300 scale-95 relative overflow-hidden">
                 <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
@@ -946,6 +969,7 @@
                 <span class="text-[10px] text-slate-400 font-bold block">Fechando automaticamente...</span>
             </div>
         </div>
+
         <!-- WHATSAPP FLUTUANTE -->
         <a id="btn-flutuante-zap" href="#" target="_blank" 
            class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl transition hover:scale-105 z-40 hidden">
@@ -992,7 +1016,7 @@
 
     </div>
 
-    <!-- JAVASCRIPT DINÂMICO -->
+    <!-- JAVASCRIPT DINÂMICO COM SUPORTE PWA WHITE-LABEL -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -1003,6 +1027,7 @@
         let tenantAtual = null;
         let listaImoveisCache = [];
         let operacaoPendenteLGPD = null;
+        let promptInstalacaoPwa = null;
         
         // ESTADO DAS TAGS RÁPIDAS (PILLS)
         const filtroTags = {
@@ -1013,12 +1038,105 @@
         // CACHE DE GALERIA PARA NAVEGAÇÃO DOS CARDS
         const galeriaImoveisCache = {};
 
+        /* =========================================================================
+           MOTOR DO PWA WHITE-LABEL DINÂMICO (ANDROID & IOS)
+           ========================================================================= */
+        function configurarPwaWhiteLabel(tenant) {
+            let nomeApp = "SGI • Gestão Imobiliária";
+            let nomeCurto = "SGI Gestão";
+            let iconeApp = "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=512&h=512&q=80";
+            let startUrl = window.location.origin + window.location.pathname;
+
+            if (tenant) {
+                nomeApp = tenant.nome_fantasia || "Imobiliária";
+                nomeCurto = (tenant.nome_fantasia || "Imobiliária").slice(0, 12);
+                if (tenant.logo_url && tenant.logo_url.trim() !== '') {
+                    iconeApp = tenant.logo_url.trim();
+                }
+                startUrl = window.location.href; // Garante que abra na vitrine do tenant
+            }
+
+            // 1. Atualiza metatags para iPhone/iPad (iOS Safari)
+            const metaTitle = document.getElementById('meta-apple-title');
+            if (metaTitle) metaTitle.content = nomeCurto;
+
+            const linkAppleIcon = document.getElementById('link-apple-icon');
+            if (linkAppleIcon) linkAppleIcon.href = iconeApp;
+
+            // 2. Constrói o manifesto dinâmico White-Label em memória
+            const manifestObj = {
+                name: nomeApp,
+                short_name: nomeCurto,
+                description: `Portal Imobiliário Oficial • ${nomeApp}`,
+                start_url: startUrl,
+                scope: "/",
+                display: "standalone",
+                background_color: "#0b0f19",
+                theme_color: "#0b0f19",
+                orientation: "portrait",
+                icons: [
+                    {
+                        src: iconeApp,
+                        sizes: "192x192 512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+
+            try {
+                const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                const manifestUrl = URL.createObjectURL(manifestBlob);
+                const linkManifest = document.getElementById('link-manifest-pwa');
+                if (linkManifest) {
+                    linkManifest.setAttribute('href', manifestUrl);
+                }
+            } catch (e) {
+                console.warn('[PWA] Não foi possível injetar manifesto dinâmico:', e);
+            }
+        }
+
+        // Registro do Service Worker Seguro
+        function registrarServiceWorker() {
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => {
+                        console.log('[PWA] Service Worker ativado no escopo:', reg.scope);
+                    })
+                    .catch(err => {
+                        console.warn('[PWA] Aviso no Service Worker:', err);
+                    });
+            }
+        }
+
+        // Listener do botão de instalação no Android/Chrome
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            promptInstalacaoPwa = e;
+            const btnInstalar = document.getElementById('btn-instalar-app');
+            if (btnInstalar) {
+                btnInstalar.classList.remove('hidden');
+            }
+        });
+
+        async function dispararInstalacaoApp() {
+            if (!promptInstalacaoPwa) return;
+            promptInstalacaoPwa.prompt();
+            const { outcome } = await promptInstalacaoPwa.userChoice;
+            if (outcome === 'accepted') {
+                const btnInstalar = document.getElementById('btn-instalar-app');
+                if (btnInstalar) btnInstalar.classList.add('hidden');
+            }
+            promptInstalacaoPwa = null;
+        }
+
         function identificarTenant() {
             const urlParams = new URLSearchParams(window.location.search);
             slugAtual = urlParams.get('imob');
 
             if (!slugAtual) {
                 exibirLandingPageSaaS();
+                configurarPwaWhiteLabel(null);
             } else {
                 exibirVitrineImobiliaria();
                 carregarDadosImobiliaria();
@@ -1049,6 +1167,7 @@
                 if (data && !error) {
                     tenantAtual = data;
                     aplicarDadosNaTela(data);
+                    configurarPwaWhiteLabel(data);
                     carregarImoveisVitrine();
                 } else {
                     exibirVitrineNaoEncontrada();
@@ -1412,7 +1531,6 @@
                     fotosUnificadas.push(fallbackImg);
                 }
 
-                // Armazena no cache local da sessão para navegação rápida
                 galeriaImoveisCache[imovel.id] = {
                     fotos: fotosUnificadas,
                     indiceAtual: 0
@@ -1434,7 +1552,6 @@
                 const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
                 const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
 
-                // Detecção inteligente de Vídeo Tour
                 const temVideo = imovel.video_url && imovel.video_url.trim() !== '';
                 const videoUrlTratada = temVideo ? imovel.video_url.trim().replace(/'/g, "\\'") : '';
                 const tituloTratado = (imovel.titulo || 'Imóvel').replace(/'/g, "\\'");
@@ -1451,25 +1568,20 @@
                         <i class="fa-brands fa-youtube text-sm"></i> Tour
                     </button>` : '';
 
-                // CONTROLES DE NAVEGAÇÃO DA GALERIA
                 const controlesGaleriaHtml = totalFotos > 1 ? `
-                    <!-- Seta Esquerda -->
                     <button type="button" onclick="navegarFotoCard(event, '${imovel.id}', -1)" 
                             class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    <!-- Seta Direita -->
                     <button type="button" onclick="navegarFotoCard(event, '${imovel.id}', 1)" 
                             class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
-                    <!-- Contador de Fotos -->
                     <div id="badge-contador-${imovel.id}" class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 z-10">
                         <i class="fa-solid fa-camera"></i> <span id="txt-contador-${imovel.id}">1/${totalFotos}</span>
                     </div>
                 ` : '';
 
-                // LÓGICA DE DESCRIÇÃO EXPANSÍVEL (VER MAIS / VER MENOS)
                 const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia ou investimento.';
                 const ehDescricaoLonga = textoDescricao.trim().length > 110;
                 const botaoExpandirDesc = ehDescricaoLonga ? `
@@ -1628,7 +1740,6 @@
             document.getElementById('filtro-preco-min').value = '';
             document.getElementById('filtro-preco-max').value = '';
             
-            // Redefinir chips rápidos
             filtroTags.mobiliado = false;
             filtroTags.destaque = false;
 
@@ -1749,7 +1860,7 @@
             operacaoPendenteLGPD = null;
         }
 
-   // JANELA CENTRALIZADA DE AGRADECIMENTO: EXIBE NO CENTRO, ANIMA A BARRA E FECHA SOZINHA EM 4.5s
+        // JANELA CENTRALIZADA DE AGRADECIMENTO: EXIBE NO CENTRO, ANIMA A BARRA E FECHA SOZINHA EM 4.5s
         function exibirToastAgradecimento() {
             const modal = document.getElementById('modal-feedback-central');
             const card = document.getElementById('card-feedback-box');
@@ -1766,7 +1877,6 @@
                 barra.style.width = '100%';
             }
 
-            // Exibe a janela no centro com fundo escurecido e zoom suave
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
@@ -1775,11 +1885,9 @@
                     card.classList.remove('scale-95');
                     card.classList.add('scale-100');
                 }
-                // Anima a barra de tempo encolhendo ao longo de 4.5s
                 if (barra) barra.style.width = '0%';
             }, 50);
 
-            // Fecha automaticamente após 4.5 segundos sem exigir nenhum clique do cliente
             setTimeout(() => {
                 modal.classList.remove('opacity-100');
                 modal.classList.add('opacity-0');
@@ -1790,6 +1898,7 @@
                 setTimeout(() => modal.classList.add('hidden'), 350);
             }, 4500);
         }
+
         function iniciarEnvioAvaliacao(event) {
             event.preventDefault();
             operacaoPendenteLGPD = {
@@ -1855,7 +1964,6 @@
             btn.disabled = true;
 
             const dados = operacaoPendenteLGPD;
-            // Gera o UUID do lead diretamente no navegador do visitante (INSERT puro, sem exigir SELECT no banco)
             const leadCriadoId = crypto.randomUUID();
 
             try {
@@ -1946,6 +2054,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             identificarTenant();
+            registrarServiceWorker();
         });
     </script>
 </body>

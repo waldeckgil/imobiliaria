@@ -167,7 +167,7 @@
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Título Comercial Atraente *</label>
                     <input type="text" id="campo-titulo" required placeholder="Ex: Excelente Casa com Piscina e Vista para o Mar" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                 </div>
 
                 <div>
@@ -222,7 +222,7 @@
                 </div>
             </div>
 
-            <!-- 3. PROPRIETÁRIO DO IMÓVEL (OBRIGATÓRIO) -->
+            <!-- 3. PROPRIETÁRIO DO IMÓVEL (OBRIGATÓRIO COM BOTÃO DE DOSSIÊ) -->
             <div class="box-tech p-6 space-y-4 border border-amber-500/30 bg-amber-950/10">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                     <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
@@ -232,14 +232,19 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-                    <div class="sm:col-span-9">
-                        <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado *</label>
-                        <select id="campo-proprietario" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400 font-bold">
-                            <option value="">Carregando proprietários...</option>
-                        </select>
+                    <div class="sm:col-span-9 flex items-end gap-2">
+                        <div class="flex-1">
+                            <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado *</label>
+                            <select id="campo-proprietario" required onchange="atualizarEstadoBotaoDossie()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400 font-bold">
+                                <option value="">Carregando proprietários...</option>
+                            </select>
+                        </div>
+                        <button type="button" id="btn-ver-dossie-prop" onclick="abrirDossieProprietario()" disabled title="Visualizar Dossiê Completo do Proprietário" class="h-[42px] px-3.5 bg-slate-900 border border-slate-700 text-slate-500 rounded-xl flex items-center justify-center transition cursor-not-allowed opacity-50 shadow flex-shrink-0">
+                            <i class="fa-solid fa-eye text-sm"></i>
+                        </button>
                     </div>
                     <div class="sm:col-span-3">
-                        <button type="button" onclick="abrirModalNovoProprietario()" class="w-full bg-amber-600 hover:bg-amber-500 text-slate-950 font-black py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow cursor-pointer">
+                        <button type="button" onclick="abrirModalNovoProprietario()" class="w-full h-[42px] bg-amber-600 hover:bg-amber-500 text-slate-950 font-black px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow cursor-pointer">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>+ Novo Proprietário</span>
                         </button>
@@ -579,6 +584,79 @@
         </div>
     </div>
 
+    <!-- MODAL DOSSIÊ DO PROPRIETÁRIO -->
+    <div id="modal-dossie-proprietario" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/50 bg-[#0b1329]">
+            <button type="button" onclick="fecharDossieProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-amber-400 uppercase tracking-wider">Dossiê do Proprietário</h3>
+                    <p class="text-[11px] text-slate-400">Dados cadastrais, contato e repasse bancário</p>
+                </div>
+            </div>
+
+            <!-- SPINNER DE CARREGAMENTO -->
+            <div id="dossie-conteudo-loading" class="py-8 text-center text-slate-400 text-xs hidden">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-amber-400 mb-2 block"></i>
+                <span>Buscando ficha cadastral do proprietário...</span>
+            </div>
+
+            <!-- DADOS DO DOSSIÊ -->
+            <div id="dossie-conteudo-dados" class="space-y-3 mt-4 text-xs">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Nome do Titular</span>
+                    <span id="dossie-nome" class="text-sm font-black text-white block">---</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">CPF / CNPJ</span>
+                        <span id="dossie-cpf-cnpj" class="font-mono font-bold text-slate-200">---</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">RG</span>
+                        <span id="dossie-rg" class="font-mono font-bold text-slate-200">---</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">WhatsApp / Telefone</span>
+                        <span id="dossie-zap" class="font-mono font-bold text-cyan-400">---</span>
+                    </div>
+                    <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 truncate">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">E-mail</span>
+                        <span id="dossie-email" class="font-medium text-slate-200 truncate block">---</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block mb-0.5">Endereço Completo</span>
+                    <span id="dossie-endereco" class="text-slate-300 block">Endereço não cadastrado</span>
+                </div>
+
+                <div class="bg-amber-950/20 border border-amber-800/40 p-3 rounded-xl">
+                    <span class="text-[10px] uppercase font-black text-amber-400 block mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-money-bill-transfer"></i> Chave PIX / Dados Bancários / Observações
+                    </span>
+                    <p id="dossie-obs" class="text-[11px] text-amber-200 font-mono leading-relaxed whitespace-pre-wrap">Nenhuma informação cadastrada.</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end pt-3 mt-3 border-t border-slate-800">
+                <button type="button" onclick="fecharDossieProprietario()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
+                    Fechar Dossiê
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Módulo de Catalogação & Locações
@@ -871,6 +949,71 @@
             renderizarDocumentosLocatarioPreview();
         }
 
+        // =========================================================================
+        // CONTROLE DO DOSSIÊ DO PROPRIETÁRIO
+        // =========================================================================
+        function atualizarEstadoBotaoDossie() {
+            const propId = document.getElementById('campo-proprietario').value;
+            const btn = document.getElementById('btn-ver-dossie-prop');
+            if (!btn) return;
+
+            if (propId) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed', 'text-slate-500');
+                btn.classList.add('cursor-pointer', 'text-amber-400', 'hover:bg-amber-500', 'hover:text-slate-950', 'border-amber-500/50');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed', 'text-slate-500');
+                btn.classList.remove('cursor-pointer', 'text-amber-400', 'hover:bg-amber-500', 'hover:text-slate-950', 'border-amber-500/50');
+            }
+        }
+
+        async function abrirDossieProprietario() {
+            const propId = document.getElementById('campo-proprietario').value;
+            if (!propId) {
+                alert('Por favor, selecione primeiro um proprietário na lista.');
+                return;
+            }
+
+            const modal = document.getElementById('modal-dossie-proprietario');
+            const loading = document.getElementById('dossie-conteudo-loading');
+            const dados = document.getElementById('dossie-conteudo-dados');
+
+            modal.classList.remove('hidden');
+            loading.classList.remove('hidden');
+            dados.classList.add('hidden');
+
+            try {
+                let query = supabaseClient.from('clientes').select('*').eq('id', propId);
+                if (!isMasterSuporte && imobiliariaId) {
+                    query = query.eq('imobiliaria_id', imobiliariaId);
+                }
+                const { data: prop, error } = await query.single();
+
+                if (error || !prop) throw new Error('Não foi possível carregar o dossiê do proprietário.');
+
+                document.getElementById('dossie-nome').innerText = prop.nome || 'Não informado';
+                document.getElementById('dossie-cpf-cnpj').innerText = prop.cpf_cnpj || 'Não informado';
+                document.getElementById('dossie-rg').innerText = prop.rg || 'Não informado';
+                document.getElementById('dossie-zap').innerText = prop.whatsapp || prop.telefone || 'Não informado';
+                document.getElementById('dossie-email').innerText = prop.email || 'Não informado';
+                document.getElementById('dossie-endereco').innerText = prop.endereco_completo || 'Endereço não cadastrado';
+                document.getElementById('dossie-obs').innerText = prop.observacoes || 'Nenhuma chave PIX ou observação cadastrada.';
+
+                loading.classList.add('hidden');
+                dados.classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                alert(err.message || 'Erro ao consultar o dossiê do proprietário.');
+                fecharDossieProprietario();
+            }
+        }
+
+        function fecharDossieProprietario() {
+            const modal = document.getElementById('modal-dossie-proprietario');
+            if (modal) modal.classList.add('hidden');
+        }
+
         async function carregarProprietariosSelect(selecionadoId = null) {
             const select = document.getElementById('campo-proprietario');
             try {
@@ -890,6 +1033,7 @@
                         select.innerHTML += `<option value="${p.id}" ${sel}>${p.nome} (${p.whatsapp || p.cpf_cnpj || 'Sem telefone'})</option>`;
                     });
                 }
+                atualizarEstadoBotaoDossie();
             } catch (err) {
                 console.warn('Erro ao carregar proprietários:', err);
                 select.innerHTML = '<option value="">Erro ao buscar proprietários</option>';
@@ -1066,6 +1210,7 @@
 
                 if (imovel.proprietario_id) {
                     document.getElementById('campo-proprietario').value = imovel.proprietario_id;
+                    atualizarEstadoBotaoDossie();
                 }
 
                 // INSERÇÃO FORMATADA EM BRL PARA EDIÇÃO

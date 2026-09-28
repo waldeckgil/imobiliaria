@@ -1,0 +1,20 @@
+{
+  "_comentario_seguranca": "ARQUIVO DE FALLBACK / REDUNDÂNCIA: Este manifesto atua como segurança para navegadores antigos e para a Landing Page SaaS principal. Quando o sistema é acessado com ?imob=slug, o index.html substitui dinamicamente estas informações pela marca, nome e logo exclusivos da Imobiliária (White-Label).",
+  "name": "SGI • Gestão Imobiliária",
+  "short_name": "SGI Gestão",
+  "description": "Plataforma de Gestão Comercial e Vitrine Imobiliária Multi-tenant",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=512&h=512&q=80",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

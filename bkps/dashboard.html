@@ -90,7 +90,9 @@
         <!-- LARGURA DO CABEÇALHO: Mantenha o mesmo valor do <main> (ex: 1560px) -->
         <div class="w-full max-w-[1560px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 
-    <div class="flex items-center gap-3">
+ 
+
+            <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-md">
                     <i class="fa-solid fa-building"></i>
                 </div>
@@ -101,11 +103,16 @@
                             DONO
                         </span>
                     </div>
-                    <p id="topbar-user-nome" class="text-xs text-slate-400">Identificando usuário...</p>
+                    <div class="flex items-center gap-2 flex-wrap text-xs text-slate-400">
+                        <span id="topbar-user-nome">Identificando usuário...</span>
+                        <span class="text-slate-600 hidden sm:inline">•</span>
+                        <span class="text-cyan-300 font-mono text-[11px] inline-flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-0.5 rounded-lg border border-slate-800 shadow-sm">
+                            <i class="fa-regular fa-clock text-cyan-400 text-[10px]"></i>
+                            <span id="topbar-data-hora">Carregando data...</span>
+                        </span>
+                    </div>
                 </div>
             </div>
-
-       
      
             <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
                 <!-- BOTÃO INTELIGENTE: COMPARTILHAR VITRINE / COPIAR LINK / WHATSAPP -->
@@ -5946,13 +5953,37 @@ Fique à vontade para pesquisar as opções disponíveis para venda e locação.
             fecharModalCompartilharVitrine();
             exibirToast('sucesso', 'WhatsApp aberto com a mensagem da vitrine pronta!');
         }
-
-        window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
+window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
         window.fecharModalCompartilharVitrine = fecharModalCompartilharVitrine;
         window.copiarLinkVitrineClipboard = copiarLinkVitrineClipboard;
         window.dispararVitrineClienteWhatsApp = dispararVitrineClienteWhatsApp;
 
-        window.addEventListener('DOMContentLoaded', inicializarDashboard);
+        // ====================================================================
+        // RELÓGIO & DATA EM TEMPO REAL NO TOPO (DIA DA SEMANA, DATA E HORA)
+        // ====================================================================
+        function atualizarRelogioTopo() {
+            const el = document.getElementById('topbar-data-hora');
+            if (!el) return;
+
+            const agora = new Date();
+            const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            const diaSemana = diasSemana[agora.getDay()];
+            
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const ano = agora.getFullYear();
+
+            const hora = String(agora.getHours()).padStart(2, '0');
+            const min = String(agora.getMinutes()).padStart(2, '0');
+
+            el.innerText = `${diaSemana}, ${dia}/${mes}/${ano} • ${hora}:${min}`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            atualizarRelogioTopo();
+            setInterval(atualizarRelogioTopo, 1000);
+            inicializarDashboard();
+        });
     </script>
 
     <!-- MODAL DARK TECH: COMPARTILHAR VITRINE / COPIAR LINK / WHATSAPP -->
