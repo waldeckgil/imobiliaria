@@ -1517,15 +1517,21 @@
             document.getElementById('input-dias-bloqueio').value = configGlobalSistema.dias_bloqueio_total;
         }
 
-        async function salvarDiasAviso(dias) {
+   async function salvarDiasAviso(dias) {
             const num = parseInt(dias, 10);
             if (isNaN(num) || num < 1) return;
             try {
-                await supabaseClient.from('config_sistema').upsert({ id: 1, dias_aviso_vencimento: num });
+                const { error } = await supabaseClient
+                    .from('config_sistema')
+                    .update({ dias_aviso_vencimento: num })
+                    .eq('id', 1);
+
+                if (error) throw error;
                 configGlobalSistema.dias_aviso_vencimento = num;
                 mostrarToast('Regra de alerta prévio salva!', 'sucesso');
             } catch (err) {
-                mostrarToast('Falha ao atualizar regra de aviso.', 'erro');
+                console.error(err);
+                mostrarToast('Falha ao atualizar regra de aviso: ' + (err.message || ''), 'erro');
             }
         }
 
@@ -1533,13 +1539,19 @@
             const num = parseInt(dias, 10);
             if (isNaN(num) || num < 0) return;
             try {
-                await supabaseClient.from('config_sistema').upsert({ id: 1, dias_carencia_leitura: num });
+                const { error } = await supabaseClient
+                    .from('config_sistema')
+                    .update({ dias_carencia_leitura: num })
+                    .eq('id', 1);
+
+                if (error) throw error;
                 configGlobalSistema.dias_carencia_leitura = num;
                 mostrarToast('Prazo para Modo Leitura atualizado!', 'sucesso');
                 atualizarMetricasMaster();
                 renderizarTabelaImobiliarias(listaImobiliarias);
             } catch (err) {
-                mostrarToast('Falha ao atualizar carência de leitura.', 'erro');
+                console.error(err);
+                mostrarToast('Falha ao atualizar carência de leitura: ' + (err.message || ''), 'erro');
             }
         }
 
@@ -1547,16 +1559,21 @@
             const num = parseInt(dias, 10);
             if (isNaN(num) || num < 1) return;
             try {
-                await supabaseClient.from('config_sistema').upsert({ id: 1, dias_bloqueio_total: num });
+                const { error } = await supabaseClient
+                    .from('config_sistema')
+                    .update({ dias_bloqueio_total: num })
+                    .eq('id', 1);
+
+                if (error) throw error;
                 configGlobalSistema.dias_bloqueio_total = num;
                 mostrarToast('Prazo de Bloqueio Total atualizado!', 'sucesso');
                 atualizarMetricasMaster();
                 renderizarTabelaImobiliarias(listaImobiliarias);
             } catch (err) {
-                mostrarToast('Falha ao atualizar prazo de bloqueio total.', 'erro');
+                console.error(err);
+                mostrarToast('Falha ao atualizar prazo de bloqueio total: ' + (err.message || ''), 'erro');
             }
         }
-
         // MOTOR DE CÁLCULO DE STATUS: MANUAL + AUTOMÁTICO POR DIAS
         function calcularStatusEfetivoImobiliaria(imob) {
             // Se o Administrador definiu manualmente no banco

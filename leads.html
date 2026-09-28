@@ -1322,9 +1322,31 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
-const hoje = new Date().toISOString().split('T')[0];
-                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || vencido);
+// Consulta a tolerância configurada no Master
+                let diasToleranciaLeitura = 3;
+                try {
+                    const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_carencia_leitura').eq('id', 1).maybeSingle();
+                    if (cfg && cfg.dias_carencia_leitura !== null) {
+                        diasToleranciaLeitura = cfg.dias_carencia_leitura;
+                    }
+                } catch (e) {
+                    console.warn('[CONFIG] Usando tolerância padrão:', e);
+                }
+
+                // Cálculo real: Data de Vencimento + Dias de Tolerância
+                let emAtrasoAlemDaTolerancia = false;
+                if (imob.data_vencimento) {
+                    const hojeDate = new Date();
+                    hojeDate.setHours(0, 0, 0, 0);
+
+                    const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
+                    const dataLimite = new Date(anoV, mesV - 1, diaV);
+                    dataLimite.setDate(dataLimite.getDate() + diasToleranciaLeitura);
+
+                    emAtrasoAlemDaTolerancia = (hojeDate > dataLimite);
+                }
+
+                modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || emAtrasoAlemDaTolerancia);
 
                 if (modoLeitura) {
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
