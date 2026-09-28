@@ -6039,10 +6039,12 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
            ========================================================================= */
         let promptInstalacaoPwaGestor = null;
 
-        function configurarPwaGestor(imob) {
+     function configurarPwaGestor(imob) {
+            // NOME LIMPO: Usa diretamente o Nome Fantasia da Imobiliária (sem a palavra "Gestão" na frente)
             const nomeFantasia = imob?.nome_fantasia || 'Imobiliária';
-            const nomeApp = `Gestão • ${nomeFantasia}`;
-            const nomeCurto = `Gestão ${nomeFantasia.slice(0, 10)}`;
+            const nomeApp = nomeFantasia;
+            const nomeCurto = nomeFantasia.length > 12 ? nomeFantasia.slice(0, 12) : nomeFantasia;
+            const slugImob = imob?.slug || imob?.id || 'master';
             const iconeApp = (imob?.logo_url && imob.logo_url.trim() !== '') 
                 ? imob.logo_url.trim() 
                 : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=512&h=512&q=80';
@@ -6053,12 +6055,14 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             const linkAppleIcon = document.getElementById('link-apple-icon-gestor');
             if (linkAppleIcon) linkAppleIcon.href = iconeApp;
 
-            const startUrl = window.location.origin + window.location.pathname;
+            // ID E START_URL ÚNICOS: Permite que múltiplas imobiliárias coexistam no mesmo celular
+            const startUrl = `${window.location.origin}${window.location.pathname}?imob_app=${encodeURIComponent(slugImob)}`;
 
             const manifestObj = {
+                id: `sgi-app-${slugImob}`,
                 name: nomeApp,
                 short_name: nomeCurto,
-                description: `Painel de Gestão Imobiliária Oficial • ${nomeFantasia}`,
+                description: `Painel Imobiliário • ${nomeFantasia}`,
                 start_url: startUrl,
                 scope: "/",
                 display: "standalone",
