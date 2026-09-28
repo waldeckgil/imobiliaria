@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard 360 - SGI Gestão Imobiliária</title>
+  
+<title>Dashboard 360 - SGI Gestão Imobiliária</title>
+    
+    <!-- METATAGS PWA MOBILE DO GESTOR -->
+    <meta name="theme-color" content="#060913" id="meta-theme-color-gestor">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SGI Gestão" id="meta-apple-title-gestor">
+    <link rel="apple-touch-icon" id="link-apple-icon-gestor" href="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=192&h=192&q=80">
+    <link rel="manifest" id="link-manifest-gestor">
+
     <!-- Tailwind CSS CDN -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -50,7 +62,7 @@
         .toast-ativo { animation: toastEntrada 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between">n
 
     <!-- CONTAINER FLUTUANTE DE NOTIFICAÇÕES -->
     <div id="container-toast-sistema" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
@@ -113,8 +125,14 @@
                     </div>
                 </div>
             </div>
-     
-            <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
+     <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
+                <!-- BOTÃO INTELIGENTE PWA: INSTALAR APP DO GESTOR -->
+                <button type="button" id="btn-instalar-app-gestor" onclick="dispararInstalacaoAppGestor()" 
+                        class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-download text-xs"></i>
+                    <span>Instalar Painel</span>
+                </button>
+
                 <!-- BOTÃO INTELIGENTE: COMPARTILHAR VITRINE / COPIAR LINK / WHATSAPP -->
                 <button type="button" onclick="abrirModalCompartilharVitrine()" 
                         class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
@@ -1594,8 +1612,9 @@
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'dono').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug || ''}`;
 
-                atualizarPainelAssinatura(imob);
+  atualizarPainelAssinatura(imob);
                 popularSeletorMeses();
+                configurarPwaGestor(imob);
 
                 await carregarMetricas(imob.id);
                 await carregarDashboardFinanceiro();
@@ -5979,10 +5998,87 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             el.innerText = `${diaSemana}, ${dia}/${mes}/${ano} • ${hora}:${min}`;
         }
 
+/* =========================================================================
+           MOTOR PWA WHITE-LABEL DO GESTOR (INSTALAÇÃO DIRETA NO DASHBOARD)
+           ========================================================================= */
+        let promptInstalacaoPwaGestor = null;
+
+        function configurarPwaGestor(imob) {
+            const nomeFantasia = imob?.nome_fantasia || 'Imobiliária';
+            const nomeApp = `Gestão • ${nomeFantasia}`;
+            const nomeCurto = `Gestão ${nomeFantasia.slice(0, 10)}`;
+            const iconeApp = (imob?.logo_url && imob.logo_url.trim() !== '') 
+                ? imob.logo_url.trim() 
+                : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=512&h=512&q=80';
+
+            const metaTitle = document.getElementById('meta-apple-title-gestor');
+            if (metaTitle) metaTitle.content = nomeCurto;
+
+            const linkAppleIcon = document.getElementById('link-apple-icon-gestor');
+            if (linkAppleIcon) linkAppleIcon.href = iconeApp;
+
+            const startUrl = window.location.origin + window.location.pathname;
+
+            const manifestObj = {
+                name: nomeApp,
+                short_name: nomeCurto,
+                description: `Painel de Gestão Imobiliária Oficial • ${nomeFantasia}`,
+                start_url: startUrl,
+                scope: "/",
+                display: "standalone",
+                background_color: "#060913",
+                theme_color: "#060913",
+                orientation: "portrait",
+                icons: [
+                    {
+                        src: iconeApp,
+                        sizes: "192x192 512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+
+            try {
+                const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                const manifestUrl = URL.createObjectURL(manifestBlob);
+                const linkManifest = document.getElementById('link-manifest-gestor');
+                if (linkManifest) {
+                    linkManifest.setAttribute('href', manifestUrl);
+                }
+            } catch (e) {
+                console.warn('[PWA Gestor] Falha ao injetar manifesto:', e);
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            promptInstalacaoPwaGestor = e;
+            const btn = document.getElementById('btn-instalar-app-gestor');
+            if (btn) btn.classList.remove('hidden');
+        });
+
+        async function dispararInstalacaoAppGestor() {
+            if (!promptInstalacaoPwaGestor) return;
+            promptInstalacaoPwaGestor.prompt();
+            const { outcome } = await promptInstalacaoPwaGestor.userChoice;
+            if (outcome === 'accepted') {
+                const btn = document.getElementById('btn-instalar-app-gestor');
+                if (btn) btn.classList.add('hidden');
+                if (typeof exibirToast === 'function') {
+                    exibirToast('sucesso', 'Aplicativo de Gestão instalado na sua tela inicial!');
+                }
+            }
+            promptInstalacaoPwaGestor = null;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             atualizarRelogioTopo();
             setInterval(atualizarRelogioTopo, 1000);
             inicializarDashboard();
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
         });
     </script>
 
