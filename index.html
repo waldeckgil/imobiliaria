@@ -1192,7 +1192,30 @@
             try {
                 const { data, error } = await supabaseClient
                     .from('imobiliarias')
-                    .select('*')
+                    .select(`
+                        id, 
+                        slug, 
+                        nome_fantasia, 
+                        razao_social, 
+                        creci_juridico, 
+                        email_admin,
+                        telefone_contato, 
+                        whatsapp_contato, 
+                        logo_url, 
+                        fundo_url, 
+                        banner_url, 
+                        sobre_corretor, 
+                        endereco, 
+                        bairro, 
+                        cidade, 
+                        uf, 
+                        cep, 
+                        instagram, 
+                        facebook, 
+                        youtube, 
+                        linkedin, 
+                        status
+                    `)
                     .eq('slug', slugAtual)
                     .eq('status', 'active')
                     .single();
