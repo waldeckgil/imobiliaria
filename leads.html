@@ -152,8 +152,8 @@
                     <span>Menu</span>
                 </a>
 
-                <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
-                <button type="button" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+  <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
+                <button type="button" id="btn-novo-lead-topbar" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
                     <i class="fa-solid fa-plus text-xs"></i>
                     <span>Novo Atendimento</span>
                 </button>
@@ -1322,15 +1322,18 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
-
-                const hoje = new Date().toISOString().split('T')[0];
+const hoje = new Date().toISOString().split('T')[0];
                 const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                modoLeitura = (imob.status === 'blocked' || vencido);
+                modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || vencido);
 
                 if (modoLeitura) {
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                    const btnNovoLead = document.getElementById('btn-novo-lead-topbar');
+                    if (btnNovoLead) {
+                        btnNovoLead.classList.add('opacity-40', 'cursor-not-allowed');
+                        btnNovoLead.setAttribute('title', 'Recurso desabilitado em Modo Somente Leitura');
+                    }
                 }
-
                 await carregarEquipeCorretores();
                 await carregarLeads();
                 iniciarAutoRefreshLeads();
@@ -2995,8 +2998,14 @@
         // ====================================================================
         // CADASTRO MANUAL DE LEAD (BALCÃO / TELEFONE)
         // ====================================================================
-        function abrirModalNovoLeadManual() {
+ function abrirModalNovoLeadManual() {
+            if (modoLeitura && !isMasterSuporte) {
+                notificar('aviso', 'Modo Somente Leitura', 'Cadastros desabilitados devido a assinatura pendente.', true);
+                return;
+            }
             const selectCorretor = document.getElementById('manual-lead-corretor');
+
+
             selectCorretor.innerHTML = '<option value="">Sem corretor inicial</option>';
             listaCorretores.forEach(c => {
                 selectCorretor.innerHTML += `<option value="${c.id}">${c.nome_completo}</option>`;
@@ -3024,9 +3033,13 @@
             document.getElementById('modal-novo-lead-manual').classList.add('hidden');
         }
 
-        async function salvarLeadManual(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-salvar-lead-manual');
+  async function gravarNotaCockpit() {
+            if (modoLeitura && !isMasterSuporte) {
+                notificar('aviso', 'Modo Somente Leitura', 'Inclusão de notas desabilitada em modo leitura.', true);
+                return;
+            }
+            if (!leadAtivoCockpit) return;
+            const input = document.getElementById('cockpit-nova-nota-input');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
 
