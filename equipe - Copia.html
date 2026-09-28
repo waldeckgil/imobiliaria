@@ -412,50 +412,14 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Gestor'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = usuario.cargo.toUpperCase();
 
- // Consulta tolerância real de carência no banco
-                let diasToleranciaLeitura = 10;
-                try {
-                    const { data: cfg } = await supabaseClient
-                        .from('config_sistema')
-                        .select('dias_carencia_leitura')
-                        .limit(1)
-                        .maybeSingle();
-
-                    if (cfg && cfg.dias_carencia_leitura !== null && cfg.dias_carencia_leitura !== undefined) {
-                        diasToleranciaLeitura = Number(cfg.dias_carencia_leitura);
-                    }
-                } catch (e) {
-                    console.warn('[EQUIPE] Usando tolerância padrão:', e);
-                }
-
-                let diasAtraso = 0;
-                if (imob.data_vencimento) {
-                    const hojeBase = new Date();
-                    hojeBase.setHours(0, 0, 0, 0);
-
-                    const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
-                    const dtVenc = new Date(anoV, mesV - 1, diaV);
-                    const diffTime = hojeBase.getTime() - dtVenc.getTime();
-                    diasAtraso = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                }
-
-                const ultrapassouTolerancia = (diasAtraso > diasToleranciaLeitura);
-                modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || ultrapassouTolerancia);
+                const hoje = new Date().toISOString().split('T')[0];
+                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
+                modoLeitura = (imob.status === 'blocked' || vencido);
 
                 if (modoLeitura) {
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
                     const btn = document.getElementById('btn-novo-membro');
-                    if (btn) {
-                        btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
-                        btn.setAttribute('title', 'Cadastro desabilitado em Modo Somente Leitura');
-                    }
-                } else {
-                    document.getElementById('faixa-modo-leitura').classList.add('hidden');
-                    const btn = document.getElementById('btn-novo-membro');
-                    if (btn) {
-                        btn.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
-                        btn.removeAttribute('title');
-                    }
+                    btn.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
 
                 await carregarMembrosEquipe();

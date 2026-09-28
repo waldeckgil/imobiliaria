@@ -452,24 +452,13 @@
                 return;
             }
 
-    let diasCarenciaLeituraConfig = 10;
             try {
-                const { data: cfg } = await supabaseClient
-                    .from('config_sistema')
-                    .select('dias_aviso_vencimento, dias_carencia_leitura')
-                    .limit(1)
-                    .maybeSingle();
-
-                if (cfg) {
-                    if (cfg.dias_aviso_vencimento) diasAvisoGlobal = Number(cfg.dias_aviso_vencimento);
-                    if (cfg.dias_carencia_leitura !== null && cfg.dias_carencia_leitura !== undefined) {
-                        diasCarenciaLeituraConfig = Number(cfg.dias_carencia_leitura);
-                    }
-                }
+                const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_aviso_vencimento').eq('id', 1).maybeSingle();
+                if (cfg && cfg.dias_aviso_vencimento) diasAvisoGlobal = Number(cfg.dias_aviso_vencimento);
             } catch (e) {
-                console.warn('Configuração de tolerância não localizada:', e);
+                console.warn('Configuração de dias de aviso não localizada:', e);
             }
-            window.diasCarenciaLeituraGlobal = diasCarenciaLeituraConfig;
+
             const email = (session.user.email || '').toLowerCase();
             const impersonateId = sessionStorage.getItem('sgi_impersonate_id');
 
@@ -575,12 +564,7 @@
             const txtDesc = document.getElementById('txt-status-desc');
             const txtCiclo = document.getElementById('txt-dias-restantes');
 
-const diasCarencia = window.diasCarenciaLeituraGlobal || 10;
-            const diasAtraso = diffDias < 0 ? Math.abs(diffDias) : 0;
-            const ultrapassouTolerancia = diasAtraso > diasCarencia;
-            const estaEmCarencia = (diffDias < 0 && !ultrapassouTolerancia);
-
-            if (imob.status === 'blocked' || imob.status === 'read_only' || ultrapassouTolerancia) {
+            if (diffDias < 0 || imob.status === 'blocked') {
                 if (!isMasterSuporte) {
                     modoLeitura = true;
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
@@ -589,28 +573,12 @@ const diasCarencia = window.diasCarenciaLeituraGlobal || 10;
                 }
 
                 document.getElementById('faixa-alerta-vencimento').classList.add('hidden');
-                badgeStatus.innerText = 'Modo Leitura • Tolerância Esgotada';
+                badgeStatus.innerText = 'Pendente / Vencida';
                 badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-950 text-rose-400 border border-rose-800';
-                txtDesc.innerText = 'O prazo de carência da sua assinatura terminou. Regularize para reativar as edições.';
-                txtCiclo.innerText = `Atrasado há ${diasAtraso} dias`;
+                txtDesc.innerText = 'Sua assinatura expirou. Regularize para reativar as funções completas do sistema.';
+                txtCiclo.innerText = `Vencido há ${Math.abs(diffDias)} dias`;
                 txtCiclo.className = 'text-xs font-bold text-rose-400';
             } 
-            else if (estaEmCarencia) {
-                modoLeitura = false;
-                document.getElementById('faixa-modo-leitura').classList.add('hidden');
-                const btn = document.getElementById('btn-salvar-config');
-                if (btn) btn.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
-
-                const diasRestantes = diasCarencia - diasAtraso;
-                document.getElementById('faixa-alerta-vencimento').classList.remove('hidden');
-                document.getElementById('txt-faixa-alerta-msg').innerText = `CARÊNCIA ATIVA: Sua mensalidade venceu em ${diaFormatado}/${mesFormatado}/${ano}. Acesso liberado por mais ${diasRestantes} dia(s) de tolerância.`;
-
-                badgeStatus.innerText = 'Em Carência • Atraso';
-                badgeStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800 animate-pulse';
-                txtDesc.innerText = `Sua imobiliária está no período de carência (restam ${diasRestantes} dias antes do bloqueio).`;
-                txtCiclo.innerText = `Carência: restam ${diasRestantes} dias`;
-                txtCiclo.className = 'text-xs font-bold text-amber-400';
-            }
             else if (diffDias <= diasAvisoGlobal) {
                 modoLeitura = false;
                 document.getElementById('faixa-alerta-vencimento').classList.remove('hidden');
