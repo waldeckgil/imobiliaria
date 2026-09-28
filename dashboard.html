@@ -50,10 +50,13 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8 !important;
         }
-
+/* BLINDAGEM MOBILE: Impede a tela do celular de rolar para as laterais */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden !important;
+        }
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
-        .tab-btn-ativo { background-color: #38bdf8; color: #020617; font-weight: 800; }
         
         @keyframes toastEntrada {
             from { opacity: 0; transform: translateY(-20px) scale(0.95); }
@@ -155,9 +158,44 @@
     </header>
 
     <!-- MENU DE MÓDULOS -->
-    <nav class="bg-slate-950/80 border-b border-slate-800/80 px-4 sm:px-8 py-2.5 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto text-xs sm:text-sm py-1">
-            
+   <!-- MENU DE MÓDULOS (RESPONSIVO COM CARA DE APP NO CELULAR) -->
+    <nav class="bg-slate-950/90 border-b border-slate-800/80 px-2 sm:px-8 py-2 backdrop-blur-md sticky top-[65px] z-20">
+        
+        <!-- VISÃO CELULAR / SMARTPHONE (GRADE COMPACTA 3x2: ZERO ROLAGEM LATERAL) -->
+        <div class="grid grid-cols-3 gap-1.5 md:hidden text-[10px]">
+            <a href="dashboard.html" class="p-2 rounded-xl font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 flex flex-col items-center justify-center gap-1 shadow-sm text-center">
+                <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="imoveis-lista.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-house-chimney text-slate-400 text-xs"></i>
+                <span>Imóveis</span>
+            </a>
+
+            <a href="leads.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-comments text-slate-400 text-xs"></i>
+                <span>Atendimentos</span>
+            </a>
+
+            <a href="equipe.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-users text-slate-400 text-xs"></i>
+                <span>Equipe</span>
+            </a>
+
+            <a href="configurar-imobiliaria.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-gear text-slate-400 text-xs"></i>
+                <span>Ajustes</span>
+            </a>
+
+            <button type="button" onclick="abrirModalCentralAjuda()" class="p-2 rounded-xl font-semibold bg-indigo-950/50 text-indigo-300 border border-indigo-800/60 flex flex-col items-center justify-center gap-1 text-center cursor-pointer">
+                <i class="fa-solid fa-headset text-indigo-400 text-xs"></i>
+                <span>Ajuda</span>
+            </button>
+        </div>
+
+        <!-- VISÃO COMPUTADOR / DESKTOP (MANTÉM EXATAMENTE A BARRA ORIGINAL) -->
+        <div class="hidden md:flex max-w-7xl mx-auto items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm py-1">
             <a href="dashboard.html" class="px-4 py-2 rounded-xl font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
                 <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
                 <span>Dashboard 360</span>
@@ -177,7 +215,6 @@
                 <i class="fa-solid fa-users text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
                 <span>Equipe & Permissões</span>
             </a>
->
 
             <a href="configurar-imobiliaria.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
                 <i class="fa-solid fa-gear text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
@@ -188,7 +225,6 @@
                 <i class="fa-solid fa-headset text-indigo-400 text-xs group-hover:scale-110 transition"></i>
                 <span>Central de Ajuda & Suporte</span>
             </button>
-
         </div>
     </nav>
 <!-- ========================================================================= -->
