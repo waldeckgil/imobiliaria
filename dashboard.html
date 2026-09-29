@@ -1671,18 +1671,11 @@
             }
         }
 
-        // =========================================================================
+    // =========================================================================
         // GUARDIÃO DE SESSÃO COM TERMINAL DE AUTOATENDIMENTO PIX
         // =========================================================================
         async function expulsarUsuarioBloqueado() {
             if (isMasterSuporte) return;
-
-            // Revoga a autenticação e limpa a memória da máquina
-            try {
-                await supabaseClient.auth.signOut();
-            } catch (e) {}
-            sessionStorage.clear();
-            localStorage.clear();
 
             const modal = document.getElementById('modal-bloqueio-suspensao');
             if (!modal) {
@@ -1759,36 +1752,69 @@
 
             const file = fileInput.files[0];
             btnZap.disabled = true;
-            btnZap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando Comprovante...';
+            btnZap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando e Registrando...';
 
             try {
-                const imobId = dadosImobiliaria?.id || 'assinante';
+                const imobId = dadosImobiliaria?.id;
                 const fileExt = file.name.split('.').pop();
-                const fileName = `pix_desbloqueio_${Date.now()}.${fileExt}`;
-                const filePath = `comprovantes/${imobId}/${fileName}`;
+                const fileName = `recibo_${imobId}_${Date.now()}.${fileExt}`;
+                const filePath = `${fileName}`;
 
                 let comprovanteUrlFinal = null;
+
+                // 1. Upload seguro para o bucket 'comprovantes'
                 const { error: errUpload } = await supabaseClient.storage
-                    .from('documentos')
-                    .upload(filePath, file, { upsert: true });
+                    .from('comprovantes')
+                    .upload(filePath, file, { cacheControl: '3600', upsert: true });
 
                 if (!errUpload) {
-                    const { data: pUrl } = supabaseClient.storage.from('documentos').getPublicUrl(filePath);
+                    const { data: pUrl } = supabaseClient.storage.from('comprovantes').getPublicUrl(filePath);
                     comprovanteUrlFinal = pUrl.publicUrl;
+                } else {
+                    console.warn('[STORAGE] Fallback upload:', errUpload);
                 }
 
-                // Prepara mensagem no WhatsApp com link do comprovante
+                // 2. Grava o lançamento no banco de dados na tabela imobiliarias_mensalidades
+                const valorPlano = Number(dadosImobiliaria?.plano_valor || 149);
+                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                const dataAtual = new Date();
+                const mesRefAtual = `${meses[dataAtual.getMonth()]}/${dataAtual.getFullYear()}`;
+                const hojeIso = dataAtual.toISOString().split('T')[0];
+
+                let obsFinal = `[SOLICITAÇÃO DE DESBLOQUEIO VIA PIX]`;
+                if (comprovanteUrlFinal) {
+                    obsFinal += ` | [COMPROVANTE]: ${comprovanteUrlFinal}`;
+                }
+
+                const { error: errInsert } = await supabaseClient
+                    .from('imobiliarias_mensalidades')
+                    .insert([{
+                        imobiliaria_id: imobId,
+                        valor_pago: valorPlano,
+                        data_pagamento: hojeIso,
+                        mes_referencia: mesRefAtual,
+                        forma_pagamento: 'PIX',
+                        comprovante_url: comprovanteUrlFinal,
+                        observacoes: obsFinal
+                    }]);
+
+                if (errInsert) {
+                    console.error('[ERRO INSERT MENSALIDADE]:', errInsert);
+                }
+
+                // 3. Prepara mensagem no WhatsApp com link do comprovante gerado
                 const nomeImob = dadosImobiliaria?.nome_fantasia || 'Nossa Imobiliária';
                 const dataVenc = document.getElementById('modal-bloq-vencimento').innerText;
-                const valorPlano = document.getElementById('modal-bloq-valor').innerText;
+                const valorFmt = document.getElementById('modal-bloq-valor').innerText;
                 const diasAtraso = document.getElementById('modal-bloq-atraso').innerText;
 
                 let textoZap = `Olá Administrador! Acabei de realizar o pagamento PIX da assinatura da *${nomeImob}*.\n\n` +
-                               `💰 *Valor Pago:* ${valorPlano}\n` +
-                               `📅 *Vencimento:* ${dataVenc} (${diasAtraso} de atraso)\n`;
+                               `💰 *Valor Pago:* ${valorFmt}\n` +
+                               `📅 *Vencimento:* ${dataVenc} (${diasAtraso} de atraso)\n` +
+                               `🗓️ *Competência:* ${mesRefAtual}\n\n`;
 
                 if (comprovanteUrlFinal) {
-                    textoZap += `📄 *Comprovante Anexado:* ${comprovanteUrlFinal}\n\n`;
+                    textoZap += `📄 *Link do Comprovante:* ${comprovanteUrlFinal}\n\n`;
                 } else {
                     textoZap += `📄 *Comprovante:* (Estou enviando a imagem aqui no chat)\n\n`;
                 }
@@ -1797,9 +1823,11 @@
 
                 window.open(`https://wa.me/5521964120231?text=${encodeURIComponent(textoZap)}`, '_blank');
 
+                alert('Comprovante registrado com sucesso no sistema! Redirecionando para a tela de login.');
+                await redirecionarParaLogin();
+
             } catch (err) {
                 console.error('[COMPROVANTE BLOQUEIO] Erro:', err);
-                // Fallback: abre o zap mesmo se o upload falhar para ele enviar direto no chat
                 window.open(`https://wa.me/5521964120231?text=${encodeURIComponent('Olá Administrador! Fiz o pagamento e vou te enviar o comprovante por aqui para liberar o acesso.')}`, '_blank');
             } finally {
                 btnZap.disabled = false;
@@ -1807,10 +1835,14 @@
             }
         }
 
-        function redirecionarParaLogin() {
+        async function redirecionarParaLogin() {
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (e) {}
+            sessionStorage.clear();
+            localStorage.clear();
             window.location.href = 'login.html';
         }
-
         function iniciarSentinelaBloqueio(imobiliariaId) {
             if (isMasterSuporte || !imobiliariaId) return;
 
