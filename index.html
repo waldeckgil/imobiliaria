@@ -1254,15 +1254,30 @@
             document.getElementById('header-razao').innerText = imob.razao_social || imob.nome_fantasia;
             document.getElementById('header-creci').innerText = imob.creci_juridico || '';
             
+ const emModoLeitura = (imob.status === 'read_only');
             const telefoneExibicao = imob.telefone_contato || imob.whatsapp_contato || '';
-            document.getElementById('txt-telefone-header').innerText = telefoneExibicao;
-            document.getElementById('btn-telefone-header').href = `tel:${telefoneExibicao.replace(/\D/g, '')}`;
+            const btnTelHeader = document.getElementById('btn-telefone-header');
 
-            if (imob.whatsapp_contato) {
-                const zapLink = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
+            if (emModoLeitura) {
+                // Em Modo Leitura: oculta ligação direta no topo e oculta o WhatsApp flutuante
+                if (btnTelHeader) btnTelHeader.classList.add('hidden');
                 const btnZap = document.getElementById('btn-flutuante-zap');
-                btnZap.href = zapLink;
-                btnZap.classList.remove('hidden');
+                if (btnZap) btnZap.classList.add('hidden');
+            } else {
+                if (btnTelHeader) {
+                    btnTelHeader.classList.remove('hidden');
+                    btnTelHeader.href = `tel:${telefoneExibicao.replace(/\D/g, '')}`;
+                    document.getElementById('txt-telefone-header').innerText = telefoneExibicao;
+                }
+
+                if (imob.whatsapp_contato) {
+                    const zapLink = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
+                    const btnZap = document.getElementById('btn-flutuante-zap');
+                    if (btnZap) {
+                        btnZap.href = zapLink;
+                        btnZap.classList.remove('hidden');
+                    }
+                }
             }
 
             document.getElementById('empresa-titulo').innerText = `Sobre a ${imob.nome_fantasia}`;
@@ -1305,7 +1320,9 @@
 
             document.getElementById('footer-nome').innerText = imob.nome_fantasia.toUpperCase();
             document.getElementById('footer-creci').innerText = imob.creci_juridico || '';
-            document.getElementById('footer-telefone').innerHTML = `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${telefoneExibicao || 'Não informado'}`;
+            document.getElementById('footer-telefone').innerHTML = emModoLeitura 
+                ? `<i class="fa-solid fa-headset mr-1.5 text-blue-400"></i> Atendimento via Formulário`
+                : `<i class="fa-solid fa-phone mr-1.5 text-blue-400"></i> ${telefoneExibicao || 'Não informado'}`;
             document.getElementById('footer-email').innerHTML = `<i class="fa-solid fa-envelope mr-1.5 text-blue-400"></i> ${imob.email_admin || 'Não informado'}`;
             
             const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
@@ -1332,7 +1349,8 @@
             if (containerFaixaPreta) {
                 let htmlFaixaPreta = '';
 
-                if (imob.whatsapp_contato && imob.whatsapp_contato.trim() !== '') {
+                // Oculta o botão verde do WhatsApp da barra de busca se estiver em read_only
+                if (!emModoLeitura && imob.whatsapp_contato && imob.whatsapp_contato.trim() !== '') {
                     const zapUrl = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
                     htmlFaixaPreta += `
                         <a href="${zapUrl}" target="_blank" rel="noopener noreferrer" 
@@ -1699,16 +1717,21 @@
                                     ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
                                 </div>
 
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    ${botaoVideoAcao}
-                                    <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
-                                            class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
-                                        <i class="fa-regular fa-envelope"></i> Mensagem
-                                    </button>
-
+ const emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
+                                const botaoZapCardHtml = emLeituraCard ? '' : `
                                     <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
                                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                                     </a>
+                                `;
+
+                                return `
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    ${botaoVideoAcao}
+                                    <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
+                                            class="btn-azul-mensagem text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                        <i class="fa-regular fa-envelope"></i> Mensagem
+                                    </button>
+                                    ${botaoZapCardHtml}
                                 </div>
                             </div>
                         </div>
