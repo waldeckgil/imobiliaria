@@ -6760,27 +6760,31 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                     <!-- CARD OFICIAL MERCADO PAGO COM QR CODE -->
                     <div class="bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 p-4 rounded-2xl border-2 border-sky-500/50 shadow-2xl flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
                         
-                        <!-- CHANCELA INSTITUCIONAL MERCADO PAGO -->
-                        <div class="w-full flex items-center justify-between border-b border-slate-800/90 pb-2.5 px-1">
-                            <div class="flex items-center gap-2">
-                                <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="none">
-                                    <rect width="24" height="24" rx="6" fill="#009ee3"/>
-                                    <path d="M12.8 7.2c-.8-.5-1.9-.3-2.4.5L7.9 11.8c-.4.7-.3 1.5.2 2 .5.5 1.3.6 2 .2l2.5-1.6 1.4 1.4c.5.5 1.3.5 1.8 0 .5-.5.5-1.3 0-1.8l-1.4-1.4 1.2-1.9c.5-.7.3-1.6-.3-2.1l-2.5-.4z" fill="#ffffff"/>
-                                    <path d="M9.8 14.5l-1.2.8c-.5.3-.7 1-.3 1.5.3.5 1 .7 1.5.3l1.2-.8-1.2-1.8z" fill="#ffffff"/>
-                                </svg>
+        <!-- CHANCELA INSTITUCIONAL MERCADO PAGO COM LOGO OFICIAL (FOTO 1) -->
+                        <div class="w-full flex items-center justify-between border-b border-slate-800/90 pb-3 px-1 gap-2 flex-wrap sm:flex-nowrap">
+                            <div class="flex items-center gap-2.5">
+                                <!-- CARD BRANCO OFICIAL COM APERTO DE MÃOS E TIPOGRAFIA MERCADO PAGO -->
+                                <div class="bg-white px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-md shadow-sky-950/40 border border-slate-200 flex-shrink-0">
+                                    <img src="https://cdn.jsdelivr.net/npm/logos-bancos-br@0/logos/svg/10573521.svg" 
+                                         alt="Mercado Pago" 
+                                         class="h-5 w-auto object-contain"
+                                         onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/logos-bancos-br@0/logos/png/10573521.png';">
+                                    <span class="text-xs font-black text-[#001a9c] font-sans tracking-tight leading-none">mercado pago</span>
+                                </div>
                                 <div class="text-left">
-                                    <span class="text-xs font-black tracking-wider text-white block uppercase flex items-center gap-1.5">
-                                        <span>Mercado Pago</span>
-                                        <i class="fa-solid fa-shield-halved text-sky-400 text-[10px]"></i>
+                                    <span class="text-[10px] text-slate-300 font-bold block flex items-center gap-1">
+                                        <i class="fa-solid fa-shield-halved text-emerald-400 text-[9px]"></i>
+                                        <span>Pagamento Seguro</span>
                                     </span>
-                                    <span class="text-[9px] text-sky-300 font-medium block">Ambiente Criptografado & Homologado</span>
+                                    <span class="text-[9px] text-sky-300/80 font-mono block">Liquidação instantânea</span>
                                 </div>
                             </div>
-                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-black uppercase bg-sky-950 text-sky-300 border border-sky-800">
+                            <span class="px-2.5 py-1 rounded-lg text-[9px] font-mono font-black uppercase bg-sky-950 text-sky-300 border border-sky-800 shadow-sm flex-shrink-0">
                                 PIX OFICIAL
                             </span>
                         </div>
 
+                        
                         <!-- MOLDURA DO QR CODE COM CONTRASTE PROFISSIONAL -->
                         <div class="bg-white p-2.5 rounded-2xl shadow-xl shadow-sky-950/40 border-2 border-slate-200">
                             <img id="mp-qrcode-img" src="" alt="QR Code Pix Oficial Mercado Pago" class="w-44 h-44 object-contain">
