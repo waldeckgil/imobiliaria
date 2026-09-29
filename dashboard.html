@@ -1747,15 +1747,15 @@
                             btnZapAnalise.href = `https://wa.me/5521964120231?text=${encodeURIComponent(msgAnalise)}`;
                         }
                     }
-                } else {
-                    // SE NÃO ENVIOU AINDA: MOSTRA O CHECKOUT PIX NORMAL
-                    if (blocoPendente) blocoPendente.classList.remove('hidden');
+ } else {
+                    // SE NÃO ENVIOU AINDA: ATIVA A ABA DO PIX AUTOMÁTICO E GERA O QR CODE
                     if (blocoAnalise) blocoAnalise.classList.add('hidden');
+                    alternarAbaBloqueio('mp');
                 }
             } catch (errCheck) {
                 console.warn('[CHECK TICKET PENDENTE]', errCheck);
-                if (blocoPendente) blocoPendente.classList.remove('hidden');
                 if (blocoAnalise) blocoAnalise.classList.add('hidden');
+                alternarAbaBloqueio('mp');
             }
 
             modal.classList.remove('hidden');
@@ -6520,7 +6520,7 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             }
         }
 
-        async function gerarPixMercadoPagoAutomatico() {
+  async function gerarPixMercadoPagoAutomatico() {
             const imobId = dadosImobiliaria?.id;
             if (!imobId) return;
 
@@ -6529,22 +6529,35 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             const imgQrCode = document.getElementById('mp-qrcode-img');
             const inputCopiaCola = document.getElementById('mp-pix-copia-cola');
 
+            if (!elCarregando || !elExibicao) return;
+
+            // Restaura o visual inicial do spinner caso tenha havido erro anterior
+            elCarregando.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-2xl mb-2"></i>
+                <p class="font-bold">Gerando QR Code PIX dinâmico do Mercado Pago...</p>
+            `;
             elCarregando.classList.remove('hidden');
             elExibicao.classList.add('hidden');
 
             try {
-                // Chama a função RPC direta do PostgreSQL
-                const { data, error } = await supabaseClient.rpc('gerar_pix_mercado_pago', {
+                // Trava de segurança: timeout de 12s para nunca travar a tela se o Mercado Pago demorar
+                const chamadaRpc = supabaseClient.rpc('gerar_pix_mercado_pago', {
                     p_imobiliaria_id: imobId
                 });
+                const timeoutPromessa = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Tempo limite esgotado ao contatar o Mercado Pago.')), 12000)
+                );
+
+                const { data, error } = await Promise.race([chamadaRpc, timeoutPromessa]);
 
                 if (error || !data?.sucesso) {
                     throw new Error(data?.erro || error?.message || 'Falha ao gerar cobrança no banco.');
                 }
 
                 paymentIdAtivoPix = data.payment_id;
-                imgQrCode.src = `data:image/png;base64,${data.qr_code_base64}`;
-                inputCopiaCola.value = data.qr_code_copia_cola;
+                const b64 = String(data.qr_code_base64 || '');
+                imgQrCode.src = b64.startsWith('data:') ? b64 : `data:image/png;base64,${b64}`;
+                inputCopiaCola.value = data.qr_code_copia_cola || '';
 
                 elCarregando.classList.add('hidden');
                 elExibicao.classList.remove('hidden');
@@ -6555,11 +6568,11 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             } catch (err) {
                 console.error('[ERRO GERAR PIX RPC]:', err);
                 elCarregando.innerHTML = `
-                    <div class="text-rose-400 space-y-2">
+                    <div class="text-rose-400 space-y-2 py-4">
                         <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
-                        <p class="text-xs">${err.message || 'Falha ao emitir PIX.'}</p>
-                        <button type="button" onclick="alternarAbaBloqueio('manual')" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold">
-                            Usar PIX Manual com Comprovante
+                        <p class="text-xs font-bold">${err.message || 'Falha ao emitir PIX automático.'}</p>
+                        <button type="button" onclick="alternarAbaBloqueio('manual')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black cursor-pointer shadow transition">
+                            <i class="fa-solid fa-qrcode mr-1"></i> Pagar via Chave PIX Manual
                         </button>
                     </div>
                 `;
