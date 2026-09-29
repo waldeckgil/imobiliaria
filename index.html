@@ -1192,7 +1192,7 @@
             try {
              
 
-                const { data, error } = await supabaseClient
+ const { data, error } = await supabaseClient
                     .from('imobiliarias')
                     .select(`
                         id, 
@@ -1216,7 +1216,8 @@
                         facebook, 
                         youtube, 
                         linkedin, 
-                        status
+                        status,
+                        data_vencimento
                     `)
                     .eq('slug', slugAtual)
                     .in('status', ['active', 'read_only'])
@@ -1254,7 +1255,20 @@
             document.getElementById('header-razao').innerText = imob.razao_social || imob.nome_fantasia;
             document.getElementById('header-creci').innerText = imob.creci_juridico || '';
             
- const emModoLeitura = (imob.status === 'read_only');
+ // CÁLCULO DINÂMICO DE CARÊNCIA E STATUS EFETIVO DA VITRINE
+            let emModoLeitura = (imob.status === 'read_only');
+            if (!emModoLeitura && imob.data_vencimento) {
+                const hojeBase = new Date();
+                hojeBase.setHours(0, 0, 0, 0);
+                const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
+                const dtVenc = new Date(anoV, mesV - 1, diaV);
+                const diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+                // Se venceu e ultrapassou a carência mínima (1 dia), entra em Modo Leitura
+                if (diffDias > 1) {
+                    emModoLeitura = true;
+                }
+            }
+
             const telefoneExibicao = imob.telefone_contato || imob.whatsapp_contato || '';
             const btnTelHeader = document.getElementById('btn-telefone-header');
 
@@ -1666,8 +1680,19 @@ const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia 
                     </button>
                 ` : '';
 
-                // CONTROLE DO BOTÃO WHATSAPP DO CARD: OCULTA SE FOR SOMENTE LEITURA
-                const emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
+  // CONTROLE DO BOTÃO WHATSAPP DO CARD: OCULTA SE FOR SOMENTE LEITURA (MANUAL OU POR VENCIMENTO)
+                let emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
+                if (!emLeituraCard && tenantAtual && tenantAtual.data_vencimento) {
+                    const hojeBase = new Date();
+                    hojeBase.setHours(0, 0, 0, 0);
+                    const [anoV, mesV, diaV] = tenantAtual.data_vencimento.split('-').map(Number);
+                    const dtVenc = new Date(anoV, mesV - 1, diaV);
+                    const diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+                    if (diffDias > 1) {
+                        emLeituraCard = true;
+                    }
+                }
+
                 const botaoZapCardHtml = emLeituraCard ? '' : `
                     <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
