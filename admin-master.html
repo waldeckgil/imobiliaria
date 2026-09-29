@@ -198,48 +198,64 @@
             </div>
 
             <!-- IMOBILIÁRIAS ATIVAS -->
-            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-emerald-400 flex flex-col justify-between">
+ <!-- IMOBILIÁRIAS ONLINE / EM DIA (CLICÁVEL) -->
+            <div id="card-kpi-ativas" onclick="filtrarCarteiraPorStatus('active')" 
+                 class="box-tech p-3.5 sm:p-4 border-l-4 border-l-emerald-400 flex flex-col justify-between cursor-pointer hover:bg-slate-900/80 hover:scale-[1.02] transition group" 
+                 title="Clique para filtrar apenas imobiliárias online / em dia">
                 <div>
                     <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
-                        <span>Imobiliárias</span>
-                        <i class="fa-solid fa-building-circle-check text-emerald-400 text-sm sm:text-base"></i>
+                        <span>Online / Em Dia</span>
+                        <i class="fa-solid fa-circle-check text-emerald-400 text-sm sm:text-base group-hover:scale-110 transition"></i>
                     </div>
                     <div class="mt-2 flex items-baseline gap-1.5">
                         <span id="kpi-imobiliarias-ativas" class="text-xl sm:text-2xl font-black text-white">0</span>
                         <span id="kpi-imobiliarias-total" class="text-[10px] text-slate-400">de 0</span>
                     </div>
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-emerald-400 mt-2 block">Em operação</span>
+                <div class="mt-2 flex items-center justify-between text-[9px] sm:text-[10px] text-emerald-400 font-bold">
+                    <span>Acesso total liberado</span>
+                    <i class="fa-solid fa-arrow-down-short-wide text-[8px]"></i>
+                </div>
             </div>
 
-            <!-- ESTOQUE DE IMÓVEIS -->
-            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-cyan-400 flex flex-col justify-between">
+            <!-- CLIENTES EM ATRASO (NOVO CARD CLICÁVEL - SUBSTITUI IMÓVEIS) -->
+            <div id="card-kpi-atraso" onclick="filtrarCarteiraPorStatus('overdue')" 
+                 class="box-tech p-3.5 sm:p-4 border-l-4 border-l-amber-400 flex flex-col justify-between cursor-pointer hover:bg-slate-900/80 hover:scale-[1.02] transition group" 
+                 title="Clique para filtrar imobiliárias com mensalidade em atraso">
                 <div>
                     <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
-                        <span>Imóveis</span>
-                        <i class="fa-solid fa-house-laptop text-cyan-400 text-sm sm:text-base"></i>
+                        <span>Em Atraso</span>
+                        <i class="fa-solid fa-clock-rotate-left text-amber-400 text-sm sm:text-base group-hover:scale-110 transition"></i>
                     </div>
                     <div class="mt-2 flex items-baseline gap-1">
-                        <span id="kpi-imoveis-global" class="text-xl sm:text-2xl font-black text-white">0</span>
-                        <span class="text-[10px] text-cyan-400">anúncios</span>
+                        <span id="kpi-em-atraso" class="text-xl sm:text-2xl font-black text-amber-400">0</span>
+                        <span class="text-[10px] text-slate-400">vencidas</span>
                     </div>
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Total na rede</span>
+                <div class="mt-2 flex items-center justify-between text-[9px] sm:text-[10px] text-amber-400 font-bold">
+                    <span>Vencimento expirado</span>
+                    <i class="fa-solid fa-arrow-down-short-wide text-[8px]"></i>
+                </div>
             </div>
 
-            <!-- BLOQUEADAS / PENDÊNCIAS -->
-            <div class="box-tech p-3.5 sm:p-4 border-l-4 border-l-rose-500 flex flex-col justify-between">
+            <!-- BLOQUEADAS / ACESSO RESTRITO (CLICÁVEL) -->
+            <div id="card-kpi-bloqueadas" onclick="filtrarCarteiraPorStatus('blocked')" 
+                 class="box-tech p-3.5 sm:p-4 border-l-4 border-l-rose-500 flex flex-col justify-between cursor-pointer hover:bg-slate-900/80 hover:scale-[1.02] transition group" 
+                 title="Clique para filtrar imobiliárias bloqueadas ou em consulta">
                 <div>
                     <div class="flex items-center justify-between text-slate-400 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
-                        <span>Pendências</span>
-                        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-sm sm:text-base"></i>
+                        <span>Bloqueadas</span>
+                        <i class="fa-solid fa-ban text-rose-400 text-sm sm:text-base group-hover:scale-110 transition"></i>
                     </div>
                     <div class="mt-2 flex items-baseline gap-1">
                         <span id="kpi-bloqueadas" class="text-xl sm:text-2xl font-black text-rose-400">0</span>
-                        <span class="text-[10px] text-slate-400">bloqueadas</span>
+                        <span class="text-[10px] text-slate-400">suspensas</span>
                     </div>
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-slate-500 mt-2 block">Acesso restrito</span>
+                <div class="mt-2 flex items-center justify-between text-[9px] sm:text-[10px] text-rose-400 font-bold">
+                    <span>Acesso cortado</span>
+                    <i class="fa-solid fa-arrow-down-short-wide text-[8px]"></i>
+                </div>
             </div>
 
      <!-- CARD NOVO: CHAMADOS (ABERTO & EM ANÁLISE COM ALERTA PULSANTE) -->
@@ -276,7 +292,15 @@
                     <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5">Gerencie contratos, lance mensalidades com anexo, defina gratuidades e preste suporte.</p>
                 </div>
 
-                <div class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="flex items-center gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+                    <!-- BOTÃO DINÂMICO DE FILTRO ATIVO -->
+                    <button type="button" id="btn-limpar-filtro-status" onclick="filtrarCarteiraPorStatus('todos')" 
+                            class="hidden bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 px-2.5 py-2 rounded-xl text-xs font-bold items-center gap-1.5 transition cursor-pointer whitespace-nowrap shadow" 
+                            title="Remover filtro e exibir todas as imobiliárias">
+                        <span id="lbl-filtro-ativo">Filtro Ativo</span>
+                        <i class="fa-solid fa-xmark text-[11px] text-amber-400"></i>
+                    </button>
+
                     <button onclick="abrirModalHistoricoGlobal()" class="bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/60 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="Ver todo o histórico financeiro com filtros avançados">
                         <i class="fa-solid fa-vault text-xs"></i>
                         <span class="hidden sm:inline">Estoque de Pagamentos</span>
@@ -2362,12 +2386,12 @@ function filtrarTicketsMaster() {
                 console.warn(err);
             }
         }
-
-   function atualizarMetricasMaster() {
+function atualizarMetricasMaster() {
             const totalImobs = listaImobiliarias.length;
             let mrrTotal = 0;
             let ativasCount = 0;
-            let pendenciasCount = 0;
+            let atrasoCount = 0;
+            let bloqueadasCount = 0;
 
             listaImobiliarias.forEach(im => {
                 const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
@@ -2376,19 +2400,25 @@ function filtrarTicketsMaster() {
                 if (statusEfetivo === 'active') {
                     mrrTotal += valorPlano;
                     ativasCount++;
-                } else {
-                    pendenciasCount++;
+                } else if (statusEfetivo === 'overdue' || statusEfetivo === 'read_only') {
+                    atrasoCount++;
+                } else if (statusEfetivo === 'blocked') {
+                    bloqueadasCount++;
                 }
             });
 
             document.getElementById('kpi-mrr').innerText = mrrTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('kpi-imobiliarias-ativas').innerText = ativasCount;
             document.getElementById('kpi-imobiliarias-total').innerText = `de ${totalImobs}`;
-            document.getElementById('kpi-imoveis-global').innerText = listaImoveisGlobal.length;
-            document.getElementById('kpi-bloqueadas').innerText = pendenciasCount;
+            
+            const elAtraso = document.getElementById('kpi-em-atraso');
+            if (elAtraso) elAtraso.innerText = atrasoCount;
+
+            const elBloq = document.getElementById('kpi-bloqueadas');
+            if (elBloq) elBloq.innerText = bloqueadasCount;
+
             document.getElementById('contador-imob').innerText = totalImobs;
         }
-
         // =========================================================================
         // RENDERIZAÇÃO DA TABELA
         // =========================================================================
@@ -3053,22 +3083,82 @@ function abrirModalEditarPlano(imobId) {
             }
         }
 
-        function filtrarImobiliarias() {
-            const busca = document.getElementById('filtro-busca-imob').value.toLowerCase().trim();
-            if (!busca) {
-                renderizarTabelaImobiliarias(listaImobiliarias);
+    // ESTADO DO FILTRO ATIVO NA CARTEIRA
+        let statusFiltroCarteiraAtivo = 'todos';
+
+        function filtrarCarteiraPorStatus(statusAlvo) {
+            // Se clicar no mesmo filtro ativo, desativa e exibe todas
+            if (statusFiltroCarteiraAtivo === statusAlvo) {
+                statusFiltroCarteiraAtivo = 'todos';
+            } else {
+                statusFiltroCarteiraAtivo = statusAlvo;
+            }
+
+            destacarCardStatusAtivo(statusFiltroCarteiraAtivo);
+            filtrarImobiliarias();
+        }
+
+        function destacarCardStatusAtivo(status) {
+            const cardAtivas = document.getElementById('card-kpi-ativas');
+            const cardAtraso = document.getElementById('card-kpi-atraso');
+            const cardBloq = document.getElementById('card-kpi-bloqueadas');
+            const btnLimpar = document.getElementById('btn-limpar-filtro-status');
+            const lblFiltro = document.getElementById('lbl-filtro-ativo');
+
+            // Limpa bordas destacadas
+            [cardAtivas, cardAtraso, cardBloq].forEach(card => {
+                if (card) card.classList.remove('ring-2', 'ring-amber-400', 'ring-emerald-400', 'ring-rose-500');
+            });
+
+            if (status === 'todos') {
+                if (btnLimpar) btnLimpar.classList.add('hidden');
                 return;
             }
 
-            const filtradas = listaImobiliarias.filter(im => 
-                (im.nome_fantasia && im.nome_fantasia.toLowerCase().includes(busca)) ||
-                (im.slug && im.slug.toLowerCase().includes(busca)) ||
-                (im.email_admin && im.email_admin.toLowerCase().includes(busca)) ||
-                (im.creci_juridico && im.creci_juridico.toLowerCase().includes(busca))
-            );
+            if (btnLimpar) btnLimpar.classList.remove('hidden');
+
+            if (status === 'active') {
+                if (cardAtivas) cardAtivas.classList.add('ring-2', 'ring-emerald-400');
+                if (lblFiltro) lblFiltro.innerText = 'Exibindo: Online / Em Dia';
+            } else if (status === 'overdue') {
+                if (cardAtraso) cardAtraso.classList.add('ring-2', 'ring-amber-400');
+                if (lblFiltro) lblFiltro.innerText = 'Exibindo: Em Atraso';
+            } else if (status === 'blocked') {
+                if (cardBloq) cardBloq.classList.add('ring-2', 'ring-rose-500');
+                if (lblFiltro) lblFiltro.innerText = 'Exibindo: Bloqueadas';
+            }
+        }
+
+        function filtrarImobiliarias() {
+            const busca = (document.getElementById('filtro-busca-imob')?.value || '').toLowerCase().trim();
+            let filtradas = [...listaImobiliarias];
+
+            // 1. Aplica o filtro de status selecionado no Card
+            if (statusFiltroCarteiraAtivo === 'active') {
+                filtradas = filtradas.filter(im => calcularStatusEfetivoImobiliaria(im) === 'active');
+            } else if (statusFiltroCarteiraAtivo === 'overdue') {
+                filtradas = filtradas.filter(im => {
+                    const st = calcularStatusEfetivoImobiliaria(im);
+                    return st === 'overdue' || st === 'read_only';
+                });
+            } else if (statusFiltroCarteiraAtivo === 'blocked') {
+                filtradas = filtradas.filter(im => calcularStatusEfetivoImobiliaria(im) === 'blocked');
+            }
+
+            // 2. Aplica busca textual se houver
+            if (busca) {
+                filtradas = filtradas.filter(im => 
+                    (im.nome_fantasia && im.nome_fantasia.toLowerCase().includes(busca)) ||
+                    (im.slug && im.slug.toLowerCase().includes(busca)) ||
+                    (im.email_admin && im.email_admin.toLowerCase().includes(busca)) ||
+                    (im.creci_juridico && im.creci_juridico.toLowerCase().includes(busca))
+                );
+            }
 
             renderizarTabelaImobiliarias(filtradas);
         }
+
+        window.filtrarCarteiraPorStatus = filtrarCarteiraPorStatus;
 
         // =========================================================================
         // CENTRAL DE ESTOQUE GLOBAL DE PAGAMENTOS
