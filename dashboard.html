@@ -1652,11 +1652,17 @@
                 popularSeletorMeses();
                 configurarPwaGestor(imob);
 
-                await carregarMetricas(imob.id);
+   await carregarMetricas(imob.id);
                 await carregarDashboardFinanceiro();
                 carregarAgendaMes();
 
-                // INICIA A SENTINELA EM SEGUNDO PLANO (HEARTBEAT DE 15 SEGUNDOS)
+                // GUARDIÃO DE SESSÃO: SE ESTIVER BLOQUEADO, EXPULSA NA HORA
+                if (imob.status === 'blocked' && !isMasterSuporte) {
+                    await expulsarUsuarioBloqueado();
+                    return;
+                }
+
+                // INICIA SENTINELA EM SEGUNDO PLANO (HEARTBEAT DE 15 SEGUNDOS)
                 iniciarSentinelaBloqueio(imob.id);
 
             } catch (err) {
@@ -1666,18 +1672,179 @@
         }
 
         // =========================================================================
-        // GUARDIÃO DE SESSÃO: EXPULSÃO E SENTINELA EM TEMPO REAL
+        // GUARDIÃO DE SESSÃO COM TERMINAL DE AUTOATENDIMENTO PIX
         // =========================================================================
-        async function expulsarUsuarioBloqueado(mensagemAlerta) {
+        async function expulsarUsuarioBloqueado() {
             if (isMasterSuporte) return;
-            alert(mensagemAlerta || 'Acesso suspenso: Sua conta foi temporariamente bloqueada pela administração do sistema.');
+
+            // Revoga a autenticação e limpa a memória da máquina
             try {
                 await supabaseClient.auth.signOut();
             } catch (e) {}
             sessionStorage.clear();
             localStorage.clear();
+
+            const modal = document.getElementById('modal-bloqueio-suspensao');
+            if (!modal) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // PREENCHIMENTO DOS DADOS DE COBRANÇA TRANSPARENTE
+            const nomeImob = dadosImobiliaria?.nome_fantasia || 'Imobiliária';
+            const dataVenc = dadosImobiliaria?.data_vencimento ? dadosImobiliaria.data_vencimento.split('-').reverse().join('/') : '--/--/----';
+            const valorPlano = Number(dadosImobiliaria?.plano_valor || 149);
+
+            let diasAtraso = 0;
+            if (dadosImobiliaria?.data_vencimento) {
+                const hojeBase = new Date();
+                hojeBase.setHours(0, 0, 0, 0);
+                const [anoV, mesV, diaV] = dadosImobiliaria.data_vencimento.split('-').map(Number);
+                const dtVenc = new Date(anoV, mesV - 1, diaV);
+                diasAtraso = Math.max(0, Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24)));
+            }
+
+            document.getElementById('modal-bloq-imob-nome').innerText = nomeImob;
+            document.getElementById('modal-bloq-vencimento').innerText = dataVenc;
+            document.getElementById('modal-bloq-atraso').innerText = `${diasAtraso} dia(s)`;
+            document.getElementById('modal-bloq-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            // CHAVE PIX CONFIGURADA NO MASTER
+            const chavePix = window.chavePixMasterGlobal || 'waldeckgil@gmail.com';
+            document.getElementById('modal-bloq-chave-pix').value = chavePix;
+
+            modal.classList.remove('hidden');
+        }
+
+        function copiarChavePixModal() {
+            const input = document.getElementById('modal-bloq-chave-pix');
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('btn-copiar-pix-modal');
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar';
+                    }, 2000);
+                }
+            });
+        }
+
+        function aoSelecionarComprovanteBloqueio(e) {
+            const file = e.target.files[0];
+            const btnZap = document.getElementById('btn-enviar-comprovante-bloqueio');
+            const aviso = document.getElementById('aviso-anexo-obrigatorio');
+
+            if (file) {
+                btnZap.disabled = false;
+                btnZap.classList.remove('opacity-40', 'cursor-not-allowed');
+                btnZap.classList.add('hover:bg-emerald-500', 'cursor-pointer');
+                if (aviso) aviso.classList.add('hidden');
+            } else {
+                btnZap.disabled = true;
+                btnZap.classList.add('opacity-40', 'cursor-not-allowed');
+                btnZap.classList.remove('hover:bg-emerald-500', 'cursor-pointer');
+                if (aviso) aviso.classList.remove('hidden');
+            }
+        }
+
+        async function processarEnvioComprovantePix() {
+            const fileInput = document.getElementById('input-comprovante-bloqueio');
+            const btnZap = document.getElementById('btn-enviar-comprovante-bloqueio');
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('Por favor, anexe o comprovante do pagamento para solicitar o desbloqueio.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            btnZap.disabled = true;
+            btnZap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando Comprovante...';
+
+            try {
+                const imobId = dadosImobiliaria?.id || 'assinante';
+                const fileExt = file.name.split('.').pop();
+                const fileName = `pix_desbloqueio_${Date.now()}.${fileExt}`;
+                const filePath = `comprovantes/${imobId}/${fileName}`;
+
+                let comprovanteUrlFinal = null;
+                const { error: errUpload } = await supabaseClient.storage
+                    .from('documentos')
+                    .upload(filePath, file, { upsert: true });
+
+                if (!errUpload) {
+                    const { data: pUrl } = supabaseClient.storage.from('documentos').getPublicUrl(filePath);
+                    comprovanteUrlFinal = pUrl.publicUrl;
+                }
+
+                // Prepara mensagem no WhatsApp com link do comprovante
+                const nomeImob = dadosImobiliaria?.nome_fantasia || 'Nossa Imobiliária';
+                const dataVenc = document.getElementById('modal-bloq-vencimento').innerText;
+                const valorPlano = document.getElementById('modal-bloq-valor').innerText;
+                const diasAtraso = document.getElementById('modal-bloq-atraso').innerText;
+
+                let textoZap = `Olá Administrador! Acabei de realizar o pagamento PIX da assinatura da *${nomeImob}*.\n\n` +
+                               `💰 *Valor Pago:* ${valorPlano}\n` +
+                               `📅 *Vencimento:* ${dataVenc} (${diasAtraso} de atraso)\n`;
+
+                if (comprovanteUrlFinal) {
+                    textoZap += `📄 *Comprovante Anexado:* ${comprovanteUrlFinal}\n\n`;
+                } else {
+                    textoZap += `📄 *Comprovante:* (Estou enviando a imagem aqui no chat)\n\n`;
+                }
+
+                textoZap += `Solicito a validação e o desbloqueio imediato do nosso acesso!`;
+
+                window.open(`https://wa.me/5521964120231?text=${encodeURIComponent(textoZap)}`, '_blank');
+
+            } catch (err) {
+                console.error('[COMPROVANTE BLOQUEIO] Erro:', err);
+                // Fallback: abre o zap mesmo se o upload falhar para ele enviar direto no chat
+                window.open(`https://wa.me/5521964120231?text=${encodeURIComponent('Olá Administrador! Fiz o pagamento e vou te enviar o comprovante por aqui para liberar o acesso.')}`, '_blank');
+            } finally {
+                btnZap.disabled = false;
+                btnZap.innerHTML = '<i class="fa-brands fa-whatsapp text-sm"></i> Enviar Comprovante no WhatsApp';
+            }
+        }
+
+        function redirecionarParaLogin() {
             window.location.href = 'login.html';
         }
+
+        function iniciarSentinelaBloqueio(imobiliariaId) {
+            if (isMasterSuporte || !imobiliariaId) return;
+
+            setInterval(async () => {
+                try {
+                    const { data: imobStatus, error } = await supabaseClient
+                        .from('imobiliarias')
+                        .select('status, data_vencimento')
+                        .eq('id', imobiliariaId)
+                        .maybeSingle();
+
+                    if (!error && imobStatus) {
+                        if (imobStatus.status === 'blocked') {
+                            await expulsarUsuarioBloqueado();
+                            return;
+                        }
+
+                        if (imobStatus.data_vencimento) {
+                            const hoje = new Date();
+                            hoje.setHours(0, 0, 0, 0);
+                            const [anoV, mesV, diaV] = imobStatus.data_vencimento.split('-').map(Number);
+                            const dtVenc = new Date(anoV, mesV - 1, diaV);
+                            const diasAtraso = Math.floor((hoje.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+                            if (diasAtraso > 8) {
+                                await expulsarUsuarioBloqueado();
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('[SENTINELA] Checagem ativa:', e);
+                }
+            }, 15000);
+        }
+   
 
         function iniciarSentinelaBloqueio(imobiliariaId) {
             if (isMasterSuporte || !imobiliariaId) return;
@@ -1747,19 +1914,20 @@ async function atualizarPainelAssinatura(imob) {
                 return;
             }
 
-            // Busca as réguas de tolerância configuradas no Console Master
+ // Busca as réguas de tolerância e a Chave PIX configuradas no Console Master
             let diasCarenciaLeitura = 3;
             let diasBloqueioTotal = 7;
             try {
                 const { data: cfg } = await supabaseClient
                     .from('config_sistema')
-                    .select('dias_carencia_leitura, dias_bloqueio_total')
+                    .select('dias_carencia_leitura, dias_bloqueio_total, chave_pix')
                     .eq('id', 1)
                     .maybeSingle();
 
                 if (cfg) {
                     if (cfg.dias_carencia_leitura !== null) diasCarenciaLeitura = cfg.dias_carencia_leitura;
                     if (cfg.dias_bloqueio_total !== null) diasBloqueioTotal = cfg.dias_bloqueio_total;
+                    if (cfg.chave_pix) window.chavePixMasterGlobal = cfg.chave_pix;
                 }
             } catch (errCfg) {
                 console.warn('[CONFIG ASSINATURA] Usando tolerâncias padrão:', errCfg);
@@ -6277,7 +6445,7 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 <p class="text-[10px] text-slate-500">O sistema abrirá a conversa com uma mensagem profissional de apresentação e o link da sua vitrine já formatado.</p>
             </div>
 
-            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+ <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
                 <a id="modal-share-link-abrir" href="#" target="_blank" class="text-cyan-400 hover:underline flex items-center gap-1 font-bold text-[11px]">
                     <span>Testar e Abrir Vitrine</span>
                     <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -6286,6 +6454,89 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                     Fechar
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL DARK TECH: SUSPENSÃO DE ACESSO, CHECKOUT PIX & ANEXO OBRIGATÓRIO    -->
+    <!-- ========================================================================= -->
+    <div id="modal-bloqueio-suspensao" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[99999] flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-5 sm:p-6 text-center border-2 border-rose-500/80 shadow-2xl space-y-4 bg-slate-950 rounded-2xl relative">
+            
+            <div class="w-14 h-14 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center text-2xl mx-auto shadow-inner animate-pulse">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="space-y-1">
+                <h3 class="text-base font-black text-white uppercase tracking-wider">Acesso Temporariamente Suspenso</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Identificamos pendências na assinatura da sua imobiliária. Para restabelecer o acesso, liquide sua fatura via PIX e envie o comprovante.
+                </p>
+            </div>
+
+            <!-- DETALHAMENTO DA DÍVIDA -->
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs grid grid-cols-2 sm:grid-cols-4 gap-2 text-left">
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Imobiliária:</span>
+                    <strong id="modal-bloq-imob-nome" class="text-white text-xs truncate block">---</strong>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Vencimento:</span>
+                    <strong id="modal-bloq-vencimento" class="text-rose-400 font-mono text-xs block">--/--/----</strong>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Atraso:</span>
+                    <strong id="modal-bloq-atraso" class="text-amber-400 font-mono text-xs block">0 dias</strong>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Valor da Fatura:</span>
+                    <strong id="modal-bloq-valor" class="text-emerald-400 font-mono text-xs block">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <!-- GAVETA DA CHAVE PIX OFICIAL -->
+            <div class="bg-emerald-950/20 p-3 rounded-xl border border-emerald-500/40 space-y-1.5 text-left text-xs">
+                <span class="text-[10px] uppercase font-black tracking-wider text-emerald-400 block flex items-center gap-1.5">
+                    <i class="fa-solid fa-qrcode text-emerald-400"></i> Chave PIX Oficial para Pagamento:
+                </span>
+                <div class="flex gap-2">
+                    <input type="text" id="modal-bloq-chave-pix" readonly 
+                           class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-emerald-300 font-mono text-xs outline-none select-all font-bold">
+                    <button type="button" id="btn-copiar-pix-modal" onclick="copiarChavePixModal()" 
+                            class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copiar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ANEXO OBRIGATÓRIO DO COMPROVANTE -->
+            <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 text-xs">
+                <label class="block font-bold text-slate-200 text-[11px] flex items-center gap-1.5">
+                    <i class="fa-solid fa-paperclip text-cyan-400"></i>
+                    <span>Anexe o Comprovante do PIX (Obrigatório para solicitar liberação):</span>
+                </label>
+                <input type="file" id="input-comprovante-bloqueio" accept=".pdf,image/*" onchange="aoSelecionarComprovanteBloqueio(event)"
+                       class="w-full bg-slate-950 border border-slate-700 rounded-xl p-1.5 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer">
+                <p id="aviso-anexo-obrigatorio" class="text-[10px] text-amber-400 font-medium">
+                    ⚠️ O botão do WhatsApp será liberado assim que você selecionar o comprovante.
+                </p>
+            </div>
+
+            <!-- BOTÕES DE AÇÃO -->
+            <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                <button type="button" id="btn-enviar-comprovante-bloqueio" disabled onclick="processarEnvioComprovantePix()"
+                        class="w-full sm:flex-1 bg-emerald-600 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition opacity-40 cursor-not-allowed">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Enviar Comprovante no WhatsApp</span>
+                </button>
+
+                <button type="button" onclick="redirecionarParaLogin()" 
+                        class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                    Sair para o Login
+                </button>
+            </div>
+
         </div>
     </div>
 </body>
