@@ -1648,7 +1648,7 @@
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'dono').toUpperCase();
   document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug || ''}`;
 
-  await atualizarPainelAssinatura(imob);
+                await atualizarPainelAssinatura(imob);
                 popularSeletorMeses();
                 configurarPwaGestor(imob);
 
@@ -1656,66 +1656,10 @@
                 await carregarDashboardFinanceiro();
                 carregarAgendaMes();
 
-                // INICIA A SENTINELA EM SEGUNDO PLANO (HEARTBEAT DE 15 SEGUNDOS)
-                iniciarSentinelaBloqueio(imob.id);
-
             } catch (err) {
                 console.error(err);
                 exibirToast('erro', err.message || 'Erro ao carregar dados operacionais.');
             }
-        }
-
-        // =========================================================================
-        // GUARDIÃO DE SESSÃO: EXPULSÃO E SENTINELA EM TEMPO REAL
-        // =========================================================================
-        async function expulsarUsuarioBloqueado(mensagemAlerta) {
-            if (isMasterSuporte) return;
-            alert(mensagemAlerta || 'Acesso suspenso: Sua conta foi temporariamente bloqueada pela administração do sistema.');
-            try {
-                await supabaseClient.auth.signOut();
-            } catch (e) {}
-            sessionStorage.clear();
-            localStorage.clear();
-            window.location.href = 'login.html';
-        }
-
-        function iniciarSentinelaBloqueio(imobiliariaId) {
-            if (isMasterSuporte || !imobiliariaId) return;
-
-            // Checa silenciosamente a cada 15 segundos se o status virou "blocked" no Master
-            setInterval(async () => {
-                try {
-                    const { data: imobStatus, error } = await supabaseClient
-                        .from('imobiliarias')
-                        .select('status, data_vencimento')
-                        .eq('id', imobiliariaId)
-                        .maybeSingle();
-
-                    if (!error && imobStatus) {
-                        // 1. Bloqueio manual direto pelo Master
-                        if (imobStatus.status === 'blocked') {
-                            await expulsarUsuarioBloqueado('Acesso Interrompido: Sua imobiliária foi bloqueada pelo Administrador do sistema.');
-                            return;
-                        }
-
-                        // 2. Bloqueio automático por carência máxima estourada (ex: > 8 dias)
-                        if (imobStatus.data_vencimento) {
-                            const hoje = new Date();
-                            hoje.setHours(0, 0, 0, 0);
-                            const [anoV, mesV, diaV] = imobStatus.data_vencimento.split('-').map(Number);
-                            const dtVenc = new Date(anoV, mesV - 1, diaV);
-                            const diasAtraso = Math.floor((hoje.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
-
-                            // 8 dias pós-vencimento configurado no Master
-                            if (diasAtraso > 8) {
-                                await expulsarUsuarioBloqueado('Acesso expirado: O período máximo de carência pós-vencimento foi esgotado.');
-                            }
-                        }
-                    }
-                } catch (e) {
-                    console.warn('[SENTINELA] Checagem de segurança ativa:', e);
-                }
-            }, 15000); // 15 segundos
         }
 
         function popularSeletorMeses() {
@@ -1809,13 +1753,7 @@ async function atualizarPainelAssinatura(imob) {
                 document.getElementById('faixa-modo-leitura').classList.add('hidden');
             }
 
-       const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
-
-            // SE ESTIVER BLOQUEADA E NÃO FOR O ADMINISTRADOR MASTER, EXPULSA NA HORA
-            if ((imob.status === 'blocked' || ultrapassouBloqueio) && !isMasterSuporte) {
-                await expulsarUsuarioBloqueado('Acesso suspenso: A assinatura da sua imobiliária possui pendências financeiras graves. Entre em contato com a administração.');
-                return;
-            }
+            const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
 
             if (imob.status === 'blocked' || ultrapassouBloqueio) {
                 cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/30`;
