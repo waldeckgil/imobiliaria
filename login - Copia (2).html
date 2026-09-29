@@ -329,16 +329,16 @@
                     diasAtraso = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                 }
 
-  const ultrapassouLeitura = (diasAtraso > diasCarenciaLeitura);
+                const ultrapassouLeitura = (diasAtraso > diasCarenciaLeitura);
                 const ultrapassouBloqueio = (diasAtraso > diasBloqueioTotal);
                 const estaBloqueadoTotal = (imob.status === 'blocked' || ultrapassouBloqueio);
                 const estaEmModoLeitura = (imob.status === 'read_only' || (ultrapassouLeitura && !estaBloqueadoTotal));
 
-                // 1. Bloqueio Total: Libera a entrada para direcionar ao Terminal de Autoatendimento no Dashboard
+                // 1. Bloqueio Total (Sem acesso)
                 if (estaBloqueadoTotal) {
-                    sessionStorage.setItem('sgi_bloqueado_total', 'true');
-                    window.location.href = 'dashboard.html';
-                    return;
+                    await supabaseClient.auth.signOut();
+                    sessionStorage.clear();
+                    throw new Error('Acesso suspenso: a assinatura da imobiliária ultrapassou o prazo limite de carência.');
                 }
 
                 // 2. Modo Leitura (Tolerância esgotada)
@@ -347,13 +347,13 @@
                     avisoLeitura.classList.remove('hidden');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
-                    }, 1200);
+                    }, 1500);
                     return;
                 }
 
+                
                 // 3. Em Dia ou Em Carência Ativa (Acesso Pleno Liberado)
                 sessionStorage.removeItem('sgi_modo_leitura');
-                sessionStorage.removeItem('sgi_bloqueado_total');
                 window.location.href = 'dashboard.html';
 
             } catch (err) {
