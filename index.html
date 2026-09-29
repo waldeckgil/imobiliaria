@@ -1657,8 +1657,7 @@
                         <i class="fa-solid fa-camera"></i> <span id="txt-contador-${imovel.id}">1/${totalFotos}</span>
                     </div>
                 ` : '';
-
-                const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia ou investimento.';
+const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia ou investimento.';
                 const ehDescricaoLonga = textoDescricao.trim().length > 110;
                 const botaoExpandirDesc = ehDescricaoLonga ? `
                     <button type="button" id="btn-toggle-desc-${imovel.id}" onclick="alternarDescricaoCard('${imovel.id}')" 
@@ -1666,6 +1665,14 @@
                         <span>Ver mais</span> <i class="fa-solid fa-chevron-down text-[9px]"></i>
                     </button>
                 ` : '';
+
+                // CONTROLE DO BOTÃO WHATSAPP DO CARD: OCULTA SE FOR SOMENTE LEITURA
+                const emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
+                const botaoZapCardHtml = emLeituraCard ? '' : `
+                    <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                    </a>
+                `;
 
                 const card = `
                 <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden hover:shadow-md hover:border-slate-300 transition duration-200" id="card-${imovel.codigo_ref}">
@@ -1717,18 +1724,10 @@
                                     ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
                                 </div>
 
- const emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
-                                const botaoZapCardHtml = emLeituraCard ? '' : `
-                                    <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
-                                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
-                                    </a>
-                                `;
-
-                                return `
                                 <div class="flex items-center gap-2 flex-wrap">
                                     ${botaoVideoAcao}
                                     <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
-                                            class="btn-azul-mensagem text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                                            class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
                                         <i class="fa-regular fa-envelope"></i> Mensagem
                                     </button>
                                     ${botaoZapCardHtml}
@@ -1737,7 +1736,6 @@
                         </div>
                     </div>
                 </div>`;
-
                 container.innerHTML += card;
             });
         }
