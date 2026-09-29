@@ -6756,19 +6756,52 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                     <p class="font-bold">Gerando QR Code PIX dinâmico do Mercado Pago...</p>
                 </div>
 
-                <div id="mp-pix-exibicao" class="hidden space-y-3">
-                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-emerald-500/50 flex flex-col items-center justify-center space-y-2">
-                        <img id="mp-qrcode-img" src="" alt="QR Code Pix" class="w-44 h-44 rounded-xl bg-white p-2 shadow-lg">
-                        <span class="text-[10px] text-emerald-300 font-mono font-bold flex items-center gap-1 animate-pulse">
-                            <i class="fa-solid fa-rotate text-[9px]"></i> Aguardando confirmação do banco...
+ <div id="mp-pix-exibicao" class="hidden space-y-3">
+                    <!-- CARD OFICIAL MERCADO PAGO COM QR CODE -->
+                    <div class="bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 p-4 rounded-2xl border-2 border-sky-500/50 shadow-2xl flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
+                        
+                        <!-- CHANCELA INSTITUCIONAL MERCADO PAGO -->
+                        <div class="w-full flex items-center justify-between border-b border-slate-800/90 pb-2.5 px-1">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                                    <rect width="24" height="24" rx="6" fill="#009ee3"/>
+                                    <path d="M12.8 7.2c-.8-.5-1.9-.3-2.4.5L7.9 11.8c-.4.7-.3 1.5.2 2 .5.5 1.3.6 2 .2l2.5-1.6 1.4 1.4c.5.5 1.3.5 1.8 0 .5-.5.5-1.3 0-1.8l-1.4-1.4 1.2-1.9c.5-.7.3-1.6-.3-2.1l-2.5-.4z" fill="#ffffff"/>
+                                    <path d="M9.8 14.5l-1.2.8c-.5.3-.7 1-.3 1.5.3.5 1 .7 1.5.3l1.2-.8-1.2-1.8z" fill="#ffffff"/>
+                                </svg>
+                                <div class="text-left">
+                                    <span class="text-xs font-black tracking-wider text-white block uppercase flex items-center gap-1.5">
+                                        <span>Mercado Pago</span>
+                                        <i class="fa-solid fa-shield-halved text-sky-400 text-[10px]"></i>
+                                    </span>
+                                    <span class="text-[9px] text-sky-300 font-medium block">Ambiente Criptografado & Homologado</span>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-mono font-black uppercase bg-sky-950 text-sky-300 border border-sky-800">
+                                PIX OFICIAL
+                            </span>
+                        </div>
+
+                        <!-- MOLDURA DO QR CODE COM CONTRASTE PROFISSIONAL -->
+                        <div class="bg-white p-2.5 rounded-2xl shadow-xl shadow-sky-950/40 border-2 border-slate-200">
+                            <img id="mp-qrcode-img" src="" alt="QR Code Pix Oficial Mercado Pago" class="w-44 h-44 object-contain">
+                        </div>
+
+                        <!-- STATUS DINÂMICO DE CONFIRMAÇÃO -->
+                        <span class="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1.5 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-800/80 shadow-sm animate-pulse">
+                            <i class="fa-solid fa-rotate text-[9px]"></i>
+                            <span>Aguardando confirmação bancária em tempo real...</span>
                         </span>
                     </div>
 
+                    <!-- GAVETA DO CÓDIGO COPIA E COLA -->
                     <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-left space-y-1.5">
-                        <label class="block font-bold text-slate-300 text-[10px] uppercase">Código PIX Copia e Cola:</label>
+                        <label class="block font-bold text-slate-300 text-[10px] uppercase flex items-center justify-between">
+                            <span>Código PIX Copia e Cola:</span>
+                            <span class="text-[9px] text-sky-400 font-mono font-normal">Pague pelo app de qualquer banco</span>
+                        </label>
                         <div class="flex gap-2">
                             <input type="text" id="mp-pix-copia-cola" readonly 
-                                   class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-1.5 px-3 text-cyan-300 font-mono text-xs outline-none select-all">
+                                   class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-1.5 px-3 text-cyan-300 font-mono text-xs outline-none select-all font-bold">
                             <button type="button" onclick="copiarPixCopiaColaMP()" id="btn-copiar-mp-pix"
                                     class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1 whitespace-nowrap">
                                 <i class="fa-solid fa-copy"></i>
@@ -6777,8 +6810,9 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                         </div>
                     </div>
 
-                    <p class="text-[10px] text-slate-400 text-center">
-                        Assim que você pagar no app do seu banco, o sistema reconhece em até <strong>3 segundos</strong> e destrava sua tela sozinho!
+                    <p class="text-[10px] text-slate-400 text-center flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-bolt text-amber-400"></i>
+                        <span>Liquidação instantânea pelo Banco Central: destravamento automático em <strong>3 segundos</strong>.</span>
                     </p>
                 </div>
 
