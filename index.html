@@ -1190,6 +1190,8 @@
 
         async function carregarDadosImobiliaria() {
             try {
+             
+
                 const { data, error } = await supabaseClient
                     .from('imobiliarias')
                     .select(`
@@ -1217,7 +1219,7 @@
                         status
                     `)
                     .eq('slug', slugAtual)
-                    .eq('status', 'active')
+                    .in('status', ['active', 'read_only'])
                     .single();
 
                 if (data && !error) {

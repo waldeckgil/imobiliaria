@@ -1701,18 +1701,9 @@
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
 
- const bloqueioContatoAtivo = (modoLeitura && !isMasterSuporte);
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
-                // MASCARAMENTO VISUAL DO TELEFONE EM MODO LEITURA
-                let telefoneExibicao = l.whatsapp;
-                if (bloqueioContatoAtivo) {
-                    const digitos = zapLimpo.slice(-11);
-                    const ddd = digitos.length >= 10 ? digitos.slice(0, 2) : 'XX';
-                    telefoneExibicao = `<span class="inline-flex items-center gap-1 text-amber-400 font-bold select-none cursor-pointer" onclick="notificar('aviso', 'Contato Bloqueado', 'Renove sua assinatura para desbloquear o telefone e WhatsApp completo deste cliente.', true)" title="Renove para desbloquear"><i class="fa-solid fa-lock text-[10px]"></i> (${ddd}) 9****-****</span>`;
-                }
-
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
                     if (modalidade === 'AVALIACAO') {
@@ -1730,34 +1721,14 @@
                     }
                 }
 
-                // BOTÃO DE CONTATO: SE FOR MODO LEITURA, FICA TRAVADO COM AVISO DE PAGAMENTO
-                let botaoContatoHtml = '';
-                if (bloqueioContatoAtivo) {
-                    botaoContatoHtml = `
-                        <button type="button" onclick="notificar('aviso', 'Recurso Protegido', 'O contato direto no WhatsApp está bloqueado. Renove a assinatura da sua imobiliária para conversar com este comprador.', true)" 
-                                class="bg-slate-900 border border-amber-500/60 text-amber-300 hover:bg-amber-950 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" 
-                                title="Desbloqueie renovando seu plano">
-                            <i class="fa-solid fa-lock text-amber-400"></i>
-                            <span>Desbloquear Zap</span>
-                        </button>
-                    `;
-                } else {
-                    botaoContatoHtml = `
-                        <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
-                            <i class="fa-brands fa-whatsapp text-sm"></i>
-                            <span>Chamar</span>
-                        </a>
-                    `;
-                }
-
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
                     
                     <td class="py-3 px-3">
                         <span class="font-black text-white block cursor-pointer hover:text-cyan-300 transition" onclick="abrirCockpitLead('${l.id}')">${l.nome}</span>
-                        <span class="text-cyan-300 font-mono text-[11px] block">${telefoneExibicao}</span>
-                        ${l.email ? `<span class="text-slate-500 text-[10px] block truncate max-w-[140px]">${bloqueioContatoAtivo ? 'e-mail@***.com (Bloqueado)' : l.email}</span>` : ''}
+                        <span class="text-cyan-300 font-mono text-[11px] block">${l.whatsapp}</span>
+                        ${l.email ? `<span class="text-slate-500 text-[10px] block truncate max-w-[140px]">${l.email}</span>` : ''}
                     </td>
 
                     <td class="py-3 px-3">${imovelBloco}</td>
@@ -1784,7 +1755,11 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-2">
-                            ${botaoContatoHtml}
+                            <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chamar</span>
+                            </a>
+
                             <button onclick="abrirCockpitLead('${l.id}')" 
                                     class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 hover:border-cyan-400 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                                     title="Abrir Ficha e Gerenciar Atendimento">
@@ -1819,18 +1794,10 @@
 
             atualizarStatusTopoCockpit(lead);
 
-  const bloqueioContato = (modoLeitura && !isMasterSuporte);
             document.getElementById('cockpit-cliente-nome').innerText = lead.nome;
+            document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
+            document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
 
-            if (bloqueioContato) {
-                const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '').slice(-11);
-                const ddd = zapLimpo.length >= 10 ? zapLimpo.slice(0, 2) : 'XX';
-                document.getElementById('cockpit-cliente-whatsapp').innerHTML = `<span class="text-amber-400 font-bold select-none"><i class="fa-solid fa-lock text-[10px] mr-1"></i> (${ddd}) 9****-**** (Bloqueado)</span>`;
-                document.getElementById('cockpit-cliente-email').innerText = 'E-mail oculto em Modo Somente Leitura';
-            } else {
-                document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
-                document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
-            }
             const cardImovel = document.getElementById('cockpit-imovel-card');
             const { modalidade, valorExibicao } = extrairContextoLead(lead);
 
@@ -2437,11 +2404,8 @@
                 btn.disabled = false;
             }
         }
-function enviarPropostaWhatsAppCockpit() {
-            if (modoLeitura && !isMasterSuporte) {
-                notificar('aviso', 'Recurso Protegido', 'O envio de propostas no WhatsApp está bloqueado. Renove seu plano para liberar este cliente.', true);
-                return;
-            }
+
+        function dispararConfirmacaoWhatsAppCockpit(tipo = 'confirmacao') {
             if (!leadAtivoCockpit) return;
 
             const dataValor = document.getElementById('cockpit-visita-data').value;
@@ -3091,18 +3055,15 @@ function enviarPropostaWhatsAppCockpit() {
             document.getElementById('modal-novo-lead-manual').classList.add('hidden');
         }
 
- async function salvarLeadManual(event) {
-            event.preventDefault();
+  async function gravarNotaCockpit() {
             if (modoLeitura && !isMasterSuporte) {
-                notificar('aviso', 'Modo Somente Leitura', 'Cadastros desabilitados devido a assinatura pendente.', true);
+                notificar('aviso', 'Modo Somente Leitura', 'Inclusão de notas desabilitada em modo leitura.', true);
                 return;
             }
-
-            const btn = document.getElementById('btn-salvar-lead-manual');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
-            }
+            if (!leadAtivoCockpit) return;
+            const input = document.getElementById('cockpit-nova-nota-input');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
 
             const nome = document.getElementById('manual-lead-nome').value.trim();
             const zap = document.getElementById('manual-lead-whatsapp').value.trim();
@@ -3142,10 +3103,8 @@ function enviarPropostaWhatsAppCockpit() {
                 console.error(err);
                 notificar('erro', 'Falha ao Cadastrar', err.message);
             } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Cadastrar Atendimento</span>';
-                }
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Cadastrar Atendimento</span>';
             }
         }
 
