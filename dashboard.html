@@ -1697,7 +1697,7 @@
                 diasAtraso = Math.max(0, Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24)));
             }
 
-            document.getElementById('modal-bloq-imob-nome').innerText = nomeImob;
+  document.getElementById('modal-bloq-imob-nome').innerText = nomeImob;
             document.getElementById('modal-bloq-vencimento').innerText = dataVenc;
             document.getElementById('modal-bloq-atraso').innerText = `${diasAtraso} dia(s)`;
             document.getElementById('modal-bloq-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -1705,6 +1705,55 @@
             // CHAVE PIX CONFIGURADA NO MASTER
             const chavePix = window.chavePixMasterGlobal || 'waldeckgil@gmail.com';
             document.getElementById('modal-bloq-chave-pix').value = chavePix;
+
+            // VERIFICA SE JÁ EXISTE UM COMPROVANTE ENVIADO AGUARDANDO ANÁLISE
+            const blocoPendente = document.getElementById('bloco-pagamento-pendente');
+            const blocoAnalise = document.getElementById('bloco-pagamento-em-analise');
+
+            try {
+                const { data: ticketAberto } = await supabaseClient
+                    .from('support_tickets')
+                    .select('*')
+                    .eq('imobiliaria_id', dadosImobiliaria?.id)
+                    .eq('categoria', 'Financeiro')
+                    .in('status', ['aberto', 'em_analise'])
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+
+                if (ticketAberto) {
+                    // SE JÁ ENVIOU: MOSTRA A TELA DE "PAGAMENTO EM ANÁLISE"
+                    if (blocoPendente) blocoPendente.classList.add('hidden');
+                    if (blocoAnalise) {
+                        blocoAnalise.classList.remove('hidden');
+                        const dataEnvioFmt = new Date(ticketAberto.created_at).toLocaleString('pt-BR');
+                        document.getElementById('analise-data-envio').innerText = dataEnvioFmt;
+                        
+                        // Extrai o link do anexo da mensagem do ticket se existir
+                        const matchLink = (ticketAberto.mensagem || '').match(/https?:\/\/[^\s]+/);
+                        const btnVerAnexo = document.getElementById('btn-ver-comprovante-analise');
+                        if (matchLink && btnVerAnexo) {
+                            btnVerAnexo.href = matchLink[0];
+                            btnVerAnexo.classList.remove('hidden');
+                        }
+
+                        // WhatsApp direcionado cobrando liberação
+                        const btnZapAnalise = document.getElementById('btn-zap-aguardando-analise');
+                        if (btnZapAnalise) {
+                            const msgAnalise = `Olá Administrador! Sou da ${nomeImob}. Já enviamos o comprovante do PIX pelo sistema em ${dataEnvioFmt} e estamos aguardando a validação para restabelecer nosso acesso. Poderia verificar por favor?`;
+                            btnZapAnalise.href = `https://wa.me/5521964120231?text=${encodeURIComponent(msgAnalise)}`;
+                        }
+                    }
+                } else {
+                    // SE NÃO ENVIOU AINDA: MOSTRA O CHECKOUT PIX NORMAL
+                    if (blocoPendente) blocoPendente.classList.remove('hidden');
+                    if (blocoAnalise) blocoAnalise.classList.add('hidden');
+                }
+            } catch (errCheck) {
+                console.warn('[CHECK TICKET PENDENTE]', errCheck);
+                if (blocoPendente) blocoPendente.classList.remove('hidden');
+                if (blocoAnalise) blocoAnalise.classList.add('hidden');
+            }
 
             modal.classList.remove('hidden');
         }
@@ -1774,7 +1823,7 @@
                     console.warn('[STORAGE] Fallback upload:', errUpload);
                 }
 
-                // 2. Grava o lançamento no banco de dados na tabela imobiliarias_mensalidades
+    // 2. Grava o lançamento no banco de dados na tabela imobiliarias_mensalidades
                 const valorPlano = Number(dadosImobiliaria?.plano_valor || 149);
                 const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
                 const dataAtual = new Date();
@@ -1786,6 +1835,7 @@
                     obsFinal += ` | [COMPROVANTE]: ${comprovanteUrlFinal}`;
                 }
 
+                // 2.1 INSERE NA TABELA DE MENSALIDADES (HISTÓRICO FINANCEIRO DO MASTER)
                 const { error: errInsert } = await supabaseClient
                     .from('imobiliarias_mensalidades')
                     .insert([{
@@ -1802,12 +1852,31 @@
                     console.error('[ERRO INSERT MENSALIDADE]:', errInsert);
                 }
 
-                // 3. Prepara mensagem no WhatsApp com link do comprovante gerado
+                // 2.2 GERA AUTOMATICAMENTE UM CHAMADO (TICKET) EM ABERTO NO CONSOLE MASTER
                 const nomeImob = dadosImobiliaria?.nome_fantasia || 'Nossa Imobiliária';
                 const dataVenc = document.getElementById('modal-bloq-vencimento').innerText;
                 const valorFmt = document.getElementById('modal-bloq-valor').innerText;
                 const diasAtraso = document.getElementById('modal-bloq-atraso').innerText;
 
+                const mensagemTicket = `A imobiliária efetuou o pagamento do plano via PIX no valor de ${valorFmt} (Vencimento: ${dataVenc}, Atraso: ${diasAtraso}).\n\n` +
+                                       `Comprovante anexado: ${comprovanteUrlFinal || 'Enviado via WhatsApp'}\n\n` +
+                                       `Solicitação: Validação do comprovante e desbloqueio do painel.`;
+
+                await supabaseClient
+                    .from('support_tickets')
+                    .insert([{
+                        imobiliaria_id: imobId,
+                        usuario_id: dadosUsuario?.id || null,
+                        gestor_nome: dadosUsuario?.nome_completo || nomeImob,
+                        gestor_email: dadosUsuario?.email || dadosImobiliaria?.email_admin || '',
+                        gestor_whatsapp: dadosUsuario?.whatsapp || dadosImobiliaria?.whatsapp_contato || '',
+                        categoria: 'Financeiro',
+                        assunto: `[DESBLOQUEIO PIX] ${nomeImob} - ${valorFmt}`,
+                        mensagem: mensagemTicket,
+                        status: 'aberto'
+                    }]);
+
+                // 3. Prepara mensagem no WhatsApp com link do comprovante gerado
                 let textoZap = `Olá Administrador! Acabei de realizar o pagamento PIX da assinatura da *${nomeImob}*.\n\n` +
                                `💰 *Valor Pago:* ${valorFmt}\n` +
                                `📅 *Vencimento:* ${dataVenc} (${diasAtraso} de atraso)\n` +
@@ -1823,7 +1892,7 @@
 
                 window.open(`https://wa.me/5521964120231?text=${encodeURIComponent(textoZap)}`, '_blank');
 
-                alert('Comprovante registrado com sucesso no sistema! Redirecionando para a tela de login.');
+                alert('Comprovante registrado com sucesso! O Administrador recebeu seu chamado no sistema e no WhatsApp.');
                 await redirecionarParaLogin();
 
             } catch (err) {
@@ -6526,47 +6595,93 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 </div>
             </div>
 
-            <!-- GAVETA DA CHAVE PIX OFICIAL -->
-            <div class="bg-emerald-950/20 p-3 rounded-xl border border-emerald-500/40 space-y-1.5 text-left text-xs">
-                <span class="text-[10px] uppercase font-black tracking-wider text-emerald-400 block flex items-center gap-1.5">
-                    <i class="fa-solid fa-qrcode text-emerald-400"></i> Chave PIX Oficial para Pagamento:
-                </span>
-                <div class="flex gap-2">
-                    <input type="text" id="modal-bloq-chave-pix" readonly 
-                           class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-emerald-300 font-mono text-xs outline-none select-all font-bold">
-                    <button type="button" id="btn-copiar-pix-modal" onclick="copiarChavePixModal()" 
-                            class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1.5 whitespace-nowrap">
-                        <i class="fa-solid fa-copy"></i>
-                        <span>Copiar</span>
+ <!-- ESTADO 1: QUANDO AINDA NÃO ENVIOU COMPROVANTE (CHECKOUT PIX) -->
+            <div id="bloco-pagamento-pendente" class="space-y-4">
+                <!-- GAVETA DA CHAVE PIX OFICIAL -->
+                <div class="bg-emerald-950/20 p-3 rounded-xl border border-emerald-500/40 space-y-1.5 text-left text-xs">
+                    <span class="text-[10px] uppercase font-black tracking-wider text-emerald-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-qrcode text-emerald-400"></i> Chave PIX Oficial para Pagamento:
+                    </span>
+                    <div class="flex gap-2">
+                        <input type="text" id="modal-bloq-chave-pix" readonly 
+                               class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-emerald-300 font-mono text-xs outline-none select-all font-bold">
+                        <button type="button" id="btn-copiar-pix-modal" onclick="copiarChavePixModal()" 
+                                class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1.5 whitespace-nowrap">
+                            <i class="fa-solid fa-copy"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ANEXO OBRIGATÓRIO DO COMPROVANTE -->
+                <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 text-xs">
+                    <label class="block font-bold text-slate-200 text-[11px] flex items-center gap-1.5">
+                        <i class="fa-solid fa-paperclip text-cyan-400"></i>
+                        <span>Anexe o Comprovante do PIX (Obrigatório para solicitar liberação):</span>
+                    </label>
+                    <input type="file" id="input-comprovante-bloqueio" accept=".pdf,image/*" onchange="aoSelecionarComprovanteBloqueio(event)"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl p-1.5 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer">
+                    <p id="aviso-anexo-obrigatorio" class="text-[10px] text-amber-400 font-medium">
+                        ⚠️ O botão do WhatsApp será liberado assim que você selecionar o comprovante.
+                    </p>
+                </div>
+
+                <!-- BOTÕES DE AÇÃO DO CHECKOUT -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                    <button type="button" id="btn-enviar-comprovante-bloqueio" disabled onclick="processarEnvioComprovantePix()"
+                            class="w-full sm:flex-1 bg-emerald-600 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition opacity-40 cursor-not-allowed">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Enviar Comprovante no WhatsApp</span>
+                    </button>
+
+                    <button type="button" onclick="redirecionarParaLogin()" 
+                            class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                        Sair para o Login
                     </button>
                 </div>
             </div>
 
-            <!-- ANEXO OBRIGATÓRIO DO COMPROVANTE -->
-            <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 text-xs">
-                <label class="block font-bold text-slate-200 text-[11px] flex items-center gap-1.5">
-                    <i class="fa-solid fa-paperclip text-cyan-400"></i>
-                    <span>Anexe o Comprovante do PIX (Obrigatório para solicitar liberação):</span>
-                </label>
-                <input type="file" id="input-comprovante-bloqueio" accept=".pdf,image/*" onchange="aoSelecionarComprovanteBloqueio(event)"
-                       class="w-full bg-slate-950 border border-slate-700 rounded-xl p-1.5 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer">
-                <p id="aviso-anexo-obrigatorio" class="text-[10px] text-amber-400 font-medium">
-                    ⚠️ O botão do WhatsApp será liberado assim que você selecionar o comprovante.
-                </p>
-            </div>
+            <!-- ESTADO 2: QUANDO JÁ ENVIOU COMPROVANTE (EM ANÁLISE / AGUARDANDO LIBERAÇÃO) -->
+            <div id="bloco-pagamento-em-analise" class="hidden space-y-4 pt-1">
+                <div class="bg-amber-950/30 p-4 rounded-xl border border-amber-500/50 space-y-2 text-left text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-amber-400 font-black uppercase text-[10px] flex items-center gap-1.5">
+                            <i class="fa-solid fa-hourglass-half text-amber-400 animate-pulse"></i>
+                            <span>Comprovante Enviado com Sucesso</span>
+                        </span>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+                            EM ANÁLISE
+                        </span>
+                    </div>
 
-            <!-- BOTÕES DE AÇÃO -->
-            <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
-                <button type="button" id="btn-enviar-comprovante-bloqueio" disabled onclick="processarEnvioComprovantePix()"
-                        class="w-full sm:flex-1 bg-emerald-600 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition opacity-40 cursor-not-allowed">
-                    <i class="fa-brands fa-whatsapp text-sm"></i>
-                    <span>Enviar Comprovante no WhatsApp</span>
-                </button>
+                    <p class="text-slate-200 text-xs leading-relaxed">
+                        Seu comprovante foi recebido pelo sistema em <strong id="analise-data-envio" class="text-white font-mono">--/--/----</strong> e já está na fila de atendimento do Administrador.
+                    </p>
 
-                <button type="button" onclick="redirecionarParaLogin()" 
-                        class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
-                    Sair para o Login
-                </button>
+                    <div class="pt-2 flex items-center justify-between border-t border-slate-800 text-[11px]">
+                        <span class="text-slate-400">Status atual:</span>
+                        <strong class="text-cyan-300 font-bold">Aguardando Validação Financeira</strong>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                    <a id="btn-ver-comprovante-analise" href="#" target="_blank"
+                       class="hidden w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800 hover:border-cyan-400 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                        <i class="fa-solid fa-eye text-xs"></i>
+                        <span>Ver Meu Anexo</span>
+                    </a>
+
+                    <a id="btn-zap-aguardando-analise" href="#" target="_blank"
+                       class="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Avisar Administrador</span>
+                    </a>
+
+                    <button type="button" onclick="redirecionarParaLogin()" 
+                            class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                        Sair para o Login
+                    </button>
+                </div>
             </div>
 
         </div>
