@@ -285,7 +285,7 @@
                     throw new Error('Seu acesso foi desativado pela diretoria da imobiliária.');
                 }
 
-                // Auditoria da Assinatura
+  // Auditoria da Assinatura com Tolerância Inteligente
                 const { data: imob, error: imobError } = await supabaseClient
                     .from('imobiliarias')
                     .select('status, data_vencimento')
@@ -296,22 +296,64 @@
                     throw new Error('Imobiliária vinculada não localizada.');
                 }
 
-                const hoje = new Date().toISOString().split('T')[0];
-                const estaVencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                const estaBloqueado = imob.status === 'blocked' || estaVencido;
+                // Busca as réguas de carência configuradas no Master
+                let diasCarenciaLeitura = 10;
+                let diasBloqueioTotal = 10;
+                try {
+                    const { data: cfg } = await supabaseClient
+                        .from('config_sistema')
+                        .select('dias_carencia_leitura, dias_bloqueio_total')
+                        .limit(1)
+                        .maybeSingle();
 
-                if (estaBloqueado) {
+                    if (cfg) {
+                        if (cfg.dias_carencia_leitura !== null && cfg.dias_carencia_leitura !== undefined) {
+                            diasCarenciaLeitura = Number(cfg.dias_carencia_leitura);
+                        }
+                        if (cfg.dias_bloqueio_total !== null && cfg.dias_bloqueio_total !== undefined) {
+                            diasBloqueioTotal = Number(cfg.dias_bloqueio_total);
+                        }
+                    }
+                } catch (e) {
+                    console.warn('[LOGIN] Tolerância padrão ativa:', e);
+                }
+
+                let diasAtraso = 0;
+                if (imob.data_vencimento) {
+                    const hojeBase = new Date();
+                    hojeBase.setHours(0, 0, 0, 0);
+
+                    const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
+                    const dtVenc = new Date(anoV, mesV - 1, diaV);
+                    const diffTime = hojeBase.getTime() - dtVenc.getTime();
+                    diasAtraso = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                }
+
+  const ultrapassouLeitura = (diasAtraso > diasCarenciaLeitura);
+                const ultrapassouBloqueio = (diasAtraso > diasBloqueioTotal);
+                const estaBloqueadoTotal = (imob.status === 'blocked' || ultrapassouBloqueio);
+                const estaEmModoLeitura = (imob.status === 'read_only' || (ultrapassouLeitura && !estaBloqueadoTotal));
+
+                // 1. Bloqueio Total: Libera a entrada para direcionar ao Terminal de Autoatendimento no Dashboard
+                if (estaBloqueadoTotal) {
+                    sessionStorage.setItem('sgi_bloqueado_total', 'true');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                // 2. Modo Leitura (Tolerância esgotada)
+                if (estaEmModoLeitura) {
                     sessionStorage.setItem('sgi_modo_leitura', 'true');
-                    // Aviso visual sem popup
                     avisoLeitura.classList.remove('hidden');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
-                    }, 2000);
+                    }, 1200);
                     return;
-                } else {
-                    sessionStorage.removeItem('sgi_modo_leitura');
                 }
 
+                // 3. Em Dia ou Em Carência Ativa (Acesso Pleno Liberado)
+                sessionStorage.removeItem('sgi_modo_leitura');
+                sessionStorage.removeItem('sgi_bloqueado_total');
                 window.location.href = 'dashboard.html';
 
             } catch (err) {

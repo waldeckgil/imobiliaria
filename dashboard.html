@@ -255,15 +255,18 @@
                     <span id="txt-dias-contagem" class="text-slate-400 text-[11px]">Calculando ciclo...</span>
                 </div>
             </div>
-
-            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+<div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                <button type="button" onclick="abrirModalPagamentoPixInstantaneo()" 
+                        class="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow-md transition cursor-pointer whitespace-nowrap animate-pulse">
+                    <i class="fa-solid fa-bolt text-xs"></i>
+                    <span>Pagar via Pix (Liberação Instantânea)</span>
+                </button>
                 <a id="btn-renovar-zap" href="https://wa.me/5521964120231" target="_blank" 
-                   class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow transition cursor-pointer whitespace-nowrap">
+                   class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-bold px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow transition cursor-pointer whitespace-nowrap">
                     <i class="fa-brands fa-whatsapp text-xs"></i>
-                    <span>Renovar</span>
+                    <span>WhatsApp</span>
                 </a>
             </div>
-        </div>
 
         <!-- FAIXA DE ALERTAS INTELIGENTES: VISITAS DE HOJE E AMANHÃ -->
         <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
@@ -6482,6 +6485,130 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             promptInstalacaoPwaGestor = null;
         }
 
+  // =========================================================================
+        // MOTOR PIX MERCADO PAGO 100% VIA RPC SUPABASE
+        // =========================================================================
+        let intervaloPollingPix = null;
+        let paymentIdAtivoPix = null;
+
+        function alternarAbaBloqueio(aba) {
+            const btnMp = document.getElementById('btn-tab-pix-mp');
+            const btnManual = document.getElementById('btn-tab-pix-manual');
+            const blocoMp = document.getElementById('bloco-pix-mp-conteudo');
+            const blocoManual = document.getElementById('bloco-pagamento-pendente');
+
+            if (aba === 'mp') {
+                btnMp.className = 'flex-1 py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center gap-1.5 shadow transition cursor-pointer';
+                btnManual.className = 'py-2 px-3 rounded-xl bg-slate-900 text-slate-400 hover:text-white border border-slate-800 flex items-center justify-center gap-1.5 transition cursor-pointer';
+                blocoMp.classList.remove('hidden');
+                blocoManual.classList.add('hidden');
+                gerarPixMercadoPagoAutomatico();
+            } else {
+                btnManual.className = 'flex-1 py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center gap-1.5 shadow transition cursor-pointer';
+                btnMp.className = 'py-2 px-3 rounded-xl bg-slate-900 text-slate-400 hover:text-white border border-slate-800 flex items-center justify-center gap-1.5 transition cursor-pointer';
+                blocoManual.classList.remove('hidden');
+                blocoMp.classList.add('hidden');
+                if (intervaloPollingPix) clearInterval(intervaloPollingPix);
+            }
+        }
+
+        async function abrirModalPagamentoPixInstantaneo() {
+            const modal = document.getElementById('modal-bloqueio-suspensao');
+            if (modal) {
+                modal.classList.remove('hidden');
+                alternarAbaBloqueio('mp');
+            }
+        }
+
+        async function gerarPixMercadoPagoAutomatico() {
+            const imobId = dadosImobiliaria?.id;
+            if (!imobId) return;
+
+            const elCarregando = document.getElementById('mp-pix-carregando');
+            const elExibicao = document.getElementById('mp-pix-exibicao');
+            const imgQrCode = document.getElementById('mp-qrcode-img');
+            const inputCopiaCola = document.getElementById('mp-pix-copia-cola');
+
+            elCarregando.classList.remove('hidden');
+            elExibicao.classList.add('hidden');
+
+            try {
+                // Chama a função RPC direta do PostgreSQL
+                const { data, error } = await supabaseClient.rpc('gerar_pix_mercado_pago', {
+                    p_imobiliaria_id: imobId
+                });
+
+                if (error || !data?.sucesso) {
+                    throw new Error(data?.erro || error?.message || 'Falha ao gerar cobrança no banco.');
+                }
+
+                paymentIdAtivoPix = data.payment_id;
+                imgQrCode.src = `data:image/png;base64,${data.qr_code_base64}`;
+                inputCopiaCola.value = data.qr_code_copia_cola;
+
+                elCarregando.classList.add('hidden');
+                elExibicao.classList.remove('hidden');
+
+                // Inicia monitoramento atômico a cada 2.5 segundos
+                iniciarPollingLiberacaoPix(imobId, paymentIdAtivoPix);
+
+            } catch (err) {
+                console.error('[ERRO GERAR PIX RPC]:', err);
+                elCarregando.innerHTML = `
+                    <div class="text-rose-400 space-y-2">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                        <p class="text-xs">${err.message || 'Falha ao emitir PIX.'}</p>
+                        <button type="button" onclick="alternarAbaBloqueio('manual')" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold">
+                            Usar PIX Manual com Comprovante
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function copiarPixCopiaColaMP() {
+            const input = document.getElementById('mp-pix-copia-cola');
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('btn-copiar-mp-pix');
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Copiado!</span>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fa-solid fa-copy"></i><span>Copiar</span>';
+                    }, 2000);
+                }
+            });
+        }
+
+        function iniciarPollingLiberacaoPix(imobId, paymentId) {
+            if (intervaloPollingPix) clearInterval(intervaloPollingPix);
+
+            intervaloPollingPix = setInterval(async () => {
+                try {
+                    // Consulta o Mercado Pago através da RPC do banco
+                    const { data, error } = await supabaseClient.rpc('verificar_e_liberar_pix_mp', {
+                        p_payment_id: String(paymentId),
+                        p_imobiliaria_id: imobId
+                    });
+
+                    if (!error && data?.aprovado) {
+                        clearInterval(intervaloPollingPix);
+                        exibirToast('sucesso', 'Pagamento confirmado! Seu acesso foi liberado na hora.');
+                        const modal = document.getElementById('modal-bloqueio-suspensao');
+                        if (modal) modal.classList.add('hidden');
+                        document.getElementById('faixa-modo-leitura').classList.add('hidden');
+                        setTimeout(() => window.location.reload(), 1500);
+                    }
+                } catch (e) {
+                    console.warn('[POLLING PIX RPC] Verificando...', e);
+                }
+            }, 2500);
+        }
+
+        window.alternarAbaBloqueio = alternarAbaBloqueio;
+        window.abrirModalPagamentoPixInstantaneo = abrirModalPagamentoPixInstantaneo;
+        window.copiarPixCopiaColaMP = copiarPixCopiaColaMP;
+
         window.addEventListener('DOMContentLoaded', () => {
             atualizarRelogioTopo();
             setInterval(atualizarRelogioTopo, 1000);
@@ -6595,8 +6722,61 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 </div>
             </div>
 
- <!-- ESTADO 1: QUANDO AINDA NÃO ENVIOU COMPROVANTE (CHECKOUT PIX) -->
-            <div id="bloco-pagamento-pendente" class="space-y-4">
+ <!-- SELETOR DE ABAS DA DUPLA OPÇÃO -->
+            <div class="flex items-center gap-2 border-b border-slate-800 pb-2 text-xs font-bold">
+                <button type="button" id="btn-tab-pix-mp" onclick="alternarAbaBloqueio('mp')" 
+                        class="flex-1 py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
+                    <i class="fa-solid fa-bolt text-xs"></i>
+                    <span>PIX Automático (Libera em 3s)</span>
+                </button>
+                <button type="button" id="btn-tab-pix-manual" onclick="alternarAbaBloqueio('manual')" 
+                        class="py-2 px-3 rounded-xl bg-slate-900 text-slate-400 hover:text-white border border-slate-800 flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+                    <span>PIX Manual (Comprovante)</span>
+                </button>
+            </div>
+
+            <!-- OPÇÃO 1: MERCADO PAGO AUTOMÁTICO (DESTAQUE RECOMENDADO) -->
+            <div id="bloco-pix-mp-conteudo" class="space-y-3.5">
+                <div id="mp-pix-carregando" class="py-8 text-center text-slate-400 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-2xl mb-2"></i>
+                    <p class="font-bold">Gerando QR Code PIX dinâmico do Mercado Pago...</p>
+                </div>
+
+                <div id="mp-pix-exibicao" class="hidden space-y-3">
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-emerald-500/50 flex flex-col items-center justify-center space-y-2">
+                        <img id="mp-qrcode-img" src="" alt="QR Code Pix" class="w-44 h-44 rounded-xl bg-white p-2 shadow-lg">
+                        <span class="text-[10px] text-emerald-300 font-mono font-bold flex items-center gap-1 animate-pulse">
+                            <i class="fa-solid fa-rotate text-[9px]"></i> Aguardando confirmação do banco...
+                        </span>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-left space-y-1.5">
+                        <label class="block font-bold text-slate-300 text-[10px] uppercase">Código PIX Copia e Cola:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="mp-pix-copia-cola" readonly 
+                                   class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-1.5 px-3 text-cyan-300 font-mono text-xs outline-none select-all">
+                            <button type="button" onclick="copiarPixCopiaColaMP()" id="btn-copiar-mp-pix"
+                                    class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1 whitespace-nowrap">
+                                <i class="fa-solid fa-copy"></i>
+                                <span>Copiar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 text-center">
+                        Assim que você pagar no app do seu banco, o sistema reconhece em até <strong>3 segundos</strong> e destrava sua tela sozinho!
+                    </p>
+                </div>
+
+                <button type="button" onclick="redirecionarParaLogin()" 
+                        class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                    Sair para o Login
+                </button>
+            </div>
+
+            <!-- OPÇÃO 2: MANUAL (FALLBACK EXISTENTE) -->
+            <div id="bloco-pagamento-pendente" class="hidden space-y-4">
                 <!-- GAVETA DA CHAVE PIX OFICIAL -->
                 <div class="bg-emerald-950/20 p-3 rounded-xl border border-emerald-500/40 space-y-1.5 text-left text-xs">
                     <span class="text-[10px] uppercase font-black tracking-wider text-emerald-400 block flex items-center gap-1.5">

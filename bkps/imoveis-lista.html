@@ -115,7 +115,7 @@
                 <a href="dashboard.html" 
                    class="bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-bold px-3.5 py-2 rounded-xl border border-slate-700 hover:border-cyan-400 flex items-center gap-2 transition cursor-pointer shadow-sm">
                     <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
-                    <span>Dashboard 360</span>
+                    <span>Menu</span>
                 </a>
 
                 <a id="btn-ver-vitrine" href="index.html" target="_blank" 
@@ -1006,14 +1006,50 @@
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug || ''}`;
 
-                const hoje = new Date().toISOString().split('T')[0];
-                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                modoLeitura = (imob.status === 'blocked' || vencido);
+    // Consulta tolerância real de carência no banco
+                let diasToleranciaLeitura = 10;
+                try {
+                    const { data: cfg } = await supabaseClient
+                        .from('config_sistema')
+                        .select('dias_carencia_leitura')
+                        .limit(1)
+                        .maybeSingle();
+
+                    if (cfg && cfg.dias_carencia_leitura !== null && cfg.dias_carencia_leitura !== undefined) {
+                        diasToleranciaLeitura = Number(cfg.dias_carencia_leitura);
+                    }
+                } catch (e) {
+                    console.warn('[IMOVEIS] Usando tolerância padrão:', e);
+                }
+
+                let diasAtraso = 0;
+                if (imob.data_vencimento) {
+                    const hojeBase = new Date();
+                    hojeBase.setHours(0, 0, 0, 0);
+
+                    const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
+                    const dtVenc = new Date(anoV, mesV - 1, diaV);
+                    const diffTime = hojeBase.getTime() - dtVenc.getTime();
+                    diasAtraso = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                }
+
+                const ultrapassouTolerancia = (diasAtraso > diasToleranciaLeitura);
+                modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || ultrapassouTolerancia);
 
                 if (modoLeitura) {
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
                     const btnNovo = document.getElementById('btn-novo-imovel');
-                    if (btnNovo) btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                    if (btnNovo) {
+                        btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                        btnNovo.setAttribute('title', 'Cadastro desabilitado em Modo Somente Leitura');
+                    }
+                } else {
+                    document.getElementById('faixa-modo-leitura').classList.add('hidden');
+                    const btnNovo = document.getElementById('btn-novo-imovel');
+                    if (btnNovo) {
+                        btnNovo.classList.remove('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
+                        btnNovo.removeAttribute('title');
+                    }
                 }
 
                 await carregarDadosAuxiliares();

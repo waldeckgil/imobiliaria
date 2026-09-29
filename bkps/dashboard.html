@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard 360 - SGI Gestão Imobiliária</title>
+  
+<title>Menu - SGI Gestão Imobiliária</title>
+    
+    <!-- METATAGS PWA MOBILE DO GESTOR -->
+    <meta name="theme-color" content="#060913" id="meta-theme-color-gestor">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SGI Gestão" id="meta-apple-title-gestor">
+    <link rel="apple-touch-icon" id="link-apple-icon-gestor" href="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=192&h=192&q=80">
+    <link rel="manifest" id="link-manifest-gestor">
+
     <!-- Tailwind CSS CDN -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -38,10 +50,13 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8 !important;
         }
-
+/* BLINDAGEM MOBILE: Impede a tela do celular de rolar para as laterais */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden !important;
+        }
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
-        .tab-btn-ativo { background-color: #38bdf8; color: #020617; font-weight: 800; }
         
         @keyframes toastEntrada {
             from { opacity: 0; transform: translateY(-20px) scale(0.95); }
@@ -113,8 +128,14 @@
                     </div>
                 </div>
             </div>
-     
-            <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
+     <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center text-xs">
+                <!-- BOTÃO INTELIGENTE PWA: INSTALAR APP DO GESTOR -->
+                <button type="button" id="btn-instalar-app-gestor" onclick="dispararInstalacaoAppGestor()" 
+                        class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+                    <i class="fa-solid fa-download text-xs"></i>
+                    <span>Instalar Painel</span>
+                </button>
+
                 <!-- BOTÃO INTELIGENTE: COMPARTILHAR VITRINE / COPIAR LINK / WHATSAPP -->
                 <button type="button" onclick="abrirModalCompartilharVitrine()" 
                         class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
@@ -137,12 +158,47 @@
     </header>
 
     <!-- MENU DE MÓDULOS -->
-    <nav class="bg-slate-950/80 border-b border-slate-800/80 px-4 sm:px-8 py-2.5 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 sm:gap-3 overflow-x-auto text-xs sm:text-sm py-1">
-            
+   <!-- MENU DE MÓDULOS (RESPONSIVO COM CARA DE APP NO CELULAR) -->
+    <nav class="bg-slate-950/90 border-b border-slate-800/80 px-2 sm:px-8 py-2 backdrop-blur-md sticky top-[65px] z-20">
+        
+        <!-- VISÃO CELULAR / SMARTPHONE (GRADE COMPACTA 3x2: ZERO ROLAGEM LATERAL) -->
+        <div class="grid grid-cols-3 gap-1.5 md:hidden text-[10px]">
+            <a href="dashboard.html" class="p-2 rounded-xl font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 flex flex-col items-center justify-center gap-1 shadow-sm text-center">
+                <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
+                <span>Menu</span>
+            </a>
+
+            <a href="imoveis-lista.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-house-chimney text-slate-400 text-xs"></i>
+                <span>Catálogo</span>
+            </a>
+
+            <a href="leads.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-comments text-slate-400 text-xs"></i>
+                <span>Atendimentos</span>
+            </a>
+
+            <a href="equipe.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-users text-slate-400 text-xs"></i>
+                <span>Equipe</span>
+            </a>
+
+            <a href="configurar-imobiliaria.html" class="p-2 rounded-xl font-semibold bg-slate-900 text-slate-300 border border-slate-800 hover:bg-slate-800 flex flex-col items-center justify-center gap-1 text-center">
+                <i class="fa-solid fa-gear text-slate-400 text-xs"></i>
+                <span>Ajustes</span>
+            </a>
+
+            <button type="button" onclick="abrirModalCentralAjuda()" class="p-2 rounded-xl font-semibold bg-indigo-950/50 text-indigo-300 border border-indigo-800/60 flex flex-col items-center justify-center gap-1 text-center cursor-pointer">
+                <i class="fa-solid fa-headset text-indigo-400 text-xs"></i>
+                <span>Ajuda</span>
+            </button>
+        </div>
+
+        <!-- VISÃO COMPUTADOR / DESKTOP (MANTÉM EXATAMENTE A BARRA ORIGINAL) -->
+        <div class="hidden md:flex max-w-7xl mx-auto items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm py-1">
             <a href="dashboard.html" class="px-4 py-2 rounded-xl font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-950/50 whitespace-nowrap flex items-center gap-2 transition">
                 <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
-                <span>Dashboard 360</span>
+                <span>Menu</span>
             </a>
 
             <a href="imoveis-lista.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
@@ -159,7 +215,6 @@
                 <i class="fa-solid fa-users text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
                 <span>Equipe & Permissões</span>
             </a>
->
 
             <a href="configurar-imobiliaria.html" class="group px-4 py-2 rounded-xl font-medium bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 hover:bg-slate-800/80 hover:text-white whitespace-nowrap flex items-center gap-2 transition">
                 <i class="fa-solid fa-gear text-slate-400 text-xs group-hover:text-cyan-400 transition"></i>
@@ -170,7 +225,6 @@
                 <i class="fa-solid fa-headset text-indigo-400 text-xs group-hover:scale-110 transition"></i>
                 <span>Central de Ajuda & Suporte</span>
             </button>
-
         </div>
     </nav>
 <!-- ========================================================================= -->
@@ -398,7 +452,7 @@
                         <button type="button" onclick="alternarVisaoFinanceira(false)" 
                                 class="bg-slate-900 hover:bg-slate-800 text-cyan-300 hover:text-white border border-slate-700 hover:border-cyan-400 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-2 transition cursor-pointer whitespace-nowrap shadow-sm">
                             <i class="fa-solid fa-arrow-left text-xs"></i>
-                            <span>Voltar ao Dashboard 360</span>
+                            <span>Voltar ao Menu</span>
                         </button>
                     </div>
                 </div>
@@ -1547,8 +1601,8 @@
                 document.getElementById('topbar-cargo-badge').innerText = 'MASTER';
                 document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
 
-                document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug || ''}`;
-                atualizarPainelAssinatura(imobAlvo);
+ document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imobAlvo.slug || ''}`;
+                await atualizarPainelAssinatura(imobAlvo);
                 popularSeletorMeses();
           
                 await carregarMetricas(imobAlvo.id);
@@ -1592,19 +1646,344 @@
                 document.getElementById('topbar-imob-nome').innerText = (imob.nome_fantasia || 'IMOBILIÁRIA').toUpperCase();
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email || ''}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'dono').toUpperCase();
-                document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug || ''}`;
+  document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug || ''}`;
 
-                atualizarPainelAssinatura(imob);
+  await atualizarPainelAssinatura(imob);
                 popularSeletorMeses();
+                configurarPwaGestor(imob);
 
-                await carregarMetricas(imob.id);
+   await carregarMetricas(imob.id);
                 await carregarDashboardFinanceiro();
                 carregarAgendaMes();
+
+                // GUARDIÃO DE SESSÃO: SE ESTIVER BLOQUEADO, EXPULSA NA HORA
+                if (imob.status === 'blocked' && !isMasterSuporte) {
+                    await expulsarUsuarioBloqueado();
+                    return;
+                }
+
+                // INICIA SENTINELA EM SEGUNDO PLANO (HEARTBEAT DE 15 SEGUNDOS)
+                iniciarSentinelaBloqueio(imob.id);
 
             } catch (err) {
                 console.error(err);
                 exibirToast('erro', err.message || 'Erro ao carregar dados operacionais.');
             }
+        }
+
+    // =========================================================================
+        // GUARDIÃO DE SESSÃO COM TERMINAL DE AUTOATENDIMENTO PIX
+        // =========================================================================
+        async function expulsarUsuarioBloqueado() {
+            if (isMasterSuporte) return;
+
+            const modal = document.getElementById('modal-bloqueio-suspensao');
+            if (!modal) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // PREENCHIMENTO DOS DADOS DE COBRANÇA TRANSPARENTE
+            const nomeImob = dadosImobiliaria?.nome_fantasia || 'Imobiliária';
+            const dataVenc = dadosImobiliaria?.data_vencimento ? dadosImobiliaria.data_vencimento.split('-').reverse().join('/') : '--/--/----';
+            const valorPlano = Number(dadosImobiliaria?.plano_valor || 149);
+
+            let diasAtraso = 0;
+            if (dadosImobiliaria?.data_vencimento) {
+                const hojeBase = new Date();
+                hojeBase.setHours(0, 0, 0, 0);
+                const [anoV, mesV, diaV] = dadosImobiliaria.data_vencimento.split('-').map(Number);
+                const dtVenc = new Date(anoV, mesV - 1, diaV);
+                diasAtraso = Math.max(0, Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24)));
+            }
+
+  document.getElementById('modal-bloq-imob-nome').innerText = nomeImob;
+            document.getElementById('modal-bloq-vencimento').innerText = dataVenc;
+            document.getElementById('modal-bloq-atraso').innerText = `${diasAtraso} dia(s)`;
+            document.getElementById('modal-bloq-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            // CHAVE PIX CONFIGURADA NO MASTER
+            const chavePix = window.chavePixMasterGlobal || 'waldeckgil@gmail.com';
+            document.getElementById('modal-bloq-chave-pix').value = chavePix;
+
+            // VERIFICA SE JÁ EXISTE UM COMPROVANTE ENVIADO AGUARDANDO ANÁLISE
+            const blocoPendente = document.getElementById('bloco-pagamento-pendente');
+            const blocoAnalise = document.getElementById('bloco-pagamento-em-analise');
+
+            try {
+                const { data: ticketAberto } = await supabaseClient
+                    .from('support_tickets')
+                    .select('*')
+                    .eq('imobiliaria_id', dadosImobiliaria?.id)
+                    .eq('categoria', 'Financeiro')
+                    .in('status', ['aberto', 'em_analise'])
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .maybeSingle();
+
+                if (ticketAberto) {
+                    // SE JÁ ENVIOU: MOSTRA A TELA DE "PAGAMENTO EM ANÁLISE"
+                    if (blocoPendente) blocoPendente.classList.add('hidden');
+                    if (blocoAnalise) {
+                        blocoAnalise.classList.remove('hidden');
+                        const dataEnvioFmt = new Date(ticketAberto.created_at).toLocaleString('pt-BR');
+                        document.getElementById('analise-data-envio').innerText = dataEnvioFmt;
+                        
+                        // Extrai o link do anexo da mensagem do ticket se existir
+                        const matchLink = (ticketAberto.mensagem || '').match(/https?:\/\/[^\s]+/);
+                        const btnVerAnexo = document.getElementById('btn-ver-comprovante-analise');
+                        if (matchLink && btnVerAnexo) {
+                            btnVerAnexo.href = matchLink[0];
+                            btnVerAnexo.classList.remove('hidden');
+                        }
+
+                        // WhatsApp direcionado cobrando liberação
+                        const btnZapAnalise = document.getElementById('btn-zap-aguardando-analise');
+                        if (btnZapAnalise) {
+                            const msgAnalise = `Olá Administrador! Sou da ${nomeImob}. Já enviamos o comprovante do PIX pelo sistema em ${dataEnvioFmt} e estamos aguardando a validação para restabelecer nosso acesso. Poderia verificar por favor?`;
+                            btnZapAnalise.href = `https://wa.me/5521964120231?text=${encodeURIComponent(msgAnalise)}`;
+                        }
+                    }
+                } else {
+                    // SE NÃO ENVIOU AINDA: MOSTRA O CHECKOUT PIX NORMAL
+                    if (blocoPendente) blocoPendente.classList.remove('hidden');
+                    if (blocoAnalise) blocoAnalise.classList.add('hidden');
+                }
+            } catch (errCheck) {
+                console.warn('[CHECK TICKET PENDENTE]', errCheck);
+                if (blocoPendente) blocoPendente.classList.remove('hidden');
+                if (blocoAnalise) blocoAnalise.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function copiarChavePixModal() {
+            const input = document.getElementById('modal-bloq-chave-pix');
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('btn-copiar-pix-modal');
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar';
+                    }, 2000);
+                }
+            });
+        }
+
+        function aoSelecionarComprovanteBloqueio(e) {
+            const file = e.target.files[0];
+            const btnZap = document.getElementById('btn-enviar-comprovante-bloqueio');
+            const aviso = document.getElementById('aviso-anexo-obrigatorio');
+
+            if (file) {
+                btnZap.disabled = false;
+                btnZap.classList.remove('opacity-40', 'cursor-not-allowed');
+                btnZap.classList.add('hover:bg-emerald-500', 'cursor-pointer');
+                if (aviso) aviso.classList.add('hidden');
+            } else {
+                btnZap.disabled = true;
+                btnZap.classList.add('opacity-40', 'cursor-not-allowed');
+                btnZap.classList.remove('hover:bg-emerald-500', 'cursor-pointer');
+                if (aviso) aviso.classList.remove('hidden');
+            }
+        }
+
+        async function processarEnvioComprovantePix() {
+            const fileInput = document.getElementById('input-comprovante-bloqueio');
+            const btnZap = document.getElementById('btn-enviar-comprovante-bloqueio');
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('Por favor, anexe o comprovante do pagamento para solicitar o desbloqueio.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            btnZap.disabled = true;
+            btnZap.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando e Registrando...';
+
+            try {
+                const imobId = dadosImobiliaria?.id;
+                const fileExt = file.name.split('.').pop();
+                const fileName = `recibo_${imobId}_${Date.now()}.${fileExt}`;
+                const filePath = `${fileName}`;
+
+                let comprovanteUrlFinal = null;
+
+                // 1. Upload seguro para o bucket 'comprovantes'
+                const { error: errUpload } = await supabaseClient.storage
+                    .from('comprovantes')
+                    .upload(filePath, file, { cacheControl: '3600', upsert: true });
+
+                if (!errUpload) {
+                    const { data: pUrl } = supabaseClient.storage.from('comprovantes').getPublicUrl(filePath);
+                    comprovanteUrlFinal = pUrl.publicUrl;
+                } else {
+                    console.warn('[STORAGE] Fallback upload:', errUpload);
+                }
+
+    // 2. Grava o lançamento no banco de dados na tabela imobiliarias_mensalidades
+                const valorPlano = Number(dadosImobiliaria?.plano_valor || 149);
+                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                const dataAtual = new Date();
+                const mesRefAtual = `${meses[dataAtual.getMonth()]}/${dataAtual.getFullYear()}`;
+                const hojeIso = dataAtual.toISOString().split('T')[0];
+
+                let obsFinal = `[SOLICITAÇÃO DE DESBLOQUEIO VIA PIX]`;
+                if (comprovanteUrlFinal) {
+                    obsFinal += ` | [COMPROVANTE]: ${comprovanteUrlFinal}`;
+                }
+
+                // 2.1 INSERE NA TABELA DE MENSALIDADES (HISTÓRICO FINANCEIRO DO MASTER)
+                const { error: errInsert } = await supabaseClient
+                    .from('imobiliarias_mensalidades')
+                    .insert([{
+                        imobiliaria_id: imobId,
+                        valor_pago: valorPlano,
+                        data_pagamento: hojeIso,
+                        mes_referencia: mesRefAtual,
+                        forma_pagamento: 'PIX',
+                        comprovante_url: comprovanteUrlFinal,
+                        observacoes: obsFinal
+                    }]);
+
+                if (errInsert) {
+                    console.error('[ERRO INSERT MENSALIDADE]:', errInsert);
+                }
+
+                // 2.2 GERA AUTOMATICAMENTE UM CHAMADO (TICKET) EM ABERTO NO CONSOLE MASTER
+                const nomeImob = dadosImobiliaria?.nome_fantasia || 'Nossa Imobiliária';
+                const dataVenc = document.getElementById('modal-bloq-vencimento').innerText;
+                const valorFmt = document.getElementById('modal-bloq-valor').innerText;
+                const diasAtraso = document.getElementById('modal-bloq-atraso').innerText;
+
+                const mensagemTicket = `A imobiliária efetuou o pagamento do plano via PIX no valor de ${valorFmt} (Vencimento: ${dataVenc}, Atraso: ${diasAtraso}).\n\n` +
+                                       `Comprovante anexado: ${comprovanteUrlFinal || 'Enviado via WhatsApp'}\n\n` +
+                                       `Solicitação: Validação do comprovante e desbloqueio do painel.`;
+
+                await supabaseClient
+                    .from('support_tickets')
+                    .insert([{
+                        imobiliaria_id: imobId,
+                        usuario_id: dadosUsuario?.id || null,
+                        gestor_nome: dadosUsuario?.nome_completo || nomeImob,
+                        gestor_email: dadosUsuario?.email || dadosImobiliaria?.email_admin || '',
+                        gestor_whatsapp: dadosUsuario?.whatsapp || dadosImobiliaria?.whatsapp_contato || '',
+                        categoria: 'Financeiro',
+                        assunto: `[DESBLOQUEIO PIX] ${nomeImob} - ${valorFmt}`,
+                        mensagem: mensagemTicket,
+                        status: 'aberto'
+                    }]);
+
+                // 3. Prepara mensagem no WhatsApp com link do comprovante gerado
+                let textoZap = `Olá Administrador! Acabei de realizar o pagamento PIX da assinatura da *${nomeImob}*.\n\n` +
+                               `💰 *Valor Pago:* ${valorFmt}\n` +
+                               `📅 *Vencimento:* ${dataVenc} (${diasAtraso} de atraso)\n` +
+                               `🗓️ *Competência:* ${mesRefAtual}\n\n`;
+
+                if (comprovanteUrlFinal) {
+                    textoZap += `📄 *Link do Comprovante:* ${comprovanteUrlFinal}\n\n`;
+                } else {
+                    textoZap += `📄 *Comprovante:* (Estou enviando a imagem aqui no chat)\n\n`;
+                }
+
+                textoZap += `Solicito a validação e o desbloqueio imediato do nosso acesso!`;
+
+                window.open(`https://wa.me/5521964120231?text=${encodeURIComponent(textoZap)}`, '_blank');
+
+                alert('Comprovante registrado com sucesso! O Administrador recebeu seu chamado no sistema e no WhatsApp.');
+                await redirecionarParaLogin();
+
+            } catch (err) {
+                console.error('[COMPROVANTE BLOQUEIO] Erro:', err);
+                window.open(`https://wa.me/5521964120231?text=${encodeURIComponent('Olá Administrador! Fiz o pagamento e vou te enviar o comprovante por aqui para liberar o acesso.')}`, '_blank');
+            } finally {
+                btnZap.disabled = false;
+                btnZap.innerHTML = '<i class="fa-brands fa-whatsapp text-sm"></i> Enviar Comprovante no WhatsApp';
+            }
+        }
+
+        async function redirecionarParaLogin() {
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (e) {}
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+        function iniciarSentinelaBloqueio(imobiliariaId) {
+            if (isMasterSuporte || !imobiliariaId) return;
+
+            setInterval(async () => {
+                try {
+                    const { data: imobStatus, error } = await supabaseClient
+                        .from('imobiliarias')
+                        .select('status, data_vencimento')
+                        .eq('id', imobiliariaId)
+                        .maybeSingle();
+
+                    if (!error && imobStatus) {
+                        if (imobStatus.status === 'blocked') {
+                            await expulsarUsuarioBloqueado();
+                            return;
+                        }
+
+                        if (imobStatus.data_vencimento) {
+                            const hoje = new Date();
+                            hoje.setHours(0, 0, 0, 0);
+                            const [anoV, mesV, diaV] = imobStatus.data_vencimento.split('-').map(Number);
+                            const dtVenc = new Date(anoV, mesV - 1, diaV);
+                            const diasAtraso = Math.floor((hoje.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+                            if (diasAtraso > 8) {
+                                await expulsarUsuarioBloqueado();
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('[SENTINELA] Checagem ativa:', e);
+                }
+            }, 15000);
+        }
+   
+
+        function iniciarSentinelaBloqueio(imobiliariaId) {
+            if (isMasterSuporte || !imobiliariaId) return;
+
+            // Checa silenciosamente a cada 15 segundos se o status virou "blocked" no Master
+            setInterval(async () => {
+                try {
+                    const { data: imobStatus, error } = await supabaseClient
+                        .from('imobiliarias')
+                        .select('status, data_vencimento')
+                        .eq('id', imobiliariaId)
+                        .maybeSingle();
+
+                    if (!error && imobStatus) {
+                        // 1. Bloqueio manual direto pelo Master
+                        if (imobStatus.status === 'blocked') {
+                            await expulsarUsuarioBloqueado('Acesso Interrompido: Sua imobiliária foi bloqueada pelo Administrador do sistema.');
+                            return;
+                        }
+
+                        // 2. Bloqueio automático por carência máxima estourada (ex: > 8 dias)
+                        if (imobStatus.data_vencimento) {
+                            const hoje = new Date();
+                            hoje.setHours(0, 0, 0, 0);
+                            const [anoV, mesV, diaV] = imobStatus.data_vencimento.split('-').map(Number);
+                            const dtVenc = new Date(anoV, mesV - 1, diaV);
+                            const diasAtraso = Math.floor((hoje.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+
+                            // 8 dias pós-vencimento configurado no Master
+                            if (diasAtraso > 8) {
+                                await expulsarUsuarioBloqueado('Acesso expirado: O período máximo de carência pós-vencimento foi esgotado.');
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('[SENTINELA] Checagem de segurança ativa:', e);
+                }
+            }, 15000); // 15 segundos
         }
 
         function popularSeletorMeses() {
@@ -1629,12 +2008,30 @@
                 select.appendChild(opt);
             }
         }
-
-        function atualizarPainelAssinatura(imob) {
+async function atualizarPainelAssinatura(imob) {
             if (!imob || !imob.data_vencimento) {
                 document.getElementById('txt-vencimento-data').innerText = 'Não definida';
                 document.getElementById('txt-dias-contagem').innerText = 'Data de vencimento em configuração.';
                 return;
+            }
+
+ // Busca as réguas de tolerância e a Chave PIX configuradas no Console Master
+            let diasCarenciaLeitura = 3;
+            let diasBloqueioTotal = 7;
+            try {
+                const { data: cfg } = await supabaseClient
+                    .from('config_sistema')
+                    .select('dias_carencia_leitura, dias_bloqueio_total, chave_pix')
+                    .eq('id', 1)
+                    .maybeSingle();
+
+                if (cfg) {
+                    if (cfg.dias_carencia_leitura !== null) diasCarenciaLeitura = cfg.dias_carencia_leitura;
+                    if (cfg.dias_bloqueio_total !== null) diasBloqueioTotal = cfg.dias_bloqueio_total;
+                    if (cfg.chave_pix) window.chavePixMasterGlobal = cfg.chave_pix;
+                }
+            } catch (errCfg) {
+                console.warn('[CONFIG ASSINATURA] Usando tolerâncias padrão:', errCfg);
             }
 
             const [ano, mes, dia] = imob.data_vencimento.split('-');
@@ -1644,6 +2041,7 @@
             const dataHoje = new Date();
             const diffTime = dataVenc.getTime() - dataHoje.getTime();
             const diffDias = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diasAtraso = diffDias < 0 ? Math.abs(diffDias) : 0;
 
             const cardAssinatura = document.getElementById('card-monitor-assinatura');
             const badgeStatus = document.getElementById('badge-status-plano');
@@ -1663,26 +2061,53 @@
                 ? '<i class="fa-brands fa-whatsapp text-sm"></i><span>Falar com Administrador</span>'
                 : '<i class="fa-brands fa-whatsapp text-sm"></i><span>Solicitar Renovação</span>';
 
-            const vencido = (diffDias < 0);
-            const bloqueado = (imob.status === 'blocked' || vencido);
+            // REGRA INTELIGENTE DE STATUS
+            const ultrapassouLeitura = diasAtraso > diasCarenciaLeitura;
+            const ultrapassouBloqueio = diasAtraso > diasBloqueioTotal;
+            const estaEmCarencia = (diffDias < 0 && !ultrapassouLeitura);
 
-            if (bloqueado && !isMasterSuporte) {
+            modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || ultrapassouLeitura);
+
+            if (modoLeitura && !isMasterSuporte) {
                 document.getElementById('faixa-modo-leitura').classList.remove('hidden');
                 const btnNovo = document.getElementById('btn-novo-imovel');
                 if (btnNovo) {
                     btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
+            } else {
+                document.getElementById('faixa-modo-leitura').classList.add('hidden');
             }
 
-            const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
+       const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
 
-            if (vencido) {
-                cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/20`;
-                badgeStatus.innerText = 'VENCIDA';
+            // SE ESTIVER BLOQUEADA E NÃO FOR O ADMINISTRADOR MASTER, EXPULSA NA HORA
+            if ((imob.status === 'blocked' || ultrapassouBloqueio) && !isMasterSuporte) {
+                await expulsarUsuarioBloqueado('Acesso suspenso: A assinatura da sua imobiliária possui pendências financeiras graves. Entre em contato com a administração.');
+                return;
+            }
+
+            if (imob.status === 'blocked' || ultrapassouBloqueio) {
+                cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/30`;
+                badgeStatus.innerText = 'BLOQUEADA';
                 badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
                 iconeStatus.className = 'w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm flex-shrink-0 border border-rose-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Expirada há ${Math.abs(diffDias)} d.</span> Modo somente leitura.`;
+                iconeStatus.innerHTML = '<i class="fa-solid fa-ban"></i>';
+                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Atrasada há ${diasAtraso} d.</span> Bloqueio total de acesso por inadimplência.`;
+            } else if (imob.status === 'read_only' || ultrapassouLeitura) {
+                cardAssinatura.className = `${baseClassSlim} border-l-amber-500 bg-amber-950/25`;
+                badgeStatus.innerText = 'MODO LEITURA';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 animate-pulse';
+                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                iconeStatus.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Expirada há ${diasAtraso} d.</span> Tolerância esgotada. Somente consulta liberada.`;
+            } else if (estaEmCarencia) {
+                const diasRestantesCarencia = diasCarenciaLeitura - diasAtraso;
+                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
+                badgeStatus.innerText = 'EM CARÊNCIA';
+                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
+                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                iconeStatus.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
+                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Vencida há ${diasAtraso} d.</span> Carência ativa: restam ${diasRestantesCarencia} d. de uso pleno antes do bloqueio.`;
             } else if (ehGratuito) {
                 cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/15`;
                 badgeStatus.innerText = 'CORTESIA';
@@ -5979,10 +6404,91 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             el.innerText = `${diaSemana}, ${dia}/${mes}/${ano} • ${hora}:${min}`;
         }
 
+/* =========================================================================
+           MOTOR PWA WHITE-LABEL DO GESTOR (INSTALAÇÃO DIRETA NO DASHBOARD)
+           ========================================================================= */
+        let promptInstalacaoPwaGestor = null;
+
+     function configurarPwaGestor(imob) {
+            // NOME LIMPO: Usa diretamente o Nome Fantasia da Imobiliária (sem a palavra "Gestão" na frente)
+            const nomeFantasia = imob?.nome_fantasia || 'Imobiliária';
+            const nomeApp = nomeFantasia;
+            const nomeCurto = nomeFantasia.length > 12 ? nomeFantasia.slice(0, 12) : nomeFantasia;
+            const slugImob = imob?.slug || imob?.id || 'master';
+            const iconeApp = (imob?.logo_url && imob.logo_url.trim() !== '') 
+                ? imob.logo_url.trim() 
+                : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=512&h=512&q=80';
+
+            const metaTitle = document.getElementById('meta-apple-title-gestor');
+            if (metaTitle) metaTitle.content = nomeCurto;
+
+            const linkAppleIcon = document.getElementById('link-apple-icon-gestor');
+            if (linkAppleIcon) linkAppleIcon.href = iconeApp;
+
+            // ID E START_URL ÚNICOS: Permite que múltiplas imobiliárias coexistam no mesmo celular
+            const startUrl = `${window.location.origin}${window.location.pathname}?imob_app=${encodeURIComponent(slugImob)}`;
+
+            const manifestObj = {
+                id: `sgi-app-${slugImob}`,
+                name: nomeApp,
+                short_name: nomeCurto,
+                description: `Painel Imobiliário • ${nomeFantasia}`,
+                start_url: startUrl,
+                scope: "/",
+                display: "standalone",
+                background_color: "#060913",
+                theme_color: "#060913",
+                orientation: "portrait",
+                icons: [
+                    {
+                        src: iconeApp,
+                        sizes: "192x192 512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ]
+            };
+
+            try {
+                const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+                const manifestUrl = URL.createObjectURL(manifestBlob);
+                const linkManifest = document.getElementById('link-manifest-gestor');
+                if (linkManifest) {
+                    linkManifest.setAttribute('href', manifestUrl);
+                }
+            } catch (e) {
+                console.warn('[PWA Gestor] Falha ao injetar manifesto:', e);
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            promptInstalacaoPwaGestor = e;
+            const btn = document.getElementById('btn-instalar-app-gestor');
+            if (btn) btn.classList.remove('hidden');
+        });
+
+        async function dispararInstalacaoAppGestor() {
+            if (!promptInstalacaoPwaGestor) return;
+            promptInstalacaoPwaGestor.prompt();
+            const { outcome } = await promptInstalacaoPwaGestor.userChoice;
+            if (outcome === 'accepted') {
+                const btn = document.getElementById('btn-instalar-app-gestor');
+                if (btn) btn.classList.add('hidden');
+                if (typeof exibirToast === 'function') {
+                    exibirToast('sucesso', 'Aplicativo de Gestão instalado na sua tela inicial!');
+                }
+            }
+            promptInstalacaoPwaGestor = null;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             atualizarRelogioTopo();
             setInterval(atualizarRelogioTopo, 1000);
             inicializarDashboard();
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
         });
     </script>
 
@@ -6040,7 +6546,7 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 <p class="text-[10px] text-slate-500">O sistema abrirá a conversa com uma mensagem profissional de apresentação e o link da sua vitrine já formatado.</p>
             </div>
 
-            <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+ <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
                 <a id="modal-share-link-abrir" href="#" target="_blank" class="text-cyan-400 hover:underline flex items-center gap-1 font-bold text-[11px]">
                     <span>Testar e Abrir Vitrine</span>
                     <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -6049,6 +6555,135 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                     Fechar
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL DARK TECH: SUSPENSÃO DE ACESSO, CHECKOUT PIX & ANEXO OBRIGATÓRIO    -->
+    <!-- ========================================================================= -->
+    <div id="modal-bloqueio-suspensao" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[99999] flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-5 sm:p-6 text-center border-2 border-rose-500/80 shadow-2xl space-y-4 bg-slate-950 rounded-2xl relative">
+            
+            <div class="w-14 h-14 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center text-2xl mx-auto shadow-inner animate-pulse">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+
+            <div class="space-y-1">
+                <h3 class="text-base font-black text-white uppercase tracking-wider">Acesso Temporariamente Suspenso</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Identificamos pendências na assinatura da sua imobiliária. Para restabelecer o acesso, liquide sua fatura via PIX e envie o comprovante.
+                </p>
+            </div>
+
+            <!-- DETALHAMENTO DA DÍVIDA -->
+            <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs grid grid-cols-2 sm:grid-cols-4 gap-2 text-left">
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Imobiliária:</span>
+                    <strong id="modal-bloq-imob-nome" class="text-white text-xs truncate block">---</strong>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Vencimento:</span>
+                    <strong id="modal-bloq-vencimento" class="text-rose-400 font-mono text-xs block">--/--/----</strong>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Atraso:</span>
+                    <strong id="modal-bloq-atraso" class="text-amber-400 font-mono text-xs block">0 dias</strong>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase font-bold text-slate-500 block">Valor da Fatura:</span>
+                    <strong id="modal-bloq-valor" class="text-emerald-400 font-mono text-xs block">R$ 0,00</strong>
+                </div>
+            </div>
+
+ <!-- ESTADO 1: QUANDO AINDA NÃO ENVIOU COMPROVANTE (CHECKOUT PIX) -->
+            <div id="bloco-pagamento-pendente" class="space-y-4">
+                <!-- GAVETA DA CHAVE PIX OFICIAL -->
+                <div class="bg-emerald-950/20 p-3 rounded-xl border border-emerald-500/40 space-y-1.5 text-left text-xs">
+                    <span class="text-[10px] uppercase font-black tracking-wider text-emerald-400 block flex items-center gap-1.5">
+                        <i class="fa-solid fa-qrcode text-emerald-400"></i> Chave PIX Oficial para Pagamento:
+                    </span>
+                    <div class="flex gap-2">
+                        <input type="text" id="modal-bloq-chave-pix" readonly 
+                               class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-emerald-300 font-mono text-xs outline-none select-all font-bold">
+                        <button type="button" id="btn-copiar-pix-modal" onclick="copiarChavePixModal()" 
+                                class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1.5 whitespace-nowrap">
+                            <i class="fa-solid fa-copy"></i>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ANEXO OBRIGATÓRIO DO COMPROVANTE -->
+                <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 text-xs">
+                    <label class="block font-bold text-slate-200 text-[11px] flex items-center gap-1.5">
+                        <i class="fa-solid fa-paperclip text-cyan-400"></i>
+                        <span>Anexe o Comprovante do PIX (Obrigatório para solicitar liberação):</span>
+                    </label>
+                    <input type="file" id="input-comprovante-bloqueio" accept=".pdf,image/*" onchange="aoSelecionarComprovanteBloqueio(event)"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl p-1.5 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer">
+                    <p id="aviso-anexo-obrigatorio" class="text-[10px] text-amber-400 font-medium">
+                        ⚠️ O botão do WhatsApp será liberado assim que você selecionar o comprovante.
+                    </p>
+                </div>
+
+                <!-- BOTÕES DE AÇÃO DO CHECKOUT -->
+                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                    <button type="button" id="btn-enviar-comprovante-bloqueio" disabled onclick="processarEnvioComprovantePix()"
+                            class="w-full sm:flex-1 bg-emerald-600 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition opacity-40 cursor-not-allowed">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Enviar Comprovante no WhatsApp</span>
+                    </button>
+
+                    <button type="button" onclick="redirecionarParaLogin()" 
+                            class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                        Sair para o Login
+                    </button>
+                </div>
+            </div>
+
+            <!-- ESTADO 2: QUANDO JÁ ENVIOU COMPROVANTE (EM ANÁLISE / AGUARDANDO LIBERAÇÃO) -->
+            <div id="bloco-pagamento-em-analise" class="hidden space-y-4 pt-1">
+                <div class="bg-amber-950/30 p-4 rounded-xl border border-amber-500/50 space-y-2 text-left text-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-amber-400 font-black uppercase text-[10px] flex items-center gap-1.5">
+                            <i class="fa-solid fa-hourglass-half text-amber-400 animate-pulse"></i>
+                            <span>Comprovante Enviado com Sucesso</span>
+                        </span>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+                            EM ANÁLISE
+                        </span>
+                    </div>
+
+                    <p class="text-slate-200 text-xs leading-relaxed">
+                        Seu comprovante foi recebido pelo sistema em <strong id="analise-data-envio" class="text-white font-mono">--/--/----</strong> e já está na fila de atendimento do Administrador.
+                    </p>
+
+                    <div class="pt-2 flex items-center justify-between border-t border-slate-800 text-[11px]">
+                        <span class="text-slate-400">Status atual:</span>
+                        <strong class="text-cyan-300 font-bold">Aguardando Validação Financeira</strong>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                    <a id="btn-ver-comprovante-analise" href="#" target="_blank"
+                       class="hidden w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800 hover:border-cyan-400 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+                        <i class="fa-solid fa-eye text-xs"></i>
+                        <span>Ver Meu Anexo</span>
+                    </a>
+
+                    <a id="btn-zap-aguardando-analise" href="#" target="_blank"
+                       class="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                        <span>Avisar Administrador</span>
+                    </a>
+
+                    <button type="button" onclick="redirecionarParaLogin()" 
+                            class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                        Sair para o Login
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 </body>

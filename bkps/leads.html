@@ -149,11 +149,11 @@
                 <a href="dashboard.html" 
                    class="bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white font-bold px-3.5 py-2 rounded-xl border border-slate-700 hover:border-cyan-400 flex items-center gap-2 transition cursor-pointer shadow-sm">
                     <i class="fa-solid fa-chart-pie text-cyan-400 text-xs"></i>
-                    <span>Dashboard 360</span>
+                    <span>Menu</span>
                 </a>
 
-                <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
-                <button type="button" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
+  <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
+                <button type="button" id="btn-novo-lead-topbar" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
                     <i class="fa-solid fa-plus text-xs"></i>
                     <span>Novo Atendimento</span>
                 </button>
@@ -1322,15 +1322,40 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
+// Consulta a tolerância configurada no Master
+                let diasToleranciaLeitura = 3;
+                try {
+                    const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_carencia_leitura').eq('id', 1).maybeSingle();
+                    if (cfg && cfg.dias_carencia_leitura !== null) {
+                        diasToleranciaLeitura = cfg.dias_carencia_leitura;
+                    }
+                } catch (e) {
+                    console.warn('[CONFIG] Usando tolerância padrão:', e);
+                }
 
-                const hoje = new Date().toISOString().split('T')[0];
-                const vencido = imob.data_vencimento && imob.data_vencimento < hoje;
-                modoLeitura = (imob.status === 'blocked' || vencido);
+                // Cálculo real: Data de Vencimento + Dias de Tolerância
+                let emAtrasoAlemDaTolerancia = false;
+                if (imob.data_vencimento) {
+                    const hojeDate = new Date();
+                    hojeDate.setHours(0, 0, 0, 0);
+
+                    const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
+                    const dataLimite = new Date(anoV, mesV - 1, diaV);
+                    dataLimite.setDate(dataLimite.getDate() + diasToleranciaLeitura);
+
+                    emAtrasoAlemDaTolerancia = (hojeDate > dataLimite);
+                }
+
+                modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || emAtrasoAlemDaTolerancia);
 
                 if (modoLeitura) {
                     document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                    const btnNovoLead = document.getElementById('btn-novo-lead-topbar');
+                    if (btnNovoLead) {
+                        btnNovoLead.classList.add('opacity-40', 'cursor-not-allowed');
+                        btnNovoLead.setAttribute('title', 'Recurso desabilitado em Modo Somente Leitura');
+                    }
                 }
-
                 await carregarEquipeCorretores();
                 await carregarLeads();
                 iniciarAutoRefreshLeads();
@@ -1676,9 +1701,18 @@
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
 
+ const bloqueioContatoAtivo = (modoLeitura && !isMasterSuporte);
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
+                // MASCARAMENTO VISUAL DO TELEFONE EM MODO LEITURA
+                let telefoneExibicao = l.whatsapp;
+                if (bloqueioContatoAtivo) {
+                    const digitos = zapLimpo.slice(-11);
+                    const ddd = digitos.length >= 10 ? digitos.slice(0, 2) : 'XX';
+                    telefoneExibicao = `<span class="inline-flex items-center gap-1 text-amber-400 font-bold select-none cursor-pointer" onclick="notificar('aviso', 'Contato Bloqueado', 'Renove sua assinatura para desbloquear o telefone e WhatsApp completo deste cliente.', true)" title="Renove para desbloquear"><i class="fa-solid fa-lock text-[10px]"></i> (${ddd}) 9****-****</span>`;
+                }
+
                 let urlWa = `https://wa.me/${numeroWa}`;
                 if (!l.status || l.status === 'Novo') {
                     if (modalidade === 'AVALIACAO') {
@@ -1696,14 +1730,34 @@
                     }
                 }
 
+                // BOTÃO DE CONTATO: SE FOR MODO LEITURA, FICA TRAVADO COM AVISO DE PAGAMENTO
+                let botaoContatoHtml = '';
+                if (bloqueioContatoAtivo) {
+                    botaoContatoHtml = `
+                        <button type="button" onclick="notificar('aviso', 'Recurso Protegido', 'O contato direto no WhatsApp está bloqueado. Renove a assinatura da sua imobiliária para conversar com este comprador.', true)" 
+                                class="bg-slate-900 border border-amber-500/60 text-amber-300 hover:bg-amber-950 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" 
+                                title="Desbloqueie renovando seu plano">
+                            <i class="fa-solid fa-lock text-amber-400"></i>
+                            <span>Desbloquear Zap</span>
+                        </button>
+                    `;
+                } else {
+                    botaoContatoHtml = `
+                        <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>Chamar</span>
+                        </a>
+                    `;
+                }
+
                 return `
                 <tr class="hover:bg-slate-900/50 transition">
                     <td class="py-3 px-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">${dataCriacao}</td>
                     
                     <td class="py-3 px-3">
                         <span class="font-black text-white block cursor-pointer hover:text-cyan-300 transition" onclick="abrirCockpitLead('${l.id}')">${l.nome}</span>
-                        <span class="text-cyan-300 font-mono text-[11px] block">${l.whatsapp}</span>
-                        ${l.email ? `<span class="text-slate-500 text-[10px] block truncate max-w-[140px]">${l.email}</span>` : ''}
+                        <span class="text-cyan-300 font-mono text-[11px] block">${telefoneExibicao}</span>
+                        ${l.email ? `<span class="text-slate-500 text-[10px] block truncate max-w-[140px]">${bloqueioContatoAtivo ? 'e-mail@***.com (Bloqueado)' : l.email}</span>` : ''}
                     </td>
 
                     <td class="py-3 px-3">${imovelBloco}</td>
@@ -1730,11 +1784,7 @@
 
                     <td class="py-3 px-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-2">
-                            <a href="${urlWa}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 shadow transition cursor-pointer" title="Chamar no WhatsApp">
-                                <i class="fa-brands fa-whatsapp text-sm"></i>
-                                <span>Chamar</span>
-                            </a>
-
+                            ${botaoContatoHtml}
                             <button onclick="abrirCockpitLead('${l.id}')" 
                                     class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/50 hover:border-cyan-400 font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                                     title="Abrir Ficha e Gerenciar Atendimento">
@@ -1769,10 +1819,18 @@
 
             atualizarStatusTopoCockpit(lead);
 
+  const bloqueioContato = (modoLeitura && !isMasterSuporte);
             document.getElementById('cockpit-cliente-nome').innerText = lead.nome;
-            document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
-            document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
 
+            if (bloqueioContato) {
+                const zapLimpo = ('' + (lead.whatsapp || '')).replace(/\D/g, '').slice(-11);
+                const ddd = zapLimpo.length >= 10 ? zapLimpo.slice(0, 2) : 'XX';
+                document.getElementById('cockpit-cliente-whatsapp').innerHTML = `<span class="text-amber-400 font-bold select-none"><i class="fa-solid fa-lock text-[10px] mr-1"></i> (${ddd}) 9****-**** (Bloqueado)</span>`;
+                document.getElementById('cockpit-cliente-email').innerText = 'E-mail oculto em Modo Somente Leitura';
+            } else {
+                document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
+                document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
+            }
             const cardImovel = document.getElementById('cockpit-imovel-card');
             const { modalidade, valorExibicao } = extrairContextoLead(lead);
 
@@ -2379,8 +2437,11 @@
                 btn.disabled = false;
             }
         }
-
-        function dispararConfirmacaoWhatsAppCockpit(tipo = 'confirmacao') {
+function enviarPropostaWhatsAppCockpit() {
+            if (modoLeitura && !isMasterSuporte) {
+                notificar('aviso', 'Recurso Protegido', 'O envio de propostas no WhatsApp está bloqueado. Renove seu plano para liberar este cliente.', true);
+                return;
+            }
             if (!leadAtivoCockpit) return;
 
             const dataValor = document.getElementById('cockpit-visita-data').value;
@@ -2995,8 +3056,14 @@
         // ====================================================================
         // CADASTRO MANUAL DE LEAD (BALCÃO / TELEFONE)
         // ====================================================================
-        function abrirModalNovoLeadManual() {
+ function abrirModalNovoLeadManual() {
+            if (modoLeitura && !isMasterSuporte) {
+                notificar('aviso', 'Modo Somente Leitura', 'Cadastros desabilitados devido a assinatura pendente.', true);
+                return;
+            }
             const selectCorretor = document.getElementById('manual-lead-corretor');
+
+
             selectCorretor.innerHTML = '<option value="">Sem corretor inicial</option>';
             listaCorretores.forEach(c => {
                 selectCorretor.innerHTML += `<option value="${c.id}">${c.nome_completo}</option>`;
@@ -3024,11 +3091,18 @@
             document.getElementById('modal-novo-lead-manual').classList.add('hidden');
         }
 
-        async function salvarLeadManual(e) {
-            e.preventDefault();
+ async function salvarLeadManual(event) {
+            event.preventDefault();
+            if (modoLeitura && !isMasterSuporte) {
+                notificar('aviso', 'Modo Somente Leitura', 'Cadastros desabilitados devido a assinatura pendente.', true);
+                return;
+            }
+
             const btn = document.getElementById('btn-salvar-lead-manual');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cadastrando...';
+            }
 
             const nome = document.getElementById('manual-lead-nome').value.trim();
             const zap = document.getElementById('manual-lead-whatsapp').value.trim();
@@ -3068,8 +3142,10 @@
                 console.error(err);
                 notificar('erro', 'Falha ao Cadastrar', err.message);
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Cadastrar Atendimento</span>';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Cadastrar Atendimento</span>';
+                }
             }
         }
 
