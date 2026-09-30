@@ -1,0 +1,20 @@
+
+
+IMOVEL FORM 
+
+
+CAMPO OBRIGATORIO 
+
+
+Valor de Venda (R$  OU Valor de Locação (R$/mês
+
+
+
+DASHBOARD 
+
+
+NÃO ESTA EXIBINDO O CARD FINACEIRO
+
+
+EM Carteira 360° • Gestão de Pessoas & Contato , criar opção de exclusão lixeira (atenção informar que todos imóveis vinculados (se houver)  ao 
+                                                                                  propietario serão excluídos 

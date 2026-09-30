@@ -256,8 +256,8 @@
                 </div>
             </div>
 <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                <button type="button" onclick="abrirModalPagamentoPixInstantaneo()" 
-                        class="bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow-md transition cursor-pointer whitespace-nowrap animate-pulse">
+                <button type="button" id="btn-pagar-pix-topo" onclick="abrirModalPagamentoPixInstantaneo()" 
+                        class="hidden bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-[11px] items-center gap-1.5 shadow-md transition cursor-pointer whitespace-nowrap">
                     <i class="fa-solid fa-bolt text-xs"></i>
                     <span>Pagar via Pix (Liberação Instantânea)</span>
                 </button>
@@ -267,6 +267,7 @@
                     <span>WhatsApp</span>
                 </a>
             </div>
+        </div>
 
         <!-- FAIXA DE ALERTAS INTELIGENTES: VISITAS DE HOJE E AMANHÃ -->
         <div id="container-alertas-agendamentos" class="space-y-2.5 hidden"></div>
@@ -2020,11 +2021,28 @@ async function atualizarPainelAssinatura(imob) {
             const diffDias = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             const diasAtraso = diffDias < 0 ? Math.abs(diffDias) : 0;
 
-            const cardAssinatura = document.getElementById('card-monitor-assinatura');
+  const cardAssinatura = document.getElementById('card-monitor-assinatura');
             const badgeStatus = document.getElementById('badge-status-plano');
             const iconeStatus = document.getElementById('icone-status-plano');
             const txtContagem = document.getElementById('txt-dias-contagem');
             const btnRenovar = document.getElementById('btn-renovar-zap');
+            const btnPixTopo = document.getElementById('btn-pagar-pix-topo');
+
+            // Regra Discreta: Se estiver EM DIA (mais de 5 dias), oculta o botão pulsante de PIX
+            if (btnPixTopo) {
+                if (diffDias <= 5 || ultrapassouLeitura || ultrapassouBloqueio || estaEmCarencia) {
+                    btnPixTopo.classList.remove('hidden');
+                    btnPixTopo.classList.add('flex');
+                    if (diffDias <= 2 || ultrapassouLeitura || ultrapassouBloqueio || estaEmCarencia) {
+                        btnPixTopo.classList.add('animate-pulse');
+                    } else {
+                        btnPixTopo.classList.remove('animate-pulse');
+                    }
+                } else {
+                    btnPixTopo.classList.add('hidden');
+                    btnPixTopo.classList.remove('flex', 'animate-pulse');
+                }
+            }
 
             const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
