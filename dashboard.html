@@ -6616,7 +6616,7 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             let cli = null;
             let impactoHtml = '';
 
-            if (tipoCliente === 'proprietario') {
+   if (tipoCliente === 'proprietario') {
                 cli = cacheProprietariosCompletos.find(c => c.id === clienteId);
                 const imoveis = cli?.imoveis_proprietario || [];
                 const alugados = imoveis.filter(im => (im.status || '').toLowerCase() === 'alugado');
@@ -6625,13 +6625,56 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 elTipo.className = 'px-2 py-0.5 rounded text-[9px] font-black uppercase bg-sky-950 text-sky-300 border border-sky-800';
 
                 if (imoveis.length > 0) {
+                    // Monta a relação detalhada dos imóveis que serão apagados
+                    const listaImoveisHtml = imoveis.map(im => {
+                        const statusLower = (im.status || '').toLowerCase();
+                        let badgeCor = 'bg-slate-900 text-slate-300 border-slate-700';
+
+                        if (statusLower === 'alugado') {
+                            badgeCor = 'bg-purple-950 text-purple-300 border-purple-800 font-bold';
+                        } else if (statusLower === 'vendido') {
+                            badgeCor = 'bg-amber-950 text-amber-300 border-amber-800 font-bold';
+                        } else if (statusLower === 'disponível' || statusLower === 'disponivel') {
+                            badgeCor = 'bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
+                        }
+
+                        return `
+                            <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800 flex items-center justify-between gap-2 text-[11px]">
+                                <div class="min-w-0 flex items-center gap-2">
+                                    <span class="font-mono font-bold text-amber-300 shrink-0">Ref: ${im.codigo_ref || '---'}</span>
+                                    <span class="text-white font-medium truncate" title="${im.titulo}">${im.titulo || 'Imóvel'}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    ${im.inquilino_nome ? `<span class="text-[10px] text-purple-300 hidden sm:inline">• Inquilino: ${im.inquilino_nome}</span>` : ''}
+                                    <span class="px-2 py-0.5 rounded text-[9px] uppercase border ${badgeCor}">
+                                        ${im.status || 'Cadastrado'}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
                     impactoHtml = `
-                        <p class="text-rose-400 font-bold">⚠️ ATENÇÃO AO IMPACTO DESTA EXCLUSÃO:</p>
-                        <p>• Este proprietário possui <strong>${imoveis.length} imóvel(is) cadastrado(s)</strong> no sistema.</p>
-                        ${alugados.length > 0 ? `
-                            <p class="text-amber-300 font-semibold">• <strong>${alugados.length} imóvel(is) está(ão) ALUGADO(S)</strong> com contratos e cobranças em vigor.</p>
-                        ` : ''}
-                        <p class="text-slate-400">Todos os imóveis vinculados a ele, fotos, contratos e históricos serão <strong class="text-rose-400">EXCLUÍDOS DEFINITIVAMENTE</strong>.</p>
+                        <div class="space-y-2">
+                            <p class="text-rose-400 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>ATENÇÃO: Os ${imoveis.length} imóvel(is) abaixo serão DELETADOS do sistema:</span>
+                            </p>
+                            
+                            <!-- LISTAGEM DOS IMÓVEIS QUE SERÃO EXCLUÍDOS -->
+                            <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1 border border-slate-800/80 p-1.5 rounded-xl bg-slate-950/60">
+                                ${listaImoveisHtml}
+                            </div>
+
+                            ${alugados.length > 0 ? `
+                                <p class="text-amber-300 font-semibold text-[11px]">
+                                    ⚠️ <strong>${alugados.length} imóvel(is) alugado(s)</strong>: os contratos e cobranças também serão destruídos.
+                                </p>
+                            ` : ''}
+                            <p class="text-[10px] text-slate-400">
+                                A exclusão do proprietário removerá permanentemente fotos, dados cadastrais e vínculos deste portfólio.
+                            </p>
+                        </div>
                     `;
                 } else {
                     impactoHtml = '<p class="text-slate-400">Este proprietário não possui imóveis vinculados ativos. O cadastro será excluído de forma simples.</p>';
