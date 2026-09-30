@@ -6587,6 +6587,7 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
         // =========================================================================
         // MOTOR DE EXCLUSÃO CRÍTICA DE CLIENTES COM RAIO-X & CONFIRMAÇÃO DE SENHA
         // =========================================================================
+      
         function iniciarExclusaoCliente(clienteId, tipoCliente) {
             // 1. CHECAGEM DE PRIVILÉGIO: Dono, Master ou Colaborador com permissão delegada
             const podeExcluir = isMasterSuporte || 
@@ -6605,14 +6606,12 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             const inputId = document.getElementById('excluir-cli-id-input');
             const inputTipo = document.getElementById('excluir-cli-tipo-input');
             const inputMotivo = document.getElementById('excluir-cli-motivo');
-            const inputSenha = document.getElementById('excluir-cli-senha');
 
             if (!modal) return;
 
             inputId.value = clienteId;
             inputTipo.value = tipoCliente;
             inputMotivo.value = '';
-            inputSenha.value = '';
 
             let cli = null;
             let impactoHtml = '';
@@ -6672,37 +6671,23 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
 
             const clienteId = document.getElementById('excluir-cli-id-input').value;
             const motivo = document.getElementById('excluir-cli-motivo').value.trim();
-            const senha = document.getElementById('excluir-cli-senha').value;
             const btn = document.getElementById('btn-confirmar-excluir-cli');
 
-            if (!clienteId || !motivo || !senha) {
-                exibirToast('aviso', 'Preencha o motivo formal e a sua senha de login.');
+            if (!clienteId || !motivo) {
+                exibirToast('aviso', 'Por favor, informe o motivo formal da exclusão.');
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Senha...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo e Auditando...';
 
             try {
-                // 1. REAUTENTICAÇÃO POR SENHA (STEP-UP AUTHENTICATION)
-                const emailUsuario = dadosUsuario?.email || dadosSessao?.user?.email;
-
-                if (!emailUsuario) throw new Error('Sessão inválida para reautenticação.');
-
-                const { error: errAuth } = await supabaseClient.auth.signInWithPassword({
-                    email: emailUsuario,
-                    password: senha
-                });
-
-                if (errAuth) {
-                    throw new Error('Senha incorreta! Operação cancelada por motivos de segurança.');
+                let autorNome = 'Super Administrador Master';
+                if (!isMasterSuporte) {
+                    autorNome = dadosUsuario?.nome_completo || dadosSessao?.user?.email || 'Gestor Titular';
                 }
 
-                // 2. DISPARO DA PROCEDURE ATÔMICA NO POSTGRESQL
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo e Auditando...';
-
-                const autorNome = dadosUsuario?.nome_completo || 'Gestor Titular';
-
+                // Disparo direto da Procedure Atômica no PostgreSQL
                 const { data, error: errRpc } = await supabaseClient.rpc('excluir_cliente_carteira_com_auditoria', {
                     p_cliente_id: clienteId,
                     p_motivo: motivo,
@@ -6710,13 +6695,13 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 });
 
                 if (errRpc || !data?.sucesso) {
-                    throw new Error(data?.erro || errRpc?.message || 'Falha ao executar exclusão no banco.');
+                    throw new Error(data?.erro || errRpc?.message || 'Falha ao executar exclusão no banco de dados.');
                 }
 
                 exibirToast('sucesso', 'Cadastro e registros vinculados excluídos e auditados com sucesso!');
                 fecharModalExcluirCliente();
 
-                // 3. ATUALIZAÇÃO IMEDIATA DA CARTEIRA E MÉTRICAS
+                // Atualização em tempo real da carteira e contadores
                 await abrirDrilldownClientes();
                 if (dadosImobiliaria?.id) {
                     await carregarMetricas(dadosImobiliaria.id);
@@ -6958,28 +6943,16 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 </div>
             </div>
 
-            <form id="form-excluir-cliente-critico" onsubmit="executarExclusaoCliente(event)" class="space-y-3.5 text-xs">
+  <form id="form-excluir-cliente-critico" onsubmit="executarExclusaoCliente(event)" class="space-y-3.5 text-xs">
                 <input type="hidden" id="excluir-cli-id-input">
                 <input type="hidden" id="excluir-cli-tipo-input">
 
                 <div>
                     <label class="block font-bold text-slate-200 mb-1 text-[11px]">
-                        1. Motivo Formal da Exclusão (Gravado em Auditoria) *
+                        Motivo Formal da Exclusão (Gravado no Livro de Auditoria) *
                     </label>
-                    <textarea id="excluir-cli-motivo" required rows="2" placeholder="Ex: Cancelamento contratual a pedido do cliente..."
+                    <textarea id="excluir-cli-motivo" required rows="2" placeholder="Ex: Cancelamento a pedido do cliente, encerramento de contrato..."
                               class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white outline-none focus:border-rose-500 text-xs"></textarea>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-amber-400 mb-1 text-[11px] flex items-center gap-1.5">
-                        <i class="fa-solid fa-lock text-amber-400"></i>
-                        <span>2. Confirme sua Senha de Login para Autorizar *</span>
-                    </label>
-                    <input type="password" id="excluir-cli-senha" required placeholder="Digite sua senha de acesso ao sistema..."
-                           class="w-full bg-slate-900 border border-amber-500/50 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-amber-400 font-mono">
-                    <p class="text-[10px] text-slate-500 mt-1">
-                        Proteção de segurança: impede que outra pessoa na sua mesa realize exclusões indesejadas.
-                    </p>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
