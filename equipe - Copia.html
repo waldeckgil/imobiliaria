@@ -280,17 +280,9 @@
                         <span>Acesso ao Painel Financeiro Global (Receitas, Aluguéis e Faturamento da Imobiliária)</span>
                     </label>
 
-  <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+                    <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
                         <input type="checkbox" id="perm-comissoes-equipe" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
                         <span>Pode visualizar comissões de toda a equipe (se desmarcado, vê apenas a sua)</span>
-                    </label>
-
-                    <label class="flex items-center gap-2 text-rose-300 cursor-pointer pt-1 border-t border-slate-800">
-                        <input type="checkbox" id="perm-excluir-cadastros" class="rounded border-rose-800 text-rose-500 focus:ring-0">
-                        <span class="font-bold flex items-center gap-1.5">
-                            <i class="fa-solid fa-trash-can text-rose-400 text-xs"></i>
-                            <span>Autorização Crítica: Pode excluir clientes e imóveis da carteira (com senha)</span>
-                        </span>
                     </label>
                 </div>
 
@@ -540,17 +532,12 @@
                     ? '<span class="px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px]">Edita Preços</span>' 
                     : '';
 
- 
- const badgeFinanceiro = perms.acesso_financeiro 
+                const badgeFinanceiro = perms.acesso_financeiro 
                     ? '<span class="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-700 text-[10px] font-bold">Financeiro Geral</span>' 
                     : '<span class="px-1.5 py-0.5 rounded bg-slate-900 text-slate-500 text-[10px]">Financeiro Restrito</span>';
 
-                const badgeExclusao = (m.cargo === 'dono' || perms.pode_excluir_cadastros)
-                    ? '<span class="px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-800 text-[10px] font-bold flex items-center gap-1"><i class="fa-solid fa-trash-can text-[8px]"></i> Exclusão OK</span>'
-                    : '';
-
                 const toggleClass = m.ativo ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-500';
-                    const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
+                const toggleTexto = m.ativo ? 'Ativo' : 'Bloqueado';
 
                 // Aplica a comissão do colaborador ou herda o padrão configurado na imobiliária
                 const comissaoVenda = (m.comissao_venda_pct !== null && m.comissao_venda_pct !== undefined) 
@@ -593,12 +580,12 @@
                             </span>
                         </div>
                     </td>
-<td class="py-3 px-3">
+
+                    <td class="py-3 px-3">
                         <div class="flex items-center gap-1 flex-wrap">
                             ${badgeProprietario}
                             ${badgeFinanceiro}
                             ${badgePrecos}
-                            ${badgeExclusao}
                         </div>
                     </td>
 
@@ -690,12 +677,11 @@
             document.getElementById('bloco-senha-novo').classList.add('hidden');
             document.getElementById('colab-senha').required = false;
 
-   const p = membro.permissoes || {};
+            const p = membro.permissoes || {};
             document.getElementById('perm-proprietarios').checked = !!p.ver_proprietarios;
             document.getElementById('perm-precos').checked = !!p.editar_precos;
             document.getElementById('perm-financeiro').checked = !!p.acesso_financeiro;
             document.getElementById('perm-comissoes-equipe').checked = !!p.ver_comissoes_gerais;
-            document.getElementById('perm-excluir-cadastros').checked = !!p.pode_excluir_cadastros;
 
             document.getElementById('modal-colaborador').classList.remove('hidden');
         }
@@ -735,13 +721,13 @@
             const comissaoVenda = Number(document.getElementById('colab-comissao-venda').value) || 30.0;
             const comissaoLocacao = (document.getElementById('colab-comissao-locacao').value !== '') ? Number(document.getElementById('colab-comissao-locacao').value) : 0.0;
 
-    const permissoesObj = {
+            const permissoesObj = {
                 ver_proprietarios: document.getElementById('perm-proprietarios').checked,
                 editar_precos: document.getElementById('perm-precos').checked,
                 acesso_financeiro: document.getElementById('perm-financeiro').checked,
-                ver_comissoes_gerais: document.getElementById('perm-comissoes-equipe').checked,
-                pode_excluir_cadastros: document.getElementById('perm-excluir-cadastros').checked
+                ver_comissoes_gerais: document.getElementById('perm-comissoes-equipe').checked
             };
+
             try {
                 if (idEdicao) {
                     const { error } = await supabaseClient

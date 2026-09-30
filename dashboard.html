@@ -2526,9 +2526,12 @@ async function atualizarPainelAssinatura(imob) {
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="window.abrirDossieUniversal('${p.id}', '${(p.nome || '').replace(/'/g, "\\'")}', '${p.cpf_cnpj || ''}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+ <button onclick="window.abrirDossieUniversal('${p.id}', '${(p.nome || '').replace(/'/g, "\\'")}', '${p.cpf_cnpj || ''}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
                                     <i class="fa-solid fa-eye text-xs"></i>
                                     <span>Dossiê 360°</span>
+                                </button>
+                                <button type="button" onclick="iniciarExclusaoCliente('${p.id}', 'proprietario')" class="p-1 rounded-lg bg-rose-950/40 hover:bg-rose-900 text-rose-400 hover:text-white border border-rose-800/60 transition cursor-pointer" title="Excluir proprietário da carteira">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
                         </div>
@@ -2604,16 +2607,20 @@ async function atualizarPainelAssinatura(imob) {
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="window.abrirDossieUniversal('${i.id}', '${(i.nome || '').replace(/'/g, "\\'")}', '${i.cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+ 
+  <button onclick="window.abrirDossieUniversal('${i.id}', '${(i.nome || '').replace(/'/g, "\\'")}', '${i.cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
                                     <i class="fa-solid fa-eye text-xs"></i>
                                     <span>Dossiê 360°</span>
+                                </button>
+                                <button type="button" onclick="iniciarExclusaoCliente('${i.id}', 'inquilino')" class="p-1 rounded-lg bg-rose-950/40 hover:bg-rose-900 text-rose-400 hover:text-white border border-rose-800/60 transition cursor-pointer" title="Excluir inquilino da carteira">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
-        }
+        }                              
 
         function renderizarCompradores(lista) {
             const container = document.getElementById('lista-drilldown-compradores');
@@ -6573,9 +6580,160 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             }, 2500);
         }
 
-        window.alternarAbaBloqueio = alternarAbaBloqueio;
+  window.alternarAbaBloqueio = alternarAbaBloqueio;
         window.abrirModalPagamentoPixInstantaneo = abrirModalPagamentoPixInstantaneo;
         window.copiarPixCopiaColaMP = copiarPixCopiaColaMP;
+
+        // =========================================================================
+        // MOTOR DE EXCLUSÃO CRÍTICA DE CLIENTES COM RAIO-X & CONFIRMAÇÃO DE SENHA
+        // =========================================================================
+        function iniciarExclusaoCliente(clienteId, tipoCliente) {
+            // 1. CHECAGEM DE PRIVILÉGIO: Dono, Master ou Colaborador com permissão delegada
+            const podeExcluir = isMasterSuporte || 
+                                (dadosUsuario?.cargo === 'dono') || 
+                                (dadosUsuario?.permissoes?.pode_excluir_cadastros === true);
+
+            if (!podeExcluir) {
+                exibirToast('erro', 'Acesso Restrito: Apenas o Gestor Titular (Dono) ou colaboradores autorizados podem excluir cadastros.');
+                return;
+            }
+
+            const modal = document.getElementById('modal-excluir-cliente-carteira');
+            const elNome = document.getElementById('excluir-cli-nome');
+            const elTipo = document.getElementById('excluir-cli-tipo-badge');
+            const elDetalhes = document.getElementById('excluir-cli-impacto-detalhes');
+            const inputId = document.getElementById('excluir-cli-id-input');
+            const inputTipo = document.getElementById('excluir-cli-tipo-input');
+            const inputMotivo = document.getElementById('excluir-cli-motivo');
+            const inputSenha = document.getElementById('excluir-cli-senha');
+
+            if (!modal) return;
+
+            inputId.value = clienteId;
+            inputTipo.value = tipoCliente;
+            inputMotivo.value = '';
+            inputSenha.value = '';
+
+            let cli = null;
+            let impactoHtml = '';
+
+            if (tipoCliente === 'proprietario') {
+                cli = cacheProprietariosCompletos.find(c => c.id === clienteId);
+                const imoveis = cli?.imoveis_proprietario || [];
+                const alugados = imoveis.filter(im => (im.status || '').toLowerCase() === 'alugado');
+
+                elTipo.innerText = 'PROPRIETÁRIO';
+                elTipo.className = 'px-2 py-0.5 rounded text-[9px] font-black uppercase bg-sky-950 text-sky-300 border border-sky-800';
+
+                if (imoveis.length > 0) {
+                    impactoHtml = `
+                        <p class="text-rose-400 font-bold">⚠️ ATENÇÃO AO IMPACTO DESTA EXCLUSÃO:</p>
+                        <p>• Este proprietário possui <strong>${imoveis.length} imóvel(is) cadastrado(s)</strong> no sistema.</p>
+                        ${alugados.length > 0 ? `
+                            <p class="text-amber-300 font-semibold">• <strong>${alugados.length} imóvel(is) está(ão) ALUGADO(S)</strong> com contratos e cobranças em vigor.</p>
+                        ` : ''}
+                        <p class="text-slate-400">Todos os imóveis vinculados a ele, fotos, contratos e históricos serão <strong class="text-rose-400">EXCLUÍDOS DEFINITIVAMENTE</strong>.</p>
+                    `;
+                } else {
+                    impactoHtml = '<p class="text-slate-400">Este proprietário não possui imóveis vinculados ativos. O cadastro será excluído de forma simples.</p>';
+                }
+            } else {
+                cli = cacheInquilinosCompletos.find(c => c.id === clienteId);
+                const contrato = cli?.contrato_inquilino;
+
+                elTipo.innerText = 'INQUILINO';
+                elTipo.className = 'px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950 text-purple-300 border border-purple-800';
+
+                if (contrato && contrato.status === 'Ativo') {
+                    impactoHtml = `
+                        <p class="text-amber-300 font-bold">⚠️ VÍNCULO CONTRATUAL ATIVO:</p>
+                        <p>• Este inquilino possui um contrato de locação ativo de <strong>R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>.</p>
+                        <p class="text-slate-300">• O imóvel voltará automaticamente ao status <strong class="text-emerald-400">"Disponível"</strong> no seu catálogo.</p>
+                        <p class="text-slate-400">• As cobranças em aberto e o contrato serão encerrados e auditados.</p>
+                    `;
+                } else {
+                    impactoHtml = '<p class="text-slate-400">Cadastro de inquilino avulso sem contrato ativo. Será excluído com registro de auditoria.</p>';
+                }
+            }
+
+            elNome.innerText = cli?.nome || 'Cliente';
+            elDetalhes.innerHTML = impactoHtml;
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalExcluirCliente() {
+            const modal = document.getElementById('modal-excluir-cliente-carteira');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function executarExclusaoCliente(e) {
+            e.preventDefault();
+
+            const clienteId = document.getElementById('excluir-cli-id-input').value;
+            const motivo = document.getElementById('excluir-cli-motivo').value.trim();
+            const senha = document.getElementById('excluir-cli-senha').value;
+            const btn = document.getElementById('btn-confirmar-excluir-cli');
+
+            if (!clienteId || !motivo || !senha) {
+                exibirToast('aviso', 'Preencha o motivo formal e a sua senha de login.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando Senha...';
+
+            try {
+                // 1. REAUTENTICAÇÃO POR SENHA (STEP-UP AUTHENTICATION)
+                const emailUsuario = dadosUsuario?.email || dadosSessao?.user?.email;
+
+                if (!emailUsuario) throw new Error('Sessão inválida para reautenticação.');
+
+                const { error: errAuth } = await supabaseClient.auth.signInWithPassword({
+                    email: emailUsuario,
+                    password: senha
+                });
+
+                if (errAuth) {
+                    throw new Error('Senha incorreta! Operação cancelada por motivos de segurança.');
+                }
+
+                // 2. DISPARO DA PROCEDURE ATÔMICA NO POSTGRESQL
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo e Auditando...';
+
+                const autorNome = dadosUsuario?.nome_completo || 'Gestor Titular';
+
+                const { data, error: errRpc } = await supabaseClient.rpc('excluir_cliente_carteira_com_auditoria', {
+                    p_cliente_id: clienteId,
+                    p_motivo: motivo,
+                    p_autor_nome: autorNome
+                });
+
+                if (errRpc || !data?.sucesso) {
+                    throw new Error(data?.erro || errRpc?.message || 'Falha ao executar exclusão no banco.');
+                }
+
+                exibirToast('sucesso', 'Cadastro e registros vinculados excluídos e auditados com sucesso!');
+                fecharModalExcluirCliente();
+
+                // 3. ATUALIZAÇÃO IMEDIATA DA CARTEIRA E MÉTRICAS
+                await abrirDrilldownClientes();
+                if (dadosImobiliaria?.id) {
+                    await carregarMetricas(dadosImobiliaria.id);
+                }
+
+            } catch (err) {
+                console.error('[EXCLUSÃO CLIENTE CRÍTICA] Erro:', err);
+                exibirToast('erro', err.message || 'Erro ao processar exclusão.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Excluir e Auditar</span>';
+            }
+        }
+
+        window.iniciarExclusaoCliente = iniciarExclusaoCliente;
+        window.fecharModalExcluirCliente = fecharModalExcluirCliente;
+        window.executarExclusaoCliente = executarExclusaoCliente;
 
         window.addEventListener('DOMContentLoaded', () => {
             atualizarRelogioTopo();
@@ -6769,6 +6927,72 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
 
  <!-- Fim do modal simplificado -->
 
+ </div>
+    </div>
+
+    <!-- MODAL DARK TECH: EXCLUSÃO CRÍTICA DE CLIENTE COM RAIO-X & SENHA -->
+    <div id="modal-excluir-cliente-carteira" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-5 sm:p-6 shadow-2xl relative border-2 border-rose-600/80 bg-slate-950 space-y-4">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-rose-400 font-black text-sm uppercase">
+                    <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/40 text-base">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <span>Exclusão Crítica de Cadastro</span>
+                </div>
+                <button type="button" onclick="fecharModalExcluirCliente()" class="text-slate-400 hover:text-white cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- RAIO-X DE IMPACTO DINÂMICO -->
+            <div class="bg-rose-950/30 border border-rose-800/60 p-3.5 rounded-xl space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Cliente Selecionado:</span>
+                    <strong id="excluir-cli-tipo-badge" class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-rose-950 text-rose-300 border border-rose-800">TIPO</strong>
+                </div>
+                <h4 id="excluir-cli-nome" class="text-sm font-black text-white uppercase">NOME DO CLIENTE</h4>
+                <div id="excluir-cli-impacto-detalhes" class="pt-1.5 border-t border-rose-900/40 text-[11px] space-y-1 text-slate-300">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+            </div>
+
+            <form id="form-excluir-cliente-critico" onsubmit="executarExclusaoCliente(event)" class="space-y-3.5 text-xs">
+                <input type="hidden" id="excluir-cli-id-input">
+                <input type="hidden" id="excluir-cli-tipo-input">
+
+                <div>
+                    <label class="block font-bold text-slate-200 mb-1 text-[11px]">
+                        1. Motivo Formal da Exclusão (Gravado em Auditoria) *
+                    </label>
+                    <textarea id="excluir-cli-motivo" required rows="2" placeholder="Ex: Cancelamento contratual a pedido do cliente..."
+                              class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white outline-none focus:border-rose-500 text-xs"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-amber-400 mb-1 text-[11px] flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-amber-400"></i>
+                        <span>2. Confirme sua Senha de Login para Autorizar *</span>
+                    </label>
+                    <input type="password" id="excluir-cli-senha" required placeholder="Digite sua senha de acesso ao sistema..."
+                           class="w-full bg-slate-900 border border-amber-500/50 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-amber-400 font-mono">
+                    <p class="text-[10px] text-slate-500 mt-1">
+                        Proteção de segurança: impede que outra pessoa na sua mesa realize exclusões indesejadas.
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalExcluirCliente()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-confirmar-excluir-cli" 
+                            class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black flex items-center gap-2 shadow-lg shadow-rose-950/60 transition cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Excluir e Auditar</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </body>
