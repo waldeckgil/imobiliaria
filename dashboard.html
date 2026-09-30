@@ -1937,12 +1937,14 @@
         }
 async function atualizarPainelAssinatura(imob) {
             if (!imob || !imob.data_vencimento) {
-                document.getElementById('txt-vencimento-data').innerText = 'Não definida';
-                document.getElementById('txt-dias-contagem').innerText = 'Data de vencimento em configuração.';
+                const elVenc = document.getElementById('txt-vencimento-data');
+                const elDias = document.getElementById('txt-dias-contagem');
+                if (elVenc) elVenc.innerText = 'Não definida';
+                if (elDias) elDias.innerText = 'Data de vencimento em configuração.';
                 return;
             }
 
- // Busca as réguas de tolerância e a Chave PIX configuradas no Console Master
+            // Busca as réguas de tolerância configuradas no Console Master
             let diasCarenciaLeitura = 3;
             let diasBloqueioTotal = 7;
             try {
@@ -1962,7 +1964,8 @@ async function atualizarPainelAssinatura(imob) {
             }
 
             const [ano, mes, dia] = imob.data_vencimento.split('-');
-            document.getElementById('txt-vencimento-data').innerText = `${dia}/${mes}/${ano}`;
+            const elTxtVenc = document.getElementById('txt-vencimento-data');
+            if (elTxtVenc) elTxtVenc.innerText = `${dia}/${mes}/${ano}`;
 
             const dataVenc = new Date(`${imob.data_vencimento}T23:59:59`);
             const dataHoje = new Date();
@@ -1970,88 +1973,115 @@ async function atualizarPainelAssinatura(imob) {
             const diffDias = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             const diasAtraso = diffDias < 0 ? Math.abs(diffDias) : 0;
 
-  
+            // Declaração segura de todos os elementos visuais
+            const cardAssinatura = document.getElementById('card-monitor-assinatura');
+            const badgeStatus = document.getElementById('badge-status-plano');
+            const iconeStatus = document.getElementById('icone-status-plano');
+            const txtContagem = document.getElementById('txt-dias-contagem');
+            const btnRenovar = document.getElementById('btn-renovar-zap');
+            const btnPixTopo = document.getElementById('btn-pagar-pix-topo');
 
             const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
-
-            const msgWhatsApp = ehGratuito 
-                ? encodeURIComponent(`Olá Administrador! Sou da imobiliária ${imob.nome_fantasia || ''} (Plano Cortesia) e gostaria de tirar uma dúvida.`)
-                : encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia || ''} (Vencimento: ${dia}/${mes}/${ano}).`);
-            
-            btnRenovar.href = `https://wa.me/5521964120231?text=${msgWhatsApp}`;
-            btnRenovar.innerHTML = ehGratuito 
-                ? '<i class="fa-brands fa-whatsapp text-sm"></i><span>Falar com Administrador</span>'
-                : '<i class="fa-brands fa-whatsapp text-sm"></i><span>Solicitar Renovação</span>';
 
             // REGRA INTELIGENTE DE STATUS
             const ultrapassouLeitura = diasAtraso > diasCarenciaLeitura;
             const ultrapassouBloqueio = diasAtraso > diasBloqueioTotal;
             const estaEmCarencia = (diffDias < 0 && !ultrapassouLeitura);
 
+            if (btnRenovar) {
+                const msgWhatsApp = ehGratuito 
+                    ? encodeURIComponent(`Olá Administrador! Sou da imobiliária ${imob.nome_fantasia || ''} (Plano Cortesia) e gostaria de tirar uma dúvida.`)
+                    : encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia || ''} (Vencimento: ${dia}/${mes}/${ano}).`);
+                
+                btnRenovar.href = `https://wa.me/5521964120231?text=${msgWhatsApp}`;
+                btnRenovar.innerHTML = ehGratuito 
+                    ? '<i class="fa-brands fa-whatsapp text-sm"></i><span>Falar com Administrador</span>'
+                    : '<i class="fa-brands fa-whatsapp text-sm"></i><span>Solicitar Renovação</span>';
+            }
+
             modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || ultrapassouLeitura);
 
+            const faixaLeitura = document.getElementById('faixa-modo-leitura');
             if (modoLeitura && !isMasterSuporte) {
-                document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                if (faixaLeitura) faixaLeitura.classList.remove('hidden');
                 const btnNovo = document.getElementById('btn-novo-imovel');
                 if (btnNovo) {
                     btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
             } else {
-                document.getElementById('faixa-modo-leitura').classList.add('hidden');
+                if (faixaLeitura) faixaLeitura.classList.add('hidden');
             }
 
-       const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
+            const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
 
             // SE ESTIVER BLOQUEADA E NÃO FOR O ADMINISTRADOR MASTER, EXPULSA NA HORA
             if ((imob.status === 'blocked' || ultrapassouBloqueio) && !isMasterSuporte) {
-                await expulsarUsuarioBloqueado('Acesso suspenso: A assinatura da sua imobiliária possui pendências financeiras graves. Entre em contato com a administração.');
+                await expulsarUsuarioBloqueado();
                 return;
             }
 
-            if (imob.status === 'blocked' || ultrapassouBloqueio) {
-                cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/30`;
-                badgeStatus.innerText = 'BLOQUEADA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm flex-shrink-0 border border-rose-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-ban"></i>';
-                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Atrasada há ${diasAtraso} d.</span> Bloqueio total de acesso por inadimplência.`;
-            } else if (imob.status === 'read_only' || ultrapassouLeitura) {
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-500 bg-amber-950/25`;
-                badgeStatus.innerText = 'MODO LEITURA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 animate-pulse';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-eye"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Expirada há ${diasAtraso} d.</span> Tolerância esgotada. Somente consulta liberada.`;
-            } else if (estaEmCarencia) {
-                const diasRestantesCarencia = diasCarenciaLeitura - diasAtraso;
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
-                badgeStatus.innerText = 'EM CARÊNCIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Vencida há ${diasAtraso} d.</span> Carência ativa: restam ${diasRestantesCarencia} d. de uso pleno antes do bloqueio.`;
-            } else if (ehGratuito) {
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/15`;
-                badgeStatus.innerText = 'CORTESIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-gift"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia concedido pelo Administrador.</span>`;
-            } else if (diffDias <= 5) {
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
-                badgeStatus.innerText = 'VENCE EM BREVE';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam ${diffDias === 0 ? 'poucas horas' : diffDias + ' dia(s)'}.</span>`;
-            } else {
-                cardAssinatura.className = `${baseClassSlim} border-l-emerald-500`;
-                badgeStatus.innerText = 'EM DIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
-                txtContagem.innerText = `Faltam ${diffDias} dias para o próximo ciclo.`;
+            if (cardAssinatura && badgeStatus && iconeStatus && txtContagem) {
+                if (imob.status === 'blocked' || ultrapassouBloqueio) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/30`;
+                    badgeStatus.innerText = 'BLOQUEADA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm flex-shrink-0 border border-rose-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-ban"></i>';
+                    txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Atrasada há ${diasAtraso} d.</span> Bloqueio total de acesso por inadimplência.`;
+                } else if (imob.status === 'read_only' || ultrapassouLeitura) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-500 bg-amber-950/25`;
+                    badgeStatus.innerText = 'MODO LEITURA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 animate-pulse';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Expirada há ${diasAtraso} d.</span> Tolerância esgotada. Somente consulta liberada.`;
+                } else if (estaEmCarencia) {
+                    const diasRestantesCarencia = diasCarenciaLeitura - diasAtraso;
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
+                    badgeStatus.innerText = 'EM CARÊNCIA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Vencida há ${diasAtraso} d.</span> Carência ativa: restam ${diasRestantesCarencia} d. de uso pleno antes do bloqueio.`;
+                } else if (ehGratuito) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/15`;
+                    badgeStatus.innerText = 'CORTESIA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-gift"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia concedido pelo Administrador.</span>`;
+                } else if (diffDias <= 5) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
+                    badgeStatus.innerText = 'VENCE EM BREVE';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam ${diffDias === 0 ? 'poucas horas' : diffDias + ' dia(s)'}.</span>`;
+                } else {
+                    cardAssinatura.className = `${baseClassSlim} border-l-emerald-500`;
+                    badgeStatus.innerText = 'EM DIA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+                    txtContagem.innerText = `Faltam ${diffDias} dias para o próximo ciclo.`;
+                }
+            }
+
+            // Regra Discreta: Se estiver EM DIA (mais de 5 dias), oculta o botão pulsante de PIX
+            if (btnPixTopo) {
+                if (diffDias <= 5 || ultrapassouLeitura || ultrapassouBloqueio || estaEmCarencia) {
+                    btnPixTopo.classList.remove('hidden');
+                    btnPixTopo.classList.add('flex');
+                    if (diffDias <= 2 || ultrapassouLeitura || ultrapassouBloqueio || estaEmCarencia) {
+                        btnPixTopo.classList.add('animate-pulse');
+                    } else {
+                        btnPixTopo.classList.remove('animate-pulse');
+                    }
+                } else {
+                    btnPixTopo.classList.add('hidden');
+                    btnPixTopo.classList.remove('flex', 'animate-pulse');
+                }
             }
         }
 
