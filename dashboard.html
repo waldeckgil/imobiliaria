@@ -3555,13 +3555,21 @@ async function atualizarPainelAssinatura(imob) {
                         </div>
                     `).join('');
 
-                } else if (tipo === 'imoveis-alugados') {
-                    titulo.innerText = 'Imóveis Alugados & Contratos Ativos de Locação';
+   } else if (tipo === 'imoveis-alugados') {
+                    titulo.innerText = 'Imóveis Alugados • Contratos Ativos, Donos & Mensalidades 360°';
                     icone.className = 'fa-solid fa-key text-purple-400';
 
+                    // Expande o modal para largura confortável max-w-5xl
+                    const boxModal = modal.querySelector('.box-tech');
+                    if (boxModal) {
+                        boxModal.classList.remove('max-w-3xl');
+                        boxModal.classList.add('max-w-5xl');
+                    }
+
+                    // 1. Busca os contratos ativos com dados do imóvel
                     const { data: contratos, error } = await supabaseClient
                         .from('contratos_locacao')
-                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro)')
+                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa, bairro, proprietario_id, created_at, valor_locacao)')
                         .eq('imobiliaria_id', dadosImobiliaria.id)
                         .eq('status', 'Ativo')
                         .order('data_fim', { ascending: true });
@@ -3570,55 +3578,283 @@ async function atualizarPainelAssinatura(imob) {
                     contador.innerText = `${contratos ? contratos.length : 0} contratos ativos`;
 
                     if (!contratos || contratos.length === 0) {
-                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum contrato de locação ativo.</p>';
+                        corpo.innerHTML = '<p class="text-center text-slate-500 text-xs py-8">Nenhum contrato de locação ativo no momento.</p>';
                         return;
                     }
 
+                    // 2. Extrai IDs para consultar Proprietários e Histórico de Mensalidades Recebíveis
+                    const propIds = (contratos || []).map(c => c.imoveis?.proprietario_id).filter(Boolean);
+                    const contratoIds = (contratos || []).map(c => c.id).filter(Boolean);
+
+                    let mapaProprietarios = {};
+                    let mapaMensalidades = {};
+
+                    if (propIds.length > 0) {
+                        const { data: props } = await supabaseClient
+                            .from('clientes')
+                            .select('id, nome, cpf_cnpj, whatsapp, telefone')
+                            .in('id', propIds);
+                        (props || []).forEach(p => { mapaProprietarios[p.id] = p; });
+                    }
+
+                    if (contratoIds.length > 0) {
+                        const { data: mensals } = await supabaseClient
+                            .from('locacao_mensalidades_recebiveis')
+                            .select('*')
+                            .in('contrato_id', contratoIds)
+                            .order('data_vencimento', { ascending: false });
+                        (mensals || []).forEach(m => {
+                            if (!mapaMensalidades[m.contrato_id]) mapaMensalidades[m.contrato_id] = [];
+                            mapaMensalidades[m.contrato_id].push(m);
+                        });
+                    }
+
+                    // 3. Renderização completa dos imóveis alugados com ciclo completo de locação
                     corpo.innerHTML = contratos.map(c => {
                         const imovel = c.imoveis || {};
                         const dataInicioFmt = c.data_inicio ? c.data_inicio.split('-').reverse().join('/') : '--/--/----';
                         const dataFimFmt = c.data_fim ? c.data_fim.split('-').reverse().join('/') : '--/--/----';
-                        const zapLimpo = ('' + (c.cliente_whatsapp || '')).replace(/\D/g, '');
+                        const dtEntradaFmt = imovel.created_at ? new Date(imovel.created_at).toLocaleDateString('pt-BR') : '--/--/----';
+                        
+                        // Proprietário Vendedor / Locador
+                        const prop = imovel.proprietario_id ? (mapaProprietarios[imovel.proprietario_id] || null) : null;
+                        const zapPropLimpo = prop ? ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '') : '';
+                        const zapInquilinoLimpo = ('' + (c.cliente_whatsapp || '')).replace(/\D/g, '');
+
+                        // Documentos Anexos do Contrato (RG, CPF, Contrato Assinado)
+                        const docsContratoHtml = renderizarBotoesDocumentos(c.documentos_anexos, 'Contrato Assinado & Documentos do Inquilino');
+
+                        // Mensalidades deste contrato
+                        const historicoMensalidades = mapaMensalidades[c.id] || [];
 
                         return `
-                            <div class="bg-slate-950 p-4 rounded-xl border border-purple-800/40 space-y-2 hover:border-purple-500/60 transition">
-                                <div class="flex items-start justify-between gap-3">
+                            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-purple-500/40 space-y-3.5 hover:border-purple-400 transition shadow-lg shadow-purple-950/20">
+                                
+                                <!-- CABEÇALHO DO IMÓVEL LOCADO -->
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                                     <div class="flex items-center gap-3">
-                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
+                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-14 h-14 rounded-xl object-cover border border-slate-700 flex-shrink-0 shadow">
                                         <div>
-                                            <span class="font-bold text-white text-xs block leading-snug uppercase">${imovel.titulo || 'Imóvel Alugado'}</span>
-                                            <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${c.imovel_id}')" class="text-[10px] text-purple-300 font-mono hover:underline block text-left">
-                                                Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'} &rarr;
-                                            </button>
+                                            <div class="flex items-center gap-2 flex-wrap">
+                                                <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${c.imovel_id}')" class="text-xs text-purple-300 font-mono font-bold hover:underline">
+                                                    Ref: ${imovel.codigo_ref || '---'} • ${imovel.bairro || 'Localização'} &rarr;
+                                                </button>
+                                                <span class="px-2 py-0.5 rounded text-[9px] font-mono font-black uppercase bg-purple-950 text-purple-300 border border-purple-800">
+                                                    Vence todo dia ${c.dia_vencimento_aluguel || '10'}
+                                                </span>
+                                            </div>
+                                            <h5 class="text-sm font-black text-white leading-snug uppercase mt-0.5">${imovel.titulo || 'Imóvel Alugado'}</h5>
+                                            <span class="text-[10px] text-slate-400 font-mono block">Vigência: <strong class="text-white">${dataInicioFmt}</strong> até <strong class="text-white">${dataFimFmt}</strong></span>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <button onclick="fecharDrilldown(); window.abrirDossieUniversal('${c.cliente_id || ''}', '${(c.cliente_nome || '').replace(/'/g, "\\'")}', '${c.cliente_cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1.5 rounded-xl text-xs transition cursor-pointer">
-                                            Dossiê 360°
+
+                                    <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
+                                        <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${c.imovel_id}')" 
+                                                class="bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-house-chimney text-[10px]"></i>
+                                            <span>Raio-X do Imóvel</span>
                                         </button>
-                                        ${zapLimpo ? `
-                                            <a href="https://wa.me/${zapLimpo}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow transition whitespace-nowrap">
-                                                <i class="fa-brands fa-whatsapp"></i> Zap
-                                            </a>
-                                        ` : ''}
+                                        <span class="px-2.5 py-1 rounded-xl text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 shadow-sm">
+                                            <i class="fa-solid fa-check text-[9px]"></i> CONTRATO ATIVO
+                                        </span>
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800/80 text-[11px]">
-                                    <div>
-                                        <span class="text-slate-500 block">Locatário:</span> 
-                                        <button onclick="fecharDrilldown(); window.abrirDossieUniversal('${c.cliente_id || ''}', '${(c.cliente_nome || '').replace(/'/g, "\\'")}', '${c.cliente_cpf_cnpj || ''}', 'inquilino')" class="text-white hover:text-purple-300 font-bold underline cursor-pointer text-left uppercase">
+                                <!-- SEÇÃO 1: OS ENVOLVIDOS (PROPRIETÁRIO LOCADOR X INQUILINO) -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    
+                                    <!-- PROPRIETÁRIO (LOCADOR) -->
+                                    <div class="bg-slate-900/80 p-3 rounded-xl border border-sky-900/60 space-y-1.5">
+                                        <div class="flex items-center justify-between text-[10px] uppercase font-black text-sky-400">
+                                            <span class="flex items-center gap-1"><i class="fa-solid fa-user-tie"></i> Proprietário Titular (Locador)</span>
+                                            <div class="flex items-center gap-1.5">
+                                                ${zapPropLimpo ? `
+                                                    <a href="https://wa.me/${zapPropLimpo}" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-0.5">
+                                                        <i class="fa-brands fa-whatsapp"></i> Zap
+                                                    </a>
+                                                ` : ''}
+                                                ${prop ? `
+                                                    <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${prop.id}', '${(prop.nome || '').replace(/'/g, "\\'")}', '${prop.cpf_cnpj || ''}', 'proprietario')" class="text-sky-300 hover:underline">
+                                                        • Dossiê 360°
+                                                    </button>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                        ${prop ? `
+                                            <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${prop.id}', '${(prop.nome || '').replace(/'/g, "\\'")}', '${prop.cpf_cnpj || ''}', 'proprietario')" 
+                                                    class="text-xs font-black text-white hover:text-sky-300 underline text-left block truncate uppercase" title="Abrir Dossiê 360° do Proprietário">
+                                                ${prop.nome}
+                                            </button>
+                                            <span class="text-[10px] text-slate-400 font-mono block">CPF: ${prop.cpf_cnpj || 'Não informado'} • Tel: ${prop.whatsapp || prop.telefone || 'Sem contato'}</span>
+                                        ` : `
+                                            <span class="text-xs font-bold text-slate-400 italic block">Proprietário não vinculado ao cadastro</span>
+                                        `}
+                                    </div>
+
+                                    <!-- LOCATÁRIO (INQUILINO) -->
+                                    <div class="bg-slate-900/80 p-3 rounded-xl border border-purple-900/60 space-y-1.5">
+                                        <div class="flex items-center justify-between text-[10px] uppercase font-black text-purple-400">
+                                            <span class="flex items-center gap-1"><i class="fa-solid fa-key"></i> Locatário (Inquilino)</span>
+                                            <div class="flex items-center gap-1.5">
+                                                ${zapInquilinoLimpo ? `
+                                                    <a href="https://wa.me/${zapInquilinoLimpo}" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-0.5">
+                                                        <i class="fa-brands fa-whatsapp"></i> Zap
+                                                    </a>
+                                                ` : ''}
+                                                <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${c.cliente_id || ''}', '${(c.cliente_nome || '').replace(/'/g, "\\'")}', '${c.cliente_cpf_cnpj || ''}', 'inquilino')" class="text-purple-300 hover:underline">
+                                                    • Dossiê 360°
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${c.cliente_id || ''}', '${(c.cliente_nome || '').replace(/'/g, "\\'")}', '${c.cliente_cpf_cnpj || ''}', 'inquilino')" 
+                                                class="text-xs font-black text-white hover:text-purple-300 underline text-left block truncate uppercase" title="Abrir Dossiê 360° do Inquilino">
                                             ${c.cliente_nome}
                                         </button>
+                                        <span class="text-[10px] text-slate-400 font-mono block">CPF: ${c.cliente_cpf_cnpj || 'Não informado'} • Tel: ${c.cliente_whatsapp || 'Sem contato'}</span>
                                     </div>
-                                    <div><span class="text-slate-500 block">Aluguel:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong></div>
-                                    <div><span class="text-slate-500 block">Taxa Imob (${c.taxa_administracao_pct}%):</span> <strong class="text-amber-300 font-mono">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong></div>
-                                    <div><span class="text-slate-500 block">Repasse Dono:</span> <strong class="text-cyan-300 font-mono">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong></div>
+
                                 </div>
 
-                                <div class="flex items-center justify-between pt-1 text-[10px] text-slate-400 border-t border-slate-900">
-                                    <span>Vigência: <strong>${dataInicioFmt}</strong> até <strong>${dataFimFmt}</strong></span>
+                                <!-- SEÇÃO 2: REPARTIÇÃO FINANCEIRA MENSAL -->
+                                <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center font-mono">
+                                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
+                                        <span class="text-slate-500 block text-[9px] uppercase font-bold">Aluguel Bruto</span>
+                                        <strong class="text-white text-xs font-black block mt-0.5">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>
+                                    </div>
+                                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
+                                        <span class="text-slate-500 block text-[9px] uppercase font-bold">Taxa Imobiliária (${c.taxa_administracao_pct || 10}%)</span>
+                                        <strong class="text-amber-300 text-xs font-black block mt-0.5">R$ ${Number(c.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}/mês</strong>
+                                    </div>
+                                    <div class="bg-slate-950 p-2 rounded-lg border border-cyan-900/50">
+                                        <span class="text-cyan-400 block text-[9px] uppercase font-black">Repasse Líquido Dono</span>
+                                        <strong class="text-cyan-300 text-xs font-black block mt-0.5">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}/mês</strong>
+                                    </div>
+                                    <div class="bg-slate-950 p-2 rounded-lg border border-purple-900/50">
+                                        <span class="text-purple-400 block text-[9px] uppercase font-black">Cobranças Emitidas</span>
+                                        <strong class="text-purple-300 text-xs font-black block mt-0.5">${historicoMensalidades.length} competência(s)</strong>
+                                    </div>
                                 </div>
+
+                                <!-- SEÇÃO 3: LINHA DO TEMPO & HISTÓRICO COMPLETO DE MENSALIDADES (PASSOS DA LOCAÇÃO) -->
+                                <details class="group bg-slate-900/60 rounded-xl border border-slate-800/90 p-3 transition" open>
+                                    <summary class="flex items-center justify-between text-xs font-black uppercase text-purple-300 cursor-pointer list-none select-none">
+                                        <span class="flex items-center gap-2">
+                                            <i class="fa-solid fa-receipt text-purple-400"></i>
+                                            <span>Linha do Tempo da Locação & Extrato das Mensalidades</span>
+                                        </span>
+                                        <span class="text-[10px] text-slate-400 font-normal font-mono flex items-center gap-1 group-open:rotate-180 transition-transform">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                    </summary>
+
+                                    <div class="pt-3.5 mt-2 border-t border-slate-800 space-y-3 font-sans text-xs">
+                                        
+                                        <!-- ETAPA 1: CAPTAÇÃO & CADASTRO -->
+                                        <div class="flex items-start gap-3 relative">
+                                            <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                                <i class="fa-solid fa-inbox"></i>
+                                            </div>
+                                            <div class="space-y-0.5 flex-1 bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+                                                <div class="flex items-center justify-between flex-wrap gap-1">
+                                                    <strong class="text-white font-bold">1. Captação & Entrada para Locação</strong>
+                                                    <span class="text-[10px] font-mono text-sky-400 bg-sky-950 px-2 py-0.5 rounded border border-sky-800">${dtEntradaFmt}</span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-400">
+                                                    Imóvel disponibilizado para locação sob a titularidade do proprietário 
+                                                    <strong class="text-white">${prop ? prop.nome : 'Proprietário'}</strong>.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- ETAPA 2: FORMALIZAÇÃO DO CONTRATO -->
+                                        <div class="flex items-start gap-3 relative">
+                                            <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                                <i class="fa-solid fa-file-contract"></i>
+                                            </div>
+                                            <div class="space-y-1.5 flex-1 bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+                                                <div class="flex items-center justify-between flex-wrap gap-1">
+                                                    <strong class="text-white font-bold">2. Contrato em Vigor & Documentos Anexos</strong>
+                                                    <span class="text-[10px] font-mono text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
+                                                        ${dataInicioFmt} até ${dataFimFmt}
+                                                    </span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-300">
+                                                    Locação ativa com o inquilino <strong class="text-white uppercase">${c.cliente_nome}</strong>. Aluguel de <strong class="text-emerald-400 font-mono">R$ ${Number(c.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}</strong>, vencimento no dia <strong class="text-amber-300 font-mono">${c.dia_vencimento_aluguel || '10'}</strong> e repasse acordado de <strong class="text-cyan-300 font-mono">R$ ${Number(c.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong>.
+                                                </p>
+                                                ${docsContratoHtml}
+                                            </div>
+                                        </div>
+
+                                        <!-- ETAPA 3: HISTÓRICO DE MENSALIDADES PAGAS E REPASSES -->
+                                        <div class="flex items-start gap-3 relative">
+                                            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                                                <i class="fa-solid fa-money-check-dollar"></i>
+                                            </div>
+                                            <div class="space-y-2 flex-1 bg-slate-950 p-2.5 rounded-xl border border-emerald-900/60">
+                                                <div class="flex items-center justify-between flex-wrap gap-1">
+                                                    <strong class="text-emerald-400 font-bold">3. Extrato Mensal de Cobrança, Recibos & Repasses</strong>
+                                                    <span class="text-[10px] font-mono text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                                                        ${historicoMensalidades.length} fatura(s)
+                                                    </span>
+                                                </div>
+
+                                                ${historicoMensalidades.length === 0 ? `
+                                                    <p class="text-[11px] text-slate-500 italic py-2 text-center">Nenhuma mensalidade emitida ainda para este contrato.</p>
+                                                ` : `
+                                                    <div class="overflow-x-auto">
+                                                        <table class="w-full text-left font-mono text-[11px] text-slate-300">
+                                                            <thead class="bg-slate-900/90 text-slate-500 uppercase text-[9px] border-b border-slate-800">
+                                                                <tr>
+                                                                    <th class="py-1.5 px-2">Competência</th>
+                                                                    <th class="py-1.5 px-2">Vencimento</th>
+                                                                    <th class="py-1.5 px-2">Valor</th>
+                                                                    <th class="py-1.5 px-2">Status Inquilino</th>
+                                                                    <th class="py-1.5 px-2">Status Repasse</th>
+                                                                    <th class="py-1.5 px-2 text-center">Comprovante</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="divide-y divide-slate-800/60">
+                                                                ${historicoMensalidades.map(m => {
+                                                                    const vencFmt = m.data_vencimento ? m.data_vencimento.split('-').reverse().join('/') : '--/--/----';
+                                                                    const pgtoFmt = m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : '';
+                                                                    const repasseFmt = m.data_repasse ? m.data_repasse.split('-').reverse().join('/') : '';
+                                                                    const ehPago = (m.status_inquilino === 'Pago');
+
+                                                                    return `
+                                                                        <tr>
+                                                                            <td class="py-2 px-2 font-bold text-white">${m.mes_referencia || '---'}</td>
+                                                                            <td class="py-2 px-2 text-amber-300 font-mono">${vencFmt}</td>
+                                                                            <td class="py-2 px-2 text-emerald-400 font-bold">R$ ${Number(m.valor_aluguel || 0).toLocaleString('pt-BR')}</td>
+                                                                            <td class="py-2 px-2">
+                                                                                <span class="px-2 py-0.5 rounded text-[9px] font-bold ${ehPago ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-300 border border-rose-800'}">
+                                                                                    ${ehPago ? `PAGO (${pgtoFmt})` : (m.status_inquilino || 'Pendente')}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td class="py-2 px-2">
+                                                                                <span class="px-2 py-0.5 rounded text-[9px] font-bold ${m.status_repasse === 'Repassado' ? 'bg-cyan-950 text-cyan-300 border border-cyan-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">
+                                                                                    ${m.status_repasse === 'Repassado' ? `REPASSADO (${repasseFmt})` : (m.status_repasse || 'Aguardando')}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td class="py-2 px-2 text-center">
+                                                                                ${m.comprovante_url ? `
+                                                                                    <a href="${m.comprovante_url}" target="_blank" class="text-cyan-400 hover:text-cyan-300 text-[10px] inline-flex items-center gap-1 font-bold underline">
+                                                                                        <i class="fa-solid fa-eye"></i> Ver Recibo
+                                                                                    </a>
+                                                                                ` : `<span class="text-slate-600 text-[10px]">Sem anexo</span>`}
+                                                                            </td>
+                                                                        </tr>
+                                                                    `;
+                                                                }).join('')}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                `}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </details>
+
                             </div>
                         `;
                     }).join('');
