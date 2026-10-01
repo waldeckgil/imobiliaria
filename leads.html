@@ -550,9 +550,8 @@
                     <span id="txt-aba-fechamento">Concluir Negócio</span>
                 </button>
             </div>
-
-            <!-- CONTEÚDO DAS ABAS (CONTAINER SCROLLÁVEL) -->
-            <div class="flex-1 overflow-y-auto pr-1 text-xs space-y-3">
+<!-- CONTEÚDO DAS ABAS (CONTAINER SCROLLÁVEL) -->
+            <div class="flex-1 min-h-[420px] sm:min-h-0 overflow-y-visible sm:overflow-y-auto pr-1 text-xs space-y-3">
                 
                 <!-- ABA 1: HISTÓRICO & NOTAS INTERNAS -->
                 <div id="aba-conteudo-timeline" class="space-y-3">
@@ -2267,7 +2266,7 @@ if (novaEtapa === 'Visita Agendada') {
             abrirGuiaEtapasFunil();
         }
 
-        function trocarAbaCockpit(aba) {
+ function trocarAbaCockpit(aba) {
             const abas = ['timeline', 'visita', 'proposta', 'fechamento'];
             abas.forEach(a => {
                 const btn = document.getElementById(`btn-aba-${a}`);
@@ -2281,8 +2280,17 @@ if (novaEtapa === 'Visita Agendada') {
                     conteudo.classList.add('hidden');
                 }
             });
-        }
 
+            // NO SMARTPHONE: ROLA AUTOMATICAMENTE PARA EXIBIR O FORMULÁRIO DA ABA ATIVA
+            if (window.innerWidth < 768 && aba !== 'timeline') {
+                setTimeout(() => {
+                    const elConteudo = document.getElementById(`aba-conteudo-${aba}`);
+                    if (elConteudo) {
+                        elConteudo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }, 100);
+            }
+        }
         async function carregarEventosTimelineCockpit(leadId) {
             const container = document.getElementById('cockpit-timeline-lista');
             container.innerHTML = `
