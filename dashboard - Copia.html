@@ -3623,21 +3623,13 @@ async function atualizarPainelAssinatura(imob) {
                         `;
                     }).join('');
 
-   } else if (tipo === 'imoveis-vendidos') {
-                    titulo.innerText = 'Histórico Geral de Imóveis Vendidos • Ciclo Completo 360°';
+                } else if (tipo === 'imoveis-vendidos') {
+                    titulo.innerText = 'Histórico Geral de Imóveis Vendidos';
                     icone.className = 'fa-solid fa-handshake text-amber-400';
 
-                    // Expande o modal para acomodar a linha do tempo e todos os dados com folga visual
-                    const boxModal = modal.querySelector('.box-tech');
-                    if (boxModal) {
-                        boxModal.classList.remove('max-w-3xl');
-                        boxModal.classList.add('max-w-5xl');
-                    }
-
-                    // 1. Consulta profunda das vendas trazendo dados cadastrais do imóvel
                     const { data: vendas, error } = await supabaseClient
                         .from('vendas_fechadas')
-                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa, valor_venda, valor_pretendido_proprietario, created_at, proprietario_id)')
+                        .select('*, imoveis(id, codigo_ref, titulo, foto_capa)')
                         .eq('imobiliaria_id', dadosImobiliaria.id)
                         .order('data_venda', { ascending: false });
 
@@ -3649,269 +3641,42 @@ async function atualizarPainelAssinatura(imob) {
                         return;
                     }
 
-                    // 2. Extrai IDs para consultar Proprietários e Histórico de Leads/Propostas/Visitas
-                    const imovelIds = (vendas || []).map(v => v.imovel_id).filter(Boolean);
-                    const propIds = (vendas || []).map(v => v.imoveis?.proprietario_id).filter(Boolean);
-
-                    let mapaLeadsPorImovel = {};
-                    let mapaProprietarios = {};
-
-                    if (imovelIds.length > 0) {
-                        const { data: leadsImov } = await supabaseClient
-                            .from('leads_contatos')
-                            .select('id, imovel_id, nome, whatsapp, status, criado_em, data_agendamento, valor_proposta, condicoes_proposta')
-                            .in('imovel_id', imovelIds)
-                            .order('criado_em', { ascending: true });
-
-                        (leadsImov || []).forEach(l => {
-                            if (!mapaLeadsPorImovel[l.imovel_id]) mapaLeadsPorImovel[l.imovel_id] = [];
-                            mapaLeadsPorImovel[l.imovel_id].push(l);
-                        });
-                    }
-
-                    if (propIds.length > 0) {
-                        const { data: props } = await supabaseClient
-                            .from('clientes')
-                            .select('id, nome, cpf_cnpj, whatsapp, telefone')
-                            .in('id', propIds);
-
-                        (props || []).forEach(p => { mapaProprietarios[p.id] = p; });
-                    }
-
-                    // 3. Renderização completa de cada imóvel com Dono, Comprador, Finanças e Linha do Tempo
                     corpo.innerHTML = vendas.map(v => {
                         const imovel = v.imoveis || {};
                         const dtFormatada = v.data_venda ? v.data_venda.split('-').reverse().join('/') : '--/--/----';
-                        const dtEntradaFmt = imovel.created_at ? new Date(imovel.created_at).toLocaleDateString('pt-BR') : '--/--/----';
-                        
-                        // Proprietário Vendedor
-                        const prop = imovel.proprietario_id ? (mapaProprietarios[imovel.proprietario_id] || null) : null;
-                        const zapPropLimpo = prop ? ('' + (prop.whatsapp || prop.telefone || '')).replace(/\D/g, '') : '';
-
-                        // Cálculos de Margem de Negociação / Deságio
-                        const valPretendido = Number(imovel.valor_pretendido_proprietario || imovel.valor_venda || 0);
-                        const valFechado = Number(v.valor_venda_real || 0);
-                        let badgeNegociacaoHtml = '';
-
-                        if (valPretendido > 0 && valFechado > 0) {
-                            const diff = valPretendido - valFechado;
-                            if (diff > 0) {
-                                const pct = ((diff / valPretendido) * 100).toFixed(1);
-                                badgeNegociacaoHtml = `<span class="text-[9px] font-mono text-amber-300 font-bold bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800">Desconto: -${pct}% (-R$ ${diff.toLocaleString('pt-BR')})</span>`;
-                            } else if (diff < 0) {
-                                const pct = ((Math.abs(diff) / valPretendido) * 100).toFixed(1);
-                                badgeNegociacaoHtml = `<span class="text-[9px] font-mono text-emerald-300 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">+${pct}% Acima do Pretendido</span>`;
-                            } else {
-                                badgeNegociacaoHtml = `<span class="text-[9px] font-mono text-cyan-300 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">100% do Valor Pretendido</span>`;
-                            }
-                        }
-
-                        // Cálculo de Tempo de Maturação da Venda (dias entre captação e venda)
-                        let diasAteVendaTexto = '';
-                        if (imovel.created_at && v.data_venda) {
-                            const dtEntrada = new Date(imovel.created_at);
-                            const [aV, mV, dV] = v.data_venda.split('-').map(Number);
-                            const dtVenda = new Date(aV, mV - 1, dV);
-                            const diffDias = Math.max(0, Math.floor((dtVenda.getTime() - dtEntrada.getTime()) / (1000 * 60 * 60 * 24)));
-                            diasAteVendaTexto = `${diffDias} dia(s) no portfólio até a venda`;
-                        }
-
-                        // Leads e Histórico da Jornada Comercial deste Imóvel
-                        const leadsDesteImovel = mapaLeadsPorImovel[v.imovel_id] || [];
-                        const visitasMarcadas = leadsDesteImovel.filter(l => l.data_agendamento);
-                        const propostasRecebidas = leadsDesteImovel.filter(l => l.valor_proposta || l.status === 'Proposta');
-
                         return `
-                            <div class="bg-slate-950 p-4 sm:p-5 rounded-2xl border border-amber-500/40 space-y-3.5 hover:border-amber-400 transition shadow-lg shadow-amber-950/20">
-                                
-                                <!-- CABEÇALHO DO IMÓVEL -->
-                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-amber-500/30 space-y-2 hover:border-amber-400 transition">
+                                <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-3">
-                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-14 h-14 rounded-xl object-cover border border-slate-700 flex-shrink-0 shadow">
+                                        <img src="${imovel.foto_capa || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=150&q=80'}" class="w-12 h-12 rounded-lg object-cover border border-slate-700">
                                         <div>
-                                            <div class="flex items-center gap-2 flex-wrap">
-                                                <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${v.imovel_id}')" class="text-xs text-amber-300 font-mono font-bold hover:underline">
-                                                    Ref: ${imovel.codigo_ref || '---'} &rarr;
-                                                </button>
-                                                ${badgeNegociacaoHtml}
-                                            </div>
-                                            <h5 class="text-sm font-black text-white leading-snug uppercase mt-0.5">${imovel.titulo || 'Imóvel Vendido'}</h5>
-                                            <span class="text-[10px] text-slate-400 font-mono block">Data da Venda: <strong class="text-white">${dtFormatada}</strong> ${diasAteVendaTexto ? `• ${diasAteVendaTexto}` : ''}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
-                                        <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${v.imovel_id}')" 
-                                                class="bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-house-chimney text-[10px]"></i>
-                                            <span>Raio-X do Imóvel</span>
-                                        </button>
-                                        <span class="px-2.5 py-1 rounded-xl text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 shadow-sm">
-                                            <i class="fa-solid fa-check text-[9px]"></i> VENDIDO
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- SEÇÃO 1: OS ENVOLVIDOS (PROPRIETÁRIO VENDEDOR X COMPRADOR X CORRETOR) -->
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
-                                    
-                                    <!-- PROPRIETÁRIO (VENDEDOR) -->
-                                    <div class="bg-slate-900/80 p-3 rounded-xl border border-sky-900/60 space-y-1.5">
-                                        <div class="flex items-center justify-between text-[10px] uppercase font-black text-sky-400">
-                                            <span class="flex items-center gap-1"><i class="fa-solid fa-user-tie"></i> Proprietário (Vendedor)</span>
-                                            ${zapPropLimpo ? `
-                                                <a href="https://wa.me/${zapPropLimpo}" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-0.5">
-                                                    <i class="fa-brands fa-whatsapp"></i> Zap
-                                                </a>
-                                            ` : ''}
-                                        </div>
-                                        ${prop ? `
-                                            <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${prop.id}', '${(prop.nome || '').replace(/'/g, "\\'")}', '${prop.cpf_cnpj || ''}', 'proprietario')" 
-                                                    class="text-xs font-black text-white hover:text-sky-300 underline text-left block truncate uppercase" title="Abrir Dossiê 360° do Proprietário">
-                                                ${prop.nome}
+                                            <span class="font-bold text-white text-xs block uppercase">${imovel.titulo || 'Imóvel Vendido'}</span>
+                                            <button type="button" onclick="fecharDrilldown(); window.abrirModalDetalhesImovel('${v.imovel_id}')" class="text-[10px] text-amber-300 font-mono hover:underline block text-left">
+                                                Ref: ${imovel.codigo_ref || '---'} • Vendido em: ${dtFormatada} &rarr;
                                             </button>
-                                            <span class="text-[10px] text-slate-400 font-mono block">CPF: ${prop.cpf_cnpj || 'Não informado'}</span>
-                                        ` : `
-                                            <span class="text-xs font-bold text-slate-400 italic block">Proprietário não vinculado ao cadastro</span>
-                                        `}
+                                        </div>
                                     </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800">Fechado</span>
+                                </div>
 
-                                    <!-- COMPRADOR -->
-                                    <div class="bg-slate-900/80 p-3 rounded-xl border border-amber-900/60 space-y-1.5">
-                                        <span class="text-[10px] uppercase font-black text-amber-400 block flex items-center gap-1">
-                                            <i class="fa-solid fa-cart-shopping"></i> Comprador
-                                        </span>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                                    <div>
+                                        <span class="text-slate-500 block">Comprador:</span> 
                                         <button type="button" onclick="fecharDrilldown(); window.abrirDossieUniversal('${v.cliente_comprador_id || ''}', '${(v.cliente_comprador_nome || '').replace(/'/g, "\\'")}', '', 'comprador')" 
-                                                class="text-xs font-black text-white hover:text-amber-300 underline text-left block truncate uppercase" title="Abrir Dossiê 360° do Comprador">
-                                            ${v.cliente_comprador_nome || 'Comprador não identificado'}
+                                                class="text-white hover:text-amber-300 font-bold underline cursor-pointer text-left inline-flex items-center gap-1 uppercase">
+                                            <span>${v.cliente_comprador_nome}</span>
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-amber-400"></i>
                                         </button>
-                                        <span class="text-[10px] text-slate-400 font-mono block">Cliente Comprador Registrado</span>
                                     </div>
-
-                                    <!-- CORRETOR FECHADOR -->
-                                    <div class="bg-slate-900/80 p-3 rounded-xl border border-blue-900/60 space-y-1.5">
-                                        <span class="text-[10px] uppercase font-black text-blue-400 block flex items-center gap-1">
-                                            <i class="fa-solid fa-handshake-angle"></i> Corretor Fechador
-                                        </span>
-                                        <button type="button" onclick="fecharDrilldown(); window.abrirDossieCorretor('${v.corretor_id || ''}', '${(v.corretor_nome || 'Casa').replace(/'/g, "\\'")}')" 
-                                                class="text-xs font-black text-white hover:text-blue-300 underline text-left block truncate uppercase" title="Abrir Dossiê Comercial do Corretor">
-                                            ${v.corretor_nome || 'Casa / Imobiliária'}
+                                    <div><span class="text-slate-500 block">Valor Venda:</span> <strong class="text-white font-mono">R$ ${Number(v.valor_venda_real).toLocaleString('pt-BR')}</strong></div>
+                                    <div><span class="text-slate-500 block">Comissão Imob:</span> <strong class="text-emerald-400 font-mono">R$ ${Number(v.valor_comissao_imobiliaria).toLocaleString('pt-BR')}</strong></div>
+                                    <div>
+                                        <span class="text-slate-500 block">Corretor:</span> 
+                                        <button type="button" onclick="fecharDrilldown(); window.abrirDossieCorretor('${v.corretor_id || ''}', '${(v.corretor_nome || 'Casa').replace(/'/g, "\\'")}')" class="text-cyan-300 font-mono hover:underline">
+                                            ${v.corretor_nome || 'Casa'} (R$ ${Number(v.valor_comissao_corretor).toLocaleString('pt-BR')})
                                         </button>
-                                        <span class="text-[10px] text-cyan-300 font-mono block">Comissão: R$ ${Number(v.valor_comissao_corretor || 0).toLocaleString('pt-BR')} (${v.comissao_corretor_pct || 0}%)</span>
                                     </div>
                                 </div>
-
-                                <!-- SEÇÃO 2: RAIO-X FINANCEIRO DO FECHAMENTO (VALORES, COMISSÕES E REPASSE) -->
-                                <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center font-mono">
-                                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
-                                        <span class="text-slate-500 block text-[9px] uppercase font-bold">Valor Pretendido</span>
-                                        <strong class="text-slate-300 text-xs block mt-0.5">R$ ${valPretendido.toLocaleString('pt-BR')}</strong>
-                                    </div>
-                                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
-                                        <span class="text-slate-500 block text-[9px] uppercase font-bold">Valor Venda Fechada</span>
-                                        <strong class="text-emerald-400 text-xs font-black block mt-0.5">R$ ${valFechado.toLocaleString('pt-BR')}</strong>
-                                    </div>
-                                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-800/80">
-                                        <span class="text-slate-500 block text-[9px] uppercase font-bold">Comissão Imobiliária</span>
-                                        <strong class="text-amber-300 text-xs font-black block mt-0.5">R$ ${Number(v.valor_comissao_imobiliaria || 0).toLocaleString('pt-BR')}</strong>
-                                    </div>
-                                    <div class="bg-slate-950 p-2 rounded-lg border border-cyan-900/50">
-                                        <span class="text-cyan-400 block text-[9px] uppercase font-black">Repasse Líquido Dono</span>
-                                        <strong class="text-cyan-300 text-xs font-black block mt-0.5">R$ ${Number(v.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong>
-                                    </div>
-                                </div>
-
-                                <!-- SEÇÃO 3: LINHA DO TEMPO CRONOLÓGICA DAS ETAPAS DO IMÓVEL (PASSOS DA VIDA DO ATIVO) -->
-                                <details class="group bg-slate-900/60 rounded-xl border border-slate-800/90 p-3 transition" open>
-                                    <summary class="flex items-center justify-between text-xs font-black uppercase text-amber-400 cursor-pointer list-none select-none">
-                                        <span class="flex items-center gap-2">
-                                            <i class="fa-solid fa-timeline text-amber-400"></i>
-                                            <span>Linha do Tempo Completa da Vida do Imóvel</span>
-                                        </span>
-                                        <span class="text-[10px] text-slate-400 font-normal font-mono flex items-center gap-1 group-open:rotate-180 transition-transform">
-                                            <i class="fa-solid fa-chevron-down"></i>
-                                        </span>
-                                    </summary>
-
-                                    <div class="pt-3.5 mt-2 border-t border-slate-800 space-y-3 font-sans text-xs">
-                                        
-                                        <!-- ETAPA 1: ENTRADA / CAPTAÇÃO -->
-                                        <div class="flex items-start gap-3 relative">
-                                            <div class="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
-                                                <i class="fa-solid fa-inbox"></i>
-                                            </div>
-                                            <div class="space-y-0.5 flex-1 bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
-                                                <div class="flex items-center justify-between flex-wrap gap-1">
-                                                    <strong class="text-white font-bold">1. Captação & Entrada no Sistema</strong>
-                                                    <span class="text-[10px] font-mono text-sky-400 bg-sky-950 px-2 py-0.5 rounded border border-sky-800">${dtEntradaFmt}</span>
-                                                </div>
-                                                <p class="text-[11px] text-slate-400">
-                                                    Imóvel cadastrado no estoque para venda sob a titularidade de 
-                                                    <strong class="text-white">${prop ? prop.nome : 'Proprietário'}</strong> com valor inicial pretendido de 
-                                                    <strong class="text-white font-mono">R$ ${valPretendido.toLocaleString('pt-BR')}</strong>.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <!-- ETAPA 2: JORNADA COMERCIAL & PROPOSTAS -->
-                                        <div class="flex items-start gap-3 relative">
-                                            <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
-                                                <i class="fa-solid fa-comments"></i>
-                                            </div>
-                                            <div class="space-y-1 flex-1 bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
-                                                <div class="flex items-center justify-between flex-wrap gap-1">
-                                                    <strong class="text-white font-bold">2. Jornada de Atendimentos, Visitas & Propostas</strong>
-                                                    <span class="text-[10px] font-mono text-purple-300 bg-purple-950 px-2 py-0.5 rounded border border-purple-800">
-                                                        ${leadsDesteImovel.length} contato(s) registrado(s)
-                                                    </span>
-                                                </div>
-
-                                                ${propostasRecebidas.length > 0 ? `
-                                                    <div class="space-y-1 pt-1">
-                                                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Propostas / Ofertas Anteriores Registradas:</span>
-                                                        ${propostasRecebidas.map(pr => `
-                                                            <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-[11px] flex items-center justify-between">
-                                                                <span class="text-slate-300">${pr.nome} (${pr.whatsapp || 'Sem Zap'})</span>
-                                                                <strong class="text-rose-300 font-mono">R$ ${Number(pr.valor_proposta || 0).toLocaleString('pt-BR')}</strong>
-                                                            </div>
-                                                        `).join('')}
-                                                    </div>
-                                                ` : (visitasMarcadas.length > 0 ? `
-                                                    <p class="text-[11px] text-slate-400 pt-0.5">
-                                                        Visita realizada com interessado em <strong class="text-white font-mono">${new Date(visitasMarcadas[0].data_agendamento).toLocaleDateString('pt-BR')}</strong>.
-                                                    </p>
-                                                ` : `
-                                                    <p class="text-[11px] text-slate-500 italic pt-0.5">
-                                                        Venda direta ou tratativa ágil sem histórico de contrapropostas pendentes no sistema.
-                                                    </p>
-                                                `)}
-                                            </div>
-                                        </div>
-
-                                        <!-- ETAPA 3: FECHAMENTO & LIQUIDAÇÃO -->
-                                        <div class="flex items-start gap-3 relative">
-                                            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
-                                                <i class="fa-solid fa-file-signature"></i>
-                                            </div>
-                                            <div class="space-y-1 flex-1 bg-slate-950 p-2.5 rounded-xl border border-emerald-900/60">
-                                                <div class="flex items-center justify-between flex-wrap gap-1">
-                                                    <strong class="text-emerald-400 font-bold">3. Batida de Martelo & Venda Concluída</strong>
-                                                    <span class="text-[10px] font-mono text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">${dtFormatada}</span>
-                                                </div>
-                                                <p class="text-[11px] text-slate-300 leading-relaxed">
-                                                    Negócio fechado com o comprador <strong class="text-white uppercase">${v.cliente_comprador_nome}</strong> no valor de <strong class="text-emerald-400 font-mono">R$ ${valFechado.toLocaleString('pt-BR')}</strong>, com intermediação do corretor <strong class="text-white">${v.corretor_nome || 'Casa'}</strong> e repasse líquido garantido ao proprietário no valor de <strong class="text-cyan-300 font-mono">R$ ${Number(v.valor_repasse_proprietario || 0).toLocaleString('pt-BR')}</strong>.
-                                                </p>
-                                                ${v.observacoes ? `
-                                                    <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800 text-[10px] text-slate-400 mt-1">
-                                                        <strong class="text-amber-400 uppercase block">Condições Registradas no Fechamento:</strong>
-                                                        <span>${v.observacoes}</span>
-                                                    </div>
-                                                ` : ''}
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </details>
-
                             </div>
                         `;
                     }).join('');
