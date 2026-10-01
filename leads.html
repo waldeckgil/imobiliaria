@@ -445,9 +445,8 @@
     <!-- ==================================================================== -->
     <!-- MODAL PRINCIPAL: COCKPIT UNIFICADO DO ATENDIMENTO (FICHA DO LEAD)    -->
     <!-- ==================================================================== -->
-    <div id="modal-cockpit-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden">
-        <div class="box-tech max-w-6xl w-full p-4 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[94vh] flex flex-col bg-slate-900">
-            
+  <div id="modal-cockpit-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center p-2 sm:p-5 hidden overflow-y-auto">
+        <div class="box-tech max-w-6xl w-full p-4 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[96vh] sm:max-h-[94vh] flex flex-col bg-slate-900 overflow-y-auto my-auto">          
             <!-- CABEÇALHO DO MODAL COM STATUS E ALERTA DE VISITA EM DESTAQUE NO TOPO -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-3">
@@ -2067,27 +2066,24 @@
                 return;
             }
 
-            if (novaEtapa === 'Visita Agendada') {
+if (novaEtapa === 'Visita Agendada') {
                 trocarAbaCockpit('visita');
                 
                 notificar(
                     'info', 
                     'Programação da Visita', 
-                    'Aba de agenda aberta! Por favor, selecione a data, horário e instruções de portaria/chaves nos campos abaixo para salvar.',
-                    true
+                    'Preencha a data e horário abaixo para salvar a visita.',
+                    false,
+                    2000
                 );
 
-                const boxVisita = document.getElementById('aba-conteudo-visita');
-                if (boxVisita) {
-                    boxVisita.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-
-                const campoDataVisita = document.getElementById('cockpit-visita-data');
-                if (campoDataVisita) {
-                    setTimeout(() => {
+                setTimeout(() => {
+                    const campoDataVisita = document.getElementById('cockpit-visita-data');
+                    if (campoDataVisita) {
+                        campoDataVisita.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         try { campoDataVisita.focus(); } catch(e){}
-                    }, 200);
-                }
+                    }
+                }, 150);
                 return;
             }
 
