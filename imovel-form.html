@@ -45,16 +45,31 @@
         .foto-capa-ativa { border-color: #38bdf8 !important; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
-        /* DESTAQUE LUMINOSO PARA CAMPOS COM ERRO */
+ /* DESTAQUE LUMINOSO PARA CAMPOS COM ERRO */
         .campo-destaque-invalido {
             border-color: #f43f5e !important;
             box-shadow: 0 0 12px rgba(244, 63, 94, 0.45) !important;
             background-color: rgba(76, 5, 25, 0.25) !important;
         }
+
+        /* ANIMAÇÃO DOS AVISOS FLUTUANTES TEMPORIZADOS (TOASTS) */
+        @keyframes toastEntrar {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes toastSair {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-30px); opacity: 0; }
+        }
+        .animar-toast-in { animation: toastEntrar 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animar-toast-out { animation: toastSair 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 
 </head>
 <body class="min-h-screen flex flex-col justify-between">
+
+    <!-- CONTAINER FLUTUANTE DE NOTIFICAÇÕES TEMPORIZADAS (SEM TRAVAR A TELA) -->
+    <div id="container-toasts" class="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-2 max-w-lg w-full pointer-events-none p-3"></div>
 
     <!-- FAIXA 1: MODO SUPORTE MASTER ATIVO -->
     <div id="faixa-modo-suporte" class="hidden bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-2xl relative z-40 border-b border-amber-600">
@@ -664,33 +679,7 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP DE ALERTA E VALIDAÇÃO PROFISSIONAL DO SISTEMA -->
-    <div id="modal-alerta-sistema" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4 hidden">
-        <div class="box-tech max-w-md w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4 bg-slate-900">
-            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                <div class="w-11 h-11 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 font-black border border-amber-500/30">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div>
-                    <h3 id="modal-alerta-titulo" class="text-sm font-black text-white uppercase tracking-wide">Atenção no Preenchimento</h3>
-                    <p id="modal-alerta-subtitulo" class="text-xs text-amber-400 font-bold">Instrução para liberação do cadastro</p>
-                </div>
-            </div>
-
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                <p id="modal-alerta-mensagem" class="leading-relaxed text-slate-200 font-medium"></p>
-            </div>
-
-            <div class="pt-2">
-                <button type="button" id="btn-modal-alerta-ok" onclick="fecharModalAlertaSistema()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition cursor-pointer shadow-lg shadow-amber-950/60 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-check text-xs"></i>
-                    <span>Entendido, vou preencher</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- RODAPÉ -->
+  <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Módulo de Catalogação & Locações
     </footer>
@@ -1490,22 +1479,66 @@
             renderizarFotosPreview();
         }
 
+   // =========================================================================
+        // MOTOR DE NOTIFICAÇÃO FLUTUANTE TEMPORIZADA (SEM BLOQUEAR A TELA)
         // =========================================================================
-        // MOTOR DE POP-UP PROFISSIONAL E DIRECIONAMENTO VISUAL EM VERMELHO
-        // =========================================================================
+        function exibirToastAlerta(titulo, mensagem, duracaoMs = 4000) {
+            const container = document.getElementById('container-toasts');
+            if (!container) return;
+
+            const toastId = 'toast-' + Math.random().toString(36).substring(2, 9);
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = 'animar-toast-in pointer-events-auto border-2 border-amber-400 bg-slate-950/98 shadow-2xl shadow-amber-950/80 rounded-2xl p-3.5 sm:p-4 backdrop-blur-xl relative overflow-hidden flex items-start gap-3 text-xs w-full max-w-md';
+
+            toast.innerHTML = `
+                <div class="text-xl text-amber-400 mt-0.5 flex-shrink-0 drop-shadow">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="flex-1 pr-1 space-y-0.5">
+                    <h5 class="font-black text-amber-300 text-xs uppercase tracking-wide flex items-center gap-1.5">
+                        ${titulo}
+                    </h5>
+                    <p class="text-slate-200 text-[11px] leading-relaxed font-medium">${mensagem}</p>
+                </div>
+                <button type="button" onclick="removerToastAlerta('${toastId}')" class="text-slate-400 hover:text-white transition p-1 cursor-pointer flex-shrink-0" title="Fechar">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto-fechamento temporizado suave após 4 segundos
+            setTimeout(() => {
+                removerToastAlerta(toastId);
+            }, duracaoMs);
+        }
+
+        function removerToastAlerta(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.remove('animar-toast-in');
+            el.classList.add('animar-toast-out');
+            setTimeout(() => {
+                if (el.parentNode) el.parentNode.removeChild(el);
+            }, 250);
+        }
+
         function alertarCampoInvalido(campoElemento, mensagemExplicativa, tituloBloco = 'Atenção no Preenchimento') {
-            // Remove realces vermelhos anteriores de qualquer outro campo
+            // Remove realces vermelhos anteriores
             document.querySelectorAll('.campo-destaque-invalido').forEach(el => {
                 el.classList.remove('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
             });
 
-            campoPendenteFoco = campoElemento;
-
+            // Se houver um campo alvo, rola até ele imediatamente e destaca com brilho vermelho
             if (campoElemento) {
-                // Aplica borda vermelha e anel luminoso diretamente no campo faltante
                 campoElemento.classList.add('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
+                campoElemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-                // Remove o destaque vermelho assim que o usuário começar a preencher ou selecionar
+                setTimeout(() => {
+                    try { campoElemento.focus(); } catch(e){}
+                }, 180);
+
                 const limparDestaque = () => {
                     campoElemento.classList.remove('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
                     campoElemento.removeEventListener('input', limparDestaque);
@@ -1515,33 +1548,8 @@
                 campoElemento.addEventListener('change', limparDestaque, { once: true });
             }
 
-            // Alimenta os dados no modal profissional do sistema
-            document.getElementById('modal-alerta-titulo').innerText = tituloBloco;
-            document.getElementById('modal-alerta-subtitulo').innerText = 'Instrução para liberação do cadastro';
-            document.getElementById('modal-alerta-mensagem').innerText = mensagemExplicativa;
-
-            // Abre o modal pop-up com efeito de desfoque
-            const modal = document.getElementById('modal-alerta-sistema');
-            if (modal) modal.classList.remove('hidden');
-
-            // Foca o botão do modal para permitir confirmação rápida com tecla Enter
-            setTimeout(() => {
-                const btnOk = document.getElementById('btn-modal-alerta-ok');
-                if (btnOk) btnOk.focus();
-            }, 100);
-        }
-
-        function fecharModalAlertaSistema() {
-            const modal = document.getElementById('modal-alerta-sistema');
-            if (modal) modal.classList.add('hidden');
-
-            // Após fechar o modal, rola suavemente até o campo e coloca o cursor nele
-            if (campoPendenteFoco) {
-                campoPendenteFoco.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(() => {
-                    try { campoPendenteFoco.focus(); } catch(e){}
-                }, 250);
-            }
+            // Dispara o toast flutuante no topo (some sozinho após 4 segundos sem bloquear o usuário)
+            exibirToastAlerta(tituloBloco, mensagemExplicativa, 4000);
         }
 
         async function salvarImovel(event) {
