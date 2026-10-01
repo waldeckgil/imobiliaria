@@ -1560,8 +1560,10 @@
                 return;
             }
 
-            const btn = document.getElementById('btn-salvar');
+  const btn = document.getElementById('btn-salvar');
             const alerta = document.getElementById('alerta-form');
+            const alertaIcone = document.getElementById('alerta-icone');
+            const alertaTexto = document.getElementById('alerta-texto');
 
             // -------------------------------------------------------------
             // VALIDAÇÃO 1: BLOCO 1 (IDENTIFICAÇÃO & ANÚNCIO COMERCIAL)
@@ -1946,10 +1948,12 @@
                     }
                 }
 
-                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
-                alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = modoEdicao ? 'Imóvel e documentos atualizados com sucesso!' : 'Imóvel cadastrado com sucesso!';
-                alerta.classList.remove('hidden');
+  if (alerta) {
+                    alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
+                    if (alertaIcone) alertaIcone.className = 'fa-solid fa-circle-check text-lg';
+                    if (alertaTexto) alertaTexto.innerText = modoEdicao ? 'Imóvel e documentos atualizados com sucesso!' : 'Imóvel cadastrado com sucesso!';
+                    alerta.classList.remove('hidden');
+                }
 
                 setTimeout(() => {
                     window.location.href = 'imoveis-lista.html';
@@ -1974,11 +1978,12 @@
                     }
                 }
 
-                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/90 border border-red-800 text-red-300 shadow-xl';
-                alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg flex-shrink-0 text-rose-400';
-                alertaTexto.innerText = mensagemAmigavel;
-                alerta.classList.remove('hidden');
-
+                if (alerta) {
+                    alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-red-950/90 border border-red-800 text-red-300 shadow-xl';
+                    if (alertaIcone) alertaIcone.className = 'fa-solid fa-circle-exclamation text-lg flex-shrink-0 text-rose-400';
+                    if (alertaTexto) alertaTexto.innerText = mensagemAmigavel;
+                    alerta.classList.remove('hidden');
+                }
                 btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Salvar Imóvel</span>';
                 btn.disabled = false;
             }
