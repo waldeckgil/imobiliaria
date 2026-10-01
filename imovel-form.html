@@ -44,6 +44,13 @@
         .foto-preview-card { position: relative; border-radius: 0.75rem; overflow: hidden; border: 2px solid transparent; }
         .foto-capa-ativa { border-color: #38bdf8 !important; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+
+        /* DESTAQUE LUMINOSO PARA CAMPOS COM ERRO */
+        .campo-destaque-invalido {
+            border-color: #f43f5e !important;
+            box-shadow: 0 0 12px rgba(244, 63, 94, 0.45) !important;
+            background-color: rgba(76, 5, 25, 0.25) !important;
+        }
     </style>
 
 </head>
@@ -108,7 +115,7 @@
     <!-- FORMULÁRIO PRINCIPAL -->
     <main class="max-w-5xl mx-auto w-full p-4 sm:p-8 flex-1">
         
-   <form id="form-imovel" novalidate onsubmit="salvarImovel(event)" class="space-y-6 text-xs">
+        <form id="form-imovel" novalidate onsubmit="salvarImovel(event)" class="space-y-6 text-xs">
             <input type="hidden" id="imovel-id-edicao" value="">
             <input type="hidden" id="contrato-id-edicao" value="">
 
@@ -126,13 +133,13 @@
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Código de Referência *</label>
-                        <input type="text" id="campo-codigo-ref" required placeholder="Ex: 101, AP-720" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-codigo-ref" placeholder="Ex: 101, AP-720" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400 transition">
                     </div>
 
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Destinação / Finalidade *</label>
-                        <select id="campo-finalidade" required onchange="ajustarCamposFinalidade()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 font-bold">
+                        <select id="campo-finalidade" onchange="ajustarCamposFinalidade()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 font-bold transition">
                             <option value="Venda" selected>Venda</option>
                             <option value="Locacao">Locação</option>
                             <option value="Ambos">Ambos (Venda e Locação)</option>
@@ -141,7 +148,7 @@
 
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Tipo de Imóvel *</label>
-                        <select id="campo-tipo" required class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <select id="campo-tipo" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                             <option value="Apartamento" selected>Apartamento</option>
                             <option value="Casa">Casa</option>
                             <option value="Casa em Condomínio">Casa em Condomínio</option>
@@ -154,7 +161,7 @@
 
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Status Comercial *</label>
-                        <select id="campo-status" required onchange="verificarStatusAlugado()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 font-bold">
+                        <select id="campo-status" onchange="verificarStatusAlugado()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 font-bold transition">
                             <option value="Disponível" selected>Disponível</option>
                             <option value="Em Proposta">Em Proposta</option>
                             <option value="Alugado">Alugado</option>
@@ -166,14 +173,14 @@
 
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Título Comercial Atraente *</label>
-                    <input type="text" id="campo-titulo" required placeholder="Ex: Excelente Casa com Piscina e Vista para o Mar" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    <input type="text" id="campo-titulo" placeholder="Ex: Excelente Casa com Piscina e Vista para o Mar" 
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                 </div>
 
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Descrição Completa do Imóvel</label>
                     <textarea id="campo-descricao" rows="3" placeholder="Descreva os diferenciais, acabamentos, comodidades..." 
-                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400"></textarea>
+                              class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition"></textarea>
                 </div>
 
                 <div class="flex items-center gap-6 pt-1">
@@ -211,14 +218,14 @@
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Fotos Oficiais do Imóvel *</label>
                     <input type="file" id="input-fotos" multiple accept="image/*" onchange="processarSelecaoFotos(event)" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-cyan-500 file:text-slate-950 cursor-pointer">
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-cyan-500 file:text-slate-950 cursor-pointer transition">
                 </div>
 
                 <div id="container-fotos-preview" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2"></div>
 
                 <div class="pt-2 border-t border-slate-800/80">
                     <label class="block font-bold text-slate-300 mb-1">Link de Vídeo Tour (YouTube)</label>
-                    <input type="url" id="campo-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                    <input type="url" id="campo-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                 </div>
             </div>
 
@@ -235,7 +242,7 @@
                     <div class="sm:col-span-9 flex items-end gap-2">
                         <div class="flex-1">
                             <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado *</label>
-                            <select id="campo-proprietario" required onchange="atualizarEstadoBotaoDossie()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400 font-bold">
+                            <select id="campo-proprietario" onchange="atualizarEstadoBotaoDossie()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400 font-bold transition">
                                 <option value="">Carregando proprietários...</option>
                             </select>
                         </div>
@@ -277,7 +284,7 @@
                             Anexar Certidões e Contratos (PDF ou Imagem)
                         </label>
                         <input type="file" id="input-documentos-imovel" multiple accept=".pdf,image/*" onchange="processarSelecaoDocumentos(event)" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-500 file:text-slate-950 cursor-pointer">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-500 file:text-slate-950 cursor-pointer transition">
                     </div>
                     <div id="container-docs-preview" class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1"></div>
                 </div>
@@ -290,7 +297,7 @@
                 </h3>
 
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-  <div>
+                    <div>
                         <label id="lbl-valor-venda" class="block font-bold text-slate-300 mb-1">Valor de Venda (R$) <span id="req-valor-venda" class="text-cyan-400 font-bold">*</span></label>
                         <input type="text" inputmode="numeric" id="campo-valor-venda" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400 transition">
@@ -303,12 +310,12 @@
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Condomínio Mensal (R$)</label>
                         <input type="text" inputmode="numeric" id="campo-valor-condominio" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">IPTU Anual (R$)</label>
                         <input type="text" inputmode="numeric" id="campo-valor-iptu" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                 </div>
             </div>
@@ -319,30 +326,30 @@
                     <i class="fa-solid fa-ruler-combined"></i> 6. Métricas Físicas & Características
                 </h3>
 
-    <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Dormitórios</label>
-                        <input type="number" id="campo-quartos" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-quartos" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Suítes</label>
-                        <input type="number" id="campo-suites" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-suites" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Banheiros</label>
-                        <input type="number" id="campo-banheiros" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-banheiros" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Vagas</label>
-                        <input type="number" id="campo-vagas" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-vagas" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Área Útil (m²)</label>
-                        <input type="number" step="0.01" id="campo-area-util" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" step="0.01" id="campo-area-util" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Área Total (m²)</label>
-                        <input type="number" step="0.01" id="campo-area-total" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" step="0.01" id="campo-area-total" placeholder="0.00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                 </div>
 
@@ -372,35 +379,35 @@
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">CEP *</label>
-                        <input type="text" id="campo-cep" required placeholder="00000-000" onblur="consultarViaCEP(this.value)" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-cep" placeholder="00000-000" onblur="consultarViaCEP(this.value)" 
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div class="sm:col-span-2">
                         <label class="block font-bold text-slate-300 mb-1">Logradouro (Rua / Avenida) *</label>
-                        <input type="text" id="campo-logradouro" required placeholder="Nome da rua" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-logradouro" placeholder="Nome da rua" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Número *</label>
-                        <input type="text" id="campo-numero" required placeholder="123 ou S/N" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-numero" placeholder="123 ou S/N" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Complemento (Opcional)</label>
-                        <input type="text" id="campo-complemento" placeholder="Apto, Bloco, Casa 2..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-complemento" placeholder="Apto, Bloco, Casa 2..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Bairro *</label>
-                        <input type="text" id="campo-bairro" required placeholder="Bairro" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-bairro" placeholder="Bairro" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Cidade *</label>
-                        <input type="text" id="campo-cidade" required placeholder="Cidade" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-cidade" placeholder="Cidade" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">UF *</label>
-                        <input type="text" id="campo-uf" required placeholder="UF" maxlength="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs uppercase outline-none focus:border-cyan-400">
+                        <input type="text" id="campo-uf" placeholder="UF" maxlength="2" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs uppercase outline-none focus:border-cyan-400 transition">
                     </div>
                 </div>
 
@@ -432,17 +439,17 @@
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Nome Completo do Locatário *</label>
                         <input type="text" id="loc-nome" placeholder="Ex: Carlos Eduardo Silva" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-bold">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-bold transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">WhatsApp / Celular do Inquilino *</label>
                         <input type="tel" id="loc-zap" placeholder="(00) 90000-0000" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-purple-400 font-bold">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono text-xs outline-none focus:border-purple-400 font-bold transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">E-mail do Inquilino</label>
                         <input type="email" id="loc-email" placeholder="inquilino@email.com" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 transition">
                     </div>
                 </div>
 
@@ -450,12 +457,12 @@
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">CPF ou CNPJ do Inquilino</label>
                         <input type="text" id="loc-cpf" placeholder="000.000.000-00" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-mono">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-mono transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">RG do Inquilino</label>
                         <input type="text" id="loc-rg" placeholder="Registro Geral" 
-                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400">
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 transition">
                     </div>
                 </div>
 
@@ -468,25 +475,25 @@
                         <div>
                             <label class="block font-bold text-slate-300 mb-1">Aluguel Bruto (R$/mês) *</label>
                             <input type="text" inputmode="numeric" id="loc-valor-aluguel" oninput="mascaraMoedaEvento(this); calcularComissaoLocacao()" placeholder="0,00" 
-                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-emerald-400 font-mono font-black text-xs outline-none focus:border-emerald-400">
+                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-emerald-400 font-mono font-black text-xs outline-none focus:border-emerald-400 transition">
                         </div>
 
                         <div>
                             <label class="block font-bold text-slate-300 mb-1">Taxa de Administração (%)</label>
                             <input type="number" step="0.1" id="loc-taxa-adm" value="10.0" oninput="calcularComissaoLocacao()" placeholder="10.0" 
-                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
+                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400 transition">
                         </div>
 
                         <div>
                             <label class="block font-bold text-slate-300 mb-1">Início da Vigência *</label>
                             <input type="date" id="loc-data-inicio" 
-                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-mono">
+                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-mono transition">
                         </div>
 
                         <div>
                             <label class="block font-bold text-slate-300 mb-1">Término do Contrato *</label>
                             <input type="date" id="loc-data-fim" 
-                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-mono">
+                                   class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 font-mono transition">
                         </div>
                     </div>
 
@@ -507,7 +514,7 @@
                         <i class="fa-solid fa-folder-open text-purple-400 mr-1"></i> Anexar Documentos do Locatário (RG, CPF, Contrato)
                     </label>
                     <input type="file" id="input-documentos-locatario" multiple accept=".pdf,image/*" onchange="processarSelecaoDocumentosLocatario(event)" 
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-purple-500 file:text-slate-950 cursor-pointer">
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-slate-400 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-purple-500 file:text-slate-950 cursor-pointer transition">
                     <div id="container-docs-locatario-preview" class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1"></div>
                 </div>
             </div>
@@ -517,7 +524,7 @@
                 <a href="imoveis-lista.html" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
                     Cancelar
                 </a>
-                <button type="submit" id="btn-salvar" class="px-8 py-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black flex items-center gap-2 text-sm shadow-xl transition cursor-pointer">
+                <button type="button" id="btn-salvar" onclick="salvarImovel(event)" class="px-8 py-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black flex items-center gap-2 text-sm shadow-xl transition cursor-pointer">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     <span id="btn-salvar-texto">Salvar Imóvel</span>
                 </button>
@@ -542,34 +549,34 @@
             <form id="form-novo-proprietario" onsubmit="salvarNovoProprietario(event)" class="space-y-3 mt-4 text-xs">
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Nome Completo *</label>
-                    <input type="text" id="prop-nome" required placeholder="Nome do proprietário" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                    <input type="text" id="prop-nome" required placeholder="Nome do proprietário" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">WhatsApp / Celular *</label>
-                        <input type="tel" id="prop-zap" required placeholder="(00) 90000-0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        <input type="tel" id="prop-zap" required placeholder="(00) 90000-0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">CPF ou CNPJ</label>
-                        <input type="text" id="prop-cpf" placeholder="000.000.000-00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        <input type="text" id="prop-cpf" placeholder="000.000.000-00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">RG</label>
-                        <input type="text" id="prop-rg" placeholder="Registro Geral" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        <input type="text" id="prop-rg" placeholder="Registro Geral" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">E-mail</label>
-                        <input type="email" id="prop-email" placeholder="email@exemplo.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400">
+                        <input type="email" id="prop-email" placeholder="email@exemplo.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Chave PIX / Dados Bancários para Repasse</label>
-                    <input type="text" id="prop-pix" placeholder="Chave PIX (CPF, Celular, E-mail ou Agência/Conta)" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-amber-300 font-mono outline-none focus:border-amber-400">
+                    <input type="text" id="prop-pix" placeholder="Chave PIX (CPF, Celular, E-mail ou Agência/Conta)" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-amber-300 font-mono outline-none focus:border-amber-400 transition">
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
@@ -657,6 +664,32 @@
         </div>
     </div>
 
+    <!-- MODAL POPUP DE ALERTA E VALIDAÇÃO PROFISSIONAL DO SISTEMA -->
+    <div id="modal-alerta-sistema" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 text-left border-2 border-amber-500/80 shadow-2xl space-y-4 bg-slate-900">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <div class="w-11 h-11 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 font-black border border-amber-500/30">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 id="modal-alerta-titulo" class="text-sm font-black text-white uppercase tracking-wide">Atenção no Preenchimento</h3>
+                    <p id="modal-alerta-subtitulo" class="text-xs text-amber-400 font-bold">Instrução para liberação do cadastro</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <p id="modal-alerta-mensagem" class="leading-relaxed text-slate-200 font-medium"></p>
+            </div>
+
+            <div class="pt-2">
+                <button type="button" id="btn-modal-alerta-ok" onclick="fecharModalAlertaSistema()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider transition cursor-pointer shadow-lg shadow-amber-950/60 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check text-xs"></i>
+                    <span>Entendido, vou preencher</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- RODAPÉ -->
     <footer class="bg-slate-950 border-t border-slate-800 text-center py-4 text-xs text-slate-500">
         SGI • Sistema de Gestão Imobiliária SaaS • Módulo de Catalogação & Locações
@@ -678,6 +711,9 @@
         let listaFotosEstado = [];
         let listaDocumentosEstado = [];
         let listaDocsLocatarioEstado = [];
+
+        // Controle para foco e scroll após fechar o modal de alerta
+        let campoPendenteFoco = null;
 
         // =========================================================================
         // MOTORES DE FORMATAÇÃO MONETÁRIA (PADRÃO BRASILEIRO R$)
@@ -712,7 +748,7 @@
         // =========================================================================
         // CONTROLE DINÂMICO DE VALORES PELA FINALIDADE (VENDA / LOCAÇÃO / AMBOS)
         // =========================================================================
-function ajustarCamposFinalidade() {
+        function ajustarCamposFinalidade() {
             const finalidade = document.getElementById('campo-finalidade').value;
             const campoVenda = document.getElementById('campo-valor-venda');
             const campoLocacao = document.getElementById('campo-valor-locacao');
@@ -791,7 +827,7 @@ function ajustarCamposFinalidade() {
                     document.getElementById('topbar-cargo-badge').className = 'text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold';
                 }
             } else {
-  // 2. USUÁRIO GESTOR / CORRETOR
+                // 2. USUÁRIO GESTOR / CORRETOR
                 const { data: usuario } = await supabaseClient.from('usuarios').select('*').eq('user_id', session.user.id).single();
                 if (usuario) {
                     imobiliariaId = usuario.imobiliaria_id;
@@ -935,7 +971,7 @@ function ajustarCamposFinalidade() {
 
             const nomeLimpo = novoNome.trim();
             if (!nomeLimpo) {
-                alert('O nome do documento não pode ficar vazio.');
+                alertarCampoInvalido(null, 'O nome do documento não pode ficar vazio.', 'Documentos do Locatário');
                 return;
             }
 
@@ -973,15 +1009,12 @@ function ajustarCamposFinalidade() {
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 flex-shrink-0">
-                        <!-- OLHINHO: VISUALIZAR -->
                         <a href="${doc.url}" target="_blank" class="p-2 rounded-lg bg-slate-900 hover:bg-purple-600 text-purple-300 hover:text-white transition flex items-center justify-center border border-slate-800" title="Visualizar documento">
                             <i class="fa-solid fa-eye text-xs"></i>
                         </a>
-                        <!-- LÁPIS: RENOMEAR -->
                         <button type="button" onclick="editarNomeDocumentoLocatario(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Renomear documento">
                             <i class="fa-solid fa-pen text-xs"></i>
                         </button>
-                        <!-- LIXEIRA: REMOVER -->
                         <button type="button" onclick="removerDocumentoLocatario(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-red-900/80 text-red-400 hover:text-red-200 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Remover">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
@@ -1018,7 +1051,7 @@ function ajustarCamposFinalidade() {
         async function abrirDossieProprietario() {
             const propId = document.getElementById('campo-proprietario').value;
             if (!propId) {
-                alert('Por favor, selecione primeiro um proprietário na lista.');
+                alertarCampoInvalido(document.getElementById('campo-proprietario'), 'Selecione primeiro um proprietário na lista para visualizar seu dossiê.', 'Bloco 3 - Proprietário');
                 return;
             }
 
@@ -1051,7 +1084,7 @@ function ajustarCamposFinalidade() {
                 dados.classList.remove('hidden');
             } catch (err) {
                 console.error(err);
-                alert(err.message || 'Erro ao consultar o dossiê do proprietário.');
+                alertarCampoInvalido(null, err.message || 'Erro ao consultar o dossiê do proprietário.', 'Dossiê do Proprietário');
                 fecharDossieProprietario();
             }
         }
@@ -1132,7 +1165,7 @@ function ajustarCamposFinalidade() {
                 await carregarProprietariosSelect(data.id);
             } catch (err) {
                 console.error(err);
-                alert('Erro ao cadastrar proprietário: ' + (err.message || 'Verifique os dados.'));
+                alertarCampoInvalido(null, 'Erro ao cadastrar proprietário: ' + (err.message || 'Verifique os dados.'), 'Cadastro de Proprietário');
             } finally {
                 btn.innerHTML = 'Salvar e Vincular';
                 btn.disabled = false;
@@ -1170,7 +1203,7 @@ function ajustarCamposFinalidade() {
 
             const nomeLimpo = novoNome.trim();
             if (!nomeLimpo) {
-                alert('O nome do documento não pode ficar vazio.');
+                alertarCampoInvalido(null, 'O nome do documento não pode ficar vazio.', 'Documentos da Casa');
                 return;
             }
 
@@ -1208,15 +1241,12 @@ function ajustarCamposFinalidade() {
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 flex-shrink-0">
-                        <!-- OLHINHO: VISUALIZAR -->
                         <a href="${doc.url}" target="_blank" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800" title="Visualizar documento">
                             <i class="fa-solid fa-eye text-xs"></i>
                         </a>
-                        <!-- LÁPIS: RENOMEAR -->
                         <button type="button" onclick="editarNomeDocumento(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-300 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Renomear documento (ex: RGI, IPTU)">
                             <i class="fa-solid fa-pen text-xs"></i>
                         </button>
-                        <!-- LIXEIRA: REMOVER -->
                         <button type="button" onclick="removerDocumento(${index})" class="p-2 rounded-lg bg-slate-900 hover:bg-red-900/80 text-red-400 hover:text-red-200 transition flex items-center justify-center border border-slate-800 cursor-pointer" title="Remover">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
@@ -1271,7 +1301,7 @@ function ajustarCamposFinalidade() {
 
                 document.getElementById('campo-quartos').value = imovel.quartos || 0;
                 document.getElementById('campo-suites').value = imovel.suites || 0;
-                document.getElementById('campo-banheiros').value = imovel.banheiros || 1;
+                document.getElementById('campo-banheiros').value = imovel.banheiros || 0;
                 document.getElementById('campo-vagas').value = imovel.vagas || 0;
                 document.getElementById('campo-area-util').value = imovel.area_util || '';
                 document.getElementById('campo-area-total').value = imovel.area_total || '';
@@ -1372,7 +1402,7 @@ function ajustarCamposFinalidade() {
 
             } catch (err) {
                 console.error(err);
-                alert('Erro ao carregar dados do imóvel para edição.');
+                alertarCampoInvalido(null, 'Erro ao carregar dados do imóvel para edição.', 'Falha de Consulta');
             }
         }
 
@@ -1460,25 +1490,22 @@ function ajustarCamposFinalidade() {
             renderizarFotosPreview();
         }
 
-   // =========================================================================
-        // MOTOR DE DIRECIONAMENTO DIDÁTICO E DESTAQUE VISUAL EM VERMELHO
         // =========================================================================
-        function alertarCampoInvalido(campoElemento, mensagemExplicativa, tituloBloco = 'Atenção') {
+        // MOTOR DE POP-UP PROFISSIONAL E DIRECIONAMENTO VISUAL EM VERMELHO
+        // =========================================================================
+        function alertarCampoInvalido(campoElemento, mensagemExplicativa, tituloBloco = 'Atenção no Preenchimento') {
             // Remove realces vermelhos anteriores de qualquer outro campo
             document.querySelectorAll('.campo-destaque-invalido').forEach(el => {
                 el.classList.remove('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
             });
 
+            campoPendenteFoco = campoElemento;
+
             if (campoElemento) {
                 // Aplica borda vermelha e anel luminoso diretamente no campo faltante
                 campoElemento.classList.add('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
-                campoElemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                setTimeout(() => {
-                    try { campoElemento.focus(); } catch(e){}
-                }, 200);
 
-                // Remove o destaque vermelho assim que o usuário começar a preencher
+                // Remove o destaque vermelho assim que o usuário começar a preencher ou selecionar
                 const limparDestaque = () => {
                     campoElemento.classList.remove('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
                     campoElemento.removeEventListener('input', limparDestaque);
@@ -1488,24 +1515,42 @@ function ajustarCamposFinalidade() {
                 campoElemento.addEventListener('change', limparDestaque, { once: true });
             }
 
-            // Exibe mensagem clara no banner de alerta superior
-            const alerta = document.getElementById('alerta-form');
-            const alertaTexto = document.getElementById('alerta-texto');
-            const alertaIcone = document.getElementById('alerta-icone');
-            if (alerta && alertaTexto && alertaIcone) {
-                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-rose-950/95 border-2 border-rose-500 text-rose-200 shadow-2xl mb-4';
-                alertaIcone.className = 'fa-solid fa-triangle-exclamation text-xl text-rose-400 flex-shrink-0';
-                alertaTexto.innerHTML = `<span class="uppercase tracking-wider font-black text-rose-300">${tituloBloco}:</span> ${mensagemExplicativa}`;
-                alerta.classList.remove('hidden');
-            }
+            // Alimenta os dados no modal profissional do sistema
+            document.getElementById('modal-alerta-titulo').innerText = tituloBloco;
+            document.getElementById('modal-alerta-subtitulo').innerText = 'Instrução para liberação do cadastro';
+            document.getElementById('modal-alerta-mensagem').innerText = mensagemExplicativa;
 
-            // Alerta nativo explicativo informando o bloco e a ação requerida
-            alert(`⚠️ ${tituloBloco.toUpperCase()}\n\n${mensagemExplicativa}`);
+            // Abre o modal pop-up com efeito de desfoque
+            const modal = document.getElementById('modal-alerta-sistema');
+            if (modal) modal.classList.remove('hidden');
+
+            // Foca o botão do modal para permitir confirmação rápida com tecla Enter
+            setTimeout(() => {
+                const btnOk = document.getElementById('btn-modal-alerta-ok');
+                if (btnOk) btnOk.focus();
+            }, 100);
+        }
+
+        function fecharModalAlertaSistema() {
+            const modal = document.getElementById('modal-alerta-sistema');
+            if (modal) modal.classList.add('hidden');
+
+            // Após fechar o modal, rola suavemente até o campo e coloca o cursor nele
+            if (campoPendenteFoco) {
+                campoPendenteFoco.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    try { campoPendenteFoco.focus(); } catch(e){}
+                }, 250);
+            }
         }
 
         async function salvarImovel(event) {
-            event.preventDefault();
-            if (modoLeitura && !isMasterSuporte) return;
+            if (event && event.preventDefault) event.preventDefault();
+
+            if (modoLeitura && !isMasterSuporte) {
+                alertarCampoInvalido(null, 'Esta imobiliária está em Modo Somente Leitura devido a pendência na assinatura. Regularize o plano para salvar ou editar imóveis.', 'Gravação Bloqueada');
+                return;
+            }
 
             const btn = document.getElementById('btn-salvar');
             const alerta = document.getElementById('alerta-form');
@@ -1515,13 +1560,13 @@ function ajustarCamposFinalidade() {
             // -------------------------------------------------------------
             const inputCodigoRef = document.getElementById('campo-codigo-ref');
             if (!inputCodigoRef.value.trim()) {
-                alertarCampoInvalido(inputCodigoRef, 'Preencha o campo "Código de Referência" (Ex: 101, AP-720). Ele é a identidade do imóvel na imobiliária.', 'Bloco 1 - Identificação');
+                alertarCampoInvalido(inputCodigoRef, 'Preencha o campo "Código de Referência" (Ex: 101, AP-720). Ele é a identidade única do imóvel na imobiliária.', 'Bloco 1 - Identificação');
                 return;
             }
 
             const inputTitulo = document.getElementById('campo-titulo');
             if (!inputTitulo.value.trim()) {
-                alertarCampoInvalido(inputTitulo, 'Preencha o campo "Título Comercial Atraente" (Ex: Linda Casa com Piscina e Vista para as Montanhas). Esse título será exibido na vitrine.', 'Bloco 1 - Identificação');
+                alertarCampoInvalido(inputTitulo, 'Preencha o campo "Título Comercial Atraente" (Ex: Linda Casa com Piscina e Vista para o Mar). Esse título estampa a vitrine pública.', 'Bloco 1 - Identificação');
                 return;
             }
 
@@ -1530,7 +1575,7 @@ function ajustarCamposFinalidade() {
             // -------------------------------------------------------------
             if (listaFotosEstado.length === 0) {
                 const inputFotos = document.getElementById('input-fotos');
-                alertarCampoInvalido(inputFotos, 'É obrigatório anexar ao menos 1 foto oficial da casa para divulgação na vitrine pública e nos folhetos em PDF.', 'Bloco 2 - Fotos do Imóvel');
+                alertarCampoInvalido(inputFotos, 'É obrigatório anexar ao menos 1 foto oficial da casa para divulgação na vitrine pública e nos folhetos comerciais em PDF.', 'Bloco 2 - Fotos do Imóvel');
                 return;
             }
 
@@ -1659,6 +1704,7 @@ function ajustarCamposFinalidade() {
                     return;
                 }
             }
+
             alerta.classList.add('hidden');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Enviando dados, mídias e documentos...';
             btn.disabled = true;
@@ -1768,6 +1814,9 @@ function ajustarCamposFinalidade() {
                     valorLocacaoFinal = converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value);
                 }
 
+                const logradouro = document.getElementById('campo-logradouro').value.trim();
+                const numero = document.getElementById('campo-numero').value.trim();
+
                 const payloadImovel = {
                     imobiliaria_id: imobiliariaId,
                     codigo_ref: document.getElementById('campo-codigo-ref').value.trim(),
@@ -1788,7 +1837,7 @@ function ajustarCamposFinalidade() {
 
                     quartos: Number(document.getElementById('campo-quartos').value || 0),
                     suites: Number(document.getElementById('campo-suites').value || 0),
-                    banheiros: Number(document.getElementById('campo-banheiros').value || 1),
+                    banheiros: Number(document.getElementById('campo-banheiros').value || 0),
                     vagas: Number(document.getElementById('campo-vagas').value || 0),
                     area_util: document.getElementById('campo-area-util').value ? Number(document.getElementById('campo-area-util').value) : 0,
                     area_total: document.getElementById('campo-area-total').value ? Number(document.getElementById('campo-area-total').value) : 0,
@@ -1910,9 +1959,10 @@ function ajustarCamposFinalidade() {
                     
                     const inputCod = document.getElementById('campo-codigo-ref');
                     if (inputCod) {
-                        inputCod.classList.add('border-rose-500', 'bg-rose-950/30');
-                        inputCod.focus();
-                        inputCod.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        alertarCampoInvalido(inputCod, mensagemAmigavel, 'Código de Referência Duplicado');
+                        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Salvar Imóvel</span>';
+                        btn.disabled = false;
+                        return;
                     }
                 }
 
