@@ -290,13 +290,13 @@
                 </h3>
 
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor de Venda (R$)</label>
+  <div>
+                        <label id="lbl-valor-venda" class="block font-bold text-slate-300 mb-1">Valor de Venda (R$) <span id="req-valor-venda" class="text-cyan-400 font-bold">*</span></label>
                         <input type="text" inputmode="numeric" id="campo-valor-venda" oninput="mascaraMoedaEvento(this)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-cyan-300 font-black text-xs outline-none focus:border-cyan-400 transition">
                     </div>
                     <div>
-                        <label class="block font-bold text-slate-300 mb-1">Valor de Locação (R$/mês)</label>
+                        <label id="lbl-valor-locacao" class="block font-bold text-slate-300 mb-1">Valor de Locação (R$/mês) <span id="req-valor-locacao" class="text-amber-400 font-bold hidden">*</span></label>
                         <input type="text" inputmode="numeric" id="campo-valor-locacao" oninput="mascaraMoedaEvento(this); sincronizarValorLocacao(this.value)" placeholder="0,00" 
                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-amber-300 font-black text-xs outline-none focus:border-cyan-400 transition">
                     </div>
@@ -319,10 +319,10 @@
                     <i class="fa-solid fa-ruler-combined"></i> 6. Métricas Físicas & Características
                 </h3>
 
-                <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Dormitórios</label>
-                        <input type="number" id="campo-quartos" value="1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-quartos" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Suítes</label>
@@ -330,11 +330,11 @@
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Banheiros</label>
-                        <input type="number" id="campo-banheiros" value="1" min="1" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-banheiros" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Vagas</label>
-                        <input type="number" id="campo-vagas" value="1" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                        <input type="number" id="campo-vagas" value="0" min="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400">
                     </div>
                     <div>
                         <label class="block font-bold text-slate-300 mb-1">Área Útil (m²)</label>
@@ -712,37 +712,45 @@
         // =========================================================================
         // CONTROLE DINÂMICO DE VALORES PELA FINALIDADE (VENDA / LOCAÇÃO / AMBOS)
         // =========================================================================
-        function ajustarCamposFinalidade() {
+function ajustarCamposFinalidade() {
             const finalidade = document.getElementById('campo-finalidade').value;
             const campoVenda = document.getElementById('campo-valor-venda');
             const campoLocacao = document.getElementById('campo-valor-locacao');
+            const reqVenda = document.getElementById('req-valor-venda');
+            const reqLocacao = document.getElementById('req-valor-locacao');
 
             if (finalidade === 'Venda') {
                 campoLocacao.disabled = true;
                 campoLocacao.value = '';
                 campoLocacao.classList.add('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
                 campoLocacao.classList.remove('bg-slate-950');
+                if (reqLocacao) reqLocacao.classList.add('hidden');
 
                 campoVenda.disabled = false;
                 campoVenda.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
                 campoVenda.classList.add('bg-slate-950');
+                if (reqVenda) reqVenda.classList.remove('hidden');
             } else if (finalidade === 'Locacao' || finalidade === 'Locação') {
                 campoVenda.disabled = true;
                 campoVenda.value = '';
                 campoVenda.classList.add('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
                 campoVenda.classList.remove('bg-slate-950');
+                if (reqVenda) reqVenda.classList.add('hidden');
 
                 campoLocacao.disabled = false;
                 campoLocacao.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
                 campoLocacao.classList.add('bg-slate-950');
+                if (reqLocacao) reqLocacao.classList.remove('hidden');
             } else { // Ambos
                 campoVenda.disabled = false;
                 campoVenda.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
                 campoVenda.classList.add('bg-slate-950');
+                if (reqVenda) reqVenda.classList.remove('hidden');
 
                 campoLocacao.disabled = false;
                 campoLocacao.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-slate-900');
                 campoLocacao.classList.add('bg-slate-950');
+                if (reqLocacao) reqLocacao.classList.remove('hidden');
             }
         }
 
@@ -1470,13 +1478,59 @@
                 return;
             }
 
-            // 2. VALIDAÇÃO RÍGIDA DE LOCALIZAÇÃO COMPLETA
+ // 2. VALIDAÇÃO RÍGIDA DE LOCALIZAÇÃO COMPLETA
             const logradouro = document.getElementById('campo-logradouro').value.trim();
             const numero = document.getElementById('campo-numero').value.trim();
             if (!logradouro || !numero) {
                 alert('Por favor, informe o Logradouro (Rua/Avenida) e o Número do imóvel para garantir a localização.');
                 if (!logradouro) document.getElementById('campo-logradouro').focus();
                 else document.getElementById('campo-numero').focus();
+                return;
+            }
+
+            // 3. VALIDAÇÃO OBRIGATÓRIA DE VALORES CONFORME A FINALIDADE
+            const finalidadeForm = document.getElementById('campo-finalidade').value;
+            const valVendaNum = converterMoedaParaFloat(document.getElementById('campo-valor-venda').value);
+            const valLocacaoNum = converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value);
+
+            if (finalidadeForm === 'Venda' && valVendaNum <= 0) {
+                alert('Atenção: Para imóveis destinados à Venda, é obrigatório informar o Valor de Venda maior que zero.');
+                const inputVenda = document.getElementById('campo-valor-venda');
+                inputVenda.focus();
+                inputVenda.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            if ((finalidadeForm === 'Locacao' || finalidadeForm === 'Locação') && valLocacaoNum <= 0) {
+                alert('Atenção: Para imóveis destinados à Locação, é obrigatório informar o Valor de Locação maior que zero.');
+                const inputLoc = document.getElementById('campo-valor-locacao');
+                inputLoc.focus();
+                inputLoc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            if (finalidadeForm === 'Ambos') {
+                if (valVendaNum <= 0 || valLocacaoNum <= 0) {
+                    alert('Atenção: Para imóveis com destinação "Ambos", é obrigatório preencher tanto o Valor de Venda quanto o Valor de Locação.');
+                    if (valVendaNum <= 0) document.getElementById('campo-valor-venda').focus();
+                    else document.getElementById('campo-valor-locacao').focus();
+                    return;
+                }
+            }
+
+            // 4. VALIDAÇÃO IMPEDITIVA DE CARACTERÍSTICAS FÍSICAS (NÃO PERMITE TODOS ZERADOS)
+            const quartosQtd = Number(document.getElementById('campo-quartos').value || 0);
+            const suitesQtd = Number(document.getElementById('campo-suites').value || 0);
+            const banheirosQtd = Number(document.getElementById('campo-banheiros').value || 0);
+            const vagasQtd = Number(document.getElementById('campo-vagas').value || 0);
+            const areaUtilQtd = Number(document.getElementById('campo-area-util').value || 0);
+            const areaTotalQtd = Number(document.getElementById('campo-area-total').value || 0);
+
+            if (quartosQtd === 0 && suitesQtd === 0 && banheirosQtd === 0 && vagasQtd === 0 && areaUtilQtd === 0 && areaTotalQtd === 0) {
+                alert('Atenção: É obrigatório informar ao menos uma métrica física do imóvel (Ex: Dormitórios, Banheiros, Vagas ou Metragem m²). Os campos não podem ficar todos zerados.');
+                const inputQuartos = document.getElementById('campo-quartos');
+                inputQuartos.focus();
+                inputQuartos.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
