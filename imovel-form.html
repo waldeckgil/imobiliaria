@@ -108,7 +108,7 @@
     <!-- FORMULÁRIO PRINCIPAL -->
     <main class="max-w-5xl mx-auto w-full p-4 sm:p-8 flex-1">
         
-        <form id="form-imovel" onsubmit="salvarImovel(event)" class="space-y-6 text-xs">
+   <form id="form-imovel" novalidate onsubmit="salvarImovel(event)" class="space-y-6 text-xs"></form>
             <input type="hidden" id="imovel-id-edicao" value="">
             <input type="hidden" id="contrato-id-edicao" value="">
 
@@ -1460,65 +1460,123 @@ function ajustarCamposFinalidade() {
             renderizarFotosPreview();
         }
 
+   // =========================================================================
+        // MOTOR DE DIRECIONAMENTO DIDÁTICO E DESTAQUE VISUAL EM VERMELHO
+        // =========================================================================
+        function alertarCampoInvalido(campoElemento, mensagemExplicativa, tituloBloco = 'Atenção') {
+            // Remove realces vermelhos anteriores de qualquer outro campo
+            document.querySelectorAll('.campo-destaque-invalido').forEach(el => {
+                el.classList.remove('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
+            });
+
+            if (campoElemento) {
+                // Aplica borda vermelha e anel luminoso diretamente no campo faltante
+                campoElemento.classList.add('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
+                campoElemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                setTimeout(() => {
+                    try { campoElemento.focus(); } catch(e){}
+                }, 200);
+
+                // Remove o destaque vermelho assim que o usuário começar a preencher
+                const limparDestaque = () => {
+                    campoElemento.classList.remove('campo-destaque-invalido', 'border-rose-500', 'ring-2', 'ring-rose-500/60', 'bg-rose-950/20');
+                    campoElemento.removeEventListener('input', limparDestaque);
+                    campoElemento.removeEventListener('change', limparDestaque);
+                };
+                campoElemento.addEventListener('input', limparDestaque, { once: true });
+                campoElemento.addEventListener('change', limparDestaque, { once: true });
+            }
+
+            // Exibe mensagem clara no banner de alerta superior
+            const alerta = document.getElementById('alerta-form');
+            const alertaTexto = document.getElementById('alerta-texto');
+            const alertaIcone = document.getElementById('alerta-icone');
+            if (alerta && alertaTexto && alertaIcone) {
+                alerta.className = 'p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-rose-950/95 border-2 border-rose-500 text-rose-200 shadow-2xl mb-4';
+                alertaIcone.className = 'fa-solid fa-triangle-exclamation text-xl text-rose-400 flex-shrink-0';
+                alertaTexto.innerHTML = `<span class="uppercase tracking-wider font-black text-rose-300">${tituloBloco}:</span> ${mensagemExplicativa}`;
+                alerta.classList.remove('hidden');
+            }
+
+            // Alerta nativo explicativo informando o bloco e a ação requerida
+            alert(`⚠️ ${tituloBloco.toUpperCase()}\n\n${mensagemExplicativa}`);
+        }
+
         async function salvarImovel(event) {
             event.preventDefault();
             if (modoLeitura && !isMasterSuporte) return;
 
             const btn = document.getElementById('btn-salvar');
             const alerta = document.getElementById('alerta-form');
-            const alertaTexto = document.getElementById('alerta-texto');
-            const alertaIcone = document.getElementById('alerta-icone');
 
-            // 1. VALIDAÇÃO RÍGIDA DE PROPRIETÁRIO
-            const proprietarioSelecionado = document.getElementById('campo-proprietario').value;
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 1: BLOCO 1 (IDENTIFICAÇÃO & ANÚNCIO COMERCIAL)
+            // -------------------------------------------------------------
+            const inputCodigoRef = document.getElementById('campo-codigo-ref');
+            if (!inputCodigoRef.value.trim()) {
+                alertarCampoInvalido(inputCodigoRef, 'Preencha o campo "Código de Referência" (Ex: 101, AP-720). Ele é a identidade do imóvel na imobiliária.', 'Bloco 1 - Identificação');
+                return;
+            }
+
+            const inputTitulo = document.getElementById('campo-titulo');
+            if (!inputTitulo.value.trim()) {
+                alertarCampoInvalido(inputTitulo, 'Preencha o campo "Título Comercial Atraente" (Ex: Linda Casa com Piscina e Vista para as Montanhas). Esse título será exibido na vitrine.', 'Bloco 1 - Identificação');
+                return;
+            }
+
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 2: BLOCO 2 (FOTOS OFICIAIS DO IMÓVEL)
+            // -------------------------------------------------------------
+            if (listaFotosEstado.length === 0) {
+                const inputFotos = document.getElementById('input-fotos');
+                alertarCampoInvalido(inputFotos, 'É obrigatório anexar ao menos 1 foto oficial da casa para divulgação na vitrine pública e nos folhetos em PDF.', 'Bloco 2 - Fotos do Imóvel');
+                return;
+            }
+
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 3: BLOCO 3 (PROPRIETÁRIO DO IMÓVEL)
+            // -------------------------------------------------------------
+            const selectProprietario = document.getElementById('campo-proprietario');
+            const proprietarioSelecionado = selectProprietario.value;
             if (!proprietarioSelecionado) {
-                alert('Atenção: É obrigatório vincular um Proprietário Titular a este imóvel.');
-                document.getElementById('campo-proprietario').focus();
-                document.getElementById('campo-proprietario').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                alertarCampoInvalido(selectProprietario, 'Selecione o "Proprietário Titular Cadastrado" na lista suspensa. Caso ele ainda não esteja cadastrado, clique no botão ao lado "+ Novo Proprietário".', 'Bloco 3 - Proprietário');
                 return;
             }
 
- // 2. VALIDAÇÃO RÍGIDA DE LOCALIZAÇÃO COMPLETA
-            const logradouro = document.getElementById('campo-logradouro').value.trim();
-            const numero = document.getElementById('campo-numero').value.trim();
-            if (!logradouro || !numero) {
-                alert('Por favor, informe o Logradouro (Rua/Avenida) e o Número do imóvel para garantir a localização.');
-                if (!logradouro) document.getElementById('campo-logradouro').focus();
-                else document.getElementById('campo-numero').focus();
-                return;
-            }
-
-            // 3. VALIDAÇÃO OBRIGATÓRIA DE VALORES CONFORME A FINALIDADE
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 4: BLOCO 5 (VALORES COMERCIAIS CONFORME FINALIDADE)
+            // -------------------------------------------------------------
             const finalidadeForm = document.getElementById('campo-finalidade').value;
-            const valVendaNum = converterMoedaParaFloat(document.getElementById('campo-valor-venda').value);
-            const valLocacaoNum = converterMoedaParaFloat(document.getElementById('campo-valor-locacao').value);
+            const inputValVenda = document.getElementById('campo-valor-venda');
+            const inputValLocacao = document.getElementById('campo-valor-locacao');
+            const valVendaNum = converterMoedaParaFloat(inputValVenda.value);
+            const valLocacaoNum = converterMoedaParaFloat(inputValLocacao.value);
 
             if (finalidadeForm === 'Venda' && valVendaNum <= 0) {
-                alert('Atenção: Para imóveis destinados à Venda, é obrigatório informar o Valor de Venda maior que zero.');
-                const inputVenda = document.getElementById('campo-valor-venda');
-                inputVenda.focus();
-                inputVenda.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                alertarCampoInvalido(inputValVenda, 'Como a destinação deste imóvel é "Venda", é obrigatório preencher o campo "Valor de Venda (R$)" com um valor maior que zero.', 'Bloco 5 - Valores Comerciais');
                 return;
             }
 
             if ((finalidadeForm === 'Locacao' || finalidadeForm === 'Locação') && valLocacaoNum <= 0) {
-                alert('Atenção: Para imóveis destinados à Locação, é obrigatório informar o Valor de Locação maior que zero.');
-                const inputLoc = document.getElementById('campo-valor-locacao');
-                inputLoc.focus();
-                inputLoc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                alertarCampoInvalido(inputValLocacao, 'Como a destinação deste imóvel é "Locação", é obrigatório preencher o campo "Valor de Locação (R$/mês)" com um valor maior que zero.', 'Bloco 5 - Valores Comerciais');
                 return;
             }
 
             if (finalidadeForm === 'Ambos') {
-                if (valVendaNum <= 0 || valLocacaoNum <= 0) {
-                    alert('Atenção: Para imóveis com destinação "Ambos", é obrigatório preencher tanto o Valor de Venda quanto o Valor de Locação.');
-                    if (valVendaNum <= 0) document.getElementById('campo-valor-venda').focus();
-                    else document.getElementById('campo-valor-locacao').focus();
+                if (valVendaNum <= 0) {
+                    alertarCampoInvalido(inputValVenda, 'Para destinação "Ambos", é obrigatório preencher o "Valor de Venda (R$)".', 'Bloco 5 - Valores Comerciais');
+                    return;
+                }
+                if (valLocacaoNum <= 0) {
+                    alertarCampoInvalido(inputValLocacao, 'Para destinação "Ambos", é obrigatório também preencher o "Valor de Locação (R$/mês)".', 'Bloco 5 - Valores Comerciais');
                     return;
                 }
             }
 
-            // 4. VALIDAÇÃO IMPEDITIVA DE CARACTERÍSTICAS FÍSICAS (NÃO PERMITE TODOS ZERADOS)
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 5: BLOCO 6 (MÉTRICAS FÍSICAS - NÃO PERMITE TUDO ZERADO)
+            // -------------------------------------------------------------
             const quartosQtd = Number(document.getElementById('campo-quartos').value || 0);
             const suitesQtd = Number(document.getElementById('campo-suites').value || 0);
             const banheirosQtd = Number(document.getElementById('campo-banheiros').value || 0);
@@ -1527,28 +1585,80 @@ function ajustarCamposFinalidade() {
             const areaTotalQtd = Number(document.getElementById('campo-area-total').value || 0);
 
             if (quartosQtd === 0 && suitesQtd === 0 && banheirosQtd === 0 && vagasQtd === 0 && areaUtilQtd === 0 && areaTotalQtd === 0) {
-                alert('Atenção: É obrigatório informar ao menos uma métrica física do imóvel (Ex: Dormitórios, Banheiros, Vagas ou Metragem m²). Os campos não podem ficar todos zerados.');
                 const inputQuartos = document.getElementById('campo-quartos');
-                inputQuartos.focus();
-                inputQuartos.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                alertarCampoInvalido(inputQuartos, 'Todos os campos de características físicas estão zerados. É obrigatório informar ao menos uma métrica física do imóvel (Ex: Dormitórios, Banheiros, Vagas ou Metragem m²).', 'Bloco 6 - Métricas Físicas');
                 return;
             }
 
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 6: BLOCO 7 (LOCALIZAÇÃO & ENDEREÇO COMPLETO)
+            // -------------------------------------------------------------
+            const inputCep = document.getElementById('campo-cep');
+            if (!inputCep.value.trim()) {
+                alertarCampoInvalido(inputCep, 'Preencha o campo "CEP" do imóvel para localização e preenchimento automático do endereço.', 'Bloco 7 - Localização');
+                return;
+            }
+
+            const inputLogradouro = document.getElementById('campo-logradouro');
+            if (!inputLogradouro.value.trim()) {
+                alertarCampoInvalido(inputLogradouro, 'Preencha o campo "Logradouro" (Nome da Rua, Avenida ou Estrada) onde o imóvel está situado.', 'Bloco 7 - Localização');
+                return;
+            }
+
+            const inputNumero = document.getElementById('campo-numero');
+            if (!inputNumero.value.trim()) {
+                alertarCampoInvalido(inputNumero, 'Preencha o campo "Número" do imóvel (caso não possua numeração, digite "S/N").', 'Bloco 7 - Localização');
+                return;
+            }
+
+            const inputBairro = document.getElementById('campo-bairro');
+            if (!inputBairro.value.trim()) {
+                alertarCampoInvalido(inputBairro, 'Preencha o campo "Bairro" onde o imóvel está localizado.', 'Bloco 7 - Localização');
+                return;
+            }
+
+            const inputCidade = document.getElementById('campo-cidade');
+            if (!inputCidade.value.trim()) {
+                alertarCampoInvalido(inputCidade, 'Preencha o campo "Cidade" onde o imóvel está localizado.', 'Bloco 7 - Localização');
+                return;
+            }
+
+            const inputUf = document.getElementById('campo-uf');
+            if (!inputUf.value.trim() || inputUf.value.trim().length !== 2) {
+                alertarCampoInvalido(inputUf, 'Preencha a sigla do estado no campo "UF" com 2 letras (Ex: RJ, SP, MG, PR).', 'Bloco 7 - Localização');
+                return;
+            }
+
+            // -------------------------------------------------------------
+            // VALIDAÇÃO 7: FORMALIZAÇÃO DE LOCAÇÃO (SE STATUS FOR "ALUGADO")
+            // -------------------------------------------------------------
             const statusComercial = document.getElementById('campo-status').value;
 
             if (statusComercial === 'Alugado') {
-                const nomeInquilino = document.getElementById('loc-nome').value.trim();
-                const zapInquilino = document.getElementById('loc-zap').value.trim();
-                const dataInicio = document.getElementById('loc-data-inicio').value;
-                const dataFim = document.getElementById('loc-data-fim').value;
+                const inputLocNome = document.getElementById('loc-nome');
+                if (!inputLocNome.value.trim()) {
+                    alertarCampoInvalido(inputLocNome, 'Para imóveis com status "Alugado", é obrigatório preencher o "Nome Completo do Locatário (Inquilino)".', 'Formalização de Locação');
+                    return;
+                }
 
-                if (!nomeInquilino || !zapInquilino || !dataInicio || !dataFim) {
-                    alert('Por favor, preencha o Nome, WhatsApp e o Período de Vigência (Início e Término) do contrato de locação.');
-                    document.getElementById('loc-nome').focus();
+                const inputLocZap = document.getElementById('loc-zap');
+                if (!inputLocZap.value.trim()) {
+                    alertarCampoInvalido(inputLocZap, 'Preencha o "WhatsApp / Celular do Inquilino" para contato e gestão de cobrança.', 'Formalização de Locação');
+                    return;
+                }
+
+                const inputLocInicio = document.getElementById('loc-data-inicio');
+                if (!inputLocInicio.value) {
+                    alertarCampoInvalido(inputLocInicio, 'Informe a "Data de Início da Vigência" do contrato de locação.', 'Formalização de Locação');
+                    return;
+                }
+
+                const inputLocFim = document.getElementById('loc-data-fim');
+                if (!inputLocFim.value) {
+                    alertarCampoInvalido(inputLocFim, 'Informe a "Data de Término do Contrato" de locação.', 'Formalização de Locação');
                     return;
                 }
             }
-
             alerta.classList.add('hidden');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Enviando dados, mídias e documentos...';
             btn.disabled = true;
