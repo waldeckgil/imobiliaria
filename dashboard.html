@@ -4451,8 +4451,17 @@ function alternarVisaoFinanceira(abrir) {
                             const cliCpf = m.contratos_locacao?.cliente_cpf_cnpj || '';
                             const ehPago = (m.status_inquilino === 'Pago');
 
-                            // CÁLCULO PRECISO DE ATRASO / DIAS RESTANTES
+ // RÉGUA TEMPORAL INTELIGENTE (EM DIA / VENCE AMANHÃ / VENCE HOJE / ATRASADO)
                             let badgeStatusInquilino = '';
+                            let badgeRepasseHtml = '';
+
+                            let diffDias = 0;
+                            if (m.data_vencimento) {
+                                const [aV, mV, dV] = m.data_vencimento.split('-').map(Number);
+                                const dtVenc = new Date(aV, mV - 1, dV);
+                                diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
+                            }
+
                             if (ehPago) {
                                 const dtPgtoFmt = m.data_pagamento_inquilino ? m.data_pagamento_inquilino.split('-').reverse().join('/') : '';
                                 badgeStatusInquilino = `
@@ -4461,26 +4470,33 @@ function alternarVisaoFinanceira(abrir) {
                                     </span>
                                 `;
                             } else if (m.data_vencimento) {
-                                const [aV, mV, dV] = m.data_vencimento.split('-').map(Number);
-                                const dtVenc = new Date(aV, mV - 1, dV);
-                                const diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
-
                                 if (diffDias > 0) {
+                                    // Vencido
                                     badgeStatusInquilino = `
                                         <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-rose-950 text-rose-300 border border-rose-600 animate-pulse flex items-center gap-1">
                                             <i class="fa-solid fa-triangle-exclamation text-[8px] text-rose-400"></i> ATRASADO (${diffDias}d)
                                         </span>
                                     `;
                                 } else if (diffDias === 0) {
+                                    // Vence hoje
                                     badgeStatusInquilino = `
-                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-600 flex items-center gap-1">
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-500 animate-pulse flex items-center gap-1">
                                             <i class="fa-solid fa-clock text-[8px]"></i> VENCE HOJE
                                         </span>
                                     `;
-                                } else {
+                                } else if (diffDias === -1) {
+                                    // Vence amanhã
                                     badgeStatusInquilino = `
-                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-900 text-slate-400 border border-slate-700">
-                                            A VENCER (${Math.abs(diffDias)}d)
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/50 flex items-center gap-1">
+                                            <i class="fa-solid fa-clock text-[8px]"></i> VENCE AMANHÃ
+                                        </span>
+                                    `;
+                                } else {
+                                    // Faltam 2 ou mais dias: Rigorosamente EM DIA
+                                    const diasFaltam = Math.abs(diffDias);
+                                    badgeStatusInquilino = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1 shadow-sm">
+                                            <i class="fa-solid fa-circle-check text-[8px]"></i> EM DIA (${diasFaltam}d)
                                         </span>
                                     `;
                                 }
@@ -4488,14 +4504,33 @@ function alternarVisaoFinanceira(abrir) {
                                 badgeStatusInquilino = `<span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400">PENDENTE</span>`;
                             }
 
-                            // STATUS SEMÂNTICO DO REPASSE AO DONO COM AÇÃO INTERATIVA
-                            let badgeRepasseHtml = '';
+                            // STATUS COERENTE DO REPASSE AO PROPRIETÁRIO
                             if (!ehPago) {
-                                badgeRepasseHtml = `
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 w-fit" title="O repasse aguarda a quitação do aluguel pelo inquilino">
-                                        <i class="fa-solid fa-hourglass-half text-[8px]"></i> Aguardando Pgto Inquilino
-                                    </span>
-                                `;
+                                if (diffDias > 0) {
+                                    badgeRepasseHtml = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-rose-950/80 text-rose-300 border border-rose-800 flex items-center gap-1 w-fit" title="Inquilino em atraso">
+                                            <i class="fa-solid fa-hourglass-half text-[8px]"></i> Aguardando Pgto (Em Atraso)
+                                        </span>
+                                    `;
+                                } else if (diffDias === 0) {
+                                    badgeRepasseHtml = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800 flex items-center gap-1 w-fit">
+                                            <i class="fa-solid fa-clock text-[8px]"></i> Vencimento Hoje
+                                        </span>
+                                    `;
+                                } else if (diffDias === -1) {
+                                    badgeRepasseHtml = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-amber-950/60 text-amber-300 border border-amber-800/80 flex items-center gap-1 w-fit">
+                                            <i class="fa-solid fa-calendar-day text-[8px]"></i> Vencimento Amanhã
+                                        </span>
+                                    `;
+                                } else {
+                                    badgeRepasseHtml = `
+                                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-slate-900 text-slate-300 border border-slate-800 flex items-center gap-1 w-fit" title="Contrato em dia, aguardando data de vencimento">
+                                            <i class="fa-solid fa-calendar-check text-[8px] text-emerald-400"></i> No Prazo (Aguardando Ciclo)
+                                        </span>
+                                    `;
+                                }
                             } else if (m.status_repasse !== 'Repassado') {
                                 badgeRepasseHtml = `
                                     <button type="button" onclick="abrirModalConfirmarRepasse('${m.id}', '${refImob}', '${m.mes_referencia}', ${Number(m.valor_repasse_proprietario || 0)})"
