@@ -115,16 +115,7 @@
                                class="w-9 bg-slate-950 border border-slate-700 rounded px-1 py-0.5 text-center text-rose-400 font-bold outline-none text-xs">
                         <span class="text-slate-500 text-[10px]">dias pós</span>
                     </div>
-
-                    <span class="text-slate-700 hidden sm:inline">|</span>
-
-                    <!-- 4. Chave PIX Oficial do Administrador -->
-                    <div class="flex items-center gap-1.5" title="Sua Chave PIX oficial para recebimento das mensalidades">
-                        <span class="text-emerald-400 font-black text-xs font-mono">PIX:</span>
-                        <input type="text" id="input-chave-pix-master" placeholder="Sua Chave PIX..." onchange="salvarChavePix(this.value)" 
-                               class="w-32 sm:w-44 bg-slate-950 border border-slate-700 rounded px-2 py-0.5 text-emerald-300 font-mono text-xs outline-none focus:border-emerald-400">
-                    </div>
-                </div>
+</div>
 
   <!-- BOTÃO DE TUTORIAIS EM VÍDEO (CMS) -->
                 <button onclick="abrirModalMasterTutoriais()" class="bg-slate-900 hover:bg-slate-800 text-cyan-300 font-bold px-3 py-1.5 rounded-xl border border-cyan-700/70 flex items-center gap-1.5 transition cursor-pointer text-xs shadow" title="Gerenciar Vídeos Tutoriais da Central de Ajuda">
@@ -1546,30 +1537,10 @@
             } catch (err) {
                 console.warn('[CONFIG] Usando padrões de carência:', err);
             }
-            document.getElementById('input-dias-aviso').value = configGlobalSistema.dias_aviso_vencimento;
+ document.getElementById('input-dias-aviso').value = configGlobalSistema.dias_aviso_vencimento;
             document.getElementById('input-dias-leitura').value = configGlobalSistema.dias_carencia_leitura;
             document.getElementById('input-dias-bloqueio').value = configGlobalSistema.dias_bloqueio_total;
-            const inputPix = document.getElementById('input-chave-pix-master');
-            if (inputPix) inputPix.value = configGlobalSistema.chave_pix || '';
         }
-
-        async function salvarChavePix(chave) {
-            const chaveLimpa = (chave || '').trim();
-            try {
-                const { error } = await supabaseClient
-                    .from('config_sistema')
-                    .update({ chave_pix: chaveLimpa })
-                    .eq('id', 1);
-
-                if (error) throw error;
-                configGlobalSistema.chave_pix = chaveLimpa;
-                mostrarToast('Chave PIX do Administrador salva com sucesso!', 'sucesso');
-            } catch (err) {
-                console.error(err);
-                mostrarToast('Falha ao salvar Chave PIX: ' + (err.message || ''), 'erro');
-            }
-        }
-
    async function salvarDiasAviso(dias) {
             const num = parseInt(dias, 10);
             if (isNaN(num) || num < 1) return;

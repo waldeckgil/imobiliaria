@@ -41,9 +41,19 @@
 
         body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
-        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+
+        /* COMPATIBILIDADE NATIVA DE CALENDÁRIO / DATA-HORA EM SMARTPHONES E MODO ESCURO */
+        input[type="datetime-local"],
+        input[type="date"] {
+            color-scheme: dark !important;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+        input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
+            opacity: 0.9;
         }
 
         /* ANIMAÇÃO DAS NOTIFICAÇÕES TOAST */
@@ -82,6 +92,15 @@
             animation: pulsoAlertaNovos 1.8s infinite ease-in-out !important;
             border: 2px solid #38bdf8 !important;
             background: linear-gradient(135deg, rgba(8, 47, 73, 0.95), rgba(15, 23, 42, 0.95)) !important;
+        }
+
+        /* UTILITÁRIO PARA ESCONDER BARRA DE ROLAGEM HORIZONTAL DAS ABAS */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none !important;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -152,7 +171,7 @@
                     <span>Menu</span>
                 </a>
 
-  <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
+                <!-- BOTÃO PARA CADASTRAR LEAD MANUAL (TELEFONE / BALCÃO) -->
                 <button type="button" id="btn-novo-lead-topbar" onclick="abrirModalNovoLeadManual()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow cursor-pointer">
                     <i class="fa-solid fa-plus text-xs"></i>
                     <span>Novo Atendimento</span>
@@ -427,7 +446,7 @@
     <!-- MODAL PRINCIPAL: COCKPIT UNIFICADO DO ATENDIMENTO (FICHA DO LEAD)    -->
     <!-- ==================================================================== -->
     <div id="modal-cockpit-lead" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-5 hidden">
-        <div class="box-tech max-w-6xl w-full p-5 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[94vh] flex flex-col bg-slate-900">
+        <div class="box-tech max-w-6xl w-full p-4 sm:p-6 border border-cyan-500/50 shadow-2xl space-y-4 max-h-[94vh] flex flex-col bg-slate-900">
             
             <!-- CABEÇALHO DO MODAL COM STATUS E ALERTA DE VISITA EM DESTAQUE NO TOPO -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
@@ -506,28 +525,28 @@
                 </div>
             </div>
 
-            <!-- BLOCO 3: NAVEGAÇÃO POR ABAS -->
-            <div class="flex items-center gap-2 border-b border-slate-800 text-xs font-bold pt-1">
+            <!-- BLOCO 3: NAVEGAÇÃO POR ABAS (COM ROLAGEM HORIZONTAL SUAVE NO SMARTPHONE) -->
+            <div class="flex items-center gap-2 border-b border-slate-800 text-xs font-bold pt-1 overflow-x-auto whitespace-nowrap scrollbar-none flex-nowrap pb-1">
                 <button onclick="trocarAbaCockpit('timeline')" id="btn-aba-timeline" 
-                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-cyan-400 text-cyan-300 bg-slate-800/60 flex items-center gap-1.5 transition cursor-pointer">
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-cyan-400 text-cyan-300 bg-slate-800/60 flex items-center gap-1.5 transition cursor-pointer shrink-0">
                     <i class="fa-solid fa-timeline"></i>
                     <span>Histórico & Notas</span>
                 </button>
 
                 <button onclick="trocarAbaCockpit('visita')" id="btn-aba-visita" 
-                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer">
-                    <i class="fa-solid fa-calendar-days"></i>
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer shrink-0">
+                    <i class="fa-solid fa-calendar-days text-cyan-400"></i>
                     <span>Visita & Agenda</span>
                 </button>
 
                 <button onclick="trocarAbaCockpit('proposta')" id="btn-aba-proposta" 
-                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer">
-                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer shrink-0">
+                    <i class="fa-solid fa-hand-holding-dollar text-purple-400"></i>
                     <span>Proposta Comercial</span>
                 </button>
 
                 <button onclick="trocarAbaCockpit('fechamento')" id="btn-aba-fechamento" 
-                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition cursor-pointer">
+                        class="px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition cursor-pointer shrink-0">
                     <i id="icone-aba-fechamento" class="fa-solid fa-handshake text-amber-400"></i>
                     <span id="txt-aba-fechamento">Concluir Negócio</span>
                 </button>
@@ -543,7 +562,7 @@
                         <div class="flex gap-2">
                             <input type="text" id="cockpit-nova-nota-input" placeholder="Ex: Liguei para o cliente, alinhamos detalhes..." 
                                    class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
-                            <button onclick="gravarNotaCockpit()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1">
+                            <button onclick="gravarNotaCockpit()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1 shrink-0">
                                 <i class="fa-solid fa-paper-plane"></i>
                                 <span>Registrar</span>
                             </button>
@@ -567,36 +586,37 @@
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Data e Horário Combinados</label>
                                 <input type="datetime-local" id="cockpit-visita-data" 
-                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                                       onclick="try{this.showPicker()}catch(e){}"
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 min-h-[42px] cursor-pointer">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Instruções de Portaria / Chaves</label>
                                 <input type="text" id="cockpit-visita-notas" placeholder="Ex: Chaves com o zelador no bloco B..." 
-                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-cyan-400">
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-cyan-400 min-h-[42px]">
                             </div>
                         </div>
 
                         <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800">
                             <button onclick="salvarAgendamentoCockpit()" id="btn-cockpit-salvar-visita" 
-                                    class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2 px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                    class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-2.5 px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
                                 <i class="fa-solid fa-floppy-disk"></i>
                                 <span>Salvar Visita</span>
                             </button>
 
                             <button onclick="dispararConfirmacaoWhatsAppCockpit('confirmacao')" 
-                                    class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                    class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Confirmar no WhatsApp</span>
                             </button>
 
                             <button onclick="dispararConfirmacaoWhatsAppCockpit('reagendamento')" 
-                                    class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                    class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Avisar Remarcação</span>
                             </button>
 
                             <button onclick="abrirModalConfirmarDesmarcarVisita()" 
-                                    class="bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/60 font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 ml-auto">
+                                    class="bg-red-950/60 hover:bg-red-900 text-red-400 border border-red-800/60 font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 ml-auto">
                                 <i class="fa-solid fa-calendar-xmark"></i>
                                 <span>Desmarcar Visita</span>
                             </button>
@@ -628,28 +648,28 @@
                             <div>
                                 <label id="cockpit-proposta-valor-lbl" class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Valor da Proposta (R$)</label>
                                 <div class="relative">
-                                    <span class="absolute left-3 top-2 text-xs font-bold text-purple-400">R$</span>
+                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-purple-400">R$</span>
                                     <input type="text" id="cockpit-proposta-valor" placeholder="0,00" 
                                            oninput="aplicarMascaraMoedaInput(this)"
-                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-10 pr-3 text-emerald-400 font-mono font-black text-sm outline-none focus:border-purple-400">
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-10 pr-3 text-emerald-400 font-mono font-black text-sm outline-none focus:border-purple-400 min-h-[42px]">
                                 </div>
                             </div>
                             <div>
                                 <label id="cockpit-proposta-condicoes-lbl" class="block text-[11px] font-bold text-slate-400 mb-1 uppercase">Forma de Pagamento / Condições</label>
                                 <input type="text" id="cockpit-proposta-condicoes" placeholder="Ex: 20% sinal + Financiamento Caixa..." 
-                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400">
+                                       class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-purple-400 min-h-[42px]">
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-2 pt-2 border-t border-slate-800">
+                        <div class="flex items-center gap-2 pt-2 border-t border-slate-800 flex-wrap">
                             <button onclick="salvarPropostaCockpit()" id="btn-cockpit-salvar-proposta" 
-                                    class="bg-purple-600 hover:bg-purple-500 text-white font-black py-2 px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                    class="bg-purple-600 hover:bg-purple-500 text-white font-black py-2.5 px-4 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
                                 <i class="fa-solid fa-floppy-disk"></i>
                                 <span>Salvar Proposta</span>
                             </button>
 
                             <button onclick="enviarPropostaWhatsAppCockpit()" 
-                                    class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
+                                    class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5 shadow">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Enviar Resumo no WhatsApp</span>
                             </button>
@@ -674,15 +694,16 @@
                                 <div>
                                     <label id="lbl-fechamento-valor" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Valor Real de Fechamento (R$) *</label>
                                     <div class="relative">
-                                        <span class="absolute left-3 top-2 text-xs font-bold text-slate-500">R$</span>
+                                        <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-500">R$</span>
                                         <input type="number" step="0.01" id="cockpit-venda-valor-real" oninput="calcularRateioCockpit()" 
-                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400">
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-emerald-400 font-mono font-bold text-xs outline-none focus:border-amber-400 min-h-[42px]">
                                     </div>
                                 </div>
                                 <div>
                                     <label id="lbl-fechamento-data" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Data do Fechamento *</label>
                                     <input type="date" id="cockpit-venda-data" 
-                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs">
+                                           onclick="try{this.showPicker()}catch(e){}"
+                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 text-xs min-h-[42px] cursor-pointer">
                                 </div>
                             </div>
 
@@ -691,16 +712,16 @@
                                     <label id="lbl-fechamento-pct-imob" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Comissão Total Negociada (%) *</label>
                                     <div class="relative">
                                         <input type="number" step="0.1" id="cockpit-venda-comissao-total-pct" oninput="calcularRateioCockpit()" 
-                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400">
-                                        <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-amber-300 font-mono font-bold text-xs outline-none focus:border-amber-400 min-h-[42px]">
+                                        <span class="absolute right-3 top-2.5 text-slate-500 font-bold">%</span>
                                     </div>
                                 </div>
                                 <div>
                                     <label id="lbl-fechamento-pct-corretor" class="block font-bold text-slate-300 mb-1 uppercase text-[10px]">Fatia do Corretor (%) *</label>
                                     <div class="relative">
                                         <input type="number" step="0.5" id="cockpit-venda-comissao-corretor-pct" oninput="calcularRateioCockpit()" 
-                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400">
-                                        <span class="absolute right-3 top-2 text-slate-500 font-bold">%</span>
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-cyan-300 font-mono font-bold text-xs outline-none focus:border-cyan-400 min-h-[42px]">
+                                        <span class="absolute right-3 top-2.5 text-slate-500 font-bold">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -1322,7 +1343,8 @@
                 document.getElementById('topbar-user-nome').innerText = `${usuario.nome_completo || 'Colaborador'} • ${usuario.email}`;
                 document.getElementById('topbar-cargo-badge').innerText = (usuario.cargo || 'corretor').toUpperCase();
                 document.getElementById('btn-ver-vitrine').href = `index.html?imob=${imob.slug}`;
-// Consulta a tolerância configurada no Master
+
+                // Consulta a tolerância configurada no Master
                 let diasToleranciaLeitura = 3;
                 try {
                     const { data: cfg } = await supabaseClient.from('config_sistema').select('dias_carencia_leitura').eq('id', 1).maybeSingle();
@@ -1701,7 +1723,7 @@
                     badgeStatusHtml = '<span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900 text-slate-400 border border-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-ban"></i> Perdido</span>';
                 }
 
- const bloqueioContatoAtivo = (modoLeitura && !isMasterSuporte);
+                const bloqueioContatoAtivo = (modoLeitura && !isMasterSuporte);
                 const numeroWa = zapLimpo.startsWith('55') ? zapLimpo : '55' + zapLimpo;
                 const nomeEmpresa = imobiliariaNomeFantasia ? ` da ${imobiliariaNomeFantasia}` : '';
                 
@@ -1819,7 +1841,7 @@
 
             atualizarStatusTopoCockpit(lead);
 
-  const bloqueioContato = (modoLeitura && !isMasterSuporte);
+            const bloqueioContato = (modoLeitura && !isMasterSuporte);
             document.getElementById('cockpit-cliente-nome').innerText = lead.nome;
 
             if (bloqueioContato) {
@@ -1831,6 +1853,7 @@
                 document.getElementById('cockpit-cliente-whatsapp').innerText = lead.whatsapp;
                 document.getElementById('cockpit-cliente-email').innerText = lead.email ? lead.email : 'Sem e-mail informado';
             }
+
             const cardImovel = document.getElementById('cockpit-imovel-card');
             const { modalidade, valorExibicao } = extrairContextoLead(lead);
 
@@ -2054,8 +2077,17 @@
                     true
                 );
 
+                const boxVisita = document.getElementById('aba-conteudo-visita');
+                if (boxVisita) {
+                    boxVisita.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+
                 const campoDataVisita = document.getElementById('cockpit-visita-data');
-                if (campoDataVisita) campoDataVisita.focus();
+                if (campoDataVisita) {
+                    setTimeout(() => {
+                        try { campoDataVisita.focus(); } catch(e){}
+                    }, 200);
+                }
                 return;
             }
 
@@ -2069,8 +2101,17 @@
                     true
                 );
 
+                const boxProposta = document.getElementById('aba-conteudo-proposta');
+                if (boxProposta) {
+                    boxProposta.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+
                 const campoValorProp = document.getElementById('cockpit-proposta-valor');
-                if (campoValorProp) campoValorProp.focus();
+                if (campoValorProp) {
+                    setTimeout(() => {
+                        try { campoValorProp.focus(); } catch(e){}
+                    }, 200);
+                }
                 return;
             }
 
@@ -2237,10 +2278,10 @@
                 const conteudo = document.getElementById(`aba-conteudo-${a}`);
 
                 if (a === aba) {
-                    btn.className = 'px-3.5 py-2 rounded-t-xl border-b-2 border-cyan-400 text-cyan-300 bg-slate-800/60 flex items-center gap-1.5 transition cursor-pointer';
+                    btn.className = 'px-3.5 py-2 rounded-t-xl border-b-2 border-cyan-400 text-cyan-300 bg-slate-800/60 flex items-center gap-1.5 transition cursor-pointer shrink-0';
                     conteudo.classList.remove('hidden');
                 } else {
-                    btn.className = 'px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer';
+                    btn.className = 'px-3.5 py-2 rounded-t-xl border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-1.5 transition cursor-pointer shrink-0';
                     conteudo.classList.add('hidden');
                 }
             });
@@ -2437,9 +2478,10 @@
                 btn.disabled = false;
             }
         }
-function enviarPropostaWhatsAppCockpit() {
+
+        function dispararConfirmacaoWhatsAppCockpit(tipo = 'confirmacao') {
             if (modoLeitura && !isMasterSuporte) {
-                notificar('aviso', 'Recurso Protegido', 'O envio de propostas no WhatsApp está bloqueado. Renove seu plano para liberar este cliente.', true);
+                notificar('aviso', 'Recurso Protegido', 'A confirmação no WhatsApp está bloqueada. Renove seu plano para liberar este cliente.', true);
                 return;
             }
             if (!leadAtivoCockpit) return;
@@ -2614,6 +2656,10 @@ function enviarPropostaWhatsAppCockpit() {
         }
 
         function enviarPropostaWhatsAppCockpit() {
+            if (modoLeitura && !isMasterSuporte) {
+                notificar('aviso', 'Recurso Protegido', 'O envio de propostas no WhatsApp está bloqueado. Renove seu plano para liberar este cliente.', true);
+                return;
+            }
             if (!leadAtivoCockpit) return;
 
             const valorFormatado = document.getElementById('cockpit-proposta-valor').value;
@@ -3056,13 +3102,12 @@ function enviarPropostaWhatsAppCockpit() {
         // ====================================================================
         // CADASTRO MANUAL DE LEAD (BALCÃO / TELEFONE)
         // ====================================================================
- function abrirModalNovoLeadManual() {
+        function abrirModalNovoLeadManual() {
             if (modoLeitura && !isMasterSuporte) {
                 notificar('aviso', 'Modo Somente Leitura', 'Cadastros desabilitados devido a assinatura pendente.', true);
                 return;
             }
             const selectCorretor = document.getElementById('manual-lead-corretor');
-
 
             selectCorretor.innerHTML = '<option value="">Sem corretor inicial</option>';
             listaCorretores.forEach(c => {
@@ -3091,7 +3136,7 @@ function enviarPropostaWhatsAppCockpit() {
             document.getElementById('modal-novo-lead-manual').classList.add('hidden');
         }
 
- async function salvarLeadManual(event) {
+        async function salvarLeadManual(event) {
             event.preventDefault();
             if (modoLeitura && !isMasterSuporte) {
                 notificar('aviso', 'Modo Somente Leitura', 'Cadastros desabilitados devido a assinatura pendente.', true);
@@ -3149,7 +3194,7 @@ function enviarPropostaWhatsAppCockpit() {
             }
         }
 
-  async function executarLogout() {
+        async function executarLogout() {
             if (isMasterSuporte) {
                 window.close();
                 return;

@@ -255,12 +255,16 @@
                     <span id="txt-dias-contagem" class="text-slate-400 text-[11px]">Calculando ciclo...</span>
                 </div>
             </div>
-
-            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+<div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+                <button type="button" id="btn-pagar-pix-topo" onclick="abrirModalPagamentoPixInstantaneo()" 
+                        class="hidden bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black px-3.5 py-1.5 rounded-lg text-[11px] items-center gap-1.5 shadow-md transition cursor-pointer whitespace-nowrap">
+                    <i class="fa-solid fa-bolt text-xs"></i>
+                    <span>Pagar via Pix (Liberação Instantânea)</span>
+                </button>
                 <a id="btn-renovar-zap" href="https://wa.me/5521964120231" target="_blank" 
-                   class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow transition cursor-pointer whitespace-nowrap">
+                   class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-bold px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow transition cursor-pointer whitespace-nowrap">
                     <i class="fa-brands fa-whatsapp text-xs"></i>
-                    <span>Renovar</span>
+                    <span>WhatsApp</span>
                 </a>
             </div>
         </div>
@@ -1674,12 +1678,17 @@
     // =========================================================================
         // GUARDIÃO DE SESSÃO COM TERMINAL DE AUTOATENDIMENTO PIX
         // =========================================================================
-        async function expulsarUsuarioBloqueado() {
+  async function expulsarUsuarioBloqueado() {
             if (isMasterSuporte) return;
 
             const modal = document.getElementById('modal-bloqueio-suspensao');
             if (!modal) {
                 window.location.href = 'login.html';
+                return;
+            }
+
+            // TRAVA ANTI-SPAM: Se o modal já estiver aberto na tela, aborta para não gerar cobranças repetidas
+            if (!modal.classList.contains('hidden')) {
                 return;
             }
 
@@ -1697,64 +1706,13 @@
                 diasAtraso = Math.max(0, Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24)));
             }
 
-  document.getElementById('modal-bloq-imob-nome').innerText = nomeImob;
+ document.getElementById('modal-bloq-imob-nome').innerText = nomeImob;
             document.getElementById('modal-bloq-vencimento').innerText = dataVenc;
             document.getElementById('modal-bloq-atraso').innerText = `${diasAtraso} dia(s)`;
             document.getElementById('modal-bloq-valor').innerText = valorPlano.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-            // CHAVE PIX CONFIGURADA NO MASTER
-            const chavePix = window.chavePixMasterGlobal || 'waldeckgil@gmail.com';
-            document.getElementById('modal-bloq-chave-pix').value = chavePix;
-
-            // VERIFICA SE JÁ EXISTE UM COMPROVANTE ENVIADO AGUARDANDO ANÁLISE
-            const blocoPendente = document.getElementById('bloco-pagamento-pendente');
-            const blocoAnalise = document.getElementById('bloco-pagamento-em-analise');
-
-            try {
-                const { data: ticketAberto } = await supabaseClient
-                    .from('support_tickets')
-                    .select('*')
-                    .eq('imobiliaria_id', dadosImobiliaria?.id)
-                    .eq('categoria', 'Financeiro')
-                    .in('status', ['aberto', 'em_analise'])
-                    .order('created_at', { ascending: false })
-                    .limit(1)
-                    .maybeSingle();
-
-                if (ticketAberto) {
-                    // SE JÁ ENVIOU: MOSTRA A TELA DE "PAGAMENTO EM ANÁLISE"
-                    if (blocoPendente) blocoPendente.classList.add('hidden');
-                    if (blocoAnalise) {
-                        blocoAnalise.classList.remove('hidden');
-                        const dataEnvioFmt = new Date(ticketAberto.created_at).toLocaleString('pt-BR');
-                        document.getElementById('analise-data-envio').innerText = dataEnvioFmt;
-                        
-                        // Extrai o link do anexo da mensagem do ticket se existir
-                        const matchLink = (ticketAberto.mensagem || '').match(/https?:\/\/[^\s]+/);
-                        const btnVerAnexo = document.getElementById('btn-ver-comprovante-analise');
-                        if (matchLink && btnVerAnexo) {
-                            btnVerAnexo.href = matchLink[0];
-                            btnVerAnexo.classList.remove('hidden');
-                        }
-
-                        // WhatsApp direcionado cobrando liberação
-                        const btnZapAnalise = document.getElementById('btn-zap-aguardando-analise');
-                        if (btnZapAnalise) {
-                            const msgAnalise = `Olá Administrador! Sou da ${nomeImob}. Já enviamos o comprovante do PIX pelo sistema em ${dataEnvioFmt} e estamos aguardando a validação para restabelecer nosso acesso. Poderia verificar por favor?`;
-                            btnZapAnalise.href = `https://wa.me/5521964120231?text=${encodeURIComponent(msgAnalise)}`;
-                        }
-                    }
-                } else {
-                    // SE NÃO ENVIOU AINDA: MOSTRA O CHECKOUT PIX NORMAL
-                    if (blocoPendente) blocoPendente.classList.remove('hidden');
-                    if (blocoAnalise) blocoAnalise.classList.add('hidden');
-                }
-            } catch (errCheck) {
-                console.warn('[CHECK TICKET PENDENTE]', errCheck);
-                if (blocoPendente) blocoPendente.classList.remove('hidden');
-                if (blocoAnalise) blocoAnalise.classList.add('hidden');
-            }
-
+            // Abre direto o PIX dinâmico do Mercado Pago
+            gerarPixMercadoPagoAutomatico();
             modal.classList.remove('hidden');
         }
 
@@ -1912,11 +1870,20 @@
             localStorage.clear();
             window.location.href = 'login.html';
         }
+  let intervaloSentinelaBloqueio = null;
+
         function iniciarSentinelaBloqueio(imobiliariaId) {
             if (isMasterSuporte || !imobiliariaId) return;
+            if (intervaloSentinelaBloqueio) clearInterval(intervaloSentinelaBloqueio);
 
-            setInterval(async () => {
+            intervaloSentinelaBloqueio = setInterval(async () => {
                 try {
+                    // Se o modal de suspensão já estiver na tela, não precisa checar nem rodar nada
+                    const modal = document.getElementById('modal-bloqueio-suspensao');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        return;
+                    }
+
                     const { data: imobStatus, error } = await supabaseClient
                         .from('imobiliarias')
                         .select('status, data_vencimento')
@@ -1945,46 +1912,6 @@
                 }
             }, 15000);
         }
-   
-
-        function iniciarSentinelaBloqueio(imobiliariaId) {
-            if (isMasterSuporte || !imobiliariaId) return;
-
-            // Checa silenciosamente a cada 15 segundos se o status virou "blocked" no Master
-            setInterval(async () => {
-                try {
-                    const { data: imobStatus, error } = await supabaseClient
-                        .from('imobiliarias')
-                        .select('status, data_vencimento')
-                        .eq('id', imobiliariaId)
-                        .maybeSingle();
-
-                    if (!error && imobStatus) {
-                        // 1. Bloqueio manual direto pelo Master
-                        if (imobStatus.status === 'blocked') {
-                            await expulsarUsuarioBloqueado('Acesso Interrompido: Sua imobiliária foi bloqueada pelo Administrador do sistema.');
-                            return;
-                        }
-
-                        // 2. Bloqueio automático por carência máxima estourada (ex: > 8 dias)
-                        if (imobStatus.data_vencimento) {
-                            const hoje = new Date();
-                            hoje.setHours(0, 0, 0, 0);
-                            const [anoV, mesV, diaV] = imobStatus.data_vencimento.split('-').map(Number);
-                            const dtVenc = new Date(anoV, mesV - 1, diaV);
-                            const diasAtraso = Math.floor((hoje.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
-
-                            // 8 dias pós-vencimento configurado no Master
-                            if (diasAtraso > 8) {
-                                await expulsarUsuarioBloqueado('Acesso expirado: O período máximo de carência pós-vencimento foi esgotado.');
-                            }
-                        }
-                    }
-                } catch (e) {
-                    console.warn('[SENTINELA] Checagem de segurança ativa:', e);
-                }
-            }, 15000); // 15 segundos
-        }
 
         function popularSeletorMeses() {
             const select = document.getElementById('filtro-mes-financeiro');
@@ -2010,12 +1937,14 @@
         }
 async function atualizarPainelAssinatura(imob) {
             if (!imob || !imob.data_vencimento) {
-                document.getElementById('txt-vencimento-data').innerText = 'Não definida';
-                document.getElementById('txt-dias-contagem').innerText = 'Data de vencimento em configuração.';
+                const elVenc = document.getElementById('txt-vencimento-data');
+                const elDias = document.getElementById('txt-dias-contagem');
+                if (elVenc) elVenc.innerText = 'Não definida';
+                if (elDias) elDias.innerText = 'Data de vencimento em configuração.';
                 return;
             }
 
- // Busca as réguas de tolerância e a Chave PIX configuradas no Console Master
+            // Busca as réguas de tolerância configuradas no Console Master
             let diasCarenciaLeitura = 3;
             let diasBloqueioTotal = 7;
             try {
@@ -2035,7 +1964,8 @@ async function atualizarPainelAssinatura(imob) {
             }
 
             const [ano, mes, dia] = imob.data_vencimento.split('-');
-            document.getElementById('txt-vencimento-data').innerText = `${dia}/${mes}/${ano}`;
+            const elTxtVenc = document.getElementById('txt-vencimento-data');
+            if (elTxtVenc) elTxtVenc.innerText = `${dia}/${mes}/${ano}`;
 
             const dataVenc = new Date(`${imob.data_vencimento}T23:59:59`);
             const dataHoje = new Date();
@@ -2043,92 +1973,115 @@ async function atualizarPainelAssinatura(imob) {
             const diffDias = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             const diasAtraso = diffDias < 0 ? Math.abs(diffDias) : 0;
 
+            // Declaração segura de todos os elementos visuais
             const cardAssinatura = document.getElementById('card-monitor-assinatura');
             const badgeStatus = document.getElementById('badge-status-plano');
             const iconeStatus = document.getElementById('icone-status-plano');
             const txtContagem = document.getElementById('txt-dias-contagem');
             const btnRenovar = document.getElementById('btn-renovar-zap');
+            const btnPixTopo = document.getElementById('btn-pagar-pix-topo');
 
             const valorPlano = Number((imob.plano_valor !== null && imob.plano_valor !== undefined) ? imob.plano_valor : 149);
             const ehGratuito = (valorPlano === 0);
-
-            const msgWhatsApp = ehGratuito 
-                ? encodeURIComponent(`Olá Administrador! Sou da imobiliária ${imob.nome_fantasia || ''} (Plano Cortesia) e gostaria de tirar uma dúvida.`)
-                : encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia || ''} (Vencimento: ${dia}/${mes}/${ano}).`);
-            
-            btnRenovar.href = `https://wa.me/5521964120231?text=${msgWhatsApp}`;
-            btnRenovar.innerHTML = ehGratuito 
-                ? '<i class="fa-brands fa-whatsapp text-sm"></i><span>Falar com Administrador</span>'
-                : '<i class="fa-brands fa-whatsapp text-sm"></i><span>Solicitar Renovação</span>';
 
             // REGRA INTELIGENTE DE STATUS
             const ultrapassouLeitura = diasAtraso > diasCarenciaLeitura;
             const ultrapassouBloqueio = diasAtraso > diasBloqueioTotal;
             const estaEmCarencia = (diffDias < 0 && !ultrapassouLeitura);
 
+            if (btnRenovar) {
+                const msgWhatsApp = ehGratuito 
+                    ? encodeURIComponent(`Olá Administrador! Sou da imobiliária ${imob.nome_fantasia || ''} (Plano Cortesia) e gostaria de tirar uma dúvida.`)
+                    : encodeURIComponent(`Olá Administrador! Gostaria de falar sobre a renovação da assinatura da imobiliária ${imob.nome_fantasia || ''} (Vencimento: ${dia}/${mes}/${ano}).`);
+                
+                btnRenovar.href = `https://wa.me/5521964120231?text=${msgWhatsApp}`;
+                btnRenovar.innerHTML = ehGratuito 
+                    ? '<i class="fa-brands fa-whatsapp text-sm"></i><span>Falar com Administrador</span>'
+                    : '<i class="fa-brands fa-whatsapp text-sm"></i><span>Solicitar Renovação</span>';
+            }
+
             modoLeitura = (imob.status === 'blocked' || imob.status === 'read_only' || ultrapassouLeitura);
 
+            const faixaLeitura = document.getElementById('faixa-modo-leitura');
             if (modoLeitura && !isMasterSuporte) {
-                document.getElementById('faixa-modo-leitura').classList.remove('hidden');
+                if (faixaLeitura) faixaLeitura.classList.remove('hidden');
                 const btnNovo = document.getElementById('btn-novo-imovel');
                 if (btnNovo) {
                     btnNovo.classList.add('opacity-40', 'cursor-not-allowed', 'pointer-events-none');
                 }
             } else {
-                document.getElementById('faixa-modo-leitura').classList.add('hidden');
+                if (faixaLeitura) faixaLeitura.classList.add('hidden');
             }
 
-       const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
+            const baseClassSlim = 'box-tech px-4 py-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 text-xs';
 
             // SE ESTIVER BLOQUEADA E NÃO FOR O ADMINISTRADOR MASTER, EXPULSA NA HORA
             if ((imob.status === 'blocked' || ultrapassouBloqueio) && !isMasterSuporte) {
-                await expulsarUsuarioBloqueado('Acesso suspenso: A assinatura da sua imobiliária possui pendências financeiras graves. Entre em contato com a administração.');
+                await expulsarUsuarioBloqueado();
                 return;
             }
 
-            if (imob.status === 'blocked' || ultrapassouBloqueio) {
-                cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/30`;
-                badgeStatus.innerText = 'BLOQUEADA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm flex-shrink-0 border border-rose-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-ban"></i>';
-                txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Atrasada há ${diasAtraso} d.</span> Bloqueio total de acesso por inadimplência.`;
-            } else if (imob.status === 'read_only' || ultrapassouLeitura) {
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-500 bg-amber-950/25`;
-                badgeStatus.innerText = 'MODO LEITURA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 animate-pulse';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-eye"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Expirada há ${diasAtraso} d.</span> Tolerância esgotada. Somente consulta liberada.`;
-            } else if (estaEmCarencia) {
-                const diasRestantesCarencia = diasCarenciaLeitura - diasAtraso;
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
-                badgeStatus.innerText = 'EM CARÊNCIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Vencida há ${diasAtraso} d.</span> Carência ativa: restam ${diasRestantesCarencia} d. de uso pleno antes do bloqueio.`;
-            } else if (ehGratuito) {
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/15`;
-                badgeStatus.innerText = 'CORTESIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-gift"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia concedido pelo Administrador.</span>`;
-            } else if (diffDias <= 5) {
-                cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
-                badgeStatus.innerText = 'VENCE EM BREVE';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
-                txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam ${diffDias === 0 ? 'poucas horas' : diffDias + ' dia(s)'}.</span>`;
-            } else {
-                cardAssinatura.className = `${baseClassSlim} border-l-emerald-500`;
-                badgeStatus.innerText = 'EM DIA';
-                badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
-                iconeStatus.className = 'w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30';
-                iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
-                txtContagem.innerText = `Faltam ${diffDias} dias para o próximo ciclo.`;
+            if (cardAssinatura && badgeStatus && iconeStatus && txtContagem) {
+                if (imob.status === 'blocked' || ultrapassouBloqueio) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-rose-500 bg-rose-950/30`;
+                    badgeStatus.innerText = 'BLOQUEADA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 animate-pulse';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-sm flex-shrink-0 border border-rose-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-ban"></i>';
+                    txtContagem.innerHTML = `<span class="text-rose-400 font-bold">Atrasada há ${diasAtraso} d.</span> Bloqueio total de acesso por inadimplência.`;
+                } else if (imob.status === 'read_only' || ultrapassouLeitura) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-500 bg-amber-950/25`;
+                    badgeStatus.innerText = 'MODO LEITURA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800 animate-pulse';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Expirada há ${diasAtraso} d.</span> Tolerância esgotada. Somente consulta liberada.`;
+                } else if (estaEmCarencia) {
+                    const diasRestantesCarencia = diasCarenciaLeitura - diasAtraso;
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
+                    badgeStatus.innerText = 'EM CARÊNCIA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Vencida há ${diasAtraso} d.</span> Carência ativa: restam ${diasRestantesCarencia} d. de uso pleno antes do bloqueio.`;
+                } else if (ehGratuito) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/15`;
+                    badgeStatus.innerText = 'CORTESIA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-gift"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Plano Cortesia concedido pelo Administrador.</span>`;
+                } else if (diffDias <= 5) {
+                    cardAssinatura.className = `${baseClassSlim} border-l-amber-400 bg-amber-950/20`;
+                    badgeStatus.innerText = 'VENCE EM BREVE';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-950 text-amber-300 border border-amber-800';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm flex-shrink-0 border border-amber-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-clock"></i>';
+                    txtContagem.innerHTML = `<span class="text-amber-300 font-bold">Faltam ${diffDias === 0 ? 'poucas horas' : diffDias + ' dia(s)'}.</span>`;
+                } else {
+                    cardAssinatura.className = `${baseClassSlim} border-l-emerald-500`;
+                    badgeStatus.innerText = 'EM DIA';
+                    badgeStatus.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-950 text-emerald-400 border border-emerald-800';
+                    iconeStatus.className = 'w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm flex-shrink-0 border border-emerald-500/30';
+                    iconeStatus.innerHTML = '<i class="fa-solid fa-shield-halved"></i>';
+                    txtContagem.innerText = `Faltam ${diffDias} dias para o próximo ciclo.`;
+                }
+            }
+
+            // Regra Discreta: Se estiver EM DIA (mais de 5 dias), oculta o botão pulsante de PIX
+            if (btnPixTopo) {
+                if (diffDias <= 5 || ultrapassouLeitura || ultrapassouBloqueio || estaEmCarencia) {
+                    btnPixTopo.classList.remove('hidden');
+                    btnPixTopo.classList.add('flex');
+                    if (diffDias <= 2 || ultrapassouLeitura || ultrapassouBloqueio || estaEmCarencia) {
+                        btnPixTopo.classList.add('animate-pulse');
+                    } else {
+                        btnPixTopo.classList.remove('animate-pulse');
+                    }
+                } else {
+                    btnPixTopo.classList.add('hidden');
+                    btnPixTopo.classList.remove('flex', 'animate-pulse');
+                }
             }
         }
 
@@ -2573,9 +2526,12 @@ async function atualizarPainelAssinatura(imob) {
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="window.abrirDossieUniversal('${p.id}', '${(p.nome || '').replace(/'/g, "\\'")}', '${p.cpf_cnpj || ''}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+ <button onclick="window.abrirDossieUniversal('${p.id}', '${(p.nome || '').replace(/'/g, "\\'")}', '${p.cpf_cnpj || ''}', 'proprietario')" class="bg-sky-950 hover:bg-sky-900 text-sky-300 border border-sky-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
                                     <i class="fa-solid fa-eye text-xs"></i>
                                     <span>Dossiê 360°</span>
+                                </button>
+                                <button type="button" onclick="iniciarExclusaoCliente('${p.id}', 'proprietario')" class="p-1 rounded-lg bg-rose-950/40 hover:bg-rose-900 text-rose-400 hover:text-white border border-rose-800/60 transition cursor-pointer" title="Excluir proprietário da carteira">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
                         </div>
@@ -2651,16 +2607,20 @@ async function atualizarPainelAssinatura(imob) {
                                         <i class="fa-brands fa-whatsapp"></i> Zap
                                     </a>
                                 ` : ''}
-                                <button onclick="window.abrirDossieUniversal('${i.id}', '${(i.nome || '').replace(/'/g, "\\'")}', '${i.cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
+ 
+  <button onclick="window.abrirDossieUniversal('${i.id}', '${(i.nome || '').replace(/'/g, "\\'")}', '${i.cpf_cnpj || ''}', 'inquilino')" class="bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-700 font-bold px-3 py-1 rounded-lg text-[10px] transition cursor-pointer flex items-center gap-1">
                                     <i class="fa-solid fa-eye text-xs"></i>
                                     <span>Dossiê 360°</span>
+                                </button>
+                                <button type="button" onclick="iniciarExclusaoCliente('${i.id}', 'inquilino')" class="p-1 rounded-lg bg-rose-950/40 hover:bg-rose-900 text-rose-400 hover:text-white border border-rose-800/60 transition cursor-pointer" title="Excluir inquilino da carteira">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
-        }
+        }                              
 
         function renderizarCompradores(lista) {
             const container = document.getElementById('lista-drilldown-compradores');
@@ -6482,6 +6442,327 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
             promptInstalacaoPwaGestor = null;
         }
 
+  // =========================================================================
+        // MOTOR PIX MERCADO PAGO 100% VIA RPC SUPABASE
+        // =========================================================================
+        let intervaloPollingPix = null;
+        let paymentIdAtivoPix = null;
+
+        function alternarAbaBloqueio(aba) {
+            const btnMp = document.getElementById('btn-tab-pix-mp');
+            const btnManual = document.getElementById('btn-tab-pix-manual');
+            const blocoMp = document.getElementById('bloco-pix-mp-conteudo');
+            const blocoManual = document.getElementById('bloco-pagamento-pendente');
+
+            if (aba === 'mp') {
+                btnMp.className = 'flex-1 py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center gap-1.5 shadow transition cursor-pointer';
+                btnManual.className = 'py-2 px-3 rounded-xl bg-slate-900 text-slate-400 hover:text-white border border-slate-800 flex items-center justify-center gap-1.5 transition cursor-pointer';
+                blocoMp.classList.remove('hidden');
+                blocoManual.classList.add('hidden');
+                gerarPixMercadoPagoAutomatico();
+            } else {
+                btnManual.className = 'flex-1 py-2 px-3 rounded-xl bg-emerald-500 text-slate-950 font-black flex items-center justify-center gap-1.5 shadow transition cursor-pointer';
+                btnMp.className = 'py-2 px-3 rounded-xl bg-slate-900 text-slate-400 hover:text-white border border-slate-800 flex items-center justify-center gap-1.5 transition cursor-pointer';
+                blocoManual.classList.remove('hidden');
+                blocoMp.classList.add('hidden');
+                if (intervaloPollingPix) clearInterval(intervaloPollingPix);
+            }
+        }
+
+        async function abrirModalPagamentoPixInstantaneo() {
+            const modal = document.getElementById('modal-bloqueio-suspensao');
+            if (modal) {
+                modal.classList.remove('hidden');
+                alternarAbaBloqueio('mp');
+            }
+        }
+
+  async function gerarPixMercadoPagoAutomatico() {
+            const imobId = dadosImobiliaria?.id;
+            if (!imobId) return;
+
+            // TRAVA ANTI-SPAM: Se já tiver um QR Code gerado e exibido na tela, não cria outro no Mercado Pago
+            if (paymentIdAtivoPix && document.getElementById('mp-pix-exibicao') && !document.getElementById('mp-pix-exibicao').classList.contains('hidden')) {
+                return;
+            }
+
+            const elCarregando = document.getElementById('mp-pix-carregando');
+            const elExibicao = document.getElementById('mp-pix-exibicao');
+            const imgQrCode = document.getElementById('mp-qrcode-img');
+            const inputCopiaCola = document.getElementById('mp-pix-copia-cola');
+
+            if (!elCarregando || !elExibicao) return;
+
+            // Restaura o visual inicial do spinner caso tenha havido erro anterior
+            elCarregando.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-2xl mb-2"></i>
+                <p class="font-bold">Gerando QR Code PIX dinâmico do Mercado Pago...</p>
+            `;
+            elCarregando.classList.remove('hidden');
+            elExibicao.classList.add('hidden');
+
+            try {
+                // Trava de segurança: timeout de 12s para nunca travar a tela se o Mercado Pago demorar
+                const chamadaRpc = supabaseClient.rpc('gerar_pix_mercado_pago', {
+                    p_imobiliaria_id: imobId
+                });
+                const timeoutPromessa = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Tempo limite esgotado ao contatar o Mercado Pago.')), 12000)
+                );
+
+                const { data, error } = await Promise.race([chamadaRpc, timeoutPromessa]);
+
+                if (error || !data?.sucesso) {
+                    throw new Error(data?.erro || error?.message || 'Falha ao gerar cobrança no banco.');
+                }
+
+                paymentIdAtivoPix = data.payment_id;
+                const b64 = String(data.qr_code_base64 || '');
+                imgQrCode.src = b64.startsWith('data:') ? b64 : `data:image/png;base64,${b64}`;
+                inputCopiaCola.value = data.qr_code_copia_cola || '';
+
+                elCarregando.classList.add('hidden');
+                elExibicao.classList.remove('hidden');
+
+                // Inicia monitoramento atômico a cada 2.5 segundos
+                iniciarPollingLiberacaoPix(imobId, paymentIdAtivoPix);
+
+            } catch (err) {
+                console.error('[ERRO GERAR PIX RPC]:', err);
+                elCarregando.innerHTML = `
+                    <div class="text-rose-400 space-y-2 py-4">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                        <p class="text-xs font-bold">${err.message || 'Falha ao emitir PIX automático.'}</p>
+                        <button type="button" onclick="alternarAbaBloqueio('manual')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black cursor-pointer shadow transition">
+                            <i class="fa-solid fa-qrcode mr-1"></i> Pagar via Chave PIX Manual
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function copiarPixCopiaColaMP() {
+            const input = document.getElementById('mp-pix-copia-cola');
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                const btn = document.getElementById('btn-copiar-mp-pix');
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Copiado!</span>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fa-solid fa-copy"></i><span>Copiar</span>';
+                    }, 2000);
+                }
+            });
+        }
+
+        function iniciarPollingLiberacaoPix(imobId, paymentId) {
+            if (intervaloPollingPix) clearInterval(intervaloPollingPix);
+
+            intervaloPollingPix = setInterval(async () => {
+                try {
+                    // Consulta o Mercado Pago através da RPC do banco
+                    const { data, error } = await supabaseClient.rpc('verificar_e_liberar_pix_mp', {
+                        p_payment_id: String(paymentId),
+                        p_imobiliaria_id: imobId
+                    });
+
+                    if (!error && data?.aprovado) {
+                        clearInterval(intervaloPollingPix);
+                        exibirToast('sucesso', 'Pagamento confirmado! Seu acesso foi liberado na hora.');
+                        const modal = document.getElementById('modal-bloqueio-suspensao');
+                        if (modal) modal.classList.add('hidden');
+                        document.getElementById('faixa-modo-leitura').classList.add('hidden');
+                        setTimeout(() => window.location.reload(), 1500);
+                    }
+                } catch (e) {
+                    console.warn('[POLLING PIX RPC] Verificando...', e);
+                }
+            }, 2500);
+        }
+
+  window.alternarAbaBloqueio = alternarAbaBloqueio;
+        window.abrirModalPagamentoPixInstantaneo = abrirModalPagamentoPixInstantaneo;
+        window.copiarPixCopiaColaMP = copiarPixCopiaColaMP;
+
+        // =========================================================================
+        // MOTOR DE EXCLUSÃO CRÍTICA DE CLIENTES COM RAIO-X & CONFIRMAÇÃO DE SENHA
+        // =========================================================================
+      
+        function iniciarExclusaoCliente(clienteId, tipoCliente) {
+            // 1. CHECAGEM DE PRIVILÉGIO: Dono, Master ou Colaborador com permissão delegada
+            const podeExcluir = isMasterSuporte || 
+                                (dadosUsuario?.cargo === 'dono') || 
+                                (dadosUsuario?.permissoes?.pode_excluir_cadastros === true);
+
+            if (!podeExcluir) {
+                exibirToast('erro', 'Acesso Restrito: Apenas o Gestor Titular (Dono) ou colaboradores autorizados podem excluir cadastros.');
+                return;
+            }
+
+            const modal = document.getElementById('modal-excluir-cliente-carteira');
+            const elNome = document.getElementById('excluir-cli-nome');
+            const elTipo = document.getElementById('excluir-cli-tipo-badge');
+            const elDetalhes = document.getElementById('excluir-cli-impacto-detalhes');
+            const inputId = document.getElementById('excluir-cli-id-input');
+            const inputTipo = document.getElementById('excluir-cli-tipo-input');
+            const inputMotivo = document.getElementById('excluir-cli-motivo');
+
+            if (!modal) return;
+
+            inputId.value = clienteId;
+            inputTipo.value = tipoCliente;
+            inputMotivo.value = '';
+
+            let cli = null;
+            let impactoHtml = '';
+
+   if (tipoCliente === 'proprietario') {
+                cli = cacheProprietariosCompletos.find(c => c.id === clienteId);
+                const imoveis = cli?.imoveis_proprietario || [];
+                const alugados = imoveis.filter(im => (im.status || '').toLowerCase() === 'alugado');
+
+                elTipo.innerText = 'PROPRIETÁRIO';
+                elTipo.className = 'px-2 py-0.5 rounded text-[9px] font-black uppercase bg-sky-950 text-sky-300 border border-sky-800';
+
+                if (imoveis.length > 0) {
+                    // Monta a relação detalhada dos imóveis que serão apagados
+                    const listaImoveisHtml = imoveis.map(im => {
+                        const statusLower = (im.status || '').toLowerCase();
+                        let badgeCor = 'bg-slate-900 text-slate-300 border-slate-700';
+
+                        if (statusLower === 'alugado') {
+                            badgeCor = 'bg-purple-950 text-purple-300 border-purple-800 font-bold';
+                        } else if (statusLower === 'vendido') {
+                            badgeCor = 'bg-amber-950 text-amber-300 border-amber-800 font-bold';
+                        } else if (statusLower === 'disponível' || statusLower === 'disponivel') {
+                            badgeCor = 'bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold';
+                        }
+
+                        return `
+                            <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800 flex items-center justify-between gap-2 text-[11px]">
+                                <div class="min-w-0 flex items-center gap-2">
+                                    <span class="font-mono font-bold text-amber-300 shrink-0">Ref: ${im.codigo_ref || '---'}</span>
+                                    <span class="text-white font-medium truncate" title="${im.titulo}">${im.titulo || 'Imóvel'}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    ${im.inquilino_nome ? `<span class="text-[10px] text-purple-300 hidden sm:inline">• Inquilino: ${im.inquilino_nome}</span>` : ''}
+                                    <span class="px-2 py-0.5 rounded text-[9px] uppercase border ${badgeCor}">
+                                        ${im.status || 'Cadastrado'}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    impactoHtml = `
+                        <div class="space-y-2">
+                            <p class="text-rose-400 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>ATENÇÃO: Os ${imoveis.length} imóvel(is) abaixo serão DELETADOS do sistema:</span>
+                            </p>
+                            
+                            <!-- LISTAGEM DOS IMÓVEIS QUE SERÃO EXCLUÍDOS -->
+                            <div class="space-y-1.5 max-h-36 overflow-y-auto pr-1 border border-slate-800/80 p-1.5 rounded-xl bg-slate-950/60">
+                                ${listaImoveisHtml}
+                            </div>
+
+                            ${alugados.length > 0 ? `
+                                <p class="text-amber-300 font-semibold text-[11px]">
+                                    ⚠️ <strong>${alugados.length} imóvel(is) alugado(s)</strong>: os contratos e cobranças também serão destruídos.
+                                </p>
+                            ` : ''}
+                            <p class="text-[10px] text-slate-400">
+                                A exclusão do proprietário removerá permanentemente fotos, dados cadastrais e vínculos deste portfólio.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    impactoHtml = '<p class="text-slate-400">Este proprietário não possui imóveis vinculados ativos. O cadastro será excluído de forma simples.</p>';
+                }
+            } else {
+                cli = cacheInquilinosCompletos.find(c => c.id === clienteId);
+                const contrato = cli?.contrato_inquilino;
+
+                elTipo.innerText = 'INQUILINO';
+                elTipo.className = 'px-2 py-0.5 rounded text-[9px] font-black uppercase bg-purple-950 text-purple-300 border border-purple-800';
+
+                if (contrato && contrato.status === 'Ativo') {
+                    impactoHtml = `
+                        <p class="text-amber-300 font-bold">⚠️ VÍNCULO CONTRATUAL ATIVO:</p>
+                        <p>• Este inquilino possui um contrato de locação ativo de <strong>R$ ${Number(contrato.valor_aluguel_bruto || 0).toLocaleString('pt-BR')}/mês</strong>.</p>
+                        <p class="text-slate-300">• O imóvel voltará automaticamente ao status <strong class="text-emerald-400">"Disponível"</strong> no seu catálogo.</p>
+                        <p class="text-slate-400">• As cobranças em aberto e o contrato serão encerrados e auditados.</p>
+                    `;
+                } else {
+                    impactoHtml = '<p class="text-slate-400">Cadastro de inquilino avulso sem contrato ativo. Será excluído com registro de auditoria.</p>';
+                }
+            }
+
+            elNome.innerText = cli?.nome || 'Cliente';
+            elDetalhes.innerHTML = impactoHtml;
+
+            modal.classList.remove('hidden');
+        }
+
+        function fecharModalExcluirCliente() {
+            const modal = document.getElementById('modal-excluir-cliente-carteira');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function executarExclusaoCliente(e) {
+            e.preventDefault();
+
+            const clienteId = document.getElementById('excluir-cli-id-input').value;
+            const motivo = document.getElementById('excluir-cli-motivo').value.trim();
+            const btn = document.getElementById('btn-confirmar-excluir-cli');
+
+            if (!clienteId || !motivo) {
+                exibirToast('aviso', 'Por favor, informe o motivo formal da exclusão.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Excluindo e Auditando...';
+
+            try {
+                let autorNome = 'Super Administrador Master';
+                if (!isMasterSuporte) {
+                    autorNome = dadosUsuario?.nome_completo || dadosSessao?.user?.email || 'Gestor Titular';
+                }
+
+                // Disparo direto da Procedure Atômica no PostgreSQL
+                const { data, error: errRpc } = await supabaseClient.rpc('excluir_cliente_carteira_com_auditoria', {
+                    p_cliente_id: clienteId,
+                    p_motivo: motivo,
+                    p_autor_nome: autorNome
+                });
+
+                if (errRpc || !data?.sucesso) {
+                    throw new Error(data?.erro || errRpc?.message || 'Falha ao executar exclusão no banco de dados.');
+                }
+
+                exibirToast('sucesso', 'Cadastro e registros vinculados excluídos e auditados com sucesso!');
+                fecharModalExcluirCliente();
+
+                // Atualização em tempo real da carteira e contadores
+                await abrirDrilldownClientes();
+                if (dadosImobiliaria?.id) {
+                    await carregarMetricas(dadosImobiliaria.id);
+                }
+
+            } catch (err) {
+                console.error('[EXCLUSÃO CLIENTE CRÍTICA] Erro:', err);
+                exibirToast('erro', err.message || 'Erro ao processar exclusão.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> <span>Excluir e Auditar</span>';
+            }
+        }
+
+        window.iniciarExclusaoCliente = iniciarExclusaoCliente;
+        window.fecharModalExcluirCliente = fecharModalExcluirCliente;
+        window.executarExclusaoCliente = executarExclusaoCliente;
+
         window.addEventListener('DOMContentLoaded', () => {
             atualizarRelogioTopo();
             setInterval(atualizarRelogioTopo, 1000);
@@ -6595,95 +6876,139 @@ window.abrirModalCompartilharVitrine = abrirModalCompartilharVitrine;
                 </div>
             </div>
 
- <!-- ESTADO 1: QUANDO AINDA NÃO ENVIOU COMPROVANTE (CHECKOUT PIX) -->
-            <div id="bloco-pagamento-pendente" class="space-y-4">
-                <!-- GAVETA DA CHAVE PIX OFICIAL -->
-                <div class="bg-emerald-950/20 p-3 rounded-xl border border-emerald-500/40 space-y-1.5 text-left text-xs">
-                    <span class="text-[10px] uppercase font-black tracking-wider text-emerald-400 block flex items-center gap-1.5">
-                        <i class="fa-solid fa-qrcode text-emerald-400"></i> Chave PIX Oficial para Pagamento:
-                    </span>
-                    <div class="flex gap-2">
-                        <input type="text" id="modal-bloq-chave-pix" readonly 
-                               class="flex-1 bg-slate-900 border border-slate-700 rounded-xl py-1.5 px-3 text-emerald-300 font-mono text-xs outline-none select-all font-bold">
-                        <button type="button" id="btn-copiar-pix-modal" onclick="copiarChavePixModal()" 
-                                class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1.5 whitespace-nowrap">
-                            <i class="fa-solid fa-copy"></i>
-                            <span>Copiar</span>
-                        </button>
-                    </div>
+ <!-- CHECKOUT AUTOMÁTICO MERCADO PAGO PIX -->
+            <div id="bloco-pix-mp-conteudo" class="space-y-3.5 pt-1">
+                <div id="mp-pix-carregando" class="py-8 text-center text-slate-400 text-xs">
+                    <i class="fa-solid fa-spinner fa-spin text-emerald-400 text-2xl mb-2"></i>
+                    <p class="font-bold">Gerando QR Code PIX dinâmico do Mercado Pago...</p>
                 </div>
 
-                <!-- ANEXO OBRIGATÓRIO DO COMPROVANTE -->
-                <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 text-left space-y-2 text-xs">
-                    <label class="block font-bold text-slate-200 text-[11px] flex items-center gap-1.5">
-                        <i class="fa-solid fa-paperclip text-cyan-400"></i>
-                        <span>Anexe o Comprovante do PIX (Obrigatório para solicitar liberação):</span>
+ <div id="mp-pix-exibicao" class="hidden space-y-3">
+                    <!-- CARD OFICIAL MERCADO PAGO COM QR CODE -->
+                    <div class="bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 p-4 rounded-2xl border-2 border-sky-500/50 shadow-2xl flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
+                        
+        <!-- CHANCELA INSTITUCIONAL MERCADO PAGO COM LOGO OFICIAL (FOTO 1) -->
+                        <div class="w-full flex items-center justify-between border-b border-slate-800/90 pb-3 px-1 gap-2 flex-wrap sm:flex-nowrap">
+                            <div class="flex items-center gap-2.5">
+                                <!-- CARD BRANCO OFICIAL COM APERTO DE MÃOS E TIPOGRAFIA MERCADO PAGO -->
+                                <div class="bg-white px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-md shadow-sky-950/40 border border-slate-200 flex-shrink-0">
+                                    <img src="https://cdn.jsdelivr.net/npm/logos-bancos-br@0/logos/svg/10573521.svg" 
+                                         alt="Mercado Pago" 
+                                         class="h-5 w-auto object-contain"
+                                         onerror="this.onerror=null; this.src='https://cdn.jsdelivr.net/npm/logos-bancos-br@0/logos/png/10573521.png';">
+                                    <span class="text-xs font-black text-[#001a9c] font-sans tracking-tight leading-none">mercado pago</span>
+                                </div>
+                                <div class="text-left">
+                                    <span class="text-[10px] text-slate-300 font-bold block flex items-center gap-1">
+                                        <i class="fa-solid fa-shield-halved text-emerald-400 text-[9px]"></i>
+                                        <span>Pagamento Seguro</span>
+                                    </span>
+                                    <span class="text-[9px] text-sky-300/80 font-mono block">Liquidação instantânea</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg text-[9px] font-mono font-black uppercase bg-sky-950 text-sky-300 border border-sky-800 shadow-sm flex-shrink-0">
+                                PIX OFICIAL
+                            </span>
+                        </div>
+
+
+                        <!-- MOLDURA DO QR CODE COM CONTRASTE PROFISSIONAL -->
+                        <div class="bg-white p-2.5 rounded-2xl shadow-xl shadow-sky-950/40 border-2 border-slate-200">
+                            <img id="mp-qrcode-img" src="" alt="QR Code Pix Oficial Mercado Pago" class="w-44 h-44 object-contain">
+                        </div>
+
+                        <!-- STATUS DINÂMICO DE CONFIRMAÇÃO -->
+                        <span class="text-[10px] text-emerald-400 font-mono font-bold flex items-center gap-1.5 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-800/80 shadow-sm animate-pulse">
+                            <i class="fa-solid fa-rotate text-[9px]"></i>
+                            <span>Aguardando confirmação bancária em tempo real...</span>
+                        </span>
+                    </div>
+
+                    <!-- GAVETA DO CÓDIGO COPIA E COLA -->
+                    <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-left space-y-1.5">
+                        <label class="block font-bold text-slate-300 text-[10px] uppercase flex items-center justify-between">
+                            <span>Código PIX Copia e Cola:</span>
+                            <span class="text-[9px] text-sky-400 font-mono font-normal">Pague pelo app de qualquer banco</span>
+                        </label>
+                        <div class="flex gap-2">
+                            <input type="text" id="mp-pix-copia-cola" readonly 
+                                   class="flex-1 bg-slate-950 border border-slate-700 rounded-xl py-1.5 px-3 text-cyan-300 font-mono text-xs outline-none select-all font-bold">
+                            <button type="button" onclick="copiarPixCopiaColaMP()" id="btn-copiar-mp-pix"
+                                    class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer shadow flex items-center gap-1 whitespace-nowrap">
+                                <i class="fa-solid fa-copy"></i>
+                                <span>Copiar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-[10px] text-slate-400 text-center flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-bolt text-amber-400"></i>
+                        <span>Liquidação instantânea pelo Banco Central: destravamento automático em <strong>3 segundos</strong>.</span>
+                    </p>
+                </div>
+
+                <button type="button" onclick="redirecionarParaLogin()" 
+                        class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
+                    Sair para o Login
+                </button>
+            </div>
+
+ <!-- Fim do modal simplificado -->
+
+ </div>
+    </div>
+
+    <!-- MODAL DARK TECH: EXCLUSÃO CRÍTICA DE CLIENTE COM RAIO-X & SENHA -->
+    <div id="modal-excluir-cliente-carteira" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-lg w-full p-5 sm:p-6 shadow-2xl relative border-2 border-rose-600/80 bg-slate-950 space-y-4">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 text-rose-400 font-black text-sm uppercase">
+                    <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/40 text-base">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <span>Exclusão Crítica de Cadastro</span>
+                </div>
+                <button type="button" onclick="fecharModalExcluirCliente()" class="text-slate-400 hover:text-white cursor-pointer p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- RAIO-X DE IMPACTO DINÂMICO -->
+            <div class="bg-rose-950/30 border border-rose-800/60 p-3.5 rounded-xl space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                    <span class="text-[10px] uppercase font-bold text-slate-400">Cliente Selecionado:</span>
+                    <strong id="excluir-cli-tipo-badge" class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-rose-950 text-rose-300 border border-rose-800">TIPO</strong>
+                </div>
+                <h4 id="excluir-cli-nome" class="text-sm font-black text-white uppercase">NOME DO CLIENTE</h4>
+                <div id="excluir-cli-impacto-detalhes" class="pt-1.5 border-t border-rose-900/40 text-[11px] space-y-1 text-slate-300">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+            </div>
+
+  <form id="form-excluir-cliente-critico" onsubmit="executarExclusaoCliente(event)" class="space-y-3.5 text-xs">
+                <input type="hidden" id="excluir-cli-id-input">
+                <input type="hidden" id="excluir-cli-tipo-input">
+
+                <div>
+                    <label class="block font-bold text-slate-200 mb-1 text-[11px]">
+                        Motivo Formal da Exclusão (Gravado no Livro de Auditoria) *
                     </label>
-                    <input type="file" id="input-comprovante-bloqueio" accept=".pdf,image/*" onchange="aoSelecionarComprovanteBloqueio(event)"
-                           class="w-full bg-slate-950 border border-slate-700 rounded-xl p-1.5 text-slate-300 text-xs file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer">
-                    <p id="aviso-anexo-obrigatorio" class="text-[10px] text-amber-400 font-medium">
-                        ⚠️ O botão do WhatsApp será liberado assim que você selecionar o comprovante.
-                    </p>
+                    <textarea id="excluir-cli-motivo" required rows="2" placeholder="Ex: Cancelamento a pedido do cliente, encerramento de contrato..."
+                              class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-white outline-none focus:border-rose-500 text-xs"></textarea>
                 </div>
 
-                <!-- BOTÕES DE AÇÃO DO CHECKOUT -->
-                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
-                    <button type="button" id="btn-enviar-comprovante-bloqueio" disabled onclick="processarEnvioComprovantePix()"
-                            class="w-full sm:flex-1 bg-emerald-600 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition opacity-40 cursor-not-allowed">
-                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                        <span>Enviar Comprovante no WhatsApp</span>
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalExcluirCliente()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition cursor-pointer">
+                        Cancelar
                     </button>
-
-                    <button type="button" onclick="redirecionarParaLogin()" 
-                            class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
-                        Sair para o Login
+                    <button type="submit" id="btn-confirmar-excluir-cli" 
+                            class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black flex items-center gap-2 shadow-lg shadow-rose-950/60 transition cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Excluir e Auditar</span>
                     </button>
                 </div>
-            </div>
-
-            <!-- ESTADO 2: QUANDO JÁ ENVIOU COMPROVANTE (EM ANÁLISE / AGUARDANDO LIBERAÇÃO) -->
-            <div id="bloco-pagamento-em-analise" class="hidden space-y-4 pt-1">
-                <div class="bg-amber-950/30 p-4 rounded-xl border border-amber-500/50 space-y-2 text-left text-xs">
-                    <div class="flex items-center justify-between">
-                        <span class="text-amber-400 font-black uppercase text-[10px] flex items-center gap-1.5">
-                            <i class="fa-solid fa-hourglass-half text-amber-400 animate-pulse"></i>
-                            <span>Comprovante Enviado com Sucesso</span>
-                        </span>
-                        <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
-                            EM ANÁLISE
-                        </span>
-                    </div>
-
-                    <p class="text-slate-200 text-xs leading-relaxed">
-                        Seu comprovante foi recebido pelo sistema em <strong id="analise-data-envio" class="text-white font-mono">--/--/----</strong> e já está na fila de atendimento do Administrador.
-                    </p>
-
-                    <div class="pt-2 flex items-center justify-between border-t border-slate-800 text-[11px]">
-                        <span class="text-slate-400">Status atual:</span>
-                        <strong class="text-cyan-300 font-bold">Aguardando Validação Financeira</strong>
-                    </div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
-                    <a id="btn-ver-comprovante-analise" href="#" target="_blank"
-                       class="hidden w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-800 hover:border-cyan-400 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
-                        <i class="fa-solid fa-eye text-xs"></i>
-                        <span>Ver Meu Anexo</span>
-                    </a>
-
-                    <a id="btn-zap-aguardando-analise" href="#" target="_blank"
-                       class="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 transition cursor-pointer">
-                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                        <span>Avisar Administrador</span>
-                    </a>
-
-                    <button type="button" onclick="redirecionarParaLogin()" 
-                            class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition cursor-pointer border border-slate-700">
-                        Sair para o Login
-                    </button>
-                </div>
-            </div>
-
+            </form>
         </div>
     </div>
 </body>
