@@ -158,7 +158,7 @@
         SGI SaaS • Sistema de Gestão Imobiliária com Isolamento Multi-tenant
     </footer>
 
-    <!-- JAVASCRIPT DE ONBOARDING COM 'supabaseClient' (SEM CONFLITO) -->
+    <!-- JAVASCRIPT DE ONBOARDING -->
     <script>
         const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
         const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
@@ -168,7 +168,7 @@
 
         // 1. Sanitizador de Slug em Tempo Real
         function sanitizarSlug(texto) {
-            return texto
+            return (texto || '')
                 .toLowerCase()
                 .normalize('NFD')
                 .replace(/[\u0300-\u036f]/g, '')
@@ -204,7 +204,7 @@
             const slug = sanitizarSlug(nomeFantasia);
 
             try {
-                // ETAPA A: Criação do Usuário no Supabase Auth via supabaseClient
+                // ETAPA A: Criação do Usuário no Supabase Auth
                 const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                     email: email,
                     password: senha,
@@ -215,13 +215,13 @@
 
                 if (authError) throw authError;
 
-                if (!authData.user) {
+                if (!authData?.user) {
                     throw new Error('Falha ao registrar usuário de autenticação.');
                 }
 
                 const novoUserId = authData.user.id;
 
-                // ETAPA B: Chamada da Função RPC Atômica no PostgreSQL via supabaseClient
+                // ETAPA B: Chamada da Função RPC Atômica no PostgreSQL
                 const { data: rpcData, error: rpcError } = await supabaseClient.rpc('cadastrar_nova_imobiliaria', {
                     p_user_id: novoUserId,
                     p_nome_fantasia: nomeFantasia,
@@ -241,24 +241,42 @@
                     throw new Error(rpcData.erro || 'Erro ao processar criação da imobiliária.');
                 }
 
- // ETAPA C: Define status de demonstração e abre chamado para a equipe
-                try {
-                    // 1. Mantém a conta como 'read_only' sem vencimento pendente (Ambiente em Ativação)
-          // 2. Busca o ID oficial da imobiliária recém-criada
+                // ETAPA C: Identificação garantida do imobiliaria_id e criação do Ticket de Suporte
+                let idOficialImob = rpcData?.imobiliaria_id || rpcData?.id || null;
+                let idOficialUsuario = rpcData?.usuario_id || null;
+
+                // Fallback 1: Buscar na tabela 'imobiliarias' pelo slug
+                if (!idOficialImob) {
                     const { data: imobCriada } = await supabaseClient
                         .from('imobiliarias')
                         .select('id')
                         .eq('slug', slug)
                         .maybeSingle();
+                    if (imobCriada?.id) {
+                        idOficialImob = imobCriada.id;
+                    }
+                }
 
-                    const idOficialImob = imobCriada?.id;
+                // Fallback 2: Buscar na tabela 'usuarios' pelo user_id do Auth
+                if (!idOficialImob) {
+                    const { data: userCriado } = await supabaseClient
+                        .from('usuarios')
+                        .select('id, imobiliaria_id')
+                        .eq('user_id', novoUserId)
+                        .maybeSingle();
+                    if (userCriado?.imobiliaria_id) {
+                        idOficialImob = userCriado.imobiliaria_id;
+                        idOficialUsuario = userCriado.id;
+                    }
+                }
 
-                    // 3. Registra o chamado de Nova Adesão com o ID real preenchido
+                // Se localizou o ID da imobiliária, registra o ticket de Nova Adesão
+                if (idOficialImob) {
                     const { error: errInsertTicket } = await supabaseClient
                         .from('support_tickets')
                         .insert([{
                             imobiliaria_id: idOficialImob,
-                            usuario_id: null,
+                            usuario_id: idOficialUsuario,
                             gestor_nome: nomeGestor,
                             gestor_email: email,
                             gestor_whatsapp: zap,
@@ -270,9 +288,11 @@
 
                     if (errInsertTicket) {
                         console.error('[ERRO AO GRAVAR TICKET DE ADESÃO]:', errInsertTicket);
+                    } else {
+                        console.log('[TICKET DE ADESÃO REGISTRADO COM SUCESSO]');
                     }
-                } catch (errTicket) {
-                    console.warn('[ADESÃO TICKET] Aviso:', errTicket);
+                } else {
+                    console.warn('[AVISO] Não foi possível obter o ID da imobiliária para abrir o ticket de adesão.');
                 }
 
                 // ETAPA D: Sucesso com mensagem acolhedora e entrada no Dashboard
