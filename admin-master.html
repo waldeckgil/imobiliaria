@@ -1667,10 +1667,14 @@ let configGlobalSistema = {
                 mostrarToast('Falha ao atualizar prazo de bloqueio total: ' + (err.message || ''), 'erro');
             }
         }
-        // MOTOR DE CÁLCULO DE STATUS: MANUAL + AUTOMÁTICO POR DIAS
+ // MOTOR DE CÁLCULO DE STATUS: MANUAL + AUTOMÁTICO POR DIAS
         function calcularStatusEfetivoImobiliaria(imob) {
             // Se o Administrador definiu manualmente no banco
             if (imob.status === 'blocked') return 'blocked';
+
+            // NOVO CLIENTE (Adesão recente sem vencimento): Não é devedor!
+            if (imob.status === 'read_only' && !imob.data_vencimento) return 'new_trial';
+
             if (imob.status === 'read_only') return 'read_only';
 
             // Avaliação por data de vencimento
@@ -2440,9 +2444,11 @@ function atualizarMetricasMaster() {
                 const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
                 const statusEfetivo = calcularStatusEfetivoImobiliaria(im);
 
-                if (statusEfetivo === 'active') {
+  if (statusEfetivo === 'active') {
                     mrrTotal += valorPlano;
                     ativasCount++;
+                } else if (statusEfetivo === 'new_trial') {
+                    // Nova adesão: Não soma em atraso (é lead novo aguardando ativação)
                 } else if (statusEfetivo === 'overdue' || statusEfetivo === 'read_only') {
                     atrasoCount++;
                 } else if (statusEfetivo === 'blocked') {
@@ -2485,16 +2491,19 @@ function atualizarMetricasMaster() {
                 const valorPlano = Number(im.plano_valor !== null ? im.plano_valor : 149);
                 const ehGratuito = valorPlano === 0;
 
-                let badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Ativa</span>';
-                if (statusEfetivo === 'blocked') {
+ let badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Ativa</span>';
+                let dataVencFormatada = im.data_vencimento ? im.data_vencimento.split('-').reverse().join('/') : '--/--/----';
+
+                if (statusEfetivo === 'new_trial') {
+                    badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-cyan-950 text-cyan-300 border border-cyan-500 shadow-sm shadow-cyan-950 flex items-center gap-1 justify-center animate-pulse"><i class="fa-solid fa-rocket text-[9px]"></i> Nova Adesão</span>';
+                    dataVencFormatada = '<span class="text-cyan-400 font-bold font-mono">Aguardando 30d</span>';
+                } else if (statusEfetivo === 'blocked') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-950 text-rose-400 border border-rose-800 flex items-center gap-1 justify-center"><i class="fa-solid fa-ban text-[9px]"></i> Bloqueada</span>';
                 } else if (statusEfetivo === 'read_only') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-950 text-amber-400 border border-amber-700 flex items-center gap-1 justify-center animate-pulse"><i class="fa-solid fa-eye text-[9px]"></i> Só Consulta</span>';
                 } else if (statusEfetivo === 'overdue') {
                     badgeStatus = '<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-800">Vencida</span>';
                 }
-
-                const dataVencFormatada = im.data_vencimento ? im.data_vencimento.split('-').reverse().join('/') : '--/--/----';
                 const zapLimpo = ('' + (im.whatsapp_contato || '')).replace(/\D/g, '');
                 const logoSrc = im.logo_url || DEFAULT_LOGO_SVG;
 
