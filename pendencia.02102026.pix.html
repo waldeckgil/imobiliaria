@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGI • Roteiro Estratégico & Checklist Executivo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1rem; }
+        .card-subitem { transition: all 0.2s ease; }
+        .card-subitem:hover { border-color: #38bdf8; transform: translateX(3px); }
+        input[type="checkbox"]:checked + div span.titulo-tarefa { text-decoration: line-through; opacity: 0.5; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-8">
+
+    <div class="max-w-5xl mx-auto w-full space-y-8">
+        
+        <!-- TOPO PRINCIPAL: TÍTULO, IDENTIFICAÇÃO E PROGRESSO -->
+        <header class="box-tech p-6 border-l-4 border-l-cyan-400 bg-gradient-to-r from-slate-900 to-cyan-950/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sticky top-4 z-40 backdrop-blur-md shadow-2xl">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-cyan-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shrink-0">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">Planejamento Estratégico & Técnico</h1>
+                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono">
+                            SPRINT 2.0 • MASTER EDITION
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">SGI SaaS • Autonomia, Fiança Locatícia & Vitrine em Grade de Alto Padrão</p>
+                </div>
+            </div>
+
+            <!-- NAVEGAÇÃO RÁPIDA ENTRE AS DUAS ETAPAS -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                <div class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs">
+                    <a href="#etapa-administrativa" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 font-bold hover:bg-amber-500 hover:text-slate-950 transition flex items-center gap-1">
+                        <i class="fa-solid fa-building-user text-[11px]"></i>
+                        <span>1. Administrativo</span>
+                    </a>
+                    <a href="#etapa-tecnica" class="px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 font-bold hover:bg-indigo-500 hover:text-white transition flex items-center gap-1">
+                        <i class="fa-solid fa-code text-[11px]"></i>
+                        <span>2. Técnico</span>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex flex-col items-end gap-1 font-mono text-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="text-slate-400 text-[11px]">Progresso:</span>
+                        <strong id="label-progresso" class="text-cyan-300 font-black">0%</strong>
+                    </div>
+                    <div class="w-32 h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                        <div id="barra-progresso" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-300 w-0"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================================================= -->
+        <!-- ETAPA 1: VISÃO ADMINISTRATIVA, NEGOCIAL & CARÊNCIAS DO GESTOR             -->
+        <!-- ========================================================================= -->
+        <section id="etapa-administrativa" class="space-y-6 pt-2">
+            
+            <div class="flex items-center gap-3 border-b border-amber-500/40 pb-3">
+                <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center font-black text-sm">
+                    1
+                </span>
+                <div>
+                    <h2 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+                        <span>Etapa Administrativa • Negócio, Carências & Ganhos do Gestor</span>
+                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800 font-mono">
+                            VISÃO DE PRODUTO
+                        </span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Diagnóstico operacional das necessidades do usuário final do sistema.</p>
+                </div>
+            </div>
+
+            <!-- O QUE VEM ACONTECENDO HOJE (DIAGNÓSTICO REAL) -->
+            <div class="box-tech p-5 sm:p-6 border-l-4 border-l-amber-500 bg-amber-950/10 space-y-3">
+                <h3 class="text-xs font-black uppercase text-amber-400 flex items-center gap-2 tracking-wider">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>O Que Vem Acontecendo Hoje? (Carências do Sistema Atual)</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300 leading-relaxed">
+                    <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                        <strong class="text-white block font-bold flex items-center gap-1.5 text-amber-300">
+                            <i class="fa-solid fa-sliders text-xs"></i> 1. Falta de Autonomia nas Regras
+                        </strong>
+                        <p class="text-slate-400 text-[11px]">
+                            O sistema aplica comportamentos fixos. O gestor precisa decidir se quer ligar/desligar: atalhos de cobrança no Zap, aviso de repasse ao dono e alerta de reajuste de 12 meses.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                        <strong class="text-white block font-bold flex items-center gap-1.5 text-amber-300">
+                            <i class="fa-solid fa-shield-halved text-xs"></i> 2. O Vácuo Jurídico do Fiador
+                        </strong>
+                        <p class="text-slate-400 text-[11px]">
+                            A fiança é a garantia mais usada no Brasil. Hoje, locações registram só o inquilino. Em caso de cobrança, a imobiliária fica descoberta sem os dados do fiador (nome, CPF, Zap, endereço).
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                        <strong class="text-white block font-bold flex items-center gap-1.5 text-amber-300">
+                            <i class="fa-solid fa-table-cells-large text-xs"></i> 3. Vitrine Pública em Formato de Lista
+                        </strong>
+                        <p class="text-slate-400 text-[11px]">
+                            A vitrine exibe imóveis em cartões horizontais compridos, cabendo apenas 1 ou 2 por tela. Os grandes portais usam <strong>Grade de Cards Verticais</strong> (lado a lado), com fotos em destaque e maior densidade visual.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NECESSIDADES DO GESTOR & GANHOS ESPERADOS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- NECESSIDADES DA IMOBILIÁRIA -->
+                <div class="box-tech p-5 space-y-3 border-t-2 border-t-cyan-400">
+                    <span class="text-[10px] uppercase font-bold text-cyan-400 block tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-bullseye"></i> O Que o Gestor Precisa
+                    </span>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-cyan-400 mt-1 text-[10px]"></i>
+                            <span><strong>Central de Regras:</strong> Ligar/desligar alertas de cobrança, repasse ao dono e reajuste anual com 1 clique em Configurações.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-cyan-400 mt-1 text-[10px]"></i>
+                            <span><strong>Fiador em Todas as Telas:</strong> Ter o campo de Fiador disponível tanto ao cadastrar o imóvel, quanto ao alugar pelo catálogo ou fechar pelo CRM.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-cyan-400 mt-1 text-[10px]"></i>
+                            <span><strong>Vitrine Comercial Atraente:</strong> Site moderno em grade de 2 colunas com fotos grandes, carrossel de setas e clique na imagem que abre o formulário de proposta direto.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- GANHOS PARA O ADMINISTRADOR (VOCÊ) -->
+                <div class="box-tech p-5 space-y-3 border-t-2 border-t-emerald-400">
+                    <span class="text-[10px] uppercase font-bold text-emerald-400 block tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-chart-line"></i> Seus Ganhos como Administrador (Dono do SaaS)
+                    </span>
+                    <ul class="space-y-2 text-xs text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-star text-emerald-400 mt-1 text-[10px]"></i>
+                            <span><strong>Conversão de Vendas do SaaS:</strong> Quando uma imobiliária testar os 30 dias grátis e ver a vitrine moderna em grade, o impacto visual fechará a assinatura.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-star text-emerald-400 mt-1 text-[10px]"></i>
+                            <span><strong>Padrão ERP de Mercado:</strong> O SGI se consolida como uma ferramenta completa de retaguarda jurídica, financeira e de catálogo.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-star text-emerald-400 mt-1 text-[10px]"></i>
+                            <span><strong>Zero Atrito no Suporte:</strong> Cada imobiliária configura o próprio fluxo, eliminando pedidos individuais de customização.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- MAPA GERAL DOS 6 CÓDIGOS AFETADOS -->
+            <div class="box-tech p-5 space-y-3 border border-slate-700 bg-slate-900/60">
+                <span class="text-[10px] uppercase font-black tracking-wider text-slate-400 block flex items-center gap-1.5">
+                    <i class="fa-solid fa-folder-tree text-cyan-400"></i> Mapa Completo de Impacto nos Códigos
+                </span>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                    
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="font-mono text-cyan-400 font-bold block text-[11px]">1. configurar-imobiliaria.html</span>
+                        <p class="text-slate-400 text-[10px]">
+                            Recebe a <strong>Seção 5</strong> (switches) para o gestor ativar/desativar lembretes de cobrança, aviso de repasse e reajuste anual.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="font-mono text-amber-400 font-bold block text-[11px]">2. imovel-form.html</span>
+                        <p class="text-slate-400 text-[10px]">
+                            Recebe campos do <strong>Fiador</strong> na gaveta de locação quando o imóvel for cadastrado ou editado com status *"Alugado"*.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="font-mono text-purple-400 font-bold block text-[11px]">3. imoveis-lista.html</span>
+                        <p class="text-slate-400 text-[10px]">
+                            Recebe campos do <strong>Fiador</strong> no modal de fechamento da chave roxa (<code>#modal-registrar-locacao</code>).
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="font-mono text-blue-400 font-bold block text-[11px]">4. leads.html</span>
+                        <p class="text-slate-400 text-[10px]">
+                            Recebe campos do <strong>Fiador</strong> na Aba 4 (*"Concluir Negócio"*) quando um lead for convertido em contrato de locação.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="font-mono text-emerald-400 font-bold block text-[11px]">5. dashboard.html</span>
+                        <p class="text-slate-400 text-[10px]">
+                            Lê as preferências salvas no banco para exibir ou ocultar botões e exibe o Fiador no histórico de contratos de locação.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                        <span class="font-mono text-pink-400 font-bold block text-[11px]">6. index.html (Vitrine Pública)</span>
+                        <p class="text-slate-400 text-[10px]">
+                            Modernização do container de imóveis para <strong>Grade Visual 2 Colunas</strong>, foco em fotos, cards verticais e clique que abre o lead.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- ETAPA 2: VISÃO TÉCNICA, ARQUITETURA & ENGENHARIA MASTER                  -->
+        <!-- ========================================================================= -->
+        <section id="etapa-tecnica" class="space-y-6 pt-6 border-t-2 border-slate-800">
+            
+            <div class="flex items-center gap-3 border-b border-indigo-500/40 pb-3">
+                <span class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 flex items-center justify-center font-black text-sm">
+                    2
+                </span>
+                <div>
+                    <h2 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+                        <span>Etapa Técnica • Engenharia de Dados & Execução Master</span>
+                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">
+                            CÓDIGO & BANCO DE DADOS
+                        </span>
+                    </h2>
+                    <p class="text-xs text-slate-400">Implementação no Supabase, manipulação de JSONB e checklist ordenado.</p>
+                </div>
+            </div>
+
+            <!-- ARQUITETURA DE BANCO DE DADOS & SCRIPT SQL -->
+            <div class="box-tech p-5 space-y-3 border border-indigo-500/40 bg-indigo-950/15">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-indigo-900/40 pb-2.5">
+                    <div>
+                        <span class="text-[10px] font-mono uppercase font-bold text-indigo-400 block">Supabase SQL Migration</span>
+                        <h4 class="text-xs font-bold text-white">Preparação das Tabelas `imobiliarias` e `contratos_locacao`</h4>
+                    </div>
+                    <button onclick="copiarSql()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5 cursor-pointer shadow">
+                        <i class="fa-solid fa-copy"></i>
+                        <span id="btn-copiar-txt">Copiar SQL de 1 Clique</span>
+                    </button>
+                </div>
+
+                <p class="text-[11px] text-slate-300 leading-relaxed">
+                    Utilizaremos a coluna <strong><code>preferencias jsonb</code></strong> na tabela <code>imobiliarias</code>. Isso permite salvar qualquer dicionário de configurações sem precisar alterar a estrutura da tabela novamente no futuro. Em <code>contratos_locacao</code>, adicionamos os atributos jurídicos do fiador:
+                </p>
+
+                <pre class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-[11px] text-indigo-200 font-mono overflow-x-auto select-all leading-relaxed" id="bloco-sql">
+-- 1. Coluna expansível de preferências da imobiliária (Padrão JSONB escalável)
+ALTER TABLE imobiliarias 
+ADD COLUMN IF NOT EXISTS preferencias jsonb DEFAULT '{
+  "notificar_zap_repasse": false,
+  "lembrete_cobranca_zap": true,
+  "alerta_reajuste_anual": true,
+  "permitir_fiador": true
+}'::jsonb;
+
+-- 2. Atributos da Fiança Locatícia nos Contratos de Locação
+ALTER TABLE contratos_locacao 
+ADD COLUMN IF NOT EXISTS tem_fiador boolean DEFAULT false,
+ADD COLUMN IF NOT EXISTS fiador_nome text,
+ADD COLUMN IF NOT EXISTS fiador_cpf_cnpj text,
+ADD COLUMN IF NOT EXISTS fiador_rg text,
+ADD COLUMN IF NOT EXISTS fiador_whatsapp text,
+ADD COLUMN IF NOT EXISTS fiador_email text,
+ADD COLUMN IF NOT EXISTS fiador_endereco text;</pre>
+            </div>
+
+            <!-- CHECKLIST INTERATIVO OPERACIONAL COM PERSISTÊNCIA -->
+            <div class="box-tech p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-tasks text-cyan-400"></i>
+                            <span>Checklist de Execução Técnica (Passo a Passo)</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-400">Marque as caixas conforme executarmos cada etapa. O progresso fica salvo no seu navegador.</p>
+                    </div>
+                    <span class="text-[10px] text-cyan-300 font-mono font-bold bg-cyan-950 px-2 py-1 rounded border border-cyan-800 hidden sm:inline">
+                        DE: (Vermelho) / PARA: (Verde)
+                    </span>
+                </div>
+
+                <div class="space-y-3 text-xs" id="lista-checklist">
+                    
+                    <!-- ITEM 1 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-sql" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">1. Execução do Script SQL no Supabase</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Rodar as duas instruções SQL no painel do Supabase para criar <code>preferencias</code> (JSONB) e os campos do fiador.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-indigo-400 bg-indigo-950/60 px-1.5 py-0.5 rounded border border-indigo-800/80">Banco de Dados Supabase</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 2 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-config-tela" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">2. Inserir a Seção 5 em `configurar-imobiliaria.html`</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Criar o painel Dark Tech com as opções ativáveis: Notificação de Repasse no WhatsApp, Lembrete de Cobrança e Alerta de 12 Meses.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/80">Arquivo: configurar-imobiliaria.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 3 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-config-js" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">3. Leitura e Gravação do JSONB no JavaScript</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Conectar as funções <code>preencherFormulario()</code> e <code>salvarConfiguracoes()</code> para carregar e persistir o objeto de preferências no banco.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-800/80">Arquivo: configurar-imobiliaria.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 4 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-form-fiador" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">4. Gaveta de Fiador em `imovel-form.html` (Locações)</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Inserir os campos do Fiador na seção condicional de locação quando o status for marcado como *"Alugado"*.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-amber-400 bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-800/80">Arquivo: imovel-form.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 5 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-lista-modal-locacao" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">5. Suporte a Fiador no Modal de Locação em `imoveis-lista.html`</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Permitir cadastrar o Fiador diretamente pelo modal da chavinha roxa (<code>#modal-registrar-locacao</code>) do catálogo.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/80">Arquivo: imoveis-lista.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 6 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-leads-fechamento-fiador" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">6. Suporte a Fiador no Fechamento de Lead em `leads.html`</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Possibilitar a inserção dos dados do Fiador na Aba 4 (*"Concluir Negócio"*) ao formalizar a locação de um lead.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-blue-400 bg-blue-950/60 px-1.5 py-0.5 rounded border border-blue-800/80">Arquivo: leads.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 7 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-dash-condicional" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">7. Condicionar o Dashboard às Preferências Salvas</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Fazer o <code>dashboard.html</code> respeitar as escolhas do gestor: só exibir os atalhos e alertas de reajuste se estiverem ativos na imobiliária.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/80">Arquivo: dashboard.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 8 -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-slate-800 cursor-pointer">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-dash-dossie-fiador" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block">8. Exibir o Fiador no Modal de Imóveis Alugados</span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Garantir que os contratos que possuem garantia fiador exibam o nome, telefone e dados de contato do fiador no histórico.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/80">Arquivo: dashboard.html</span>
+                        </div>
+                    </label>
+
+                    <!-- ITEM 9 (NOVO: VITRINE EM GRADE VISUAL) -->
+                    <label class="card-subitem flex items-start gap-3 bg-slate-950 p-3.5 rounded-xl border border-pink-500/40 cursor-pointer hover:border-pink-400">
+                        <input type="checkbox" onchange="atualizarProgresso()" data-id="item-vitrine-grid" class="w-4 h-4 rounded border-slate-700 text-pink-500 focus:ring-0 mt-0.5">
+                        <div class="flex-1">
+                            <span class="titulo-tarefa font-bold text-white block flex items-center gap-1.5">
+                                <i class="fa-solid fa-table-cells-large text-pink-400 text-xs"></i>
+                                <span>9. Modernização da Vitrine para Grade Visual 2 Colunas</span>
+                            </span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Transformar o container de imóveis em <code>index.html</code> de lista para Grade Vertical (lado a lado), com fotos grandes no topo, carrossel de setas, atributos compactos e clique na imagem que abre o modal de lead direto.</p>
+                            <span class="inline-block mt-1 text-[9px] font-mono text-pink-400 bg-pink-950/60 px-1.5 py-0.5 rounded border border-pink-800/80">Arquivo: index.html</span>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RODAPÉ TÉCNICO -->
+        <footer class="box-tech p-4 text-center text-slate-500 text-xs border border-slate-800">
+            SGI • Desenvolvedor Master a Serviço do Administrador • Pronto para Início Amanhã
+        </footer>
+
+    </div>
+
+    <!-- SCRIPT DE INTERATIVIDADE E SALVAMENTO AUTOMÁTICO DO PROGRESSO -->
+    <script>
+        function copiarSql() {
+            const sql = document.getElementById('bloco-sql').innerText;
+            navigator.clipboard.writeText(sql).then(() => {
+                const btn = document.getElementById('btn-copiar-txt');
+                btn.innerText = 'Copiado para a Memória!';
+                setTimeout(() => btn.innerText = 'Copiar SQL de 1 Clique', 2000);
+            });
+        }
+
+        function atualizarProgresso() {
+            const checkboxes = document.querySelectorAll('#lista-checklist input[type="checkbox"]');
+            let marcados = 0;
+            const estado = {};
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) marcados++;
+                estado[cb.getAttribute('data-id')] = cb.checked;
+            });
+
+            localStorage.setItem('sgi_roteiro_progresso_v4', JSON.stringify(estado));
+
+            const pct = Math.round((marcados / checkboxes.length) * 100);
+            document.getElementById('barra-progresso').style.width = pct + '%';
+            document.getElementById('label-progresso').innerText = pct + '% (' + marcados + '/' + checkboxes.length + ')';
+        }
+
+        function restaurarProgresso() {
+            try {
+                const salvo = localStorage.getItem('sgi_roteiro_progresso_v4');
+                if (!salvo) return;
+                const estado = JSON.parse(salvo);
+                document.querySelectorAll('#lista-checklist input[type="checkbox"]').forEach(cb => {
+                    const id = cb.getAttribute('data-id');
+                    if (estado[id] !== undefined) {
+                        cb.checked = estado[id];
+                    }
+                });
+            } catch(e) {}
+            atualizarProgresso();
+        }
+
+        window.addEventListener('DOMContentLoaded', restaurarProgresso);
+    </script>
+</body>
+</html>

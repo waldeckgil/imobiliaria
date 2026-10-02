@@ -126,15 +126,13 @@
                     A plataforma completa para gestão comercial imobiliária: catálogo online moderno, funil de captação de leads integrado ao WhatsApp, gestão de corretores e geração instantânea de fichas comerciais em PDF.
                 </p>
 
-  <!-- CONDIÇÃO COMERCIAL CLARA NO HERO -->
+                <!-- CONDIÇÃO COMERCIAL CLARA NO HERO -->
                 <div class="inline-flex flex-wrap items-center justify-center gap-3 bg-slate-950/80 border border-amber-500/40 px-4 py-2 rounded-2xl text-xs">
                     <span class="text-amber-400 font-black flex items-center gap-1.5">
                         <i class="fa-solid fa-check-circle"></i> 30 Dias Grátis
                     </span>
                     <span class="text-slate-500">•</span>
-                    <span class="text-slate-300">
-                        Após o teste: <span class="line-through text-slate-500 font-mono" id="hero-preco-normal">De R$ 149,00</span> por apenas <strong class="text-cyan-300 font-mono text-sm font-black" id="hero-preco-promo">R$ 69,90/mês</strong>
-                    </span>
+                    <span class="text-slate-300">Após o teste: apenas <strong class="text-cyan-300 font-mono text-sm">R$ 69,90/mês</strong></span>
                     <span class="text-slate-500">•</span>
                     <span class="text-emerald-400 font-bold">Pague somente após usar</span>
                     <span class="text-slate-500">•</span>
@@ -336,11 +334,11 @@
                             <p class="text-xs text-slate-400 mt-0.5">Todos os módulos e recursos liberados.</p>
                         </div>
 
-     <div class="text-left sm:text-right">
-                            <span class="text-xs text-slate-400 block line-through font-mono" id="card-preco-normal">De R$ 149,00</span>
+                        <div class="text-left sm:text-right">
+                            <span class="text-xs text-slate-400 block line-through">De R$ 149,00</span>
                             <div class="flex items-baseline gap-1">
                                 <span class="text-sm font-bold text-slate-300">R$</span>
-                                <span class="text-4xl sm:text-5xl font-black text-cyan-300 font-mono" id="card-preco-promo">69,90</span>
+                                <span class="text-4xl sm:text-5xl font-black text-cyan-300 font-mono">69,90</span>
                                 <span class="text-xs text-slate-400 font-bold">/mês</span>
                             </div>
                             <span class="text-[10px] text-amber-400 font-bold block mt-0.5">Após os primeiros 30 dias</span>
@@ -1178,44 +1176,12 @@
             }
         }
 
-   async function exibirLandingPageSaaS() {
+        function exibirLandingPageSaaS() {
             document.title = "SGI • Gestão Imobiliária - WB Projetos";
             document.getElementById('secao-landing-saas').classList.remove('hidden');
             document.getElementById('secao-vitrine-imobiliaria').classList.add('hidden');
-            await carregarPrecosLandingPage();
         }
 
-        async function carregarPrecosLandingPage() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('config_sistema')
-                    .select('plano_preco_normal, plano_preco_promocional')
-                    .eq('id', 1)
-                    .maybeSingle();
-
-                if (!error && data) {
-                    const precoNormal = Number(data.plano_preco_normal ?? 149.00);
-                    const precoPromo = Number(data.plano_preco_promocional ?? 69.90);
-
-                    const normalFormatado = precoNormal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    const promoFormatado = precoPromo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-                    // Atualiza no Hero Banner
-                    const elHeroNormal = document.getElementById('hero-preco-normal');
-                    const elHeroPromo = document.getElementById('hero-preco-promo');
-                    if (elHeroNormal) elHeroNormal.innerText = `De R$ ${normalFormatado}`;
-                    if (elHeroPromo) elHeroPromo.innerText = `R$ ${promoFormatado}/mês`;
-
-                    // Atualiza no Card da seção #precos
-                    const elCardNormal = document.getElementById('card-preco-normal');
-                    const elCardPromo = document.getElementById('card-preco-promo');
-                    if (elCardNormal) elCardNormal.innerText = `De R$ ${normalFormatado}`;
-                    if (elCardPromo) elCardPromo.innerText = promoFormatado;
-                }
-            } catch (err) {
-                console.warn('[PREÇOS SAAS] Usando valores padrão:', err);
-            }
-        }
         function exibirVitrineImobiliaria() {
             document.getElementById('secao-landing-saas').classList.add('hidden');
             document.getElementById('secao-vitrine-imobiliaria').classList.remove('hidden');
