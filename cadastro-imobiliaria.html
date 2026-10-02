@@ -244,25 +244,33 @@
  // ETAPA C: Define status de demonstração e abre chamado para a equipe
                 try {
                     // 1. Mantém a conta como 'read_only' sem vencimento pendente (Ambiente em Ativação)
-                    await supabaseClient
+          // 2. Busca o ID oficial da imobiliária recém-criada
+                    const { data: imobCriada } = await supabaseClient
                         .from('imobiliarias')
-                        .update({ status: 'read_only', data_vencimento: null })
-                        .eq('slug', slug);
+                        .select('id')
+                        .eq('slug', slug)
+                        .maybeSingle();
 
-                    // 2. Registra o chamado de Nova Adesão para você no painel Master
-                    await supabaseClient
+                    const idOficialImob = imobCriada?.id;
+
+                    // 3. Registra o chamado de Nova Adesão com o ID real preenchido
+                    const { error: errInsertTicket } = await supabaseClient
                         .from('support_tickets')
                         .insert([{
-                            imobiliaria_id: rpcData?.imobiliaria_id || null,
+                            imobiliaria_id: idOficialImob,
                             usuario_id: null,
                             gestor_nome: nomeGestor,
                             gestor_email: email,
                             gestor_whatsapp: zap,
                             categoria: 'Adesão',
                             assunto: `[NOVA ADESÃO] ${nomeFantasia}`,
-                            mensagem: `Novo cadastro realizado no site solicitando teste grátis.\n• Imobiliária: ${nomeFantasia} (/${slug})\n• CRECI: ${creci}\n• Cidade/UF: ${cidade}/${uf}\n• Gestor: ${nomeGestor}\n• WhatsApp: ${zap}\n• E-mail: ${email}\n\nAguardando contato da equipe e liberação dos 30 dias.`,
+                            mensagem: `Nova imobiliária cadastrada aguardando liberação do teste de 30 dias.\n• Empresa: ${nomeFantasia} (/${slug})\n• CRECI: ${creci}\n• Cidade/UF: ${cidade}/${uf}\n• Gestor: ${nomeGestor}\n• WhatsApp: ${zap}\n• E-mail: ${email}\n\nAguardando contato da equipe e liberação dos 30 dias.`,
                             status: 'aberto'
                         }]);
+
+                    if (errInsertTicket) {
+                        console.error('[ERRO AO GRAVAR TICKET DE ADESÃO]:', errInsertTicket);
+                    }
                 } catch (errTicket) {
                     console.warn('[ADESÃO TICKET] Aviso:', errTicket);
                 }
