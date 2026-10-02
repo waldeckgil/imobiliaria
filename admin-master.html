@@ -1957,7 +1957,10 @@ function filtrarTicketsMaster() {
                 // Tema visual exclusivo da imobiliária
                 const temaImob = obterTemaVisualImobiliaria(t.imobiliaria_id);
 
-                const msgZapTexto = `Olá ${t.gestor_nome}! Sou o Administrador do SGI. Estou entrando em contato referente ao seu chamado sobre "${t.assunto}".`;
+    const msgZapTexto = (t.categoria === 'Adesão')
+                    ? `Olá ${t.gestor_nome}! Sou da equipe do SGI. Recebemos o cadastro da sua imobiliária e estou entrando em contato para liberar o seu teste de 30 dias grátis!`
+                    : `Olá ${t.gestor_nome}! Sou da equipe de atendimento do SGI. Estou entrando em contato referente ao seu chamado sobre "${t.assunto}".`;
+    
                 const urlZap = zapLimpo ? `https://wa.me/${zapLimpo}?text=${encodeURIComponent(msgZapTexto)}` : null;
 
                 let badgeStatus = '';

@@ -241,42 +241,16 @@
                     throw new Error(rpcData.erro || 'Erro ao processar criação da imobiliária.');
                 }
 
- // ETAPA C: Define status de demonstração e abre chamado para a equipe
-                try {
-                    // 1. Mantém a conta como 'read_only' sem vencimento pendente (Ambiente em Ativação)
-                    await supabaseClient
-                        .from('imobiliarias')
-                        .update({ status: 'read_only', data_vencimento: null })
-                        .eq('slug', slug);
-
-                    // 2. Registra o chamado de Nova Adesão para você no painel Master
-                    await supabaseClient
-                        .from('support_tickets')
-                        .insert([{
-                            imobiliaria_id: rpcData?.imobiliaria_id || null,
-                            usuario_id: null,
-                            gestor_nome: nomeGestor,
-                            gestor_email: email,
-                            gestor_whatsapp: zap,
-                            categoria: 'Adesão',
-                            assunto: `[NOVA ADESÃO] ${nomeFantasia}`,
-                            mensagem: `Novo cadastro realizado no site solicitando teste grátis.\n• Imobiliária: ${nomeFantasia} (/${slug})\n• CRECI: ${creci}\n• Cidade/UF: ${cidade}/${uf}\n• Gestor: ${nomeGestor}\n• WhatsApp: ${zap}\n• E-mail: ${email}\n\nAguardando contato da equipe e liberação dos 30 dias.`,
-                            status: 'aberto'
-                        }]);
-                } catch (errTicket) {
-                    console.warn('[ADESÃO TICKET] Aviso:', errTicket);
-                }
-
-                // ETAPA D: Sucesso com mensagem acolhedora e entrada no Dashboard
+                // ETAPA C: Sucesso Absoluto
                 alertaBox.className = 'mb-6 p-4 rounded-xl text-xs font-bold flex items-center gap-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300';
                 alertaIcone.className = 'fa-solid fa-circle-check text-lg';
-                alertaTexto.innerText = 'Ambiente preparado com sucesso! Entrando no seu painel para visitação...';
+                alertaTexto.innerText = 'Imobiliária cadastrada com sucesso! Redirecionando para o seu Dashboard...';
                 alertaBox.classList.remove('hidden');
 
-                // Redireciona em 1.5 segundo para o tour guiado
+                // Redireciona em 2 segundos
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 1500);
+                }, 2000);
 
             } catch (err) {
                 console.error('Erro no onboarding:', err);
