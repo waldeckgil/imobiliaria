@@ -2036,28 +2036,44 @@ function filtrarTicketsMaster() {
                             </div>
                         ` : ''}
 
-                        ${t.status !== 'resolvido' ? `
+  ${t.status !== 'resolvido' ? `
                             <div class="pt-2 border-t border-slate-800/80 space-y-2">
-                                <div class="flex items-center justify-between">
-                                    <label class="font-bold text-slate-300 text-[11px] flex items-center gap-1.5">
-                                        <i class="fa-solid fa-reply text-indigo-400"></i>
-                                        <span>Redigir Parecer Técnico / Resolução:</span>
-                                    </label>
-                                    ${t.status === 'aberto' ? `
-                                        <button type="button" onclick="colocarTicketEmAnalise('${t.id}')" class="text-blue-400 hover:text-blue-300 font-bold text-[10px] flex items-center gap-1 cursor-pointer">
-                                            <i class="fa-solid fa-spinner"></i> Colocar em Análise
+                                ${t.categoria === 'Adesão' ? `
+                                    <div class="bg-cyan-950/30 p-3 rounded-xl border border-cyan-500/40 flex flex-col sm:flex-row items-center justify-between gap-3">
+                                        <div class="space-y-0.5 text-left">
+                                            <span class="text-xs font-black uppercase text-cyan-300 flex items-center gap-1.5">
+                                                <i class="fa-solid fa-rocket text-cyan-400"></i> Ação de Boas-Vindas & Ativação de Lead
+                                            </span>
+                                            <p class="text-[11px] text-slate-400">Após o contato no WhatsApp, conceda o teste grátis de 30 dias com 1 clique.</p>
+                                        </div>
+                                        <button type="button" onclick="conceder30DiasViaTicket('${t.id}', '${t.imobiliaria_id}', '${(nomeImob).replace(/'/g, "\\'")}')" 
+                                                class="w-full sm:w-auto px-4 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/60 transition cursor-pointer whitespace-nowrap">
+                                            <i class="fa-solid fa-bolt"></i>
+                                            <span>🚀 Conceder 30 Dias & Ativar</span>
                                         </button>
-                                    ` : ''}
-                                </div>
-                                <div class="flex flex-col sm:flex-row gap-2">
-                                    <input type="text" id="resposta-ticket-${t.id}" placeholder="Escreva a resposta que o gestor verá no painel dele..." 
-                                           class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400">
-                                    <button type="button" onclick="resolverTicketMaster('${t.id}')" 
-                                            class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition shadow cursor-pointer whitespace-nowrap">
-                                        <i class="fa-solid fa-check"></i>
-                                        <span>Concluir & Responder</span>
-                                    </button>
-                                </div>
+                                    </div>
+                                ` : `
+                                    <div class="flex items-center justify-between">
+                                        <label class="font-bold text-slate-300 text-[11px] flex items-center gap-1.5">
+                                            <i class="fa-solid fa-reply text-indigo-400"></i>
+                                            <span>Redigir Parecer Técnico / Resolução:</span>
+                                        </label>
+                                        ${t.status === 'aberto' ? `
+                                            <button type="button" onclick="colocarTicketEmAnalise('${t.id}')" class="text-blue-400 hover:text-blue-300 font-bold text-[10px] flex items-center gap-1 cursor-pointer">
+                                                <i class="fa-solid fa-spinner"></i> Colocar em Análise
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row gap-2">
+                                        <input type="text" id="resposta-ticket-${t.id}" placeholder="Escreva a resposta que o gestor verá no painel dele..." 
+                                               class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-white text-xs outline-none focus:border-indigo-400">
+                                        <button type="button" onclick="resolverTicketMaster('${t.id}')" 
+                                                class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 transition shadow cursor-pointer whitespace-nowrap">
+                                            <i class="fa-solid fa-check"></i>
+                                            <span>Concluir & Responder</span>
+                                        </button>
+                                    </div>
+                                `}
                             </div>
                         ` : `
                             <div class="pt-1 flex items-center justify-end">
@@ -2150,7 +2166,60 @@ function filtrarTicketsMaster() {
         window.carregarTicketsMaster = carregarTicketsMaster;
         window.colocarTicketEmAnalise = colocarTicketEmAnalise;
         window.resolverTicketMaster = resolverTicketMaster;
-        window.reabrirTicketMaster = reabrirTicketMaster;
+ window.reabrirTicketMaster = reabrirTicketMaster;
+
+        async function conceder30DiasViaTicket(ticketId, imobId, nomeImob) {
+            const confirmou = await solicitarConfirmacaoMaster(
+                'Liberar Teste de 30 Dias',
+                `Deseja ativar a imobiliária "${nomeImob}", definir 30 dias de teste grátis e concluir este chamado de adesão?`,
+                'Sim, Conceder 30 Dias',
+                'emerald'
+            );
+
+            if (!confirmou) return;
+
+            try {
+                // 1. Calcula vencimento de hoje + 30 dias
+                const dt30 = new Date();
+                dt30.setDate(dt30.getDate() + 30);
+                const vencimentoIso = dt30.toISOString().split('T')[0];
+
+                // 2. Ativa a imobiliária no banco
+                const { error: errImob } = await supabaseClient
+                    .from('imobiliarias')
+                    .update({
+                        status: 'active',
+                        data_vencimento: vencimentoIso
+                    })
+                    .eq('id', imobId);
+
+                if (errImob) throw errImob;
+
+                // 3. Conclui o chamado automaticamente com o parecer formal
+                const agora = new Date().toISOString();
+                const { error: errTicket } = await supabaseClient
+                    .from('support_tickets')
+                    .update({
+                        status: 'resolvido',
+                        resposta_admin: `Adesão validada pelo Administrador Master. Teste de 30 dias concedido com sucesso (Vencimento: ${vencimentoIso.split('-').reverse().join('/')}). Painel e vitrine liberados.`,
+                        respondido_em: agora
+                    })
+                    .eq('id', ticketId);
+
+                if (errTicket) throw errTicket;
+
+                mostrarToast(`Sucesso! "${nomeImob}" ativada com 30 dias de teste grátis!`, 'sucesso');
+
+                // Recarrega todos os dados e fecha o alarme
+                await carregarDadosMaster();
+                await carregarTicketsMaster();
+
+            } catch (err) {
+                console.error('[ERRO ATIVAR 30 DIAS TICKET]:', err);
+                mostrarToast('Falha ao ativar imobiliária: ' + (err.message || 'Erro no banco'), 'erro');
+            }
+        }
+        window.conceder30DiasViaTicket = conceder30DiasViaTicket;
 
         // =========================================================================
         // MOTOR DO CMS SOBERANO DE VÍDEOS TUTORIAIS
