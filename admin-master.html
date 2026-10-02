@@ -1672,14 +1672,16 @@ let configGlobalSistema = {
             // Se o Administrador definiu manualmente no banco
             if (imob.status === 'blocked') return 'blocked';
 
-            // NOVO CLIENTE (Adesão recente sem vencimento): Não é devedor!
-            if (imob.status === 'read_only' && !imob.data_vencimento) return 'new_trial';
+            // NOVO CLIENTE (Adesão recente sem vencimento ou com status read_only/trial): Não é devedor!
+            const st = (imob.status || '').toLowerCase().trim();
+            if (!imob.data_vencimento || st === 'new_trial' || st === 'trial' || (st === 'read_only' && !imob.data_vencimento)) {
+                return 'new_trial';
+            }
 
             if (imob.status === 'read_only') return 'read_only';
 
             // Avaliação por data de vencimento
             if (!imob.data_vencimento) return 'active';
-
             const hoje = new Date();
             hoje.setHours(0, 0, 0, 0);
 
