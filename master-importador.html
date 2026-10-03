@@ -397,18 +397,48 @@
                     const sheetName = workbook.SheetNames[0];
                     const linhas = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-                    logEtapa1(`Total de registros localizados na planilha: ${linhas.length}`);
+  logEtapa1(`Total de registros lidos na planilha: ${linhas.length}`);
 
                     const cacheProprietarios = new Map();
-                    let inseridosSucesso = 0;
+                    const listaNovos = [];
+                    const listaIgnorados = [];
 
                     for (let item of linhas) {
                         const ref = String(item.codigo_ref || '').trim();
-                        if (!ref) continue;
+                        const tituloItem = String(item.titulo || `Imóvel ${ref}`).trim();
 
-                        logEtapa1(`Processando imóvel Ref: ${ref}...`);
+                        // 1. BLINDAGEM: Código de referência ausente
+                        if (!ref) {
+                            listaIgnorados.push({
+                                ref: 'SEM REF',
+                                titulo: tituloItem,
+                                motivo: 'Linha sem código de referência (codigo_ref em branco)'
+                            });
+                            logEtapa1(`⚠️ [IGNORADO] Linha pulada: código de referência vazio.`);
+                            continue;
+                        }
 
-                        // 1. Tratamento do Proprietário (campo proprietario_id guarda o nome no Excel)
+                        // 2. BLINDAGEM ADITIVA PURA: Imóvel já existente no catálogo desta imobiliária
+                        const { data: imovelJaExiste } = await supabaseClient
+                            .from('imoveis')
+                            .select('id, titulo')
+                            .eq('imobiliaria_id', imobiliariaSelecionadaId)
+                            .eq('codigo_ref', ref)
+                            .maybeSingle();
+
+                        if (imovelJaExiste) {
+                            listaIgnorados.push({
+                                ref: ref,
+                                titulo: tituloItem,
+                                motivo: 'Imóvel já existente no catálogo desta imobiliária (não sobrescrito)'
+                            });
+                            logEtapa1(`⚠️ [IGNORADO] Ref: ${ref} já cadastrado no banco. Pulado com sucesso.`);
+                            continue;
+                        }
+
+                        logEtapa1(`Processando novo imóvel Ref: ${ref}...`);
+
+                        // 3. Tratamento do Proprietário (executado apenas para imóveis novos)
                         const nomeDono = String(item.proprietario_id || item.proprietario || '').trim();
                         let donoUuid = null;
 
@@ -416,7 +446,6 @@
                             if (cacheProprietarios.has(nomeDono)) {
                                 donoUuid = cacheProprietarios.get(nomeDono);
                             } else {
-                                // Busca se o cliente já existe
                                 const { data: clienteExistente } = await supabaseClient
                                     .from('clientes')
                                     .select('id')
@@ -428,7 +457,6 @@
                                     donoUuid = clienteExistente.id;
                                     logEtapa1(`Proprietário existente identificado: ${nomeDono}`);
                                 } else {
-                                    // Cria novo proprietário
                                     logEtapa1(`Cadastrando novo proprietário: ${nomeDono}...`);
                                     const { data: novoCliente, error: errCli } = await supabaseClient
                                         .from('clientes')
@@ -449,7 +477,7 @@
                             }
                         }
 
-                        // 2. Monta o payload do imóvel (sem fotos obrigatórias)
+                        // 4. Monta o payload exclusivo para inserção
                         const finalidadeTratada = String(item.finalidade || 'Venda').trim();
                         const statusTratado = String(item.status || 'Disponível').trim();
                         const ativoBool = (String(item.ativa).toUpperCase() !== 'FALSO' && String(item.ativa).toUpperCase() !== 'FALSE');
@@ -457,7 +485,7 @@
                         const payloadImovel = {
                             imobiliaria_id: imobiliariaSelecionadaId,
                             codigo_ref: ref,
-                            titulo: item.titulo || `Imóvel ${ref}`,
+                            titulo: tituloItem,
                             tipo: item.tipo || 'Casa',
                             finalidade: finalidadeTratada,
                             bairro: item.bairro || null,
@@ -473,40 +501,56 @@
                             fotos: []
                         };
 
-                        // Verifica se o imóvel já existe para atualizar ou inserir
-                        const { data: imovelJaExiste } = await supabaseClient
+                        const { error: errIns } = await supabaseClient
                             .from('imoveis')
-                            .select('id')
-                            .eq('imobiliaria_id', imobiliariaSelecionadaId)
-                            .eq('codigo_ref', ref)
-                            .maybeSingle();
+                            .insert([payloadImovel]);
 
-                        if (imovelJaExiste) {
-                            const { error: errUp } = await supabaseClient
-                                .from('imoveis')
-                                .update(payloadImovel)
-                                .eq('id', imovelJaExiste.id);
-
-                            if (errUp) logEtapa1(`Erro ao atualizar ${ref}: ${errUp.message}`);
-                            else {
-                                logEtapa1(`Imóvel ${ref} atualizado no banco.`);
-                                inseridosSucesso++;
-                            }
+                        if (errIns) {
+                            listaIgnorados.push({
+                                ref: ref,
+                                titulo: tituloItem,
+                                motivo: `Erro retornado pelo banco: ${errIns.message}`
+                            });
+                            logEtapa1(`❌ Erro ao cadastrar Ref ${ref}: ${errIns.message}`);
                         } else {
-                            const { error: errIns } = await supabaseClient
-                                .from('imoveis')
-                                .insert([payloadImovel]);
-
-                            if (errIns) logEtapa1(`Erro ao inserir ${ref}: ${errIns.message}`);
-                            else {
-                                logEtapa1(`Imóvel ${ref} criado com sucesso!`);
-                                inseridosSucesso++;
-                            }
+                            listaNovos.push({
+                                ref: ref,
+                                titulo: tituloItem
+                            });
+                            logEtapa1(`✅ [NOVO] Imóvel Ref: ${ref} inserido com sucesso!`);
                         }
                     }
 
-                    logEtapa1(`=== CARGA CONCLUÍDA: ${inseridosSucesso} imóveis processados! ===`);
-                    logEtapa1(`Lembrete: Como estão sem fotos, eles permanecem ocultos da vitrine até você subir fotos na Etapa 2.`);
+                    // 5. CONSULTA CONSOLIDADA DO ESTOQUE DA IMOBILIÁRIA
+                    let totalEstoqueAtual = 0;
+                    try {
+                        const { count } = await supabaseClient
+                            .from('imoveis')
+                            .select('id', { count: 'exact', head: true })
+                            .eq('imobiliaria_id', imobiliariaSelecionadaId);
+                        totalEstoqueAtual = count || 0;
+                    } catch (e) {}
+
+                    // 6. IMPRESSÃO DO SUMÁRIO EXECUTIVO DE AUDITORIA MASTER
+                    logEtapa1(`=======================================================`);
+                    logEtapa1(`📊 SUMÁRIO EXECUTIVO DA CARGA (AUDITORIA MASTER)`);
+                    logEtapa1(`• Total de registros lidos na planilha: ${linhas.length}`);
+                    logEtapa1(`• Novos imóveis inseridos no banco: ${listaNovos.length}`);
+                    logEtapa1(`• Imóveis ignorados / não alterados: ${listaIgnorados.length}`);
+
+                    if (listaIgnorados.length > 0) {
+                        logEtapa1(`-------------------------------------------------------`);
+                        logEtapa1(`📋 DETALHAMENTO DOS REGISTROS IGNORADOS:`);
+                        listaIgnorados.forEach((ig, idx) => {
+                            logEtapa1(`  [#${idx + 1}] Ref: ${ig.ref} ("${ig.titulo}") -> Motivo: ${ig.motivo}`);
+                        });
+                    }
+
+                    logEtapa1(`-------------------------------------------------------`);
+                    logEtapa1(`🏢 Estoque consolidado desta imobiliária: ${totalEstoqueAtual} imóvel(is) no total`);
+                    logEtapa1(`=======================================================`);
+                    logEtapa1(`Lembrete: Imóveis sem foto permanecem ocultos da vitrine até você subir mídias na Etapa 2.`);
+
                     carregarImoveisParaAba2();
 
                 } catch (err) {
