@@ -551,13 +551,13 @@ async function processarPlanilhaImoveis() {
                                     donoUuid = clienteExistente.id;
                                     logEtapa1(`Proprietário existente identificado: ${nomeDono}`);
                                 } else {
-                                    logEtapa1(`Cadastrando novo proprietário: ${nomeDono}...`);
+logEtapa1(`Cadastrando novo proprietário: ${nomeDono}...`);
                                     const { data: novoCliente, error: errCli } = await supabaseClient
                                         .from('clientes')
                                         .insert([{
                                             imobiliaria_id: imobiliariaSelecionadaId,
                                             nome: nomeDono,
-                                            tipo: 'Proprietario'
+                                            tipo: 'Proprietário'
                                         }])
                                         .select('id')
                                         .single();
@@ -571,8 +571,16 @@ async function processarPlanilhaImoveis() {
                             }
                         }
 
-                        // 4. Monta o payload exclusivo para inserção
-                        const finalidadeTratada = String(item.finalidade || 'Venda').trim();
+                        // 4. Monta o payload padronizado para o form de produção
+                        let finalidadeTratada = 'Venda';
+                        const finPlanilha = String(item.finalidade || '').toLowerCase();
+                        if (finPlanilha.includes('loca')) {
+                            finalidadeTratada = 'Locacao';
+                        } else if (finPlanilha.includes('amb')) {
+                            finalidadeTratada = 'Ambos';
+                        } else {
+                            finalidadeTratada = 'Venda';
+                        }
                         const statusTratado = String(item.status || 'Disponível').trim();
                         const ativoBool = (String(item.ativa).toUpperCase() !== 'FALSO' && String(item.ativa).toUpperCase() !== 'FALSE');
 
