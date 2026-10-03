@@ -381,11 +381,21 @@
             }
         }
 
-        function aoMudarImobiliaria() {
+   function aoMudarImobiliaria() {
             const select = document.getElementById('select-imobiliaria-alvo');
             imobiliariaSelecionadaId = select.value;
             document.getElementById('txt-id-tenant').innerText = imobiliariaSelecionadaId || 'Nenhuma selecionada';
+            
+            // BLINDAGEM SOBERANA ANTI-ACIDENTE: Zera imediatamente a Etapa 2
+            const inputFotos = document.getElementById('input-fotos-imovel');
+            if (inputFotos) inputFotos.value = '';
+            mostrarPreviewFotos([]);
+
+            const buscaAba2 = document.getElementById('busca-imovel-aba2');
+            if (buscaAba2) buscaAba2.value = '';
+
             carregarImoveisParaAba2();
+            mostrarAvisoMaster('Imobiliária alterada. Lista e campos de mídias redefinidos para segurança.', 'info');
         }
 
         function alternarAba(num) {
@@ -456,18 +466,17 @@
         // =========================================================================
         // ETAPA 1: PROCESSAMENTO DA PLANILHA (APPEND-ONLY + SUMÁRIO DE AUDITORIA)
         // =========================================================================
-        async function processarPlanilhaImoveis() {
+async function processarPlanilhaImoveis() {
             if (!imobiliariaSelecionadaId) {
-                alert('Por favor, selecione primeiro a imobiliária destino no topo da tela.');
+                mostrarAvisoMaster('Por favor, selecione primeiro a imobiliária destino no menu do topo.', 'aviso');
                 return;
             }
 
             const inputArquivo = document.getElementById('input-arquivo-excel').files[0];
             if (!inputArquivo) {
-                alert('Selecione o arquivo Excel ou CSV.');
+                mostrarAvisoMaster('Selecione um arquivo Excel (.xlsx) ou CSV para processar.', 'aviso');
                 return;
             }
-
             const btn = document.getElementById('btn-processar-planilha');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Processando Planilha...';
@@ -870,29 +879,35 @@
             }
         }
 
-        // =========================================================================
-        // GATILHO: ABRE MODAL DE CONFIRMAÇÃO PRÉVIA (SEM ENVIAR DIRETO)
+ // =========================================================================
+        // GATILHO: VALIDAÇÃO SEM ALERTS E ABERTURA DO MODAL DE CONFIRMAÇÃO
         // =========================================================================
         function enviarFotosParaImovel() {
             if (!imobiliariaSelecionadaId) {
-                mostrarAvisoMaster('Selecione primeiro a imobiliária de destino no topo.', 'aviso');
+                mostrarAvisoMaster('Ação bloqueada: selecione a imobiliária de destino no menu do topo.', 'aviso');
                 return;
             }
 
             const selectImovel = document.getElementById('select-imovel-alvo');
-            const imovelId = selectImovel.value;
-            const optSelecionada = selectImovel.options[selectImovel.selectedIndex];
+            const imovelId = selectImovel ? selectImovel.value : '';
 
-            if (!imovelId) {
-                mostrarAvisoMaster('Selecione qual imóvel receberá as fotos.', 'aviso');
+            // TRAVA ANTI-ACIDENTE: Se nenhum imóvel foi escolhido, bloqueia e faz piscar em vermelho
+            if (!imovelId || imovelId === '') {
+                if (selectImovel) {
+                    selectImovel.classList.add('ring-4', 'ring-rose-500', 'border-rose-500');
+                    selectImovel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    selectImovel.focus();
+                    setTimeout(() => selectImovel.classList.remove('ring-4', 'ring-rose-500', 'border-rose-500'), 3000);
+                }
+                mostrarAvisoMaster('Bloqueado: selecione um imóvel na lista antes de enviar as fotos!', 'erro');
                 return;
             }
 
             const inputFotos = document.getElementById('input-fotos-imovel');
-            const files = Array.from(inputFotos.files || []);
+            const files = Array.from(inputFotos?.files || []);
 
             if (files.length === 0) {
-                mostrarAvisoMaster('Selecione pelo menos 1 foto para realizar o upload.', 'aviso');
+                mostrarAvisoMaster('Selecione ao menos 1 foto no seu computador para realizar a carga.', 'aviso');
                 return;
             }
 
