@@ -137,9 +137,26 @@
                 <p class="text-xs text-slate-400 mt-0.5">Selecione o imóvel cadastrado e envie suas fotos para o Storage do Supabase. Assim que receber fotos, ele entra na vitrine pública automaticamente.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">Selecione o Imóvel Cadastrado:</label>
+ <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-slate-300">Localizar Imóvel Alvo:</label>
+                        <button type="button" id="btn-filtro-sem-fotos" onclick="alternarFiltroSemFotos()" 
+                                class="text-[10px] font-bold text-slate-400 hover:text-amber-400 px-2 py-0.5 rounded-lg border border-slate-800 bg-slate-950 transition flex items-center gap-1 cursor-pointer" title="Mostrar apenas imóveis pendentes de fotos">
+                            <i class="fa-solid fa-filter text-[9px]"></i>
+                            <span>Apenas Sem Fotos</span>
+                        </button>
+                    </div>
+
+                    <!-- CAMPO DE BUSCA INTELIGENTE COM LUPA -->
+                    <div class="relative">
+                        <input type="text" id="busca-imovel-aba2" placeholder="Buscar por código ou título (ex: 001, praia)..." 
+                               oninput="filtrarImoveisAba2()"
+                               class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-8 pr-3 text-xs text-white outline-none focus:border-amber-400 font-bold shadow-inner">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-500 text-xs"></i>
+                    </div>
+
+                    <!-- SELETOR DINÂMICO FILTRADO -->
                     <select id="select-imovel-alvo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-bold outline-none focus:border-amber-400 cursor-pointer">
                         <option value="">Selecione uma imobiliária primeiro</option>
                     </select>
@@ -151,7 +168,6 @@
                            class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-black file:bg-amber-400 file:text-slate-950 hover:file:bg-amber-300 cursor-pointer">
                 </div>
             </div>
-
             <!-- PREVIEW DAS FOTOS SELECIONADAS -->
             <div id="box-preview-fotos" class="hidden bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
                 <span class="text-[11px] text-slate-400 font-bold block">Fotos Selecionadas para Envio (<span id="txt-qtd-fotos-preview" class="text-amber-400">0</span>):</span>
@@ -569,14 +585,17 @@
             reader.readAsArrayBuffer(inputArquivo);
         }
 
+ // =========================================================================
+        // ETAPA 2: UPLOAD DE FOTOS E ATIVAÇÃO COM BUSCA INTELIGENTE
         // =========================================================================
-        // ETAPA 2: UPLOAD DE FOTOS E ATIVAÇÃO
-        // =========================================================================
+        let listaImoveisAba2Cache = [];
+        let apenasSemFotosAtivo = false;
+
         async function carregarImoveisParaAba2() {
             if (!imobiliariaSelecionadaId) return;
 
             const select = document.getElementById('select-imovel-alvo');
-            select.innerHTML = '<option value="">Carregando imóveis...</option>';
+            if (select) select.innerHTML = '<option value="">Carregando imóveis...</option>';
 
             try {
                 const { data: imoveis, error } = await supabaseClient
@@ -586,28 +605,72 @@
                     .order('codigo_ref', { ascending: true });
 
                 if (error) throw error;
-
-                if (!imoveis || imoveis.length === 0) {
-                    select.innerHTML = '<option value="">Nenhum imóvel cadastrado nesta imobiliária</option>';
-                    return;
-                }
-
-                select.innerHTML = '<option value="">-- Escolha o Imóvel para Anexar Fotos --</option>';
-                imoveis.forEach(im => {
-                    const totalFotos = (im.fotos && Array.isArray(im.fotos)) ? im.fotos.length : (im.foto_capa ? 1 : 0);
-                    const tagFotos = totalFotos === 0 ? '❌ Sem fotos (Oculto da vitrine)' : `✅ ${totalFotos} foto(s) ativas`;
-
-                    const opt = document.createElement('option');
-                    opt.value = im.id;
-                    opt.setAttribute('data-ref', im.codigo_ref);
-                    opt.textContent = `Ref: ${im.codigo_ref} • ${im.titulo} [${tagFotos}]`;
-                    select.appendChild(opt);
-                });
+                listaImoveisAba2Cache = imoveis || [];
+                filtrarImoveisAba2();
             } catch (err) {
                 console.error(err);
             }
         }
 
+        function alternarFiltroSemFotos() {
+            apenasSemFotosAtivo = !apenasSemFotosAtivo;
+            const btn = document.getElementById('btn-filtro-sem-fotos');
+            if (btn) {
+                if (apenasSemFotosAtivo) {
+                    btn.className = 'text-[10px] font-black text-amber-300 px-2 py-0.5 rounded-lg border border-amber-500/60 bg-amber-950/40 transition flex items-center gap-1 cursor-pointer';
+                } else {
+                    btn.className = 'text-[10px] font-bold text-slate-400 hover:text-amber-400 px-2 py-0.5 rounded-lg border border-slate-800 bg-slate-950 transition flex items-center gap-1 cursor-pointer';
+                }
+            }
+            filtrarImoveisAba2();
+        }
+
+        function filtrarImoveisAba2() {
+            const termo = (document.getElementById('busca-imovel-aba2')?.value || '').toLowerCase().trim();
+            const select = document.getElementById('select-imovel-alvo');
+            if (!select) return;
+
+            let filtrados = [...listaImoveisAba2Cache];
+
+            // 1. Filtro opcional: apenas imóveis sem fotos
+            if (apenasSemFotosAtivo) {
+                filtrados = filtrados.filter(im => {
+                    const totalFotos = (im.fotos && Array.isArray(im.fotos)) ? im.fotos.length : (im.foto_capa ? 1 : 0);
+                    return totalFotos === 0;
+                });
+            }
+
+            // 2. Busca por código de referência ou palavras do título
+            if (termo) {
+                filtrados = filtrados.filter(im => {
+                    const ref = String(im.codigo_ref || '').toLowerCase();
+                    const titulo = String(im.titulo || '').toLowerCase();
+                    return ref.includes(termo) || titulo.includes(termo);
+                });
+            }
+
+            if (filtrados.length === 0) {
+                select.innerHTML = '<option value="">Nenhum imóvel correspondente à busca</option>';
+                return;
+            }
+
+            select.innerHTML = `<option value="">-- Escolha o Imóvel (${filtrados.length} localizados) --</option>`;
+            filtrados.forEach(im => {
+                const totalFotos = (im.fotos && Array.isArray(im.fotos)) ? im.fotos.length : (im.foto_capa ? 1 : 0);
+                const tagFotos = totalFotos === 0 ? '❌ Sem fotos (Oculto da vitrine)' : `✅ ${totalFotos} foto(s) ativas`;
+
+                const opt = document.createElement('option');
+                opt.value = im.id;
+                opt.setAttribute('data-ref', im.codigo_ref);
+                opt.textContent = `Ref: ${im.codigo_ref} • ${im.titulo} [${tagFotos}]`;
+                select.appendChild(opt);
+            });
+
+            // Se o senhor digitar exatamente a referência e sobrar apenas 1, já seleciona direto!
+            if (termo && filtrados.length === 1) {
+                select.value = filtrados[0].id;
+            }
+        }
         function mostrarPreviewFotos(files) {
             const box = document.getElementById('box-preview-fotos');
             const grade = document.getElementById('grade-miniaturas-preview');
