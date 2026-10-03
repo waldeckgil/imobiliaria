@@ -254,7 +254,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-                    <div class="sm:col-span-9 flex items-end gap-2">
+ <div class="sm:col-span-9 flex items-end gap-2">
                         <div class="flex-1">
                             <label class="block font-bold text-slate-300 mb-1">Proprietário Titular Cadastrado *</label>
                             <select id="campo-proprietario" onchange="atualizarEstadoBotaoDossie()" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-3 text-white text-xs outline-none focus:border-amber-400 font-bold transition">
@@ -263,6 +263,9 @@
                         </div>
                         <button type="button" id="btn-ver-dossie-prop" onclick="abrirDossieProprietario()" disabled title="Visualizar Dossiê Completo do Proprietário" class="h-[42px] px-3.5 bg-slate-900 border border-slate-700 text-slate-500 rounded-xl flex items-center justify-center transition cursor-not-allowed opacity-50 shadow flex-shrink-0">
                             <i class="fa-solid fa-eye text-sm"></i>
+                        </button>
+                        <button type="button" id="btn-editar-prop" onclick="abrirModalEditarProprietario()" disabled title="Editar Dados Cadastrais do Proprietário" class="h-[42px] px-3.5 bg-slate-900 border border-slate-700 text-slate-500 rounded-xl flex items-center justify-center transition cursor-not-allowed opacity-50 shadow flex-shrink-0">
+                            <i class="fa-solid fa-user-pen text-sm"></i>
                         </button>
                     </div>
                     <div class="sm:col-span-3">
@@ -602,11 +605,77 @@
                         Salvar e Vincular
                     </button>
                 </div>
+
+</form>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR PROPRIETÁRIO -->
+    <div id="modal-editar-proprietario" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="box-tech max-w-md w-full p-6 shadow-2xl relative border border-amber-500/50">
+            <button type="button" onclick="fecharModalEditarProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-2 text-amber-400 font-black text-sm uppercase tracking-wide border-b border-slate-800 pb-3">
+                <i class="fa-solid fa-user-pen"></i>
+                <span>Editar Dados do Proprietário</span>
+            </div>
+
+            <form id="form-editar-proprietario" onsubmit="salvarEdicaoProprietario(event)" class="space-y-3 mt-4 text-xs">
+                <input type="hidden" id="edit-prop-id" value="">
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nome Completo *</label>
+                    <input type="text" id="edit-prop-nome" required placeholder="Nome do proprietário" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">WhatsApp / Celular *</label>
+                        <input type="tel" id="edit-prop-zap" required placeholder="(00) 90000-0000" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-cyan-300 font-mono outline-none focus:border-amber-400 transition">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">CPF ou CNPJ</label>
+                        <input type="text" id="edit-prop-cpf" placeholder="000.000.000-00" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">RG</label>
+                        <input type="text" id="edit-prop-rg" placeholder="Registro Geral" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">E-mail</label>
+                        <input type="email" id="edit-prop-email" placeholder="email@exemplo.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Endereço Completo</label>
+                    <input type="text" id="edit-prop-endereco" placeholder="Rua, número, complemento, bairro, cidade - UF" class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-white outline-none focus:border-amber-400 transition">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Chave PIX / Dados Bancários / Observações</label>
+                    <textarea id="edit-prop-obs" rows="2" placeholder="Chave PIX, conta bancária para repasses ou anotações..." class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 px-3 text-amber-300 font-mono outline-none focus:border-amber-400 transition"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="fecharModalEditarProprietario()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="btn-atualizar-prop" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black transition shadow cursor-pointer">
+                        Atualizar Cadastro
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL DOSSIÊ DO PROPRIETÁRIO -->
+
     <div id="modal-dossie-proprietario" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="box-tech max-w-lg w-full p-6 shadow-2xl relative border border-amber-500/50 bg-[#0b1329]">
             <button type="button" onclick="fecharDossieProprietario()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">
@@ -671,9 +740,13 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end pt-3 mt-3 border-t border-slate-800">
-                <button type="button" onclick="fecharDossieProprietario()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
+ <div class="flex items-center justify-end gap-2 pt-3 mt-3 border-t border-slate-800">
+                <button type="button" onclick="fecharDossieProprietario()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition cursor-pointer">
                     Fechar Dossiê
+                </button>
+                <button type="button" onclick="abrirEdicaoPeloDossie()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition shadow flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-user-pen"></i>
+                    <span>Editar Cadastro</span>
                 </button>
             </div>
         </div>
@@ -1021,22 +1094,117 @@
         // =========================================================================
         // CONTROLE DO DOSSIÊ DO PROPRIETÁRIO
         // =========================================================================
-        function atualizarEstadoBotaoDossie() {
+     function atualizarEstadoBotaoDossie() {
             const propId = document.getElementById('campo-proprietario').value;
-            const btn = document.getElementById('btn-ver-dossie-prop');
-            if (!btn) return;
+            const btnDossie = document.getElementById('btn-ver-dossie-prop');
+            const btnEditar = document.getElementById('btn-editar-prop');
 
-            if (propId) {
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed', 'text-slate-500');
-                btn.classList.add('cursor-pointer', 'text-amber-400', 'hover:bg-amber-500', 'hover:text-slate-950', 'border-amber-500/50');
-            } else {
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed', 'text-slate-500');
-                btn.classList.remove('cursor-pointer', 'text-amber-400', 'hover:bg-amber-500', 'hover:text-slate-950', 'border-amber-500/50');
+            [btnDossie, btnEditar].forEach(btn => {
+                if (!btn) return;
+                if (propId) {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.add('cursor-pointer', 'text-amber-400', 'hover:bg-amber-500', 'hover:text-slate-950', 'border-amber-500/50');
+                } else {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed', 'text-slate-500');
+                    btn.classList.remove('cursor-pointer', 'text-amber-400', 'hover:bg-amber-500', 'hover:text-slate-950', 'border-amber-500/50');
+                }
+            });
+        }
+
+        async function abrirModalEditarProprietario() {
+            const propId = document.getElementById('campo-proprietario').value;
+            if (!propId) {
+                alertarCampoInvalido(document.getElementById('campo-proprietario'), 'Selecione primeiro um proprietário na lista para editar.', 'Bloco 3 - Proprietário');
+                return;
+            }
+
+            try {
+                let query = supabaseClient.from('clientes').select('*').eq('id', propId);
+                if (!isMasterSuporte && imobiliariaId) {
+                    query = query.eq('imobiliaria_id', imobiliariaId);
+                }
+                const { data: prop, error } = await query.single();
+                if (error || !prop) throw new Error('Não foi possível carregar os dados do proprietário.');
+
+                document.getElementById('edit-prop-id').value = prop.id;
+                document.getElementById('edit-prop-nome').value = prop.nome || '';
+                document.getElementById('edit-prop-zap').value = prop.whatsapp || prop.telefone || '';
+                document.getElementById('edit-prop-cpf').value = prop.cpf_cnpj || '';
+                document.getElementById('edit-prop-rg').value = prop.rg || '';
+                document.getElementById('edit-prop-email').value = prop.email || '';
+                document.getElementById('edit-prop-endereco').value = prop.endereco_completo || '';
+                document.getElementById('edit-prop-obs').value = prop.observacoes || '';
+
+                document.getElementById('modal-editar-proprietario').classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                alertarCampoInvalido(null, err.message || 'Erro ao abrir edição do proprietário.', 'Edição de Proprietário');
             }
         }
 
+        function fecharModalEditarProprietario() {
+            const modal = document.getElementById('modal-editar-proprietario');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function abrirEdicaoPeloDossie() {
+            fecharDossieProprietario();
+            abrirModalEditarProprietario();
+        }
+
+        async function salvarEdicaoProprietario(event) {
+            event.preventDefault();
+            const btn = document.getElementById('btn-atualizar-prop');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Atualizando...';
+            btn.disabled = true;
+
+            const propId = document.getElementById('edit-prop-id').value;
+            const nome = document.getElementById('edit-prop-nome').value.trim();
+            const zap = document.getElementById('edit-prop-zap').value.trim();
+            const cpf = document.getElementById('edit-prop-cpf').value.trim();
+            const rg = document.getElementById('edit-prop-rg').value.trim();
+            const email = document.getElementById('edit-prop-email').value.trim();
+            const endereco = document.getElementById('edit-prop-endereco').value.trim();
+            const obs = document.getElementById('edit-prop-obs').value.trim();
+
+            try {
+                let query = supabaseClient.from('clientes').update({
+                    nome: nome,
+                    whatsapp: zap,
+                    telefone: zap,
+                    cpf_cnpj: cpf || null,
+                    rg: rg || null,
+                    email: email || null,
+                    endereco_completo: endereco || null,
+                    observacoes: obs || null
+                }).eq('id', propId);
+
+                if (!isMasterSuporte && imobiliariaId) {
+                    query = query.eq('imobiliaria_id', imobiliariaId);
+                }
+
+                const { error } = await query;
+                if (error) throw error;
+
+                // Atualiza o texto do item no select sem resetar o formulário do imóvel
+                const select = document.getElementById('campo-proprietario');
+                const opt = select.querySelector(`option[value="${propId}"]`);
+                if (opt) {
+                    opt.textContent = `${nome} (${zap || cpf || 'Sem telefone'})`;
+                }
+
+                fecharModalEditarProprietario();
+                exibirToastAlerta('Cadastro Atualizado', `Os dados de ${nome} foram salvos com sucesso!`, 3500);
+            } catch (err) {
+                console.error(err);
+                alertarCampoInvalido(null, 'Erro ao atualizar proprietário: ' + (err.message || 'Verifique os dados.'), 'Edição de Proprietário');
+            } finally {
+                btn.innerHTML = 'Atualizar Cadastro';
+                btn.disabled = false;
+            }
+        }
         async function abrirDossieProprietario() {
             const propId = document.getElementById('campo-proprietario').value;
             if (!propId) {
