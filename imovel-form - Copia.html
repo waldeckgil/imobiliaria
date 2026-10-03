@@ -1083,14 +1083,14 @@
             if (modal) modal.classList.add('hidden');
         }
 
-  async function carregarProprietariosSelect(selecionadoId = null) {
+        async function carregarProprietariosSelect(selecionadoId = null) {
             const select = document.getElementById('campo-proprietario');
             try {
                 const { data: proprietarios, error } = await supabaseClient
                     .from('clientes')
                     .select('id, nome, whatsapp, cpf_cnpj')
                     .eq('imobiliaria_id', imobiliariaId)
-                    .in('tipo', ['Proprietário', 'Proprietario'])
+                    .eq('tipo', 'Proprietário')
                     .order('nome');
 
                 if (error) throw error;
@@ -1265,20 +1265,8 @@
 
                 if (error || !imovel) throw new Error('Imóvel não encontrado.');
 
-   document.getElementById('campo-codigo-ref').value = imovel.codigo_ref || '';
-
-                // NORMALIZAÇÃO INTELIGENTE: Reconhece "Locação", "Locacao", "Venda" ou "Ambos"
-                let finalidadeTratada = 'Venda';
-                const finSalva = String(imovel.finalidade || '').toLowerCase();
-                if (finSalva.includes('loca')) {
-                    finalidadeTratada = 'Locacao';
-                } else if (finSalva.includes('amb')) {
-                    finalidadeTratada = 'Ambos';
-                } else {
-                    finalidadeTratada = 'Venda';
-                }
-                document.getElementById('campo-finalidade').value = finalidadeTratada;
-
+                document.getElementById('campo-codigo-ref').value = imovel.codigo_ref || '';
+                document.getElementById('campo-finalidade').value = imovel.finalidade || 'Venda';
                 document.getElementById('campo-tipo').value = imovel.tipo || 'Apartamento';
                 document.getElementById('campo-status').value = imovel.status || 'Disponível';
                 document.getElementById('campo-titulo').value = imovel.titulo || '';
