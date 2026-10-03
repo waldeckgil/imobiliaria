@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGI • Central Master de Carga em Lote</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS v2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- SheetJS (Leitura e Geração de Excel) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body { background-color: #060913; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .box-tech { background: #0f172a; border: 1px solid #334155; border-radius: 1.25rem; }
+        .box-master { background: #131722; border: 1px solid #f59e0b; border-radius: 1.25rem; box-shadow: 0 0 25px rgba(245, 158, 11, 0.12); }
+        .tab-btn.ativa { background-color: #0f172a; border-color: #38bdf8; color: #38bdf8; font-weight: 800; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto w-full space-y-6">
+
+        <!-- CABEÇALHO DO IMPORTADOR MASTER -->
+        <header class="box-tech p-5 sm:p-6 border-l-4 border-l-amber-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xl">
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shrink-0">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">Carga em Lote de Imóveis & Mídias</h1>
+                        <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+                            MASTER CONCIERGE
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-0.5">Onboarding assistido em 2 etapas: (1) Dados da Planilha e (2) Mídias e Fotos.</p>
+                </div>
+            </div>
+
+            <!-- BOTÕES SUPERIORES: MANUAL DE AJUDA & MODELO -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button type="button" onclick="abrirModalAjuda()" 
+                        class="bg-indigo-950/80 hover:bg-indigo-900 text-indigo-300 border border-indigo-700/80 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow">
+                    <i class="fa-solid fa-circle-question text-indigo-400"></i>
+                    <span>Manual de Instruções</span>
+                </button>
+
+                <button type="button" onclick="baixarPlanilhaModeloOficial()" 
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition cursor-pointer shadow">
+                    <i class="fa-solid fa-file-excel"></i>
+                    <span>Baixar Modelo (.xlsx)</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- SELETOR DINÂMICO DE IMOBILIÁRIA ALVO -->
+        <div class="box-tech p-5 space-y-2 border border-slate-700 bg-slate-900/60">
+            <label class="block font-black text-xs uppercase tracking-wider text-amber-400 flex items-center gap-2">
+                <i class="fa-solid fa-building"></i> 1. Selecione a Imobiliária Destino da Carga:
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                <div class="sm:col-span-8">
+                    <select id="select-imobiliaria-alvo" onchange="aoMudarImobiliaria()" 
+                            class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white font-bold outline-none focus:border-amber-400 cursor-pointer">
+                        <option value="">Carregando imobiliárias cadastradas...</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-4 bg-slate-950/80 border border-slate-800 rounded-xl p-2.5 text-[11px] text-slate-400">
+                    <span class="block text-slate-500 font-mono text-[9px] uppercase">ID do Tenant Selecionado:</span>
+                    <span id="txt-id-tenant" class="font-mono text-cyan-300 font-bold truncate block">Nenhuma selecionada</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVEGAÇÃO ENTRE AS DUAS ETAPAS -->
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-2">
+            <button type="button" id="tab-btn-1" onclick="alternarAba(1)" 
+                    class="tab-btn ativa px-4 py-2.5 rounded-xl border border-slate-800 text-xs transition flex items-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-file-csv text-cyan-400"></i>
+                <span>Etapa 1: Importar Planilha de Imóveis</span>
+            </button>
+            <button type="button" id="tab-btn-2" onclick="alternarAba(2)" 
+                    class="tab-btn px-4 py-2.5 rounded-xl border border-slate-800 text-xs text-slate-400 transition flex items-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-images text-amber-400"></i>
+                <span>Etapa 2: Carga de Fotos por Imóvel</span>
+            </button>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- ABA 1: IMPORTAÇÃO DA PLANILHA (DADOS TEXTUAIS & PROPRIETÁRIOS)             -->
+        <!-- ========================================================================= -->
+        <div id="painel-aba-1" class="box-tech p-6 space-y-5">
+            <div class="border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-upload text-cyan-400"></i> Carga em Massa via Planilha (Sem Fotos Obrigatórias)
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Os imóveis entrarão no banco de dados e os proprietários serão criados automaticamente em `clientes`. Imóveis sem fotos permanecerão ocultos da vitrine pública.</p>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-bold uppercase text-slate-300">Selecione o arquivo preenchido (.xlsx ou .csv):</label>
+                <input type="file" id="input-arquivo-excel" accept=".xlsx, .csv" 
+                       class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer">
+            </div>
+
+            <button type="button" id="btn-processar-planilha" onclick="processarPlanilhaImoveis()" 
+                    class="w-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-2 text-xs uppercase tracking-wider shadow-lg cursor-pointer">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Processar e Inserir Imóveis no Banco</span>
+            </button>
+
+            <!-- CAIXA DE LOGS EM TEMPO REAL -->
+            <div class="space-y-1.5">
+                <span class="text-[10px] font-mono text-slate-400 uppercase font-bold block">Console de Execução:</span>
+                <div id="log-box-etapa-1" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-cyan-300 h-44 overflow-y-auto space-y-1">
+                    <div>> Aguardando seleção do arquivo...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- ABA 2: UPLOAD DE FOTOS POR IMÓVEL (ATIVAÇÃO NA VITRINE)                   -->
+        <!-- ========================================================================= -->
+        <div id="painel-aba-2" class="box-tech p-6 space-y-5 hidden">
+            <div class="border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-camera-retro text-amber-400"></i> Anexar Fotos ao Imóvel (Ativação na Vitrine)
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Selecione o imóvel cadastrado e envie suas fotos para o Storage do Supabase. Assim que receber pelo menos 1 foto, ele entra na vitrine pública automaticamente.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Selecione o Imóvel Cadastrado:</label>
+                    <select id="select-imovel-alvo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white font-bold outline-none focus:border-amber-400 cursor-pointer">
+                        <option value="">Selecione uma imobiliária primeiro</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Selecione as Fotos da Residência (Múltiplas):</label>
+                    <input type="file" id="input-fotos-imovel" accept="image/*" multiple onchange="mostrarPreviewFotos(this.files)"
+                           class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-300 file:mr-3 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-black file:bg-amber-400 file:text-slate-950 hover:file:bg-amber-300 cursor-pointer">
+                </div>
+            </div>
+
+            <!-- PREVIEW DAS FOTOS SELECIONADAS -->
+            <div id="box-preview-fotos" class="hidden bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                <span class="text-[11px] text-slate-400 font-bold block">Fotos Selecionadas para Envio (<span id="txt-qtd-fotos-preview" class="text-amber-400">0</span>):</span>
+                <div id="grade-miniaturas-preview" class="flex items-center gap-2 overflow-x-auto py-1"></div>
+            </div>
+
+            <button type="button" id="btn-enviar-fotos" onclick="enviarFotosParaImovel()" 
+                    class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3 rounded-xl transition flex items-center justify-center gap-2 text-xs uppercase tracking-wider shadow-lg cursor-pointer">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Fazer Upload das Fotos & Publicar na Vitrine</span>
+            </button>
+
+            <!-- CAIXA DE LOGS ETAPA 2 -->
+            <div class="space-y-1.5">
+                <span class="text-[10px] font-mono text-slate-400 uppercase font-bold block">Console de Upload de Fotos:</span>
+                <div id="log-box-etapa-2" class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-amber-300 h-40 overflow-y-auto space-y-1">
+                    <div>> Pronto para upload de mídias...</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL DE INSTRUÇÕES & MANUAL DE OPERAÇÃO (COMPLETO)                       -->
+    <!-- ========================================================================= -->
+    <div id="modal-ajuda-master" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+        <div class="box-tech max-w-3xl w-full p-5 sm:p-7 shadow-2xl relative border-2 border-indigo-500/60 max-h-[92vh] flex flex-col">
+            <button type="button" onclick="fecharModalAjuda()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg border border-indigo-500/40 shrink-0">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-black text-white">Manual Operacional de Carga em Lote</h3>
+                    <p class="text-xs text-slate-400">Guia passo a passo para o Administrador ou equipe técnica.</p>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto flex-1 pr-2 space-y-4 text-xs text-slate-300 leading-relaxed">
+                
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-amber-300 uppercase text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-excel"></i> 1. Como funciona a Planilha (.xlsx):
+                    </h4>
+                    <p>• O cliente (ou você) preenche apenas uma planilha simples do Excel ou Google Sheets.</p>
+                    <p>• A coluna <code class="text-cyan-400">proprietario_id</code> recebe o <strong>Nome do Dono</strong> (ex: "Gabriel Fernandes"). O sistema busca se ele já existe na tabela de clientes; se não existir, cria o cadastro dele na hora com tipo "Proprietario".</p>
+                    <p>• Valores monetários devem ser preenchidos apenas com números e ponto (ex: <strong>450000.00</strong> ou <strong>2500.00</strong>). Não coloque "R$".</p>
+                    <p>• Se a coluna <code class="text-cyan-400">imobiliaria_id</code> vier vazia, o sistema usará automaticamente a imobiliária selecionada no topo da tela.</p>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-cyan-300 uppercase text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-eye-slash"></i> 2. A Regra de Proteção da Vitrine Pública:
+                    </h4>
+                    <p>• Quando você roda a <strong>Etapa 1</strong>, todos os imóveis são inseridos no banco com segurança, mas <strong>sem fotos</strong>.</p>
+                    <p>• O site público (<code class="text-cyan-400">index.html</code>) possui um filtro de blindagem ativo: <strong>imóveis sem foto não aparecem no catálogo</strong>.</p>
+                    <p>• Isso permite que você suba 50 imóveis sem poluir a vitrine com imagens cinzas ou cards vazios.</p>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                    <h4 class="font-bold text-emerald-300 uppercase text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 3. Como subir as fotos depois (Etapa 2):
+                    </h4>
+                    <p>• O cliente te envia as fotos pelo WhatsApp ou Google Drive.</p>
+                    <p>• Você entra na <strong>Etapa 2</strong>, escolhe o imóvel na lista (ex: "IMO101 - Casa de Praia") e seleciona as fotos daquela residência.</p>
+                    <p>• O sistema grava os arquivos no Storage seguro do Supabase e vincula ao imóvel. No mesmo segundo, o imóvel ganha capa e entra no ar na vitrine em 3 colunas!</p>
+                </div>
+
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end">
+                <button type="button" onclick="fecharModalAjuda()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition cursor-pointer">
+                    Entendido, Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RODAPÉ TÉCNICO -->
+    <footer class="text-center text-xs text-slate-600 mt-6">
+        SGI SaaS • Ferramenta Master de Onboarding • Acesso Restrito ao Administrador
+    </footer>
+
+    <!-- JAVASCRIPT MASTER DE IMPORTAÇÃO -->
+    <script>
+        const SUPABASE_URL = "https://vribzkhqsmvrxwqwdpdn.supabase.co";
+        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable__4LrC2zuiNdntaJK4pd-IQ_1CN5pwQV";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        let listaImobiliarias = [];
+        let imobiliariaSelecionadaId = null;
+
+        function logEtapa1(msg) {
+            const box = document.getElementById('log-box-etapa-1');
+            box.innerHTML += `<div>> ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function logEtapa2(msg) {
+            const box = document.getElementById('log-box-etapa-2');
+            box.innerHTML += `<div>> ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function inicializarMaster() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session || session.user.email.toLowerCase() !== 'waldeckgil@gmail.com') {
+                alert('Acesso Restrito: Apenas o Administrador Master tem permissão.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            await carregarImobiliarias();
+        }
+
+        async function carregarImobiliarias() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('imobiliarias')
+                    .select('id, nome_fantasia, slug')
+                    .order('nome_fantasia', { ascending: true });
+
+                if (error) throw error;
+                listaImobiliarias = data || [];
+
+                const select = document.getElementById('select-imobiliaria-alvo');
+                select.innerHTML = '<option value="">-- Selecione a Imobiliária --</option>';
+
+                listaImobiliarias.forEach(im => {
+                    const opt = document.createElement('option');
+                    opt.value = im.id;
+                    opt.textContent = `${im.nome_fantasia} (/${im.slug})`;
+                    select.appendChild(opt);
+                });
+
+                if (listaImobiliarias.length > 0) {
+                    select.value = listaImobiliarias[0].id;
+                    aoMudarImobiliaria();
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao listar imobiliárias: ' + err.message);
+            }
+        }
+
+        function aoMudarImobiliaria() {
+            const select = document.getElementById('select-imobiliaria-alvo');
+            imobiliariaSelecionadaId = select.value;
+            document.getElementById('txt-id-tenant').innerText = imobiliariaSelecionadaId || 'Nenhuma selecionada';
+            carregarImoveisParaAba2();
+        }
+
+        function alternarAba(num) {
+            const tab1 = document.getElementById('tab-btn-1');
+            const tab2 = document.getElementById('tab-btn-2');
+            const p1 = document.getElementById('painel-aba-1');
+            const p2 = document.getElementById('painel-aba-2');
+
+            if (num === 1) {
+                tab1.className = 'tab-btn ativa px-4 py-2.5 rounded-xl border border-slate-800 text-xs transition flex items-center gap-2 cursor-pointer';
+                tab2.className = 'tab-btn px-4 py-2.5 rounded-xl border border-slate-800 text-xs text-slate-400 transition flex items-center gap-2 cursor-pointer';
+                p1.classList.remove('hidden');
+                p2.classList.add('hidden');
+            } else {
+                tab2.className = 'tab-btn ativa px-4 py-2.5 rounded-xl border border-slate-800 text-xs transition flex items-center gap-2 cursor-pointer';
+                tab1.className = 'tab-btn px-4 py-2.5 rounded-xl border border-slate-800 text-xs text-slate-400 transition flex items-center gap-2 cursor-pointer';
+                p2.classList.remove('hidden');
+                p1.classList.add('hidden');
+                carregarImoveisParaAba2();
+            }
+        }
+
+        // =========================================================================
+        // BAIXAR PLANILHA MODELO OFICIAL (COM AS MESMAS COLUNAS DO PRINT)
+        // =========================================================================
+        function baixarPlanilhaModeloOficial() {
+            const colunasModelo = [
+                {
+                    codigo_ref: "IMO101",
+                    imobiliaria_id: imobiliariaSelecionadaId || "",
+                    titulo: "Casa de Praia com Piscina",
+                    tipo: "Casa",
+                    finalidade: "Venda",
+                    bairro: "Centro",
+                    valor_venda: 450000.00,
+                    valor_locacao: "",
+                    area_util: 120.5,
+                    quartos: 3,
+                    vagas: 2,
+                    status: "Disponível",
+                    ativa: "VERDADEIRO",
+                    proprietario_id: "Gabriel Fernandes"
+                },
+                {
+                    codigo_ref: "IMO102",
+                    imobiliaria_id: imobiliariaSelecionadaId || "",
+                    titulo: "Apartamento Aconchegante Próximo ao Mar",
+                    tipo: "Apartamento",
+                    finalidade: "Locação",
+                    bairro: "Praia",
+                    valor_venda: "",
+                    valor_locacao: 2500.00,
+                    area_util: 65.0,
+                    quartos: 2,
+                    vagas: 1,
+                    status: "Disponível",
+                    ativa: "VERDADEIRO",
+                    proprietario_id: "Emanoel Ferreira"
+                }
+            ];
+
+            const worksheet = XLSX.utils.json_to_sheet(colunasModelo);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Imoveis");
+            XLSX.writeFile(workbook, "modelo_carga_imoveis_sgi.xlsx");
+        }
+
+        // =========================================================================
+        // ETAPA 1: PROCESSAMENTO DA PLANILHA EXCEL
+        // =========================================================================
+        async function processarPlanilhaImoveis() {
+            if (!imobiliariaSelecionadaId) {
+                alert('Por favor, selecione primeiro a imobiliária destino no topo da tela.');
+                return;
+            }
+
+            const inputArquivo = document.getElementById('input-arquivo-excel').files[0];
+            if (!inputArquivo) {
+                alert('Selecione o arquivo Excel ou CSV.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-processar-planilha');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Processando Planilha...';
+
+            logEtapa1(`Lendo arquivo: ${inputArquivo.name}...`);
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const linhas = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+                    logEtapa1(`Total de registros localizados na planilha: ${linhas.length}`);
+
+                    const cacheProprietarios = new Map();
+                    let inseridosSucesso = 0;
+
+                    for (let item of linhas) {
+                        const ref = String(item.codigo_ref || '').trim();
+                        if (!ref) continue;
+
+                        logEtapa1(`Processando imóvel Ref: ${ref}...`);
+
+                        // 1. Tratamento do Proprietário (campo proprietario_id guarda o nome no Excel)
+                        const nomeDono = String(item.proprietario_id || item.proprietario || '').trim();
+                        let donoUuid = null;
+
+                        if (nomeDono) {
+                            if (cacheProprietarios.has(nomeDono)) {
+                                donoUuid = cacheProprietarios.get(nomeDono);
+                            } else {
+                                // Busca se o cliente já existe
+                                const { data: clienteExistente } = await supabaseClient
+                                    .from('clientes')
+                                    .select('id')
+                                    .eq('imobiliaria_id', imobiliariaSelecionadaId)
+                                    .ilike('nome', nomeDono)
+                                    .maybeSingle();
+
+                                if (clienteExistente) {
+                                    donoUuid = clienteExistente.id;
+                                    logEtapa1(`Proprietário existente identificado: ${nomeDono}`);
+                                } else {
+                                    // Cria novo proprietário
+                                    logEtapa1(`Cadastrando novo proprietário: ${nomeDono}...`);
+                                    const { data: novoCliente, error: errCli } = await supabaseClient
+                                        .from('clientes')
+                                        .insert([{
+                                            imobiliaria_id: imobiliariaSelecionadaId,
+                                            nome: nomeDono,
+                                            tipo: 'Proprietario'
+                                        }])
+                                        .select('id')
+                                        .single();
+
+                                    if (!errCli && novoCliente) {
+                                        donoUuid = novoCliente.id;
+                                    }
+                                }
+
+                                if (donoUuid) cacheProprietarios.set(nomeDono, donoUuid);
+                            }
+                        }
+
+                        // 2. Monta o payload do imóvel (sem fotos obrigatórias)
+                        const finalidadeTratada = String(item.finalidade || 'Venda').trim();
+                        const statusTratado = String(item.status || 'Disponível').trim();
+                        const ativoBool = (String(item.ativa).toUpperCase() !== 'FALSO' && String(item.ativa).toUpperCase() !== 'FALSE');
+
+                        const payloadImovel = {
+                            imobiliaria_id: imobiliariaSelecionadaId,
+                            codigo_ref: ref,
+                            titulo: item.titulo || `Imóvel ${ref}`,
+                            tipo: item.tipo || 'Casa',
+                            finalidade: finalidadeTratada,
+                            bairro: item.bairro || null,
+                            valor_venda: item.valor_venda ? Number(item.valor_venda) : null,
+                            valor_locacao: item.valor_locacao ? Number(item.valor_locacao) : null,
+                            area_util: item.area_util ? Number(item.area_util) : null,
+                            quartos: item.quartos ? Number(item.quartos) : 0,
+                            vagas: item.vagas ? Number(item.vagas) : 0,
+                            status: statusTratado,
+                            ativa: ativoBool,
+                            proprietario_id: donoUuid,
+                            foto_capa: null,
+                            fotos: []
+                        };
+
+                        // Verifica se o imóvel já existe para atualizar ou inserir
+                        const { data: imovelJaExiste } = await supabaseClient
+                            .from('imoveis')
+                            .select('id')
+                            .eq('imobiliaria_id', imobiliariaSelecionadaId)
+                            .eq('codigo_ref', ref)
+                            .maybeSingle();
+
+                        if (imovelJaExiste) {
+                            const { error: errUp } = await supabaseClient
+                                .from('imoveis')
+                                .update(payloadImovel)
+                                .eq('id', imovelJaExiste.id);
+
+                            if (errUp) logEtapa1(`Erro ao atualizar ${ref}: ${errUp.message}`);
+                            else {
+                                logEtapa1(`Imóvel ${ref} atualizado no banco.`);
+                                inseridosSucesso++;
+                            }
+                        } else {
+                            const { error: errIns } = await supabaseClient
+                                .from('imoveis')
+                                .insert([payloadImovel]);
+
+                            if (errIns) logEtapa1(`Erro ao inserir ${ref}: ${errIns.message}`);
+                            else {
+                                logEtapa1(`Imóvel ${ref} criado com sucesso!`);
+                                inseridosSucesso++;
+                            }
+                        }
+                    }
+
+                    logEtapa1(`=== CARGA CONCLUÍDA: ${inseridosSucesso} imóveis processados! ===`);
+                    logEtapa1(`Lembrete: Como estão sem fotos, eles permanecem ocultos da vitrine até você subir fotos na Etapa 2.`);
+                    carregarImoveisParaAba2();
+
+                } catch (err) {
+                    console.error(err);
+                    logEtapa1(`Erro fatal ao ler planilha: ${err.message}`);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Processar e Inserir Imóveis no Banco</span>';
+                }
+            };
+
+            reader.readAsArrayBuffer(inputArquivo);
+        }
+
+        // =========================================================================
+        // ETAPA 2: UPLOAD DE FOTOS E ATIVAÇÃO
+        // =========================================================================
+        async function carregarImoveisParaAba2() {
+            if (!imobiliariaSelecionadaId) return;
+
+            const select = document.getElementById('select-imovel-alvo');
+            select.innerHTML = '<option value="">Carregando imóveis...</option>';
+
+            try {
+                const { data: imoveis, error } = await supabaseClient
+                    .from('imoveis')
+                    .select('id, codigo_ref, titulo, foto_capa, fotos')
+                    .eq('imobiliaria_id', imobiliariaSelecionadaId)
+                    .order('codigo_ref', { ascending: true });
+
+                if (error) throw error;
+
+                if (!imoveis || imoveis.length === 0) {
+                    select.innerHTML = '<option value="">Nenhum imóvel cadastrado nesta imobiliária</option>';
+                    return;
+                }
+
+                select.innerHTML = '<option value="">-- Escolha o Imóvel para Anexar Fotos --</option>';
+                imoveis.forEach(im => {
+                    const totalFotos = (im.fotos && Array.isArray(im.fotos)) ? im.fotos.length : (im.foto_capa ? 1 : 0);
+                    const tagFotos = totalFotos === 0 ? '❌ Sem fotos (Oculto da vitrine)' : `✅ ${totalFotos} foto(s) ativas`;
+
+                    const opt = document.createElement('option');
+                    opt.value = im.id;
+                    opt.setAttribute('data-ref', im.codigo_ref);
+                    opt.textContent = `Ref: ${im.codigo_ref} • ${im.titulo} [${tagFotos}]`;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function mostrarPreviewFotos(files) {
+            const box = document.getElementById('box-preview-fotos');
+            const grade = document.getElementById('grade-miniaturas-preview');
+            const txtQtd = document.getElementById('txt-qtd-fotos-preview');
+
+            if (!files || files.length === 0) {
+                box.classList.add('hidden');
+                grade.innerHTML = '';
+                return;
+            }
+
+            txtQtd.innerText = files.length;
+            grade.innerHTML = '';
+            box.classList.remove('hidden');
+
+            Array.from(files).forEach((file, idx) => {
+                const url = URL.createObjectURL(file);
+                grade.innerHTML += `
+                    <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-700 shrink-0">
+                        <img src="${url}" class="w-full h-full object-cover">
+                        ${idx === 0 ? '<span class="absolute bottom-0 inset-x-0 bg-emerald-600 text-white text-[8px] font-black text-center">CAPA</span>' : ''}
+                    </div>
+                `;
+            });
+        }
+
+        async function enviarFotosParaImovel() {
+            if (!imobiliariaSelecionadaId) {
+                alert('Selecione a imobiliária no topo.');
+                return;
+            }
+
+            const selectImovel = document.getElementById('select-imovel-alvo');
+            const imovelId = selectImovel.value;
+            const optSelecionada = selectImovel.options[selectImovel.selectedIndex];
+            const codigoRef = optSelecionada?.getAttribute('data-ref') || 'imovel';
+
+            if (!imovelId) {
+                alert('Por favor, selecione qual imóvel receberá essas fotos.');
+                return;
+            }
+
+            const inputFotos = document.getElementById('input-fotos-imovel');
+            const files = Array.from(inputFotos.files || []);
+
+            if (files.length === 0) {
+                alert('Selecione pelo menos 1 foto para enviar.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-enviar-fotos');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Enviando Fotos para o Storage...';
+
+            logEtapa2(`Iniciando upload de ${files.length} foto(s) para o imóvel Ref: ${codigoRef}...`);
+
+            const urlsFotos = [];
+
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const fotoFile = files[i];
+                    const nomeSanitizado = fotoFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+                    const caminhoStorage = `${imobiliariaSelecionadaId}/imoveis/${codigoRef}/${Date.now()}_${nomeSanitizado}`;
+
+                    logEtapa2(`[${i + 1}/${files.length}] Enviando ${fotoFile.name}...`);
+
+                    const { error: errUp } = await supabaseClient.storage
+                        .from('imoveis-midias')
+                        .upload(caminhoStorage, fotoFile, { upsert: true });
+
+                    if (errUp) {
+                        logEtapa2(`Erro ao enviar foto: ${errUp.message}`);
+                    } else {
+                        const { data: pubData } = supabaseClient.storage.from('imoveis-midias').getPublicUrl(caminhoStorage);
+                        if (pubData?.publicUrl) urlsFotos.push(pubData.publicUrl);
+                    }
+                }
+
+                if (urlsFotos.length > 0) {
+                    const fotoCapa = urlsFotos[0];
+
+                    logEtapa2(`Atualizando cadastro do imóvel Ref: ${codigoRef}...`);
+
+                    const { error: errUpdate } = await supabaseClient
+                        .from('imoveis')
+                        .update({
+                            foto_capa: fotoCapa,
+                            fotos: urlsFotos
+                        })
+                        .eq('id', imovelId);
+
+                    if (errUpdate) throw errUpdate;
+
+                    logEtapa2(`✅ SUCESSO! ${urlsFotos.length} fotos vinculadas. O imóvel Ref: ${codigoRef} agora ESTÁ PUBLICADO NA VITRINE!`);
+                    alert(`Imóvel Ref: ${codigoRef} atualizado com ${urlsFotos.length} fotos e liberado na vitrine com sucesso!`);
+                    
+                    inputFotos.value = '';
+                    mostrarPreviewFotos([]);
+                    carregarImoveisParaAba2();
+                }
+
+            } catch (err) {
+                console.error(err);
+                logEtapa2(`Falha no upload: ${err.message}`);
+                alert('Erro durante upload: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span>Fazer Upload das Fotos & Publicar na Vitrine</span>';
+            }
+        }
+
+        // =========================================================================
+        // CONTROLE DO MODAL DE AJUDA
+        // =========================================================================
+        function abrirModalAjuda() {
+            document.getElementById('modal-ajuda-master').classList.remove('hidden');
+        }
+
+        function fecharModalAjuda() {
+            document.getElementById('modal-ajuda-master').classList.add('hidden');
+        }
+
+        window.addEventListener('DOMContentLoaded', inicializarMaster);
+    </script>
+</body>
+</html>

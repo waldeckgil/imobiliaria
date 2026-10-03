@@ -1564,17 +1564,11 @@
                 if (filtros.bairro) query = query.ilike('bairro', `%${filtros.bairro}%`);
                 if (filtros.mobiliado) query = query.eq('mobiliado', true);
                 if (filtros.destaque) query = query.eq('destaque', true);
-const { data, error } = await query.order('created_at', { ascending: false }).limit(60);
+
+                const { data, error } = await query.order('created_at', { ascending: false }).limit(60);
                 if (error) throw error;
 
                 let filtrados = data || [];
-
-                // REGRA MASTER: Imóvel sem fotos NÃO aparece na vitrine pública
-                filtrados = filtrados.filter(im => {
-                    const temCapa = im.foto_capa && typeof im.foto_capa === 'string' && im.foto_capa.trim() !== '';
-                    const temGaleria = Array.isArray(im.fotos) && im.fotos.some(f => f && typeof f === 'string' && f.trim() !== '');
-                    return temCapa || temGaleria;
-                });
 
                 if (filtros.precoMin && filtros.precoMin > 0) {
                     filtrados = filtrados.filter(im => {
