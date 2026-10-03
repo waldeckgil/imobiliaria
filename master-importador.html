@@ -911,11 +911,13 @@ async function processarPlanilhaImoveis() {
                 return;
             }
 
-            const imobObj = listaImobiliarias.find(i => i.id === imobiliariaSelecionadaId);
+ const imobObj = listaImobiliarias.find(i => i.id === imobiliariaSelecionadaId);
             const nomeImob = imobObj ? imobObj.nome_fantasia : 'Imobiliária Selecionada';
             const imovelObj = listaImoveisAba2Cache.find(i => i.id === imovelId);
             const refImovel = imovelObj ? imovelObj.codigo_ref : '---';
             const tituloImovel = imovelObj ? imovelObj.titulo : 'Imóvel';
+            
+            const optSelecionada = (selectImovel && selectImovel.selectedIndex >= 0) ? selectImovel.options[selectImovel.selectedIndex] : null;
             const totalFotosAtuais = Number(optSelecionada?.getAttribute('data-total-fotos') || 0);
 
             // Preenche o modal de confirmação
