@@ -611,33 +611,133 @@
 
         <!-- CONTEÚDO PRINCIPAL (CATÁLOGO EM 3 COLUNAS - LARGURA TOTAL) -->
         <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-6">
-            
-            <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA COM GATILHO DE FILTRAR IMÓVEIS -->
-            <div class="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-3.5 shadow-sm flex items-center gap-2 flex-wrap justify-between sm:justify-start">
-                
-                <!-- BOTÃO PRINCIPAL DE FILTROS (ABRE O DRAWER LATERAL SOBREPOSTO) -->
-                <button type="button" onclick="abrirDrawerFiltros()" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 shadow-sm transition cursor-pointer">
-                    <i class="fa-solid fa-sliders text-xs"></i>
-                    <span>Filtrar Imóveis</span>
-                </button>
+<!-- BARRA DE CHIPS / TAGS RÁPIDAS COM BOTÃO E DROPDOWN ANCORADO LOGO ABAIXO -->
+            <div class="relative z-30">
+                <div class="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-3.5 shadow-sm flex items-center gap-2 flex-wrap justify-between sm:justify-start">
+                    
+                    <!-- BOTÃO QUE ABRE E RECOLHE O FORMULÁRIO EXATAMENTE ABAIXO -->
+                    <button type="button" id="btn-toggle-filtros" onclick="alternarFiltrosAbaixo()" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 shadow-sm transition cursor-pointer">
+                        <i class="fa-solid fa-sliders text-xs"></i>
+                        <span>Filtrar Imóveis</span>
+                        <i id="seta-toggle-filtros" class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
+                    </button>
 
-                <div class="h-5 w-px bg-slate-200 hidden sm:block mx-1"></div>
+                    <div class="h-5 w-px bg-slate-200 hidden sm:block mx-1"></div>
 
-                <button type="button" id="tag-chip-mobiliado" onclick="alternarTag('mobiliado')" 
-                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                    <span>🛋️ Mobiliado</span>
-                </button>
-                <button type="button" id="tag-chip-destaque" onclick="alternarTag('destaque')" 
-                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                    <span>⭐ Destaques</span>
-                </button>
-                <button type="button" id="tag-chip-todos" onclick="limparFiltros()" 
-                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                        title="Mostrar todos os imóveis disponíveis">
-                    <i class="fa-solid fa-border-all text-[10px] text-blue-600"></i>
-                    <span>Todos os Imóveis</span>
-                </button>
+                    <button type="button" id="tag-chip-mobiliado" onclick="alternarTag('mobiliado')" 
+                            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
+                        <span>🛋️ Mobiliado</span>
+                    </button>
+                    <button type="button" id="tag-chip-destaque" onclick="alternarTag('destaque')" 
+                            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
+                        <span>⭐ Destaques</span>
+                    </button>
+                    <button type="button" id="tag-chip-todos" onclick="limparFiltros()" 
+                            class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                            title="Mostrar todos os imóveis disponíveis">
+                        <i class="fa-solid fa-border-all text-[10px] text-blue-600"></i>
+                        <span>Todos os Imóveis</span>
+                    </button>
+                </div>
+
+                <!-- PAINEL DE FILTROS QUE SOBREPÕE A TELA DIRETAMENTE ABAIXO DO BOTÃO -->
+                <div id="painel-filtros-dropdown" class="hidden absolute top-full left-0 mt-2.5 w-full sm:w-[500px] bg-white border border-slate-200 rounded-2xl shadow-2xl p-5 sm:p-6 z-40 space-y-4">
+                    
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-filter text-blue-600 text-xs"></i>
+                            <h3 class="font-black text-slate-900 uppercase tracking-wide text-xs">Filtros de Busca</h3>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="limparFiltros()" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 cursor-pointer transition">
+                                Limpar
+                            </button>
+                            <button onclick="fecharFiltrosAbaixo()" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-700 flex items-center justify-center transition cursor-pointer">
+                                <i class="fa-solid fa-xmark text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais(); fecharFiltrosAbaixo();" class="space-y-3.5 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Finalidade</label>
+                                <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer font-bold">
+                                    <option value="" selected>Todas</option>
+                                    <option value="Venda">Comprar (Venda)</option>
+                                    <option value="Locacao">Alugar (Locação)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Tipo de Imóvel</label>
+                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer">
+                                    <option value="" selected>Todos os Tipos</option>
+                                    <option value="Apartamento">Apartamento</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Casa em Condomínio">Casa em Condomínio</option>
+                                    <option value="Terreno">Terreno</option>
+                                    <option value="Comercial">Comercial</option>
+                                    <option value="Cobertura">Cobertura</option>
+                                    <option value="Sítio">Sítio / Chácara</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block font-bold text-slate-700">Faixa de Preço (R$)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="relative">
+                                    <span class="absolute left-2.5 top-2 text-[10px] font-bold text-slate-400">R$</span>
+                                    <input type="text" inputmode="numeric" id="filtro-preco-min" placeholder="Mínimo" 
+                                           oninput="mascaraMoedaEvento(this); aplicarFiltrosLaterais();"
+                                           class="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 pl-7 pr-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
+                                </div>
+                                <div class="relative">
+                                    <span class="absolute left-2.5 top-2 text-[10px] font-bold text-slate-400">R$</span>
+                                    <input type="text" inputmode="numeric" id="filtro-preco-max" placeholder="Máximo" 
+                                           oninput="mascaraMoedaEvento(this); aplicarFiltrosLaterais();"
+                                           class="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 pl-7 pr-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Dormitórios</label>
+                                <select id="filtro-quartos" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer">
+                                    <option value="" selected>Todos</option>
+                                    <option value="1">1 dorm ou mais</option>
+                                    <option value="2">2 dorms ou mais</option>
+                                    <option value="3">3 dorms ou mais</option>
+                                    <option value="4">4 dorms ou mais</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Buscar por Bairro</label>
+                                <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Ex: Centro, Icaraí..." 
+                                       class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-2.5 rounded-xl shadow-md hover:opacity-95 transition uppercase tracking-wider text-xs mt-2 cursor-pointer flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Aplicar Filtros</span>
+                        </button>
+                    </form>
+
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                        <a href="#secao-negocie" onclick="fecharFiltrosAbaixo()" class="hover:text-emerald-700 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-calculator text-emerald-600"></i> Avalie seu Imóvel
+                        </a>
+                        <a href="#secao-negocie" onclick="fecharFiltrosAbaixo()" class="hover:text-emerald-700 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-handshake text-emerald-600"></i> Negocie Conosco
+                        </a>
+                    </div>
+
+                </div>
             </div>
 
             <!-- CONTAINER DOS CARDS DE IMÓVEIS EM GRADE DE 3 COLUNAS (LADO A LADO) -->
@@ -649,124 +749,6 @@
             </div>
 
         </main>
-
-        <!-- DRAWER RETRÁTIL DE FILTROS (SOBREPÕE A TELA PELA DIREITA) -->
-        <div id="drawer-filtros" class="fixed inset-0 z-50 hidden">
-            <!-- Fundo escurecido semi-transparente -->
-            <div onclick="fecharDrawerFiltros()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
-            
-            <div class="fixed inset-y-0 right-0 max-w-full flex">
-                <div id="painel-drawer-filtros" class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between overflow-y-auto transform translate-x-full">
-                    
-                    <!-- Topo do Drawer -->
-                    <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
-                                <i class="fa-solid fa-sliders"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-black text-slate-900 uppercase tracking-wide text-xs">Filtrar Imóveis</h3>
-                                <p class="text-[11px] text-slate-400">Refine as opções de catálogo</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="limparFiltros()" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 cursor-pointer transition">
-                                Limpar Todos
-                            </button>
-                            <button onclick="fecharDrawerFiltros()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition cursor-pointer">
-                                <i class="fa-solid fa-xmark text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Formulário de Filtros -->
-                    <div class="p-5 sm:p-6 space-y-4 flex-1">
-                        <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais(); fecharDrawerFiltros();" class="space-y-4 text-xs">
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Finalidade</label>
-                                <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer font-bold">
-                                    <option value="" selected>Todas as Finalidades</option>
-                                    <option value="Venda">Quero Comprar (Venda)</option>
-                                    <option value="Locacao">Quero Alugar (Locação)</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Tipo de Imóvel</label>
-                                <select id="filtro-tipo" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer">
-                                    <option value="" selected>Todos os Tipos</option>
-                                    <option value="Apartamento">Apartamento</option>
-                                    <option value="Casa">Casa</option>
-                                    <option value="Casa em Condomínio">Casa em Condomínio</option>
-                                    <option value="Terreno">Terreno</option>
-                                    <option value="Comercial">Comercial</option>
-                                    <option value="Cobertura">Cobertura</option>
-                                    <option value="Sítio">Sítio / Chácara</option>
-                                </select>
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <label class="block font-bold text-slate-700">Faixa de Preço (R$)</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div class="relative">
-                                        <span class="absolute left-2.5 top-2.5 text-[10px] font-bold text-slate-400">R$</span>
-                                        <input type="text" inputmode="numeric" id="filtro-preco-min" placeholder="Mínimo" 
-                                               oninput="mascaraMoedaEvento(this); aplicarFiltrosLaterais();"
-                                               class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
-                                    </div>
-                                    <div class="relative">
-                                        <span class="absolute left-2.5 top-2.5 text-[10px] font-bold text-slate-400">R$</span>
-                                        <input type="text" inputmode="numeric" id="filtro-preco-max" placeholder="Máximo" 
-                                               oninput="mascaraMoedaEvento(this); aplicarFiltrosLaterais();"
-                                               class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Dormitórios</label>
-                                <select id="filtro-quartos" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer">
-                                    <option value="" selected>Todos os Dormitórios</option>
-                                    <option value="1">1 dormitório ou mais</option>
-                                    <option value="2">2 dormitórios ou mais</option>
-                                    <option value="3">3 dormitórios ou mais</option>
-                                    <option value="4">4 dormitórios ou mais</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1.5">Buscar por Bairro</label>
-                                <input type="text" id="filtro-bairro" oninput="aplicarFiltrosLaterais()" placeholder="Ex: Centro, Icaraí, Barra..." 
-                                       class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
-                            </div>
-
-                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-xl shadow-md hover:opacity-95 transition uppercase tracking-wider text-xs mt-3 cursor-pointer flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <span>Aplicar Filtros e Fechar</span>
-                            </button>
-                        </form>
-
-                        <!-- Serviços & Avaliações dentro do Drawer -->
-                        <div class="mt-6 pt-5 border-t border-slate-100 space-y-2.5">
-                            <span class="block text-[10px] font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-briefcase text-emerald-600"></i> Serviços & Avaliações
-                            </span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <a href="#secao-negocie" onclick="fecharDrawerFiltros()" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
-                                    <i class="fa-solid fa-calculator text-emerald-600 text-base"></i>
-                                    <span>Avalie seu Imóvel</span>
-                                </a>
-                                <a href="#secao-negocie" onclick="fecharDrawerFiltros()" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
-                                    <i class="fa-solid fa-handshake text-emerald-600 text-base"></i>
-                                    <span>Negocie seu Imóvel</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
 
         <!-- SEÇÃO: "A EMPRESA" (DINÂMICA) -->
         <section id="secao-empresa" class="bg-white border-y border-gray-200 py-16 px-4 sm:px-8">
@@ -1097,33 +1079,40 @@
         // CACHE DE GALERIA PARA NAVEGAÇÃO DOS CARDS
         const galeriaImoveisCache = {};
 
-        /* =========================================================================
-           CONTROLE DO DRAWER DE FILTROS RETRÁTIL
+ /* =========================================================================
+           CONTROLE DO PAINEL DE FILTROS SOBREPOSTO LOGO ABAIXO DO BOTÃO
            ========================================================================= */
-        function abrirDrawerFiltros() {
-            const drawer = document.getElementById('drawer-filtros');
-            const painel = document.getElementById('painel-drawer-filtros');
-            if (!drawer || !painel) return;
+        function alternarFiltrosAbaixo() {
+            const painel = document.getElementById('painel-filtros-dropdown');
+            const seta = document.getElementById('seta-toggle-filtros');
+            if (!painel) return;
 
-            drawer.classList.remove('hidden');
-            setTimeout(() => {
-                painel.classList.remove('translate-x-full');
-            }, 10);
-            document.body.classList.add('overflow-hidden');
+            const estaOculto = painel.classList.contains('hidden');
+            if (estaOculto) {
+                painel.classList.remove('hidden');
+                if (seta) seta.classList.add('rotate-180');
+            } else {
+                fecharFiltrosAbaixo();
+            }
         }
 
-        function fecharDrawerFiltros() {
-            const drawer = document.getElementById('drawer-filtros');
-            const painel = document.getElementById('painel-drawer-filtros');
-            if (!drawer || !painel) return;
-
-            painel.classList.add('translate-x-full');
-            setTimeout(() => {
-                drawer.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-            }, 300);
+        function fecharFiltrosAbaixo() {
+            const painel = document.getElementById('painel-filtros-dropdown');
+            const seta = document.getElementById('seta-toggle-filtros');
+            if (painel) painel.classList.add('hidden');
+            if (seta) seta.classList.remove('rotate-180');
         }
 
+        // FECHA O DROPDOWN SE O USUÁRIO CLICAR FORA DELE
+        document.addEventListener('click', (e) => {
+            const painel = document.getElementById('painel-filtros-dropdown');
+            const btn = document.getElementById('btn-toggle-filtros');
+            if (!painel || !btn || painel.classList.contains('hidden')) return;
+
+            if (!painel.contains(e.target) && !btn.contains(e.target)) {
+                fecharFiltrosAbaixo();
+            }
+        });
         /* =========================================================================
            MOTOR DO PWA WHITE-LABEL DINÂMICO (ANDROID & IOS)
            ========================================================================= */
