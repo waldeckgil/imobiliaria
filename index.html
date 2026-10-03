@@ -73,6 +73,11 @@
             transform: translateY(-4px);
             box-shadow: 0 16px 30px -8px rgba(15, 23, 42, 0.15);
         }
+
+        /* TRANSIÇÃO DA GAVETA LATERAL (DRAWER) */
+        #painel-drawer-filtros {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
@@ -604,64 +609,79 @@
             </div>
         </div>
 
-        <!-- CONTEÚDO PRINCIPAL (CATÁLOGO + BARRA LATERAL CLEAN WHITE) -->
-        <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- CONTEÚDO PRINCIPAL (CATÁLOGO EM 3 COLUNAS - LARGURA TOTAL) -->
+        <main class="max-w-[1340px] mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-6">
+            
+            <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA COM GATILHO DE FILTRAR IMÓVEIS -->
+            <div class="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-3.5 shadow-sm flex items-center gap-2 flex-wrap justify-between sm:justify-start">
                 
-                <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO -->
-                <div class="lg:col-span-8 space-y-5">
-                    
-                    <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-3.5 shadow-sm flex items-center gap-2 flex-wrap justify-between sm:justify-start">
-                        
-                        <!-- BOTÃO DE FILTRO DIRETO PARA O CELULAR -->
-                        <a href="#form-filtros" class="lg:hidden bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 shadow transition">
-                            <i class="fa-solid fa-sliders text-[10px]"></i>
-                            <span>Filtrar Imóveis</span>
-                        </a>
+                <!-- BOTÃO PRINCIPAL DE FILTROS (ABRE O DRAWER LATERAL SOBREPOSTO) -->
+                <button type="button" onclick="abrirDrawerFiltros()" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 shadow-sm transition cursor-pointer">
+                    <i class="fa-solid fa-sliders text-xs"></i>
+                    <span>Filtrar Imóveis</span>
+                </button>
 
-                        <span class="hidden sm:inline-flex text-[11px] font-black uppercase tracking-wider text-slate-400 mr-1 items-center gap-1">
-                            <i class="fa-solid fa-sliders text-cyan-600"></i> Filtro Rápido:
-                        </span>
-                        <button type="button" id="tag-chip-mobiliado" onclick="alternarTag('mobiliado')" 
-                                class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                            <span>🛋️ Mobiliado</span>
-                        </button>
-                        <button type="button" id="tag-chip-destaque" onclick="alternarTag('destaque')" 
-                                class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
-                            <span>⭐ Destaques</span>
-                        </button>
-                        <button type="button" id="tag-chip-todos" onclick="limparFiltros()" 
-                                class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
-                                title="Mostrar todos os imóveis disponíveis">
-                            <i class="fa-solid fa-border-all text-[10px] text-blue-600"></i>
-                            <span>Todos os Imóveis</span>
-                        </button>
-                    </div>
+                <div class="h-5 w-px bg-slate-200 hidden sm:block mx-1"></div>
 
-                    <!-- NOVO CONTAINER DE GRADE RESPONSIVA 2 COLUNAS (ALTO PADRÃO VISUAL) -->
-                    <div id="container-imoveis" class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-                        <div class="col-span-full bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
-                            <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
-                            <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
-                        </div>
-                    </div>
+                <button type="button" id="tag-chip-mobiliado" onclick="alternarTag('mobiliado')" 
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
+                    <span>🛋️ Mobiliado</span>
+                </button>
+                <button type="button" id="tag-chip-destaque" onclick="alternarTag('destaque')" 
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer">
+                    <span>⭐ Destaques</span>
+                </button>
+                <button type="button" id="tag-chip-todos" onclick="limparFiltros()" 
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer shadow-sm"
+                        title="Mostrar todos os imóveis disponíveis">
+                    <i class="fa-solid fa-border-all text-[10px] text-blue-600"></i>
+                    <span>Todos os Imóveis</span>
+                </button>
+            </div>
+
+            <!-- CONTAINER DOS CARDS DE IMÓVEIS EM GRADE DE 3 COLUNAS (LADO A LADO) -->
+            <div id="container-imoveis" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
+                    <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
                 </div>
+            </div>
 
-                <!-- BARRA LATERAL DE FILTROS: PADRÃO CLEAN WHITE / SLATE -->
-                <div class="lg:col-span-4">
-                    <div class="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-5">
-                        
-                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                            <h3 class="font-black text-slate-900 uppercase tracking-wide text-xs flex items-center gap-2">
-                                <i class="fa-solid fa-filter text-blue-600"></i> Filtrar Imóveis
-                            </h3>
+        </main>
+
+        <!-- DRAWER RETRÁTIL DE FILTROS (SOBREPÕE A TELA PELA DIREITA) -->
+        <div id="drawer-filtros" class="fixed inset-0 z-50 hidden">
+            <!-- Fundo escurecido semi-transparente -->
+            <div onclick="fecharDrawerFiltros()" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+            
+            <div class="fixed inset-y-0 right-0 max-w-full flex">
+                <div id="painel-drawer-filtros" class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between overflow-y-auto transform translate-x-full">
+                    
+                    <!-- Topo do Drawer -->
+                    <div class="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-slate-900 uppercase tracking-wide text-xs">Filtrar Imóveis</h3>
+                                <p class="text-[11px] text-slate-400">Refine as opções de catálogo</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
                             <button onclick="limparFiltros()" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 cursor-pointer transition">
                                 Limpar Todos
                             </button>
+                            <button onclick="fecharDrawerFiltros()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition cursor-pointer">
+                                <i class="fa-solid fa-xmark text-sm"></i>
+                            </button>
                         </div>
+                    </div>
 
-                        <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais();" class="space-y-4 text-xs">
+                    <!-- Formulário de Filtros -->
+                    <div class="p-5 sm:p-6 space-y-4 flex-1">
+                        <form id="form-filtros" onsubmit="event.preventDefault(); aplicarFiltrosLaterais(); fecharDrawerFiltros();" class="space-y-4 text-xs">
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1.5">Finalidade</label>
                                 <select id="filtro-finalidade" onchange="aplicarFiltrosLaterais()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition cursor-pointer font-bold">
@@ -685,7 +705,6 @@
                                 </select>
                             </div>
 
-                            <!-- FILTRO POR FAIXA DE PREÇO (MÍNIMO E MÁXIMO) -->
                             <div class="space-y-1.5">
                                 <label class="block font-bold text-slate-700">Faixa de Preço (R$)</label>
                                 <div class="grid grid-cols-2 gap-2">
@@ -721,34 +740,33 @@
                                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 outline-none focus:border-blue-600 focus:bg-white transition">
                             </div>
 
-                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-xl shadow-sm hover:opacity-90 transition uppercase tracking-wider text-xs mt-2 cursor-pointer flex items-center justify-center gap-2">
+                            <button type="submit" class="w-full btn-azul-mensagem text-white font-bold py-3 rounded-xl shadow-md hover:opacity-95 transition uppercase tracking-wider text-xs mt-3 cursor-pointer flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-magnifying-glass"></i>
-                                <span>Aplicar Filtros</span>
+                                <span>Aplicar Filtros e Fechar</span>
                             </button>
                         </form>
 
-                        <!-- ATALHOS DE SERVIÇOS E CAPTAÇÃO -->
-                        <div class="mt-5 pt-4 border-t border-slate-100 space-y-2.5">
+                        <!-- Serviços & Avaliações dentro do Drawer -->
+                        <div class="mt-6 pt-5 border-t border-slate-100 space-y-2.5">
                             <span class="block text-[10px] font-black uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
                                 <i class="fa-solid fa-briefcase text-emerald-600"></i> Serviços & Avaliações
                             </span>
                             <div class="grid grid-cols-2 gap-2">
-                                <a href="#secao-negocie" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
+                                <a href="#secao-negocie" onclick="fecharDrawerFiltros()" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
                                     <i class="fa-solid fa-calculator text-emerald-600 text-base"></i>
                                     <span>Avalie seu Imóvel</span>
                                 </a>
-                                <a href="#secao-negocie" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
+                                <a href="#secao-negocie" onclick="fecharDrawerFiltros()" class="bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-xl p-3 text-center font-bold text-[11px] flex flex-col items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
                                     <i class="fa-solid fa-handshake text-emerald-600 text-base"></i>
                                     <span>Negocie seu Imóvel</span>
                                 </a>
                             </div>
                         </div>
-
                     </div>
-                </div>
 
+                </div>
             </div>
-        </main>
+        </div>
 
         <!-- SEÇÃO: "A EMPRESA" (DINÂMICA) -->
         <section id="secao-empresa" class="bg-white border-y border-gray-200 py-16 px-4 sm:px-8">
@@ -1078,6 +1096,33 @@
 
         // CACHE DE GALERIA PARA NAVEGAÇÃO DOS CARDS
         const galeriaImoveisCache = {};
+
+        /* =========================================================================
+           CONTROLE DO DRAWER DE FILTROS RETRÁTIL
+           ========================================================================= */
+        function abrirDrawerFiltros() {
+            const drawer = document.getElementById('drawer-filtros');
+            const painel = document.getElementById('painel-drawer-filtros');
+            if (!drawer || !painel) return;
+
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                painel.classList.remove('translate-x-full');
+            }, 10);
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function fecharDrawerFiltros() {
+            const drawer = document.getElementById('drawer-filtros');
+            const painel = document.getElementById('painel-drawer-filtros');
+            if (!drawer || !painel) return;
+
+            painel.classList.add('translate-x-full');
+            setTimeout(() => {
+                drawer.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }, 300);
+        }
 
         /* =========================================================================
            MOTOR DO PWA WHITE-LABEL DINÂMICO (ANDROID & IOS)
@@ -1490,9 +1535,9 @@
             if (!btn) return;
 
             if (filtroTags[tipo]) {
-                btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white border border-blue-600 shadow-sm transition flex items-center gap-1.5 cursor-pointer";
+                btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white border border-blue-600 shadow-sm transition flex items-center gap-1.5 cursor-pointer";
             } else {
-                btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
+                btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
             }
             aplicarFiltrosLaterais();
         }
@@ -1583,7 +1628,7 @@
         }
 
         /* =========================================================================
-           NOVO MOTOR DE RENDERIZAÇÃO: GRADE VISUAL 2 COLUNAS (ALTO IMPACTO)
+           MOTOR DE RENDERIZAÇÃO: GRADE VISUAL 3 COLUNAS (ALTO IMPACTO)
            ========================================================================= */
         function renderizarCardsImoveis(imoveis, filtroFinalidadeAtual = '') {
             const container = document.getElementById('container-imoveis');
@@ -1686,7 +1731,6 @@
                     </div>
                 ` : '';
 
-                // CONTROLE DO BOTÃO WHATSAPP (MODO LEITURA / VENCIDO)
                 let emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
                 if (!emLeituraCard && tenantAtual && tenantAtual.data_vencimento) {
                     const hojeBase = new Date();
@@ -1706,11 +1750,10 @@
                     </a>
                 `;
 
-                // NOVO CARD VERTICAL MODERNO COM FOCO EM FOTO (ESTILO CHANELL)
                 const card = `
                 <div class="card-imovel-grade bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col justify-between group" id="card-${imovel.codigo_ref}">
                     
-                    <!-- TOPO DO CARD: FOTO PANORÂMICA COM CLIQUE DIRETO PARA PROPOSTA -->
+                    <!-- FOTO PANORÂMICA COM CLIQUE DIRETO PARA PROPOSTA -->
                     <div class="relative w-full aspect-[4/3] bg-slate-900 select-none overflow-hidden cursor-pointer" 
                          onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${tituloTratado}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})">
                         
@@ -1719,7 +1762,7 @@
                              alt="${imovel.titulo}" 
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         
-                        <!-- BADGE SUPERIOR DE STATUS + VALOR (PADRÃO CHANELL) -->
+                        <!-- BADGE SUPERIOR DE STATUS + VALOR (ESTILO CHANELL) -->
                         <div class="absolute top-3 left-3 ${corBadgeTag} text-white text-[11px] font-black px-3 py-1 rounded-xl shadow-lg backdrop-blur-md flex items-center gap-1.5 z-10 tracking-wide">
                             ${textoTagChanell}
                         </div>
@@ -1734,7 +1777,7 @@
                         ${controlesGaleriaHtml}
                     </div>
 
-                    <!-- CORPO DO CARD: INFORMAÇÕES DECISIVAS E COMPACTAS -->
+                    <!-- CORPO DO CARD COM INFORMAÇÕES DECISIVAS -->
                     <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3.5">
                         
                         <div>
@@ -1743,15 +1786,15 @@
                                 ${imovel.tipo || 'Imóvel'} • ${imovel.bairro || 'Localização'}${imovel.cidade ? ' - ' + imovel.cidade + '/' + (imovel.uf || '') : ''}
                             </span>
 
-                            <!-- TÍTULO PRINCIPAL (TRUNCADO EM 1 OU 2 LINHAS) -->
-                            <h3 onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${tituloTratado}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0}) "
+                            <!-- TÍTULO PRINCIPAL (TRUNCADO EM 1 LINHA PARA UNIFORMIDADE DA GRADE) -->
+                            <h3 onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${tituloTratado}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
                                 class="text-sm sm:text-base font-extrabold text-slate-800 leading-snug mt-1 line-clamp-1 hover:text-blue-700 transition cursor-pointer" 
                                 title="${imovel.titulo}">
                                 ${imovel.titulo}
                             </h3>
                         </div>
 
-                        <!-- ESPECIFICAÇÕES COMPACTAS COM ÍCONES -->
+                        <!-- ESPECIFICAÇÕES COMPACTAS EM 4 COLUNAS -->
                         <div class="grid grid-cols-4 gap-1 py-2 border-y border-slate-100 text-slate-600 text-xs text-center font-semibold bg-slate-50/50 rounded-xl">
                             <span title="Dormitórios" class="flex flex-col items-center justify-center py-1">
                                 <i class="fa-solid fa-bed text-blue-600 text-[11px] mb-0.5"></i>
@@ -1786,7 +1829,6 @@
             });
         }
 
-        // CONTROLADOR DE NAVEGAÇÃO DA GALERIA NO CARD
         function navegarFotoCard(event, imovelId, direcao) {
             if (event) event.stopPropagation();
 
@@ -1854,7 +1896,7 @@
             ['mobiliado', 'destaque'].forEach(tag => {
                 const btn = document.getElementById(`tag-chip-${tag}`);
                 if (btn) {
-                    btn.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
+                    btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 transition flex items-center gap-1.5 cursor-pointer";
                 }
             });
 
