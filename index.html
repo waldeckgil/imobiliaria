@@ -27,8 +27,7 @@
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-  
-  /* BLINDAGEM MOBILE DA VITRINE: Impede a tela do celular de rolar para as laterais */
+        /* BLINDAGEM MOBILE DA VITRINE */
         html, body {
             max-width: 100vw;
             overflow-x: hidden !important;
@@ -64,6 +63,15 @@
             background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        /* EFEITO DE SUAVE TRANSIÇÃO NO CARD VERTICAL */
+        .card-imovel-grade {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-imovel-grade:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 30px -8px rgba(15, 23, 42, 0.15);
         }
     </style>
 </head>
@@ -126,7 +134,7 @@
                     A plataforma completa para gestão comercial imobiliária: catálogo online moderno, funil de captação de leads integrado ao WhatsApp, gestão de corretores e geração instantânea de fichas comerciais em PDF.
                 </p>
 
-  <!-- CONDIÇÃO COMERCIAL CLARA NO HERO -->
+                <!-- CONDIÇÃO COMERCIAL CLARA NO HERO -->
                 <div class="inline-flex flex-wrap items-center justify-center gap-3 bg-slate-950/80 border border-amber-500/40 px-4 py-2 rounded-2xl text-xs">
                     <span class="text-amber-400 font-black flex items-center gap-1.5">
                         <i class="fa-solid fa-check-circle"></i> 30 Dias Grátis
@@ -336,7 +344,7 @@
                             <p class="text-xs text-slate-400 mt-0.5">Todos os módulos e recursos liberados.</p>
                         </div>
 
-     <div class="text-left sm:text-right">
+                        <div class="text-left sm:text-right">
                             <span class="text-xs text-slate-400 block line-through font-mono" id="card-preco-normal">De R$ 149,00</span>
                             <div class="flex items-baseline gap-1">
                                 <span class="text-sm font-bold text-slate-300">R$</span>
@@ -470,7 +478,7 @@
          ========================================================================= -->
     <div id="secao-vitrine-imobiliaria" class="hidden flex-col min-h-screen justify-between">
 
- <!-- CABEÇALHO DA VITRINE (RESPONSIVO COM MODO APP) -->
+        <!-- CABEÇALHO DA VITRINE (RESPONSIVO COM MODO APP) -->
         <header class="bg-white border-b border-gray-200 py-3 px-4 sm:px-8 sticky top-0 z-40 shadow-sm">
             <div class="max-w-[1340px] mx-auto flex items-center justify-between gap-2">
                 
@@ -603,7 +611,7 @@
                 <!-- COLUNA DOS IMÓVEIS COM CHIPS DE FILTRO RÁPIDO -->
                 <div class="lg:col-span-8 space-y-5">
                     
-            <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
+                    <!-- BARRA DE CHIPS / TAGS RÁPIDAS DE BUSCA -->
                     <div class="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-3.5 shadow-sm flex items-center gap-2 flex-wrap justify-between sm:justify-start">
                         
                         <!-- BOTÃO DE FILTRO DIRETO PARA O CELULAR -->
@@ -631,9 +639,9 @@
                         </button>
                     </div>
 
-                    <!-- CONTAINER DOS CARDS DE IMÓVEIS -->
-                    <div id="container-imoveis" class="space-y-6">
-                        <div class="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
+                    <!-- NOVO CONTAINER DE GRADE RESPONSIVA 2 COLUNAS (ALTO PADRÃO VISUAL) -->
+                    <div id="container-imoveis" class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                        <div class="col-span-full bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
                             <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
                             <p class="text-sm font-bold">Consultando catálogo de imóveis...</p>
                         </div>
@@ -987,7 +995,7 @@
             </div>
         </div>
 
-        <!-- JANELA CENTRALIZADA QUADRADA DE AGRADECIMENTO (COM TEMPORIZADOR AUTOMÁTICO) -->
+        <!-- JANELA CENTRALIZADA QUADRADA DE AGRADECIMENTO -->
         <div id="modal-feedback-central" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden transition-all duration-300 opacity-0">
             <div id="card-feedback-box" class="bg-white rounded-3xl max-w-sm w-full p-8 text-center shadow-2xl space-y-4 border border-slate-100 transform transition-all duration-300 scale-95 relative overflow-hidden">
                 <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
@@ -997,7 +1005,6 @@
                 <p class="text-xs text-slate-600 leading-relaxed" id="feedback-texto-central">
                     Agradecemos o seu contato! Em breve nossa equipe retornará através do seu WhatsApp.
                 </p>
-                <!-- BARRA DE PROGRESSO DO TEMPORIZADOR -->
                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-3">
                     <div id="barra-timer-feedback" class="bg-emerald-500 h-full w-full transition-all duration-[4500ms] ease-linear"></div>
                 </div>
@@ -1020,7 +1027,6 @@
                     <p class="text-slate-400 mt-2 leading-relaxed" id="footer-sobre">
                         Intermediação e consultoria imobiliária com transparência e segurança jurídica.
                     </p>
-                    <!-- CONTÊINER DINÂMICO DE REDES SOCIAIS -->
                     <div id="footer-redes-sociais" class="flex items-center gap-2.5 mt-4 flex-wrap"></div>
                 </div>
 
@@ -1088,17 +1094,15 @@
                 if (tenant.logo_url && tenant.logo_url.trim() !== '') {
                     iconeApp = tenant.logo_url.trim();
                 }
-                startUrl = window.location.href; // Garante que abra na vitrine do tenant
+                startUrl = window.location.href;
             }
 
-            // 1. Atualiza metatags para iPhone/iPad (iOS Safari)
             const metaTitle = document.getElementById('meta-apple-title');
             if (metaTitle) metaTitle.content = nomeCurto;
 
             const linkAppleIcon = document.getElementById('link-apple-icon');
             if (linkAppleIcon) linkAppleIcon.href = iconeApp;
 
-            // 2. Constrói o manifesto dinâmico White-Label em memória
             const manifestObj = {
                 name: nomeApp,
                 short_name: nomeCurto,
@@ -1131,7 +1135,6 @@
             }
         }
 
-        // Registro do Service Worker Seguro
         function registrarServiceWorker() {
             if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
                 navigator.serviceWorker.register('./sw.js')
@@ -1144,7 +1147,6 @@
             }
         }
 
-        // Listener do botão de instalação no Android/Chrome
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             promptInstalacaoPwa = e;
@@ -1178,7 +1180,7 @@
             }
         }
 
-   async function exibirLandingPageSaaS() {
+        async function exibirLandingPageSaaS() {
             document.title = "SGI • Gestão Imobiliária - WB Projetos";
             document.getElementById('secao-landing-saas').classList.remove('hidden');
             document.getElementById('secao-vitrine-imobiliaria').classList.add('hidden');
@@ -1200,13 +1202,11 @@
                     const normalFormatado = precoNormal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     const promoFormatado = precoPromo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-                    // Atualiza no Hero Banner
                     const elHeroNormal = document.getElementById('hero-preco-normal');
                     const elHeroPromo = document.getElementById('hero-preco-promo');
                     if (elHeroNormal) elHeroNormal.innerText = `De R$ ${normalFormatado}`;
                     if (elHeroPromo) elHeroPromo.innerText = `R$ ${promoFormatado}/mês`;
 
-                    // Atualiza no Card da seção #precos
                     const elCardNormal = document.getElementById('card-preco-normal');
                     const elCardPromo = document.getElementById('card-preco-promo');
                     if (elCardNormal) elCardNormal.innerText = `De R$ ${normalFormatado}`;
@@ -1216,6 +1216,7 @@
                 console.warn('[PREÇOS SAAS] Usando valores padrão:', err);
             }
         }
+
         function exibirVitrineImobiliaria() {
             document.getElementById('secao-landing-saas').classList.add('hidden');
             document.getElementById('secao-vitrine-imobiliaria').classList.remove('hidden');
@@ -1224,9 +1225,7 @@
 
         async function carregarDadosImobiliaria() {
             try {
-             
-
- const { data, error } = await supabaseClient
+                const { data, error } = await supabaseClient
                     .from('imobiliarias')
                     .select(`
                         id, 
@@ -1289,7 +1288,6 @@
             document.getElementById('header-razao').innerText = imob.razao_social || imob.nome_fantasia;
             document.getElementById('header-creci').innerText = imob.creci_juridico || '';
             
- // CÁLCULO DINÂMICO DE CARÊNCIA E STATUS EFETIVO DA VITRINE
             let emModoLeitura = (imob.status === 'read_only');
             if (!emModoLeitura && imob.data_vencimento) {
                 const hojeBase = new Date();
@@ -1297,7 +1295,6 @@
                 const [anoV, mesV, diaV] = imob.data_vencimento.split('-').map(Number);
                 const dtVenc = new Date(anoV, mesV - 1, diaV);
                 const diffDias = Math.floor((hojeBase.getTime() - dtVenc.getTime()) / (1000 * 60 * 60 * 24));
-                // Se venceu e ultrapassou a carência mínima (1 dia), entra em Modo Leitura
                 if (diffDias > 1) {
                     emModoLeitura = true;
                 }
@@ -1307,7 +1304,6 @@
             const btnTelHeader = document.getElementById('btn-telefone-header');
 
             if (emModoLeitura) {
-                // Em Modo Leitura: oculta ligação direta no topo e oculta o WhatsApp flutuante
                 if (btnTelHeader) btnTelHeader.classList.add('hidden');
                 const btnZap = document.getElementById('btn-flutuante-zap');
                 if (btnZap) btnZap.classList.add('hidden');
@@ -1345,7 +1341,6 @@
                 txtNegocie.innerText = `Avaliamos seu imóvel com atenção, conhecimento de mercado e orientação profissional para ajudar você a encontrar a melhor oportunidade de negociação ${pracaAtuacao}.`;
             }
 
-            // ATUALIZAÇÃO DINÂMICA DA FACHADA/BANNER DA IMOBILIÁRIA (COM FALLBACK)
             const imgFachada = document.getElementById('img-negocie-fachada') || document.querySelector('#secao-negocie img');
             if (imgFachada) {
                 const fotoFachada = (imob.banner_url && imob.banner_url.trim() !== '') 
@@ -1376,7 +1371,6 @@
             const localizacao = [imob.endereco, imob.bairro, imob.cidade, imob.uf].filter(Boolean).join(', ');
             document.getElementById('footer-endereco').innerHTML = `<i class="fa-solid fa-location-dot mr-1.5 text-blue-400"></i> ${localizacao || 'Brasil'}`;
 
-            // RENDERIZAÇÃO DINÂMICA DAS REDES SOCIAIS (TOPO E RODAPÉ)
             const formatarLinkRede = (link, tipo) => {
                 if (!link) return '';
                 let url = link.trim();
@@ -1392,12 +1386,10 @@
                 return url;
             };
 
-            // 1. Redes Oficiais + WhatsApp na FAIXA DE BUSCA
             const containerFaixaPreta = document.getElementById('faixa-preta-redes-sociais');
             if (containerFaixaPreta) {
                 let htmlFaixaPreta = '';
 
-                // Oculta o botão verde do WhatsApp da barra de busca se estiver em read_only
                 if (!emModoLeitura && imob.whatsapp_contato && imob.whatsapp_contato.trim() !== '') {
                     const zapUrl = `https://wa.me/${sanitizarZap(imob.whatsapp_contato)}?text=${encodeURIComponent('Olá! Vim através da sua vitrine de imóveis.')}`;
                     htmlFaixaPreta += `
@@ -1447,7 +1439,6 @@
                 containerFaixaPreta.innerHTML = htmlFaixaPreta;
             }
 
-            // 2. Redes no Rodapé
             const containerRedes = document.getElementById('footer-redes-sociais');
             if (containerRedes) {
                 let htmlRedes = '';
@@ -1472,7 +1463,7 @@
             document.getElementById('titulo-categoria-atual').innerText = 'Imobiliária não encontrada';
             document.getElementById('contador-imoveis').innerText = '0';
             document.getElementById('container-imoveis').innerHTML = `
-                <div class="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-sm">
+                <div class="col-span-full bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-sm">
                     <i class="fa-solid fa-circle-exclamation text-4xl text-amber-500 mb-3"></i>
                     <h3 class="text-base font-bold text-slate-800">Vitrine Indisponível ou Não Encontrada</h3>
                     <p class="text-xs text-slate-400 mt-1">Verifique o endereço digitado ou certifique-se de que a imobiliária está ativa na plataforma.</p>
@@ -1480,7 +1471,6 @@
             `;
         }
 
-        // MÁSCARA MONETÁRIA BRASILEIRA (R$)
         function mascaraMoedaEvento(input) {
             let valor = input.value.replace(/\D/g, '');
             if (!valor) { input.value = ''; return; }
@@ -1494,7 +1484,6 @@
             return isNaN(num) ? 0 : num;
         }
 
-        // CONTROLADOR DE TAGS RÁPIDAS
         function alternarTag(tipo) {
             filtroTags[tipo] = !filtroTags[tipo];
             const btn = document.getElementById(`tag-chip-${tipo}`);
@@ -1513,7 +1502,7 @@
 
             const container = document.getElementById('container-imoveis');
             container.innerHTML = `
-                <div class="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
+                <div class="col-span-full bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 shadow-sm">
                     <i class="fa-solid fa-spinner fa-spin text-3xl text-blue-600 mb-3"></i>
                     <p class="text-sm font-bold">Buscando imóveis disponíveis...</p>
                 </div>`;
@@ -1547,7 +1536,6 @@
 
                 let filtrados = data || [];
 
-                // FILTRAGEM DINÂMICA POR FAIXA DE PREÇO (MÍNIMO E MÁXIMO)
                 if (filtros.precoMin && filtros.precoMin > 0) {
                     filtrados = filtrados.filter(im => {
                         const preco = (filtros.finalidade === 'Locacao' || filtros.finalidade === 'Locação')
@@ -1571,7 +1559,7 @@
 
                 if (listaImoveisCache.length === 0) {
                     container.innerHTML = `
-                        <div class="bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-sm">
+                        <div class="col-span-full bg-white rounded-2xl p-12 text-center text-slate-500 border border-slate-200 shadow-sm">
                             <i class="fa-solid fa-house-chimney-crack text-4xl text-amber-500 mb-3"></i>
                             <h3 class="text-base font-bold text-slate-800">Nenhum imóvel encontrado com esses critérios</h3>
                             <p class="text-xs text-slate-400 mt-1">Tente ajustar a faixa de preço, limpar os filtros ou selecionar "Todas as Finalidades".</p>
@@ -1587,55 +1575,62 @@
             } catch (err) {
                 console.error('Erro ao consultar imóveis:', err);
                 container.innerHTML = `
-                    <div class="bg-white rounded-2xl p-8 text-center text-red-500 border border-red-200 shadow-sm">
+                    <div class="col-span-full bg-white rounded-2xl p-8 text-center text-red-500 border border-red-200 shadow-sm">
                         <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
                         <p class="text-sm font-bold">Erro ao carregar catálogo de imóveis.</p>
                     </div>`;
             }
         }
 
+        /* =========================================================================
+           NOVO MOTOR DE RENDERIZAÇÃO: GRADE VISUAL 2 COLUNAS (ALTO IMPACTO)
+           ========================================================================= */
         function renderizarCardsImoveis(imoveis, filtroFinalidadeAtual = '') {
             const container = document.getElementById('container-imoveis');
             container.innerHTML = '';
 
             imoveis.forEach(imovel => {
                 let precoExibido = 0;
-                let rotuloFinalidade = 'Valor';
                 let modalidadeNegocioZap = 'negociação';
                 let valorTextoZap = '';
+                let textoTagChanell = 'Venda';
+                let corBadgeTag = 'bg-emerald-600';
 
                 if (filtroFinalidadeAtual === 'Locacao' || filtroFinalidadeAtual === 'Locação') {
                     precoExibido = imovel.valor_locacao || imovel.valor_venda || 0;
-                    rotuloFinalidade = 'Aluguel (Locação)';
                     modalidadeNegocioZap = 'LOCAÇÃO';
                     valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês`;
+                    textoTagChanell = `Locação • ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês`;
+                    corBadgeTag = 'bg-blue-600';
                 } else if (filtroFinalidadeAtual === 'Venda') {
                     precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
-                    rotuloFinalidade = 'Venda';
                     modalidadeNegocioZap = 'VENDA (COMPRA)';
                     valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                    textoTagChanell = `Venda • ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                    corBadgeTag = 'bg-emerald-600';
                 } else {
                     if (imovel.finalidade === 'Ambos') {
-                        rotuloFinalidade = 'Venda ou Aluguel';
                         precoExibido = imovel.valor_venda || imovel.valor_locacao || 0;
                         modalidadeNegocioZap = 'VENDA ou LOCAÇÃO';
                         valorTextoZap = `(Venda: ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês)`;
+                        textoTagChanell = `Venda & Locação • ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                        corBadgeTag = 'bg-purple-700';
                     } else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') {
-                        rotuloFinalidade = 'Aluguel (Locação)';
                         precoExibido = imovel.valor_locacao || 0;
                         modalidadeNegocioZap = 'LOCAÇÃO';
                         valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês`;
+                        textoTagChanell = `Locação • ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}/mês`;
+                        corBadgeTag = 'bg-blue-600';
                     } else {
-                        rotuloFinalidade = 'Venda';
                         precoExibido = imovel.valor_venda || 0;
                         modalidadeNegocioZap = 'VENDA (COMPRA)';
                         valorTextoZap = `no valor de ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                        textoTagChanell = `Venda • ${Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                        corBadgeTag = 'bg-emerald-600';
                     }
                 }
 
-                const precoFormatado = Number(precoExibido).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                
-                // UNIFICAÇÃO DA GALERIA DE FOTOS (FOTO CAPA + ARRAY DE FOTOS)
+                // UNIFICAÇÃO DA GALERIA DE FOTOS
                 const fallbackImg = 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80';
                 const fotosUnificadas = [];
 
@@ -1663,15 +1658,6 @@
                 const totalFotos = fotosUnificadas.length;
                 const fotoInicial = fotosUnificadas[0];
 
-                let badgeFoto = 'Venda';
-                let corBadgeFoto = 'bg-emerald-600';
-                if (imovel.finalidade === 'Ambos') {
-                    badgeFoto = 'Venda & Locação';
-                    corBadgeFoto = 'bg-purple-700';
-                } else if (imovel.finalidade === 'Locacao' || imovel.finalidade === 'Locação') {
-                    badgeFoto = 'Locação';
-                    corBadgeFoto = 'bg-blue-700';
-                }
                 const textoMensagemZap = `Olá! Gostaria de mais informações sobre a ${modalidadeNegocioZap} do imóvel Ref: ${imovel.codigo_ref} ${valorTextoZap}.`;
                 const zapImobiliaria = sanitizarZap(tenantAtual.whatsapp_contato || '');
                 const urlWhatsappDireto = `https://wa.me/${zapImobiliaria}?text=${encodeURIComponent(textoMensagemZap)}`;
@@ -1681,40 +1667,26 @@
                 const tituloTratado = (imovel.titulo || 'Imóvel').replace(/'/g, "\\'");
 
                 const badgeVideoHtml = temVideo ? `
-                    <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
-                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded shadow flex items-center gap-1.5 cursor-pointer transition animate-pulse z-10">
-                        <i class="fa-brands fa-youtube"></i> Vídeo Tour
-                    </button>` : '';
-
-                const botaoVideoAcao = temVideo ? `
-                    <button type="button" onclick="abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
-                            class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Assistir Vídeo Tour">
-                        <i class="fa-brands fa-youtube text-sm"></i> Tour
+                    <button type="button" onclick="event.stopPropagation(); abrirModalVideo('${videoUrlTratada}', '${tituloTratado}')" 
+                            class="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-md flex items-center gap-1 cursor-pointer transition z-20" title="Vídeo Tour">
+                        <i class="fa-brands fa-youtube"></i> Tour
                     </button>` : '';
 
                 const controlesGaleriaHtml = totalFotos > 1 ? `
                     <button type="button" onclick="navegarFotoCard(event, '${imovel.id}', -1)" 
-                            class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
+                            class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                     <button type="button" onclick="navegarFotoCard(event, '${imovel.id}', 1)" 
-                            class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black/85 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
+                            class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center text-xs transition cursor-pointer backdrop-blur-sm z-20 shadow-md">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
-                    <div id="badge-contador-${imovel.id}" class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 z-10">
+                    <div id="badge-contador-${imovel.id}" class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-sm flex items-center gap-1 z-10">
                         <i class="fa-solid fa-camera"></i> <span id="txt-contador-${imovel.id}">1/${totalFotos}</span>
                     </div>
                 ` : '';
-const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia ou investimento.';
-                const ehDescricaoLonga = textoDescricao.trim().length > 110;
-                const botaoExpandirDesc = ehDescricaoLonga ? `
-                    <button type="button" id="btn-toggle-desc-${imovel.id}" onclick="alternarDescricaoCard('${imovel.id}')" 
-                            class="text-blue-700 hover:text-blue-900 font-bold text-[11px] mt-1 inline-flex items-center gap-1 cursor-pointer transition">
-                        <span>Ver mais</span> <i class="fa-solid fa-chevron-down text-[9px]"></i>
-                    </button>
-                ` : '';
 
-  // CONTROLE DO BOTÃO WHATSAPP DO CARD: OCULTA SE FOR SOMENTE LEITURA (MANUAL OU POR VENCIMENTO)
+                // CONTROLE DO BOTÃO WHATSAPP (MODO LEITURA / VENCIDO)
                 let emLeituraCard = (tenantAtual && tenantAtual.status === 'read_only');
                 if (!emLeituraCard && tenantAtual && tenantAtual.data_vencimento) {
                     const hojeBase = new Date();
@@ -1728,92 +1700,90 @@ const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia 
                 }
 
                 const botaoZapCardHtml = emLeituraCard ? '' : `
-                    <a href="${urlWhatsappDireto}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                    <a href="${urlWhatsappDireto}" target="_blank" onclick="event.stopPropagation();" 
+                       class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm">
                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                     </a>
                 `;
 
+                // NOVO CARD VERTICAL MODERNO COM FOCO EM FOTO (ESTILO CHANELL)
                 const card = `
-                <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden hover:shadow-md hover:border-slate-300 transition duration-200" id="card-${imovel.codigo_ref}">
-                    <div class="grid grid-cols-1 md:grid-cols-12">
-                        <div class="md:col-span-5 relative bg-slate-900 min-h-[240px] select-none group">
-                            <img id="img-card-${imovel.id}" src="${fotoInicial}" alt="${imovel.titulo}" class="w-full h-full object-cover min-h-[240px] max-h-[300px] transition-opacity duration-300">
-                            
-                            <div class="absolute top-3 left-3 ${corBadgeFoto} text-white text-[11px] font-black px-2.5 py-0.5 rounded shadow z-10">
-                                ${badgeFoto}
-                            </div>
-                            
-                            ${badgeVideoHtml}
-
-                            <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-sm z-10">
-                                Ref: ${imovel.codigo_ref}
-                            </div>
-
-                            ${controlesGaleriaHtml}
+                <div class="card-imovel-grade bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col justify-between group" id="card-${imovel.codigo_ref}">
+                    
+                    <!-- TOPO DO CARD: FOTO PANORÂMICA COM CLIQUE DIRETO PARA PROPOSTA -->
+                    <div class="relative w-full aspect-[4/3] bg-slate-900 select-none overflow-hidden cursor-pointer" 
+                         onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${tituloTratado}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})">
+                        
+                        <img id="img-card-${imovel.id}" 
+                             src="${fotoInicial}" 
+                             alt="${imovel.titulo}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        
+                        <!-- BADGE SUPERIOR DE STATUS + VALOR (PADRÃO CHANELL) -->
+                        <div class="absolute top-3 left-3 ${corBadgeTag} text-white text-[11px] font-black px-3 py-1 rounded-xl shadow-lg backdrop-blur-md flex items-center gap-1.5 z-10 tracking-wide">
+                            ${textoTagChanell}
                         </div>
 
-                        <div class="md:col-span-7 p-5 sm:p-6 flex flex-col justify-between">
-                            <div>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${imovel.bairro || 'Localização'} - ${imovel.cidade || ''}/${imovel.uf || ''}</span>
-                                <h3 class="text-base font-bold text-slate-800 leading-snug mt-0.5 flex items-center flex-wrap gap-2">
-                                    <span>${imovel.titulo}</span>
-                                    <span class="${corBadgeFoto} text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider shadow-sm">
-                                        ${badgeFoto}
-                                    </span>
-                                </h3>
-                                <div class="flex items-center gap-4 mt-3 text-xs text-slate-600 border-y border-slate-100 py-2.5">
-                                    <span><i class="fa-solid fa-bed text-blue-600 mr-1"></i> ${imovel.quartos || 0} Dorms</span>
-                                    <span><i class="fa-solid fa-bath text-blue-600 mr-1"></i> ${imovel.banheiros || 1} Banheiro</span>
-                                    <span><i class="fa-solid fa-car text-blue-600 mr-1"></i> ${imovel.vagas || 0} Vagas</span>
-                                    <span><i class="fa-solid fa-ruler-combined text-blue-600 mr-1"></i> ${imovel.area_util || 0} m²</span>
-                                </div>
+                        ${badgeVideoHtml}
 
-                                <div class="mt-2.5">
-                                    <p id="desc-imovel-${imovel.id}" class="text-xs text-slate-500 line-clamp-2 leading-relaxed whitespace-pre-line">
-                                        ${textoDescricao}
-                                    </p>
-                                    ${botaoExpandirDesc}
-                                </div>
-                            </div>
-
-                            <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                <div>
-                                    <span class="text-[10px] text-slate-400 uppercase font-semibold block">${rotuloFinalidade}</span>
-                                    <span class="text-xl font-extrabold azul-preco leading-none">${precoFormatado}</span>
-                                    ${imovel.finalidade === 'Ambos' ? `<span class="text-[10px] text-slate-500 block mt-0.5">Venda: R$ ${Number(imovel.valor_venda || 0).toLocaleString('pt-BR')} | Aluguel: R$ ${Number(imovel.valor_locacao || 0).toLocaleString('pt-BR')}/mês</span>` : ''}
-                                </div>
-
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    ${botaoVideoAcao}
-                                    <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${imovel.titulo.replace(/'/g, "\\'")}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
-                                            class="btn-azul-mensagem text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm cursor-pointer">
-                                        <i class="fa-regular fa-envelope"></i> Mensagem
-                                    </button>
-                                    ${botaoZapCardHtml}
-                                </div>
-                            </div>
+                        <!-- REF NO CANTO INFERIOR ESQUERDO -->
+                        <div class="absolute bottom-3 left-3 bg-black/80 text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded backdrop-blur-sm z-10 shadow">
+                            Ref: ${imovel.codigo_ref}
                         </div>
+
+                        ${controlesGaleriaHtml}
+                    </div>
+
+                    <!-- CORPO DO CARD: INFORMAÇÕES DECISIVAS E COMPACTAS -->
+                    <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3.5">
+                        
+                        <div>
+                            <!-- SUBTÍTULO: TIPO E LOCALIZAÇÃO -->
+                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block truncate">
+                                ${imovel.tipo || 'Imóvel'} • ${imovel.bairro || 'Localização'}${imovel.cidade ? ' - ' + imovel.cidade + '/' + (imovel.uf || '') : ''}
+                            </span>
+
+                            <!-- TÍTULO PRINCIPAL (TRUNCADO EM 1 OU 2 LINHAS) -->
+                            <h3 onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${tituloTratado}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0}) "
+                                class="text-sm sm:text-base font-extrabold text-slate-800 leading-snug mt-1 line-clamp-1 hover:text-blue-700 transition cursor-pointer" 
+                                title="${imovel.titulo}">
+                                ${imovel.titulo}
+                            </h3>
+                        </div>
+
+                        <!-- ESPECIFICAÇÕES COMPACTAS COM ÍCONES -->
+                        <div class="grid grid-cols-4 gap-1 py-2 border-y border-slate-100 text-slate-600 text-xs text-center font-semibold bg-slate-50/50 rounded-xl">
+                            <span title="Dormitórios" class="flex flex-col items-center justify-center py-1">
+                                <i class="fa-solid fa-bed text-blue-600 text-[11px] mb-0.5"></i>
+                                <span class="text-[11px]">${imovel.quartos || 0} Dorms</span>
+                            </span>
+                            <span title="Banheiros" class="flex flex-col items-center justify-center py-1 border-l border-slate-200/60">
+                                <i class="fa-solid fa-bath text-blue-600 text-[11px] mb-0.5"></i>
+                                <span class="text-[11px]">${imovel.banheiros || 1} Banho</span>
+                            </span>
+                            <span title="Vagas de Garagem" class="flex flex-col items-center justify-center py-1 border-l border-slate-200/60">
+                                <i class="fa-solid fa-car text-blue-600 text-[11px] mb-0.5"></i>
+                                <span class="text-[11px]">${imovel.vagas || 0} Vagas</span>
+                            </span>
+                            <span title="Área Útil" class="flex flex-col items-center justify-center py-1 border-l border-slate-200/60">
+                                <i class="fa-solid fa-ruler-combined text-blue-600 text-[11px] mb-0.5"></i>
+                                <span class="text-[11px]">${imovel.area_util || 0} m²</span>
+                            </span>
+                        </div>
+
+                        <!-- RODAPÉ DE AÇÕES RÁPIDAS (MENSAGEM + WHATSAPP) -->
+                        <div class="pt-1 flex items-center gap-2">
+                            <button onclick="abrirModalLead('${imovel.id}', '${imovel.codigo_ref}', '${tituloTratado}', '${imovel.finalidade}', ${imovel.valor_venda || 0}, ${imovel.valor_locacao || 0})" 
+                                    class="flex-1 btn-azul-mensagem text-white text-xs font-bold py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer hover:opacity-95">
+                                <i class="fa-regular fa-envelope"></i> Mensagem
+                            </button>
+                            ${botaoZapCardHtml}
+                        </div>
+
                     </div>
                 </div>`;
                 container.innerHTML += card;
             });
-        }
-
-        // CONTROLADOR DE EXPANSÃO DA DESCRIÇÃO (VER MAIS / VER MENOS)
-        function alternarDescricaoCard(imovelId) {
-            const pDesc = document.getElementById(`desc-imovel-${imovelId}`);
-            const btn = document.getElementById(`btn-toggle-desc-${imovelId}`);
-            if (!pDesc || !btn) return;
-
-            const estaExpandido = !pDesc.classList.contains('line-clamp-2');
-
-            if (estaExpandido) {
-                pDesc.classList.add('line-clamp-2');
-                btn.innerHTML = '<span>Ver mais</span> <i class="fa-solid fa-chevron-down text-[9px]"></i>';
-            } else {
-                pDesc.classList.remove('line-clamp-2');
-                btn.innerHTML = '<span>Ver menos</span> <i class="fa-solid fa-chevron-up text-[9px]"></i>';
-            }
         }
 
         // CONTROLADOR DE NAVEGAÇÃO DA GALERIA NO CARD
@@ -1958,7 +1928,6 @@ const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia 
             document.getElementById('modal-lead').classList.add('hidden');
         }
 
-        // CONTROLADOR DO VÍDEO TOUR DO YOUTUBE
         function extrairEmbedYouTube(url) {
             if (!url) return '';
             const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -1998,7 +1967,6 @@ const textoDescricao = imovel.descricao || 'Excelente oportunidade para moradia 
             operacaoPendenteLGPD = null;
         }
 
-        // JANELA CENTRALIZADA DE AGRADECIMENTO: EXIBE NO CENTRO, ANIMA A BARRA E FECHA SOZINHA EM 4.5s
         function exibirToastAgradecimento() {
             const modal = document.getElementById('modal-feedback-central');
             const card = document.getElementById('card-feedback-box');
